@@ -1,43 +1,37 @@
 # Introdução
 
-Texto descritivo com a visão geral do projeto abordado. Inclui o contexto, o problema, os objetivos, a justificativa e o público-alvo do projeto.
+Em um cenário econômico contemporâneo, a saúde financeira tornou-se um dos pilares para a estabilidade e o crescimento tanto de indivíduos quanto de organizações. A gestão eficaz dos recursos não é mais um diferencial, mas uma necessidade fundamental para a sobrevivência e prosperidade em um ambiente competitivo, que não deixa mais espaço para o empirismo administrativo (GAZZONI, 2003). No Brasil, essa necessidade é amplificada por um contexto cultural particular, onde o passado de instabilidade econômica e altas taxas de inflação condicionou o indivíduo a tomar "decisões de curto prazo e à falta de planejamento" (VIEIRA et al., 2011, p. 63).
+
+Essa herança histórica, somada a uma educação financeira de baixa qualidade, resulta em uma população que "tende a não se planejar" (IGREJA, 2019). Embora existam iniciativas para ampliar o conhecimento financeiro, elas ainda se mostram aquém do necessário para capacitar a população a tomar decisões mais conscientes (SAVOIA; SAITO; SANTANA, 2007). Assim como os cidadãos exigem rigor e transparência na gestão do erário público (SERRA, 2015), indivíduos e gestores buscam o mesmo nível de clareza sobre suas próprias finanças. Ferramentas que integram controle e educação tornaram-se, portanto, ativos estratégicos para promover essa capacitação.
 
 ## Problema
-Nesse momento você deve apresentar o problema que a sua aplicação deve  resolver. No entanto, não é a hora de comentar sobre a aplicação.
 
-Descreva também o contexto em que essa aplicação será usada, se  houver: empresa, tecnologias, etc. Novamente, descreva apenas o que de  fato existir, pois ainda não é a hora de apresentar requisitos  detalhados ou projetos.
+A falta de visibilidade sobre receitas e despesas representa um grande obstáculo para a compreensão da própria saúde financeira. Muitos usuários enfrentam dificuldades em monitorar suas transações, o que leva a desequilíbrios orçamentários e endividamento. A complexidade de ferramentas tradicionais, como planilhas, e a ausência de recursos educativos integrados criam uma barreira significativa para o planejamento eficaz, especialmente em um país onde a preocupação com a educação financeira ainda é recente (VIEIRA et al., 2011).
 
-Nesse momento, o grupo pode optar por fazer uso  de ferramentas como Design Thinking, que permite um olhar de ponta a ponta para o problema.
+A análise do cenário atual identifica duas lacunas principais: a carência de soluções que combinem, em uma única plataforma, controle financeiro prático e conteúdo educativo acessível; e a dificuldade de pessoas e pequenas empresas em transformar dados brutos de gastos em relatórios inteligentes que facilitem a tomada de decisão. Sem esse suporte, torna-se difícil adotar estratégias econômicas eficazes para otimizar a gestão e garantir um fluxo monetário sustentável.
 
-> **Links Úteis**:
-> - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-> - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
-> - [Brainstorming](https://www.euax.com.br/2018/09/brainstorming/)
+Neste viés, o projeto Save Money V2 pretende propor uma solução multiplataforma completa, que supere as limitações de ferramentas isoladas, oferecendo um ecossistema integrado de controle financeiro, educação e geração de relatórios inteligentes para capacitar os usuários a gerir suas finanças com maior confiança e eficiência.
 
 ## Objetivos
 
-Aqui você deve descrever os objetivos do trabalho indicando que o objetivo geral é desenvolver um software para solucionar o problema apresentado acima. 
+O projeto tem como principal objetivo desenvolver um sistema de backend robusto e escalável para uma plataforma de gestão financeira, utilizando tecnologias como C#, ASP.NET e MySQL. Este sistema servirá como a base para aplicações cliente (Web e Mobile), focando em centralizar o controle financeiro, promover a educação financeira e oferecer ferramentas inovadoras, como um conversor de consumo energético.
 
-Apresente também alguns (pelo menos 2) objetivos específicos dependendo de onde você vai querer concentrar a sua prática investigativa, ou como você vai aprofundar no seu trabalho.
- 
-> **Links Úteis**:
-> - [Objetivo geral e objetivo específico: como fazer e quais verbos utilizar](https://blog.mettzer.com/diferenca-entre-objetivo-geral-e-objetivo-especifico/)
+#### Objetivos Específicos:
+
+* Auxiliar os usuários na organização financeira por meio de ferramentas intuitivas para registro e categorização de receitas e despesas.
+* Proporcionar relatórios claros e diagnósticos precisos sobre a saúde financeira, permitindo uma tomada de decisão mais embasada.
+* Integrar uma área de educação financeira com as metas e objetivos do usuário, oferecendo conteúdo e ferramentas que o auxiliem a alcançar seus propósitos financeiros.
+* Oferecer recursos personalizados para atender às necessidades específicas de pessoas físicas e jurídicas.
 
 ## Justificativa
 
-Explique de forma clara a relevância da aplicação escolhida, justificando os objetivos específicos e os aspectos do software que serão aprofundados, e quantifique o impacto do problema com dados concretos (números, percentuais, indicadores) obtidos por bases oficiais ou outras fontes confiáveis, sempre citadas no padrão ABNT (no formato [Numérico] ou (AUTOR, ANO)).
+A crescente necessidade de controle financeiro pessoal e empresarial é uma realidade inegável. A qualidade das decisões financeiras particulares pode influenciar toda a economia, estando intimamente ligada a problemas como inadimplência e endividamento familiar (VIEIRA et al., 2011). No entanto, o mercado carece de soluções que integrem, de forma fluida, ferramentas de gestão com recursos de educação financeira. Muitas pessoas e pequenos empreendedores não apenas lutam para organizar suas finanças, mas também para entender os conceitos por trás de um bom planejamento.
 
-**Relacione o problema aos Objetivos de Desenvolvimento Sustentável (ODS), indicando quais ODS e subobjetivos são atendidos e descrevendo como o projeto contribui para cada um deles, garantindo coerência entre o impacto mensurado e as metas selecionadas.**
-
-> **Links Úteis**:
-> - [Como montar a justificativa](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
+O Save Money V2 justifica-se por atacar diretamente essa dor, combinando a automação de relatórios com uma camada educacional. A Organização para Cooperação e Desenvolvimento Econômico (OCDE) define a educação financeira como um processo contínuo para melhorar o entendimento sobre produtos e conceitos financeiros (SAVOIA; SAITO; SANTANA, 2007). Nossa proposta materializa esse conceito em uma ferramenta prática. Enquanto a maioria dos aplicativos se limita a mostrar "o que" foi gasto, nossa proposta é ajudar o usuário a entender "por que" e "como" melhorar, alinhando-se à crescente demanda por uma cultura financeira mais sólida no Brasil.
 
 ## Público-Alvo
 
-Descreva quem serão as pessoas que usarão a sua aplicação indicando os diferentes perfis. O objetivo aqui não é definir quem serão os clientes ou quais serão os papéis dos usuários na aplicação. A ideia é, dentro do possível, conhecer um pouco mais sobre o perfil dos usuários: conhecimentos prévios, relação com a tecnologia, relações hierárquicas, etc.
+O Save Money V2 é voltado para dois segmentos principais:
 
-> **Links Úteis**:
-> - [Público-alvo](https://blog.hotmart.com/pt-br/publico-alvo/)
-> - [Como definir o público alvo](https://exame.com/pme/5-dicas-essenciais-para-definir-o-publico-alvo-do-seu-negocio/)
-> - [Público-alvo: o que é, tipos, como definir seu público e exemplos](https://klickpages.com.br/blog/publico-alvo-o-que-e/)
-> - [Qual a diferença entre público-alvo e persona?](https://rockcontent.com/blog/diferenca-publico-alvo-e-persona/)
+* **Pessoas Físicas:** Indivíduos e famílias, como estudantes, jovens profissionais e chefes de família, que desejam melhorar sua vida financeira, controlar despesas, reduzir gastos e planejar melhor seus orçamentos para alcançar metas pessoais.
+* **Pequenas Empresas e Empreendedores:** Pequenos empreendedores, autônomos e empresas de pequeno e médio porte que buscam uma ferramenta eficiente e simplificada para gerenciar fluxo de caixa, controlar despesas operacionais e gerar relatórios para um planejamento financeiro mais assertivo.
