@@ -1,99 +1,69 @@
-# Especificações do Projeto
+### Personas
 
-<span style="color:red">Pré-requisitos: <a href="1-Documentação de Contexto.md"> Documentação de Contexto</a></span>
+#### Persona 1: João, o Estudante Organizado
 
-Definição do problema e ideia de solução a partir da perspectiva do usuário. É composta pela definição do  diagrama de personas, histórias de usuários, requisitos funcionais e não funcionais além das restrições do projeto.
+* **Informações:** João tem 25 anos, mora em São Paulo (SP) e é estudante universitário de Engenharia de Software. Ele trabalha como estagiário em uma startup de tecnologia e tem uma renda mensal limitada.
+* **Objetivos:** Seu principal objetivo é organizar suas despesas mensais (aluguel, transporte, alimentação e lazer) para conseguir economizar uma parte do seu salário. Ele sonha em fazer um intercâmbio no próximo ano e precisa saber exatamente para onde seu dinheiro está indo.
+* **Dores e Desafios:** João já tentou usar planilhas, mas acha o processo demorado e acaba esquecendo de preencher. Ele se sente frustrado por não ter uma visão clara de seus "ralos de dinheiro" e tem dificuldade em criar um orçamento que consiga seguir. A falta de disciplina para o registro manual é seu maior obstáculo.
+* **Como o Save Money V2 Ajuda:**
+    * João pode usar o Controle Financeiro (R1) para registrar rapidamente suas despesas pelo celular, categorizando cada uma.
+    * Com a Gestão de Orçamento (R12), ele define limites para categorias como "lazer" e recebe alertas antes de estourar o orçamento.
+    * O Dashboard Personalizado (R10) permite que ele veja, de forma visual e rápida, seus principais gastos do mês.
+    * O módulo de Educação Financeira (R2) oferece dicas práticas sobre como criar uma reserva de emergência, algo que ele ainda não sabe como fazer.
 
-Apresente uma visão geral do que será abordado nesta parte do documento, enumerando as técnicas e/ou ferramentas utilizadas para realizar a especificações do projeto
+#### Persona 2: Maria, a Empreendedora Eficiente
 
-## Personas
+* **Informações:** Maria tem 40 anos, é casada, tem dois filhos e é dona de uma pequena cafeteria em Curitiba (PR). Ela é apaixonada pelo seu negócio, mas se sente sobrecarregada com a parte administrativa e financeira.
+* **Objetivos:** O principal objetivo de Maria é ter um controle simplificado do fluxo de caixa da sua empresa para tomar decisões mais rápidas, como quando investir em um novo equipamento ou contratar um funcionário. Ela precisa de relatórios claros para apresentar ao seu contador e, eventualmente, a um gerente de banco para solicitar um empréstimo.
+* **Dores e Desafios:** A maior dor de Maria é a falta de tempo. Ela passa o dia gerenciando a operação da cafeteria e, à noite, tenta organizar as finanças em uma planilha complexa, o que a deixa exausta e propensa a erros. Ela considera os softwares de gestão financeira do mercado muito caros e complexos para a sua necessidade.
+* **Como o Save Money V2 Ajuda:**
+    * Maria utiliza o Perfil Pessoa Jurídica (R7) para separar as finanças da cafeteria das suas contas pessoais.
+    * A funcionalidade de Relatórios, Diagnósticos e Resultados (R4) gera automaticamente um relatório de fluxo de caixa mensal. Com um clique, ela usa a Exportação (R5) para enviar o PDF para seu contador.
+    * Os diagnósticos inteligentes a alertam: "Notamos que seus gastos com fornecedores de grãos de café aumentaram 15% este mês", ajudando-a a renegociar preços.
+    * O Conversor de Energia (R3) a ajuda a entender o impacto da conta de luz no custo operacional, incentivando-a a trocar equipamentos por modelos mais eficientes.
 
-Identifique, em torno de, 5 personas. Para cada persona, lembre-se de descrever suas angústicas, frustrações e expectativas de vida relacionadas ao problema. Além disso, defina uma "aparência" para a persona. Para isso, você poderá utilizar sites como [https://this-person-does-not-exist.com/pt#google_vignette](https://this-person-does-not-exist.com/pt) ou https://thispersondoesnotexist.com/ 
+### Histórias de Usuários
 
-Utilize também como referência o exemplo abaixo:
+| EU COMO... [QUEM] | ...QUERO/DESEJO... [O QUE] | ...PARA... [PORQUÊ] |
+| :--- | :--- | :--- |
+| João (Estudante) | Cadastrar minhas despesas de forma rápida pelo celular | Ter um controle financeiro eficiente e saber onde posso economizar para meu intercâmbio. |
+| Maria (Empresária) | Gerar relatórios de fluxo de caixa em PDF | Apresentar os resultados do meu negócio de forma profissional para meu contador. |
+| João (Estudante) | Criar uma meta de economia para minha viagem | Acompanhar meu progresso de forma visual e me manter motivado. |
+| Maria (Empresária) | Receber um resumo diário das finanças por e-mail | Me manter atualizada sobre a saúde financeira do meu negócio sem precisar abrir o sistema todo dia. |
 
-<img src="https://github.com/ICEI-PUC-Minas-PMV-ADS/IntApplicationProject-Template/blob/main/docs/img/AnaClara1.png" alt="Persona1"/>
+### Requisitos do Projeto
 
-Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
+#### Requisitos Funcionais
 
-> **Links Úteis**:
-> 
-> - [Rock Content](https://rockcontent.com/blog/personas/)
-> - [Hotmart](https://blog.hotmart.com/pt-br/como-criar-persona-negocio/)
-> - [O que é persona?](https://resultadosdigitais.com.br/blog/persona-o-que-e/)
-> - [Persona x Público-alvo](https://flammo.com.br/blog/persona-e-publico-alvo-qual-a-diferenca/)
-> - [Mapa de Empatia](https://resultadosdigitais.com.br/blog/mapa-da-empatia/)
-> - [Mapa de Stalkeholders](https://www.racecomunicacao.com.br/blog/como-fazer-o-mapeamento-de-stakeholders/)
->
-Lembre-se que você deve ser enumerar e descrever precisamente e personalizada todos os clientes ideais que sua solução almeja.
+| ID | Descrição | Prioridade |
+| :--- | :--- | :--- |
+| R1 | **Controle Financeiro:** Permitir o gerenciamento completo de finanças, incluindo registro de receitas/despesas, categorização, visualização de saldos e histórico. | Alta |
+| R2 | **Educação Financeira:** Disponibilizar conteúdos educativos (artigos, dicas, newsletters) e ferramentas interativas para auxiliar no planejamento financeiro. | Média |
+| R3 | **Conversor de Energia:** Fornecer um conversor para transformar consumo energético (kWh) em valores monetários, considerando as bandeiras tarifárias via API. | Baixa |
+| R4 | **Relatórios, Diagnósticos e Resultados:** Gerar relatórios detalhados com gráficos interativos, métricas, análises de tendências e projeções futuras. | Alta |
+| R5 | **Exportação e Compartilhamento:** Permitir que relatórios sejam exportados em PDF e Excel e compartilhados via e-mail ou WhatsApp. | Alta |
+| R6 | **Perfil Pessoa Física:** Disponibilizar funcionalidades específicas para usuários individuais, como metas financeiras pessoais e controle de gastos domésticos. | Alta |
+| R7 | **Perfil Pessoa Jurídica:** Oferecer recursos para empresas, como gestão de fluxo de caixa, controle de despesas operacionais e relatórios gerenciais (DRE simplificado). | Alta |
+| R8 | **Personalização do Tema:** Permitir ao usuário escolher temas, esquemas de cores e estilos de interface. | Média |
+| R9 | **Metas Financeiras:** Oferecer a possibilidade de criar, monitorar e gerenciar metas financeiras, com alertas de progresso e indicadores visuais. | Alta |
+| R10 | **Dashboard Personalizado:** Permitir ao usuário customizar seu painel financeiro com widgets configuráveis e função *drag and drop*. | Alta |
+| R11 | **E-mails Diários e Newsletters:** Enviar resumos diários, dicas financeiras e notificações importantes por e-mail. | Média |
+| R12 | **Gestão de Orçamento:** Permitir o planejamento e controle de orçamentos, com definição de limites por categoria e alertas ao atingir os valores definidos. | Alta |
 
-## Histórias de Usuários
+#### Requisitos Não Funcionais
 
-Com base na análise das personas forma identificadas as seguintes histórias de usuários:
+| ID | Descrição | Prioridade |
+| :--- | :--- | :--- |
+| RNF-1 | **Performance:** O sistema deve garantir um tempo de resposta de até 2 segundos por requisição para todas as operações críticas. | Alta |
+| RNF-2 | **Segurança:** Implementação de autenticação via OAuth 2.0 e criptografia para todos os dados sensíveis do usuário, em repouso e em trânsito. | Alta |
+| RNF-3 | **Compatibilidade:** O backend deve ser construído sobre uma arquitetura de serviços (API) para suportar de forma agnóstica diversas aplicações cliente, como Web (desktops) e Mobile (smartphones/tablets). | Alta |
+| RNF-4 | **Escalabilidade:** A arquitetura do sistema deve ser projetada para suportar um crescimento de até 10.000 usuários simultâneos sem degradação de performance. | Média |
 
-|EU COMO... `PERSONA`| QUERO/PRECISO ... `FUNCIONALIDADE` |PARA ... `MOTIVO/VALOR`                 |
-|--------------------|------------------------------------|----------------------------------------|
-|Ana Clara  | Uma forma de identificar se uma agência é realmente confiável           | Me sentir mais segura ao contratar seus serviços               |
-|Ana Clara       | Ter um mecanismo eficiente e rápido de comunicação                 | Que eu possa sanar todas as minhas dúvidas rapidamente |
+### Restrições
 
-Apresente aqui as histórias de usuário que são relevantes para o projeto de sua solução. As Histórias de Usuário consistem em uma ferramenta poderosa para a compreensão e elicitação dos requisitos funcionais e não funcionais da sua aplicação. Se possível, agrupe as histórias de usuário por contexto, para facilitar consultas recorrentes à essa parte do documento.
-
-> **Links Úteis**:
-> - [Histórias de usuários com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
-> - [Como escrever boas histórias de usuário (User Stories)](https://medium.com/vertice/como-escrever-boas-users-stories-hist%C3%B3rias-de-usu%C3%A1rios-b29c75043fac)
-> - [User Stories: requisitos que humanos entendem](https://www.luiztools.com.br/post/user-stories-descricao-de-requisitos-que-humanos-entendem/)
-> - [Histórias de Usuários: mais exemplos](https://www.reqview.com/doc/user-stories-example.html)
-> - [9 Common User Story Mistakes](https://airfocus.com/blog/user-story-mistakes/)
-
-## Requisitos
-
-As tabelas que se seguem apresentam os requisitos funcionais e não funcionais que detalham o escopo do projeto.
-
-### Requisitos Funcionais
-
-|ID    | Descrição do Requisito  | Prioridade |
-|------|-----------------------------------------|----|
-|RF-001| A aplicação deve permitir que o usuário avalie uma agência de intercâmbio com base na sua experiência| ALTA | 
-|RF-002| A aplicação deve permitir que o usuário inclua comentários ao fazer uma avaliação de uma agência de intercâmbio    | ALTA |
-|RF-003| A aplicação deve permitir que o usuário consulte todas as agências de intercâmbio cadastradas ordenando-as com base em suas notas | ALTA |
-
-### Requisitos não Funcionais
-
-|ID     | Descrição do Requisito  |Prioridade |
-|-------|-------------------------|----|
-|RNF-001| A aplicação deve ser responsiva | MÉDIA | 
-|RNF-002| A aplicação deve processar requisições do usuário em no máximo 3s |  BAIXA | 
-
-Com base nas Histórias de Usuário, enumere os requisitos da sua solução. Classifique esses requisitos em dois grupos:
-
-- [Requisitos Funcionais
- (RF)](https://pt.wikipedia.org/wiki/Requisito_funcional):
- correspondem a uma funcionalidade que deve estar presente na
-  plataforma (ex: cadastro de usuário).
-- [Requisitos Não Funcionais
-  (RNF)](https://pt.wikipedia.org/wiki/Requisito_n%C3%A3o_funcional):
-  correspondem a uma característica técnica, seja de usabilidade,
-  desempenho, confiabilidade, segurança ou outro (ex: suporte a
-  dispositivos iOS e Android).
-Lembre-se que cada requisito deve corresponder à uma e somente uma
-característica alvo da sua solução. Além disso, certifique-se de que
-todos os aspectos capturados nas Histórias de Usuário foram cobertos.
-
-## Restrições
-
-O projeto está restrito pelos itens apresentados na tabela a seguir.
-
-|ID| Restrição                                             |
-|--|-------------------------------------------------------|
-|01| O projeto deverá ser entregue até o final do semestre |
-|02| Não pode ser desenvolvido um módulo de backend        |
-
-
-Enumere as restrições à sua solução. Lembre-se de que as restrições geralmente limitam a solução candidata.
-
-> **Links Úteis**:
-> - [O que são Requisitos Funcionais e Requisitos Não Funcionais?](https://codificar.com.br/requisitos-funcionais-nao-funcionais/)
-> - [O que são requisitos funcionais e requisitos não funcionais?](https://analisederequisitos.com.br/requisitos-funcionais-e-requisitos-nao-funcionais-o-que-sao/)
+| ID | Restrição |
+| :--- | :--- |
+| 01 | O projeto deverá ser desenvolvido utilizando tecnologias open source. |
 
 ## Diagrama de Casos de Uso
 
