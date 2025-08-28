@@ -67,68 +67,75 @@
 
 ## Diagrama de Casos de Uso
 
+O diagrama de casos de uso abaixo representa as principais funcionalidades do sistema SaveMoney e como os usuários (pessoas físicas e jurídicas) interagem com essas funcionalidades. O diagrama mostra os casos de uso principais, suas dependências e relacionamentos, incluindo as funcionalidades de gerenciamento financeiro, educação financeira, conversão de consumo energético, relatórios e personalização.
+
 <img width="100%" alt="DiagramaUserCase" src="./img/diagramausercase.png" />
 
 ```mermaid
-@startuml
-skinparam actorStyle awesome
-
-actor "Usuário Pessoa Física" as PF
-actor "Usuário Pessoa Jurídica" as PJ
-
-rectangle "Sistema SaveMoney" {
-
-    usecase "Gerenciar Transações Financeiras\n(R1: Receitas, Despesas, Categorização, Saldos, Histórico)" as UC1
-    usecase "Acessar Educação Financeira\n(R2: Dicas, Ferramentas Interativas)" as UC2
-    usecase "Converter Consumo Energético\n(R3: kWh para Valor Monetário)" as UC3
-    usecase "Gerar Relatórios e Análises\n(R4: Gráficos, Métricas, Tendências)" as UC4
-    usecase "Exportar e Compartilhar Relatórios\n(R5: PDF, Excel, E-mail, WhatsApp)" as UC5
-    usecase "Personalizar Tema e Interface\n(R8: Cores, Estilos)" as UC6
-    usecase "Gerenciar Metas Financeiras\n(R9: Criar, Monitorar, Alertas)" as UC7
-    usecase "Customizar Dashboard\n(R10: Drag and Drop, Widgets)" as UC8
-    usecase "Receber E-mails e Newsletters\n(R11: Resumos Diários, Dicas)" as UC9
-    usecase "Gerenciar Orçamento\n(R12: Limites por Categoria, Alertas)" as UC10
-    usecase "Gerenciar Finanças Pessoais\n(R6: Metas Pessoais, Gastos Domésticos)" as UC11
-    usecase "Gerenciar Finanças Empresariais\n(R7: Fluxo de Caixa, Relatórios Gerenciais)" as UC12
-
-    UC4 ..> UC1 : <<include>>
-    UC5 ..> UC4 : <<include>>
-    UC7 ..> UC1 : <<include>>
-    UC10 ..> UC1 : <<include>>
-    UC11 ..> UC7 : <<include>>
-    UC11 ..> UC10 : <<include>>
-    UC11 ..> UC1 : <<include>>
-    UC12 ..> UC1 : <<include>>
-    UC12 ..> UC4 : <<include>>
-    UC8 ..> UC4 : <<extend>>
-    UC6 ..> UC8 : <<extend>>
-}
-
-PF --> UC1
-PF --> UC2
-PF --> UC3
-PF --> UC4
-PF --> UC5
-PF --> UC6
-PF --> UC7
-PF --> UC8
-PF --> UC9
-PF --> UC10
-PF --> UC11
-
-PJ --> UC1
-PJ --> UC2
-PJ --> UC3
-PJ --> UC4
-PJ --> UC5
-PJ --> UC6
-PJ --> UC7
-PJ --> UC8
-PJ --> UC9
-PJ --> UC10
-PJ --> UC12
-
-@enduml
+graph TD
+    %% Atores
+    PF[Usuário Pessoa Física]
+    PJ[Usuário Pessoa Jurídica]
+    
+    %% Casos de Uso
+    UC1[Gerenciar Transações Financeiras<br/>R1: Receitas, Despesas, Categorização, Saldos, Histórico]
+    UC2[Acessar Educação Financeira<br/>R2: Dicas, Ferramentas Interativas]
+    UC3[Converter Consumo Energético<br/>R3: kWh para Valor Monetário]
+    UC4[Gerar Relatórios e Análises<br/>R4: Gráficos, Métricas, Tendências]
+    UC5[Exportar e Compartilhar Relatórios<br/>R5: PDF, Excel, E-mail, WhatsApp]
+    UC6[Personalizar Tema e Interface<br/>R8: Cores, Estilos]
+    UC7[Gerenciar Metas Financeiras<br/>R9: Criar, Monitorar, Alertas]
+    UC8[Customizar Dashboard<br/>R10: Drag and Drop, Widgets]
+    UC9[Receber E-mails e Newsletters<br/>R11: Resumos Diários, Dicas]
+    UC10[Gerenciar Orçamento<br/>R12: Limites por Categoria, Alertas]
+    UC11[Gerenciar Finanças Pessoais<br/>R6: Metas Pessoais, Gastos Domésticos]
+    UC12[Gerenciar Finanças Empresariais<br/>R7: Fluxo de Caixa, Relatórios Gerenciais]
+    
+    %% Relacionamentos dos Atores
+    PF --> UC1
+    PF --> UC2
+    PF --> UC3
+    PF --> UC4
+    PF --> UC5
+    PF --> UC6
+    PF --> UC7
+    PF --> UC8
+    PF --> UC9
+    PF --> UC10
+    PF --> UC11
+    
+    PJ --> UC1
+    PJ --> UC2
+    PJ --> UC3
+    PJ --> UC4
+    PJ --> UC5
+    PJ --> UC6
+    PJ --> UC7
+    PJ --> UC8
+    PJ --> UC9
+    PJ --> UC10
+    PJ --> UC12
+    
+    %% Dependências entre Casos de Uso
+    UC4 -.->|include| UC1
+    UC5 -.->|include| UC4
+    UC7 -.->|include| UC1
+    UC10 -.->|include| UC1
+    UC11 -.->|include| UC7
+    UC11 -.->|include| UC10
+    UC11 -.->|include| UC1
+    UC12 -.->|include| UC1
+    UC12 -.->|include| UC4
+    UC8 -.->|extend| UC4
+    UC6 -.->|extend| UC8
+    
+    %% Estilo
+    classDef actor fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef usecase fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef relationship fill:#fff3e0,stroke:#e65100,stroke-width:1px
+    
+    class PF,PJ actor
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12 usecase
 ```
 
 > **Links Úteis**:
