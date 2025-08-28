@@ -67,8 +67,9 @@
 
 ## Diagrama de Casos de Uso
 
-<img width="2168" height="700" alt="Image" src="https://github.com/user-attachments/assets/65450985-a16b-4aa2-93f3-24617112e99e" />
+<img width="100%" alt="DiagramaUserCase" src="./img/diagramausercase.png" />
 
+```mermaid
 @startuml
 skinparam actorStyle awesome
 
@@ -128,6 +129,7 @@ PJ --> UC10
 PJ --> UC12
 
 @enduml
+```
 
 > **Links Úteis**:
 > - [Criando Casos de Uso](https://www.ibm.com/docs/pt-br/elm/6.0?topic=requirements-creating-use-cases)
