@@ -74,68 +74,87 @@ O diagrama de casos de uso abaixo representa as principais funcionalidades do si
 ```mermaid
 graph TD
     %% Atores
-    PF[Usuário Pessoa Física]
-    PJ[Usuário Pessoa Jurídica]
+    PF[👤 Usuário<br/>Pessoa Física]
+    PJ[🏢 Usuário<br/>Pessoa Jurídica]
     
-    %% Casos de Uso
-    UC1[Gerenciar Transações Financeiras<br/>R1: Receitas, Despesas, Categorização, Saldos, Histórico]
-    UC2[Acessar Educação Financeira<br/>R2: Dicas, Ferramentas Interativas]
-    UC3[Converter Consumo Energético<br/>R3: kWh para Valor Monetário]
-    UC4[Gerar Relatórios e Análises<br/>R4: Gráficos, Métricas, Tendências]
-    UC5[Exportar e Compartilhar Relatórios<br/>R5: PDF, Excel, E-mail, WhatsApp]
-    UC6[Personalizar Tema e Interface<br/>R8: Cores, Estilos]
-    UC7[Gerenciar Metas Financeiras<br/>R9: Criar, Monitorar, Alertas]
-    UC8[Customizar Dashboard<br/>R10: Drag and Drop, Widgets]
-    UC9[Receber E-mails e Newsletters<br/>R11: Resumos Diários, Dicas]
-    UC10[Gerenciar Orçamento<br/>R12: Limites por Categoria, Alertas]
-    UC11[Gerenciar Finanças Pessoais<br/>R6: Metas Pessoais, Gastos Domésticos]
-    UC12[Gerenciar Finanças Empresariais<br/>R7: Fluxo de Caixa, Relatórios Gerenciais]
+    %% Sistema
+    subgraph "Sistema SaveMoney"
+        %% Funcionalidades Core - Alta Prioridade
+        subgraph "Funcionalidades Core (Alta Prioridade)"
+            UC1[💰 Controle Financeiro<br/>R1: Receitas, Despesas,<br/>Categorização, Saldos, Histórico]
+            UC4[📊 Relatórios e Análises<br/>R4: Gráficos, Métricas,<br/>Tendências, Projeções]
+            UC5[📤 Exportação e Compartilhamento<br/>R5: PDF, Excel, E-mail, WhatsApp]
+            UC6[👤 Perfil Pessoa Física<br/>R6: Metas Pessoais,<br/>Gastos Domésticos]
+            UC7[🏢 Perfil Pessoa Jurídica<br/>R7: Fluxo de Caixa,<br/>Relatórios Gerenciais]
+            UC9[🎯 Metas Financeiras<br/>R9: Criar, Monitorar,<br/>Alertas, Indicadores Visuais]
+            UC10[🎛️ Dashboard Personalizado<br/>R10: Drag and Drop,<br/>Widgets Configuráveis]
+            UC12[📋 Gestão de Orçamento<br/>R12: Limites por Categoria,<br/>Alertas, Controle]
+        end
+        
+        %% Funcionalidades Secundárias - Média Prioridade
+        subgraph "Funcionalidades Secundárias (Média Prioridade)"
+            UC2[📚 Educação Financeira<br/>R2: Artigos, Dicas,<br/>Ferramentas Interativas]
+            UC8[🎨 Personalização do Tema<br/>R8: Temas, Cores,<br/>Estilos de Interface]
+            UC11[📧 E-mails e Newsletters<br/>R11: Resumos Diários,<br/>Dicas Financeiras]
+        end
+        
+        %% Funcionalidades Especiais - Baixa Prioridade
+        subgraph "Funcionalidades Especiais (Baixa Prioridade)"
+            UC3[⚡ Conversor de Energia<br/>R3: kWh → Valor Monetário,<br/>Bandeiras Tarifárias via API]
+        end
+    end
     
-    %% Relacionamentos dos Atores
+    %% Relacionamentos dos Atores com Funcionalidades Core
     PF --> UC1
-    PF --> UC2
-    PF --> UC3
     PF --> UC4
     PF --> UC5
     PF --> UC6
-    PF --> UC7
-    PF --> UC8
     PF --> UC9
     PF --> UC10
-    PF --> UC11
+    PF --> UC12
     
     PJ --> UC1
-    PJ --> UC2
-    PJ --> UC3
     PJ --> UC4
     PJ --> UC5
-    PJ --> UC6
     PJ --> UC7
-    PJ --> UC8
     PJ --> UC9
     PJ --> UC10
     PJ --> UC12
     
+    %% Relacionamentos dos Atores com Funcionalidades Secundárias
+    PF --> UC2
+    PF --> UC8
+    PF --> UC11
+    
+    PJ --> UC2
+    PJ --> UC8
+    PJ --> UC11
+    
+    %% Relacionamentos dos Atores com Funcionalidades Especiais
+    PF --> UC3
+    PJ --> UC3
+    
     %% Dependências entre Casos de Uso
     UC4 -.->|include| UC1
     UC5 -.->|include| UC4
+    UC6 -.->|include| UC1
     UC7 -.->|include| UC1
-    UC10 -.->|include| UC1
-    UC11 -.->|include| UC7
-    UC11 -.->|include| UC10
-    UC11 -.->|include| UC1
+    UC7 -.->|include| UC4
+    UC9 -.->|include| UC1
+    UC10 -.->|extend| UC4
     UC12 -.->|include| UC1
     UC12 -.->|include| UC4
-    UC8 -.->|extend| UC4
-    UC6 -.->|extend| UC8
     
-    %% Estilo
-    classDef actor fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef usecase fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef relationship fill:#fff3e0,stroke:#e65100,stroke-width:1px
+    %% Estilos
+    classDef actor fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+    classDef core fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef secondary fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef special fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
     
     class PF,PJ actor
-    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12 usecase
+    class UC1,UC4,UC5,UC6,UC7,UC9,UC10,UC12 core
+    class UC2,UC8,UC11 secondary
+    class UC3 special
 ```
 
 > **Links Úteis**:
