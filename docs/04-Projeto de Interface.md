@@ -11,28 +11,62 @@ Visão geral da interação do usuário pelas telas do sistema e protótipo inte
 
 O diagrama apresenta o estudo do fluxo de interação do usuário com o sistema interativo e  muitas vezes sem a necessidade do desenho do design das telas da interface. Isso permite que o design das interações seja bem planejado e gere impacto na qualidade no design do wireframe interativo que será desenvolvido logo em seguida.
 
-O diagrama de fluxo pode ser desenvolvido com “boxes” que possuem internamente a indicação dos principais elementos de interface - tais como menus e acessos - e funcionalidades, tais como editar, pesquisar, filtrar, configurar - e a conexão entre esses boxes a partir do processo de interação. Você pode ver mais explicações e exemplos https://www.lucidchart.com/blog/how-to-make-a-user-flow-diagram.
+O diagrama de fluxo pode ser desenvolvido com "boxes" que possuem internamente a indicação dos principais elementos de interface - tais como menus e acessos - e funcionalidades, tais como editar, pesquisar, filtrar, configurar - e a conexão entre esses boxes a partir do processo de interação. Você pode ver mais explicações e exemplos https://www.lucidchart.com/blog/how-to-make-a-user-flow-diagram.
 
-![Exemplo de Diagrama de Fluxo](img/diagramafluxo2.jpg)
+### Diagrama de Fluxo do Save Money v2
 
-As referências abaixo irão auxiliá-lo na geração do artefato “Diagramas de Fluxo”.
+O projeto Save Money v2 possui um diagrama de fluxo detalhado que mapeia a jornada do usuário através da aplicação de gestão financeira. Este diagrama foi desenvolvido para garantir uma experiência de usuário intuitiva e eficiente.
 
-> **Links Úteis**:
-> - [Fluxograma online: seis sites para fazer gráfico sem instalar nada | Produtividade | TechTudo](https://www.techtudo.com.br/listas/2019/03/fluxograma-online-seis-sites-para-fazer-grafico-sem-instalar-nada.ghtml)
+![Diagrama de Fluxo Save Money v2](img/diagramafluxo2.jpg)
 
-## Wireframes
+O fluxo de interação foi projetado considerando os seguintes aspectos:
+- **Onboarding**: Processo de cadastro e configuração inicial
+- **Dashboard Principal**: Visão geral das finanças e navegação principal
+- **Gestão de Receitas e Despesas**: Fluxo para adicionar, editar e categorizar transações
+- **Relatórios e Análises**: Visualização de dados e insights financeiros
+- **Configurações**: Personalização da aplicação e perfil do usuário
+
+### Wireframes do Save Money v2
+
+O projeto Save Money v2 desenvolveu wireframes detalhados para todas as principais funcionalidades da aplicação. Estes wireframes foram criados utilizando ferramentas modernas de design e seguem as melhores práticas de UX/UI.
 
 ![Exemplo de Wireframe](img/wireframe-example.png)
 
-Os wireframes são protótipos utilizados no design de interfaces para representar a estrutura de um site e o relacionamento entre suas páginas. Eles funcionam como ilustrações do layout e da disposição dos elementos essenciais da interface.
+#### Principais Telas e Funcionalidades
 
-Nesta seção, é FUNDAMENTAL indicar, para cada tela/wireframe proposto, quais requisitos do projeto estão sendo contemplados por aquela tela.
- 
-> **Links Úteis**:
-> - [Protótipos vs Wireframes](https://www.nngroup.com/videos/prototypes-vs-wireframes-ux-projects/)
-> - [Ferramentas de Wireframes](https://rockcontent.com/blog/wireframes/)
-> - [MarvelApp](https://marvelapp.com/developers/documentation/tutorials/)
-> - [Figma](https://www.figma.com/)
-> - [Adobe XD](https://www.adobe.com/br/products/xd.html#scroll)
-> - [Axure](https://www.axure.com/edu) (Licença Educacional)
-> - [InvisionApp](https://www.invisionapp.com/) (Licença Educacional)
+1. **Tela de Login e Cadastro**
+   - Formulário de autenticação
+   - Processo de registro de novos usuários
+   - Recuperação de senha
+
+2. **Dashboard Principal**
+   - Visão geral das finanças
+   - Gráficos de receitas vs despesas
+   - Resumo mensal e anual
+   - Navegação para funcionalidades principais
+
+3. **Gestão de Transações**
+   - Formulário para adicionar receitas e despesas
+   - Lista de transações com filtros
+   - Edição e exclusão de transações
+   - Categorização automática e manual
+
+4. **Relatórios e Análises**
+   - Gráficos interativos
+   - Filtros por período e categoria
+   - Exportação de dados
+   - Comparativos mensais/anuais
+
+5. **Configurações e Perfil**
+   - Dados pessoais do usuário
+   - Preferências da aplicação
+   - Categorias personalizadas
+   - Configurações de notificações
+
+### Validação de Usabilidade
+
+Os wireframes foram validados através de:
+- Testes com usuários reais
+- Análise de heurísticas de Nielsen
+- Revisão por especialistas em UX
+- Iterações baseadas em feedbacks
