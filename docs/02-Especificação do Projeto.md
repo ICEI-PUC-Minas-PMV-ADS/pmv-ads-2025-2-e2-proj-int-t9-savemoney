@@ -67,6 +67,8 @@
 
 ## Diagrama de Casos de Uso
 
+<img width="2168" height="700" alt="Image" src="https://github.com/user-attachments/assets/65450985-a16b-4aa2-93f3-24617112e99e" />
+
 @startuml
 skinparam actorStyle awesome
 
