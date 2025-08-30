@@ -38,7 +38,7 @@
 | ID | Descrição | Prioridade |
 | :--- | :--- | :--- |
 | R1 | **Controle Financeiro:** O usuário pode incluir o registro de receitas e despesas. | Alta |
-| R2 | **Educação Financeira:** O usário poderá catogorizar e visualizar saldos e histórico financeiro. | Média |
+| R2 | **Educação Financeira:** Disponibilizar conteúdos educativos (artigos dicas newsletter) via e-mail. | Média |
 | R3 | **Conversor de Energia:** Fornecer um conversor para transformar consumo energético (kWh) em valores monetários, considerando as bandeiras tarifárias via API. | Baixa |
 | R4 | **Relatórios, Diagnósticos e Resultados:** Gerar relatórios detalhados | Alta |
 | R5 | **Exportação e Compartilhamento:** Permitir que relatórios sejam exportados em PDF e Excel e compartilhados. | Alta |
