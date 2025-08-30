@@ -52,7 +52,7 @@
 | R13 | **Analise de Tendencias:** Sistema deve conter analises de tendências financeiras. | Alta |
 | R14 | **Projeção financeira:** O usuario deve consultar projecões financeiras futuras. | Alta |
 | R15 | **Ferramentas interativas:** Disponibilizar ferramentas interativas para auxilio no planejamento financeiro. | Média |
-| R16 | **Histórico finaceiro:** O usário poderá catogorizar e visualizar saldos e histórico financeiro. | Alta |
+| R16 | **Histórico finaceiro:** O usário poderá catogorizar e visualizar saldos e histórico financeiro. | Média |
 
 #### Requisitos Não Funcionais
 
