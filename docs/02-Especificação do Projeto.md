@@ -73,7 +73,7 @@
 
 O diagrama de casos de uso abaixo representa as principais funcionalidades do sistema SaveMoney e como os usuários (pessoas físicas e jurídicas) interagem com essas funcionalidades. O diagrama mostra os casos de uso principais, suas dependências e relacionamentos, incluindo as funcionalidades de gerenciamento financeiro, educação financeira, conversão de consumo energético, relatórios e personalização.
 
-<img width="100%" alt="DiagramaUserCase" src="./img/diagramausercase.png" />
+<img width="100%" alt="DiagramaUserCase" src="./img/UserCaseSaveMoneyV2.png" />
 
 ```mermaid
 graph TD
