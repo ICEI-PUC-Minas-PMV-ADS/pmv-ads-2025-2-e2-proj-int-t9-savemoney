@@ -5,12 +5,7 @@ O projeto Save Money tem como objetivo desenvolver um sistema de gestão finance
 
 ## Vídeo de apresentação - Etapa 01
 
-Veja o vídeo de apresentação da etapa 1 abaixo:
-
-<video controls width="600">
-	<source src="../videos/apresentacao_1_projeto_save_money_v2.mp4" type="video/mp4">
-	Seu navegador não suporta a tag de vídeo.
-</video>
+[Baixe o vídeo da Etapa 01](../docs/videos/apresentacao_1_projeto_save_money_v2.mp4)
 
 ## Vídeo de apresentação - Etapa 05
 
