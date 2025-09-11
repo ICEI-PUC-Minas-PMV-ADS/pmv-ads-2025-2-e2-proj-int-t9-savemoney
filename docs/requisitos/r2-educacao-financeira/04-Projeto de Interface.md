@@ -8,14 +8,14 @@ O diagrama a seguir representa o fluxo de interação do usuário para acessar, 
 
 ```mermaid
 graph TD
-    subgraph Início e Carregamento
+    subgraph "Inicio e Carregamento"
         A[1. Usuário clica em 'Educação Financeira'] --> B[2. Frontend solicita lista de artigos];
         B --> C[3. GET /api/educacao];
         C --> D[4. Backend retorna lista de artigos];
         D --> E[5. Frontend exibe a lista de artigos];
     end
 
-    subgraph Interação do Usuário
+    subgraph "Interacao do Usuario"
         E --> F{6. Usuário decide a ação};
         F -- Leitura --> G[7a. App abre o link original do artigo];
         F -- Interação --> H{7b. Clica no ícone 'Curtir'};

@@ -14,14 +14,14 @@ graph TD
     C -- "Calculadora de Metas" --> D_Metas;
     C -- "Ponto de Equilíbrio" --> E_PE;
 
-    subgraph Fluxo 1: Calculadora de Metas (Persona: João)
+    subgraph "Fluxo 1 - Calculadora de Metas"
         D_Metas[4a. Abre a tela da Calculadora de Metas] --> F_Metas[5a. Usuário preenche campos da meta];
         F_Metas --> G_Metas[6a. Clica em 'Calcular'];
         G_Metas --> H_Metas[7a. Lógica JavaScript executa o cálculo];
         H_Metas --> I_Metas[8a. Exibe resultado com texto e gráfico];
     end
 
-    subgraph Fluxo 2: Calculadora de Ponto de Equilíbrio (Persona: Maria)
+    subgraph "Fluxo 2 - Calculadora de Ponto de Equilibrio"
         E_PE[4b. Abre a tela da Calculadora de Ponto de Equilíbrio] --> F_PE[5b. Frontend solicita produtos via GET /api/produtos];
         F_PE --> G_PE[6b. Frontend popula o seletor de produtos];
         
