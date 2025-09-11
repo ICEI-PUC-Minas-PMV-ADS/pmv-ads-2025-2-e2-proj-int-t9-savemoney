@@ -12,10 +12,10 @@ O diagrama de classes a seguir detalha a arquitetura da funcionalidade, incluind
 classDiagram
     class Usuario {
         -int id
-        +List~ArtigoCurtido~ obterArtigosCurtidos()
+        +List~ConteudoCurtido~ obterConteudosCurtidos()
     }
 
-    class ArtigoAgregado {
+    class ConteudoAgregado {
         -int id
         -string titulo
         -string resumo
@@ -25,28 +25,28 @@ classDiagram
         -datetime data_publicacao
     }
 
-    class ArtigoCurtido {
+    class ConteudoCurtido {
         -int id_usuario
-        -int id_artigo
+        -int id_conteudo
         -datetime data_curtida
     }
 
     class ServicoFrontend {
-        +List~ArtigoAgregado~ obterArtigos()
-        +List~ArtigoAgregado~ obterArtigosCurtidos()
-        +void curtirArtigo(artigoId)
-        +void descurtirArtigo(artigoId)
+        +List~ConteudoAgregado~ obterConteudos()
+        +List~ConteudoAgregado~ obterConteudosCurtidos()
+        +void curtirConteudo(conteudoId)
+        +void descurtirConteudo(conteudoId)
     }
 
     class ServicoBackend {
-        +List~ArtigoAgregado~ obterArtigos()
-        +List~ArtigoAgregado~ obterArtigosCurtidosPorUsuario(usuarioId)
-        +void salvarCurtida(usuarioId, artigoId)
-        +void removerCurtida(usuarioId, artigoId)
+        +List~ConteudoAgregado~ obterConteudos()
+        +List~ConteudoAgregado~ obterConteudosCurtidosPorUsuario(usuarioId)
+        +void salvarCurtida(usuarioId, conteudoId)
+        +void removerCurtida(usuarioId, conteudoId)
     }
     
     class ServicoAgregadorConteudo {
-        +void buscarEsalvarNovosArtigos()
+        +void buscarEsalvarNovosConteudos()
         +void enviarNewsletterSemanal()
     }
 
@@ -57,8 +57,8 @@ classDiagram
         +void removerDados(tabela, id)
     }
 
-    Usuario "1" -- "0..*" ArtigoCurtido : curte
-    ArtigoAgregado "1" -- "0..*" ArtigoCurtido : é curtido por
+    Usuario "1" -- "0..*" ConteudoCurtido : curte
+    ConteudoAgregado "1" -- "0..*" ConteudoCurtido : é curtido por
     ServicoFrontend "1" -- "1" ServicoBackend : usa
     ServicoBackend "1" -- "1" BancoDados : interage
     ServicoAgregadorConteudo "1" -- "1" BancoDados : interage
