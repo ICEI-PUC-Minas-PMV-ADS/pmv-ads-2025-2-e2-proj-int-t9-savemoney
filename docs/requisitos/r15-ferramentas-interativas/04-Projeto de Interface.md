@@ -8,44 +8,32 @@ O diagrama a seguir representa a jornada do usuário para acessar o hub de ferra
 
 ```mermaid
 graph TD
-    A[Usuário clica em 'Ferramentas' no menu principal] --> B{Abre a tela 'Hub de Ferramentas'};
-    B --> C{Usuário visualiza as opções disponíveis};
-    C --> D[Opção 1: Calculadora de Metas];
-    C --> E[Opção 2: Calculadora de Ponto de Equilíbrio];
+    A[1. Usuário clica em 'Ferramentas' no menu] --> B[2. Abre a tela 'Hub de Ferramentas'];
+    B --> C{3. Usuário escolhe a calculadora};
     
-    subgraph Fluxo da Calculadora de Metas (Client-Side)
-        D -- Seleciona --> F[Abre a tela da Calculadora de Metas];
-        F --> G[Usuário preenche campos: <br> Valor do Objetivo, Prazo, etc.];
-        G --> H[Clica em 'Calcular'];
-        H --> I{Lógica JavaScript executa o cálculo};
-        I --> J[Exibe resultado com texto e gráfico de projeção];
+    C -- "Calculadora de Metas" --> D_Metas;
+    C -- "Ponto de Equilíbrio" --> E_PE;
+
+    subgraph Fluxo 1: Calculadora de Metas (Persona: João)
+        D_Metas[4a. Abre a tela da Calculadora de Metas] --> F_Metas[5a. Usuário preenche campos da meta];
+        F_Metas --> G_Metas[6a. Clica em 'Calcular'];
+        G_Metas --> H_Metas[7a. Lógica JavaScript executa o cálculo];
+        H_Metas --> I_Metas[8a. Exibe resultado com texto e gráfico];
     end
 
-    subgraph Fluxo da Calculadora de Ponto de Equilíbrio (com Backend)
-        E -- Seleciona --> K[Abre a tela da Calculadora de Ponto de Equilíbrio];
+    subgraph Fluxo 2: Calculadora de Ponto de Equilíbrio (Persona: Maria)
+        E_PE[4b. Abre a tela da Calculadora de Ponto de Equilíbrio] --> F_PE[5b. Frontend solicita produtos via GET /api/produtos];
+        F_PE --> G_PE[6b. Frontend popula o seletor de produtos];
         
-        subgraph Carregamento e Gestão de Dados
-            K --> L{Solicitar lista de produtos do usuário};
-            L --> M[GET /api/produtos];
-            M --> N[Backend retorna a lista de produtos da Maria];
-            N --> O{Frontend popula o seletor 'Escolha um Produto'};
-            
-            O --> P[Usuário clica em 'Gerenciar Produtos'];
-            P --> Q{Abre modal de Cadastro/Edição de Produtos};
-            Q --> R[Usuário adiciona/edita um produto];
-            R --> S[POST /api/produtos];
-            S --> T[Backend salva o produto e retorna sucesso];
-            T --> L;
-        end
+        G_PE --> H_PE{7b. Precisa gerenciar produtos?};
+        
+        H_PE -- Sim --> I_PE[8b. Abre modal de gestão de produtos];
+        I_PE --> J_PE[9b. Usuário salva um produto via POST /api/produtos];
+        J_PE --> F_PE;
 
-        subgraph Cálculo
-            O --> U[Usuário preenche campo 'Custos Fixos Mensais'];
-            U --> V[Usuário seleciona um produto já cadastrado];
-            V --> W[Clica em 'Calcular'];
-            W --> X{Lógica JavaScript calcula o ponto de equilíbrio};
-            X --> Y[Exibe resultado com texto e gráfico de break-even];
-        end
+        H_PE -- Não --> K_PE[8c. Usuário preenche 'Custos Fixos'];
+        K_PE --> L_PE[9c. Usuário seleciona um produto da lista];
+        L_PE --> M_PE[10c. Clica em 'Calcular'];
+        M_PE --> N_PE[11c. Lógica JavaScript executa o cálculo];
+        N_PE --> O_PE[12c. Exibe resultado com texto e gráfico];
     end
-
-    J --> Z[Fim da interação];
-    Y --> Z;

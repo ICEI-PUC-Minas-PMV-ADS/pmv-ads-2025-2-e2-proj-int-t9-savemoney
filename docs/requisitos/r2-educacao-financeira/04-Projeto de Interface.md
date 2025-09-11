@@ -8,25 +8,22 @@ O diagrama a seguir representa o fluxo de interação do usuário para acessar, 
 
 ```mermaid
 graph TD
-    A[Usuário clica em 'Educação Financeira' no menu] --> B{Solicitar lista de artigos};
-    B --> C[GET /api/educacao];
-    C --> D[Backend consulta artigos em cache no BD];
-    D --> E[Backend retorna lista de artigos];
-    E --> F{Frontend exibe a lista de artigos};
+    subgraph Início e Carregamento
+        A[1. Usuário clica em 'Educação Financeira'] --> B[2. Frontend solicita lista de artigos];
+        B --> C[3. GET /api/educacao];
+        C --> D[4. Backend retorna lista de artigos];
+        D --> E[5. Frontend exibe a lista de artigos];
+    end
 
-    F --> G{Usuário decide a ação};
-    
-    G -- Clica em um card para ler --> H[App abre o link original do artigo em um navegador/WebView];
-    
-    G -- Clica no ícone 'Curtir' --> I{Enviar requisição para salvar como favorito};
-    I --> J[POST /api/educacao/{id}/curtir];
-    J --> K[Backend salva na tabela 'artigos_curtidos'];
-    K --> L[UI atualiza o ícone para 'curtido'];
-
-    G -- Clica no filtro 'Meus Curtidos' --> M{Solicitar lista de artigos favoritados};
-    M --> N[GET /api/educacao/curtidos];
-    N --> O[Backend consulta e retorna a lista de curtidos];
-    O --> F;
-
-    H --> Z[Fim da interação];
-    L --> Z;
+    subgraph Interação do Usuário
+        E --> F{6. Usuário decide a ação};
+        F -- Leitura --> G[7a. App abre o link original do artigo];
+        F -- Interação --> H{7b. Clica no ícone 'Curtir'};
+        H --> I[8b. POST /api/educacao/{id}/curtir];
+        I --> J[9b. Backend salva o favorito];
+        J --> K[10b. UI atualiza o ícone];
+        F -- Navegação --> L{7c. Clica no filtro 'Meus Curtidos'};
+        L --> M[8c. GET /api/educacao/curtidos];
+        M --> N[9c. Backend retorna a lista de favoritos];
+        N --> E;
+    end
