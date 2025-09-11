@@ -15,7 +15,7 @@ Para garantir uma cobertura adequada do nosso público-alvo, os testes foram rea
 ## Registro dos Testes de Usabilidade
 
 ### Cenário 1: Descoberta de Conteúdo (Persona: João)
-A tarefa dada ao usuário foi: **"Imagine que você está planejando uma viagem. Use o aplicativo para encontrar um artigo que te dê dicas sobre como economizar dinheiro para esse objetivo."**
+A tarefa dada ao usuário foi: **"Imagine que você está planejando uma viagem. Use o aplicativo para encontrar um conteúdo (notícia ou artigo) que te dê dicas sobre como economizar dinheiro para esse objetivo."**
 
 | **Usuário** | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** (Onde clicou errado, etc.) | **Feedback Qualitativo do Usuário** |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -37,7 +37,7 @@ A tarefa dada ao usuário foi: **"Imagine que você tem uma pequena empresa. Pro
 | Usuário 5 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
 
 ### Cenário 3: Interação e Gerenciamento de Conteúdo
-A tarefa dada ao usuário foi: **"Navegue pela lista de artigos, salve 3 que você ache interessantes usando o ícone de 'Curtir'. Depois, encontre a sua lista de artigos salvos."**
+A tarefa dada ao usuário foi: **"Navegue pela lista de conteúdos, salve 3 que você ache interessantes usando o ícone de 'Curtir'. Depois, encontre a sua lista de conteúdos curtidos."**
 
 | **Usuário** | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** (Onde clicou errado, etc.) | **Feedback Qualitativo do Usuário** |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -66,18 +66,18 @@ A tarefa dada ao usuário foi: **"Navegue pela lista de artigos, salve 3 que voc
 A partir do feedback dos usuários e da observação, foram identificados os seguintes padrões:
 
 - **Principais dificuldades:** **[Exemplo: A maioria dos usuários (4 de 5) demorou a encontrar a seção "Meus Curtidos", indicando que o filtro/aba não está em um local intuitivo.]**
-- **Pontos positivos:** **[Exemplo: Todos os usuários elogiaram a clareza dos cards de artigos, afirmando que o título, resumo e fonte eram suficientes para decidir se o conteúdo era relevante.]**
+- **Pontos positivos:** **[Exemplo: Todos os usuários elogiaram a clareza dos cards de conteúdos, afirmando que o título, resumo e fonte eram suficientes para decidir se o conteúdo era relevante.]**
 - **Sugestões dos usuários:** **[Exemplo: O Usuário 2 sugeriu a inclusão de filtros por categoria (ex: "Investimentos", "Negócios") na tela principal para facilitar ainda mais a descoberta.]**
 
 ### Problemas Identificados e Priorização
 
 1.  **Crítico:** **[Exemplo: Nenhum problema crítico que impede o uso da funcionalidade foi identificado.]**
-2.  **Moderado:** **[Exemplo: A localização da lista de artigos "Curtidos" é pouco clara, dificultando o acesso a uma funcionalidade chave. (Afeta Cenário 3)]**
+2.  **Moderado:** **[Exemplo: A localização da lista de conteúdos "Curtidos" é pouco clara, dificultando o acesso a uma funcionalidade chave. (Afeta Cenário 3)]**
 3.  **Leve:** **[Exemplo: O ícone de "Curtir" não dá um feedback visual imediato muito forte, alguns usuários clicaram duas vezes achando que a primeira não tinha funcionado.]**
 
 ### Plano de Ação e Melhorias Propostas
 Com base na análise, a equipe propõe as seguintes ações a serem priorizadas na próxima Sprint:
 
-- **Ação 1 (Correção - Prioridade Alta):** Mover o acesso à lista de "Meus Curtidos" para um local mais visível, como uma aba proeminente no topo da tela, ao lado de "Todos os Artigos".
+- **Ação 1 (Correção - Prioridade Alta):** Mover o acesso à lista de "Meus Curtidos" para um local mais visível, como uma aba proeminente no topo da tela, ao lado de "Todos os Conteúdos".
 - **Ação 2 (Melhoria - Prioridade Média):** Adicionar uma microanimação mais evidente ao ícone de "Curtir" quando ele é pressionado.
-- **Ação 3 (Nova Feature - Backlog):** Criar uma nova *issue* para adicionar a funcionalidade de filtros por categoria na tela de listagem de artigos, conforme sugestão dos usuários.
+- **Ação 3 (Nova Feature - Backlog):** Criar uma nova *issue* para adicionar a funcionalidade de filtros por categoria na tela de listagem de conteúdos, conforme sugestão dos usuários.
