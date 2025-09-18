@@ -8,7 +8,7 @@ Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pess
 
 ```mermaid
 graph TD
-    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário (PF/PJ)}
+    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário: PF ou PJ}
     B -- Pessoa Física --> C[Preencher nome, e-mail, senha, CPF]
     B -- Pessoa Jurídica --> D[Preencher razão social, e-mail, senha, CNPJ]
     C --> E[Validar dados e senha]

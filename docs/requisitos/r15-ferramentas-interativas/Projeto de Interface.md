@@ -20,3 +20,4 @@ graph TD
     H --> I[Usuário preenche Custos Fixos, Preço de Venda e Custo Variável];
     I --> J[Clica em 'Calcular'];
     J --> K[Lógica JavaScript calcula e exibe o resultado];
+```

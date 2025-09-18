@@ -14,3 +14,4 @@ graph TD
     D --> E[Frontend exibe a lista de conteúdos];
     E --> F[Usuário clica em um conteúdo para ler];
     F --> G[App abre o link original do conteúdo em um navegador/WebView];
+```

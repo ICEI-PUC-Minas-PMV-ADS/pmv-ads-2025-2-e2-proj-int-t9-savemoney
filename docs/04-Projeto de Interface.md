@@ -42,7 +42,7 @@ Este diagrama representa o fluxo de execução para a funcionalidade de registro
 
 ```mermaid
 graph TD
-    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo (receita/despesa), data e descrição]
+    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo: receita ou despesa, data e descrição]
     B --> C{"Dados válidos e completos?"}
     C -- Sim --> D[Registrar no sistema]
     C -- Não --> E[Exibir mensagem de erro: Dados inválidos ou incompletos]
@@ -80,6 +80,7 @@ graph TD
     D --> E[Frontend exibe a lista de conteúdos];
     E --> F[Usuário clica em um conteúdo para ler];
     F --> G[App abre o link original do conteúdo em um navegador/WebView];
+```
 
 # Projeto de Interface — R3 Conversor de Energia
 
@@ -150,7 +151,7 @@ Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pess
 
 ```mermaid
 graph TD
-    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário (PF/PJ)}
+    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário: PF ou PJ}
     B -- Pessoa Física --> C[Preencher nome, e-mail, senha, CPF]
     B -- Pessoa Jurídica --> D[Preencher razão social, e-mail, senha, CNPJ]
     C --> E[Validar dados e senha]
@@ -345,6 +346,7 @@ graph TD
     H --> I[Usuário preenche Custos Fixos, Preço de Venda e Custo Variável];
     I --> J[Clica em 'Calcular'];
     J --> K[Lógica JavaScript calcula e exibe o resultado];
+```
 
 # Projeto de Interface — R16 Histórico Financeiro
 
