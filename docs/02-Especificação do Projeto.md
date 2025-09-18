@@ -1,3 +1,7 @@
+# Especificações do Projeto
+
+Este documento reúne as principais definições, requisitos, personas, histórias de usuários e restrições do sistema SaveMoney V2. Seu objetivo é detalhar as necessidades dos usuários, os requisitos funcionais e não funcionais, além de apresentar o escopo e os casos de uso que orientarão o desenvolvimento do projeto.
+
 ### Personas
 
 #### Persona 1: João, o Estudante Organizado
