@@ -1,4 +1,4 @@
-# Plano de Testes de Software — R2 Educação Financeira
+# Plano de Testes de Software — R2 Educação Financeira Save Money com JavaScript
 
 ## 1. Introdução
 
@@ -8,7 +8,7 @@ O plano de testes foca em garantir a funcionalidade completa do módulo de Educa
 
 | ID | Funcionalidade | Pré-condições | Ações | Resultados Esperados |
 | :--- | :--- | :--- | :--- | :--- |
-| **CT-R2-001** | API - Listar conteúdos agregados | O serviço de agregação já populou a tabela `conteudos_agregados` com pelo menos 5 itens. | 1. Realizar uma requisição `GET` para o endpoint `/api/educacao`. | A API deve retornar status `200 OK` e um JSON contendo a lista de conteúdos. |
+| **CT-R2-001** | API - Listar conteúdos agregados teste testestes | O serviço de agregação já populou a tabela `conteudos_agregados` com pelo menos 5 itens. | 1. Realizar uma requisição `GET` para o endpoint `/api/educacao`. | A API deve retornar status `200 OK` e um JSON contendo a lista de conteúdos. |
 | **CT-R2-002** | API - Curtir um conteúdo | Usuário está logado. <br> Existe um conteúdo com `id=1`. <br> O usuário ainda não curtiu o conteúdo `id=1`. | 1. Realizar uma requisição `POST` para `/api/educacao/1/curtir`. | A API retorna `201 Created` ou `200 OK`. <br> Um registro associando o usuário ao conteúdo `id=1` é criado na tabela `conteudos_curtidos`. |
 | **CT-R2-003** | API - Listar conteúdos curtidos | Usuário está logado e já curtiu 2 conteúdos específicos. | 1. Realizar uma requisição `GET` para `/api/educacao/curtidos`. | A API retorna `200 OK` e um JSON contendo a lista com os dados completos dos 2 conteúdos curtidos. |
 | **CT-R2-004** | API - Descurtir um conteúdo | Usuário está logado e já curtiu o conteúdo com `id=1`. | 1. Realizar uma requisição `DELETE` para `/api/educacao/1/descurtir`. | A API retorna `200 OK` ou `204 No Content`. <br> O registro correspondente é removido da tabela `conteudos_curtidos`. |
