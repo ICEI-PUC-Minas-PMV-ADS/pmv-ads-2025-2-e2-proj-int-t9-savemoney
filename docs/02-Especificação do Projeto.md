@@ -49,10 +49,10 @@
 | R10 | **Dashboard Personalizado:** Permitir ao usuário customizar seu painel financeiro com widgets configuráveis e função *drag and drop*. | Alta |
 | R11 | **Avisos e Notificações:** O sistema deve conter notificações com alertas de progresso e indicadores visuais. | Alta |
 | R12 | **Gestão de Orçamento:** Permitir o planejamento e controle de orçamentos, com definição de limites por categoria. | Alta |
-| R13 | **Analise de Tendencias:** O sistema deve conter análises de tendências financeiras. | Alta |
-| R14 | **Projeção financeira:** O usuário deve consultar projeções financeiras futuras. | Alta |
-| R15 | **Ferramentas interativas:** Disponibilizar ferramentas interativas para auxílio no planejamento financeiro. | Média |
-| R16 | **Histórico finaceiro:** O usuário poderá visualizar saldos e histórico financeiro. | Média |
+| R13 | **Análise de Tendências:** O sistema deve conter análises de tendências financeiras. | Alta |
+| R14 | **Projeção Financeira:** O usuário deve consultar projeções financeiras futuras. | Alta |
+| R15 | **Ferramentas Interativas:** Disponibilizar ferramentas interativas para auxílio no planejamento financeiro. | Média |
+| R16 | **Histórico Financeiro:** O usuário poderá visualizar saldos e histórico financeiro. | Média |
 
 #### Requisitos Não Funcionais
 
