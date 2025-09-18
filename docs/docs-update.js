@@ -59,7 +59,21 @@ const aggregations = [
 
 function getAllFilesByName(dir, filename) {
   let files = [];
-  const items = fs.readdirSync(dir, { withFileTypes: true });
+  let items = fs.readdirSync(dir, { withFileTypes: true });
+
+  // Ordena diretórios de requisitos (r1, r2, ..., r16) corretamente
+  items = items.sort((a, b) => {
+    const reqRegex = /^r(\d+)[^/\\]*$/i;
+    const aMatch = a.name.match(reqRegex);
+    const bMatch = b.name.match(reqRegex);
+    if (aMatch && bMatch) {
+      return parseInt(aMatch[1], 10) - parseInt(bMatch[1], 10);
+    }
+    if (aMatch) return -1;
+    if (bMatch) return 1;
+    return a.name.localeCompare(b.name);
+  });
+
   for (const item of items) {
     const fullPath = path.join(dir, item.name);
     if (item.isDirectory()) {
@@ -72,10 +86,7 @@ function getAllFilesByName(dir, filename) {
 }
 
 function aggregateFiles({ output, searchFile, header, emptyMsg }) {
-  // Clean output file before running
-  if (fs.existsSync(output)) {
-    fs.unlinkSync(output);
-  }
+  fs.writeFileSync(output, "", "utf-8");
 
   const foundFiles = getAllFilesByName(requisitosDir, searchFile);
   let outputContent = header || "";
