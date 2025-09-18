@@ -1,112 +1,97 @@
 const fs = require("fs");
 const path = require("path");
 
-const outputInterfaceFile = path.join(__dirname, '08-Projeto de Interface.md');
-
-function getAllInterfaceProjects(dir) {
-  let files = [];
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      files = files.concat(getAllInterfaceProjects(fullPath));
-    } else if (item.name === 'Projeto de Interface.md') {
-      files.push(fullPath);
-    }
-  }
-  return files;
-}
-function mainInterface() {
-  const interfaceFiles = getAllInterfaceProjects(requisitosDir);
-  let output = '';
-
-  if (interfaceFiles.length === 0) {
-    output += 'Nenhum projeto de interface encontrado.';
-  } else {
-    interfaceFiles.forEach((file) => {
-      const content = fs.readFileSync(file, 'utf-8');
-      output += content.trim() + '\n\n';
-    });
-  }
-
-  fs.writeFileSync(outputInterfaceFile, output, 'utf-8');
-  console.log(`Arquivo global criado em: ${outputInterfaceFile}`);
-}
-
-const outputUsabFile = path.join(
-  __dirname,
-  "08-Plano de Testes de Usabilidade.md"
-);
-
-function getAllUsabilityTestPlans(dir) {
-  let files = [];
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      files = files.concat(getAllUsabilityTestPlans(fullPath));
-    } else if (item.name === "Plano de Testes de Usabilidade.md") {
-      files.push(fullPath);
-    }
-  }
-  return files;
-}
-function mainUsab() {
-  const testPlanFiles = getAllUsabilityTestPlans(requisitosDir);
-  let output = "";
-
-  if (testPlanFiles.length === 0) {
-    output += "Nenhum plano de testes de usabilidade encontrado.";
-  } else {
-    testPlanFiles.forEach((file) => {
-      const content = fs.readFileSync(file, "utf-8");
-      output += content.trim() + "\n\n";
-    });
-  }
-
-  fs.writeFileSync(outputUsabFile, output, "utf-8");
-  console.log(`Arquivo global criado em: ${outputUsabFile}`);
-}
-
 const requisitosDir = path.join(__dirname, "requisitos");
-const outputFile = path.join(__dirname, "08-Plano de Testes de Software.md");
 
-// Clean output file before running
-if (fs.existsSync(outputFile)) {
-  fs.unlinkSync(outputFile);
-}
+// Configuração dos tipos de agregação
+const aggregations = [
+  {
+    output: path.join(__dirname, "08-Plano de Testes de Software.md"),
+    searchFile: "Plano de Testes de Software.md",
+    header: "",
+    emptyMsg: "Nenhum plano de testes encontrado.",
+  },
+  {
+    output: path.join(__dirname, "10-Plano de Testes de Usabilidade.md"),
+    searchFile: "Plano de Testes de Usabilidade.md",
+    header: "",
+    emptyMsg: "Nenhum plano de testes de usabilidade encontrado.",
+  },
+  {
+    output: path.join(__dirname, "04-Projeto de Interface.md"),
+    searchFile: "Projeto de Interface.md",
+    header: `# Projeto de Interface
 
-function getAllTestPlans(dir) {
+#### Principais Telas e Funcionalidades
+
+1. **Tela de Login e Cadastro**
+  - Formulário de autenticação
+  - Processo de registro de novos usuários
+  - Recuperação de senha
+
+2. **Dashboard Principal**
+  - Visão geral das finanças
+  - Gráficos de receitas vs despesas
+  - Resumo mensal e anual
+  - Navegação para funcionalidades principais
+
+3. **Gestão de Transações**
+  - Formulário para adicionar receitas e despesas
+  - Lista de transações com filtros
+  - Edição e exclusão de transações
+  - Categorização automática e manual
+
+4. **Relatórios e Análises**
+  - Gráficos interativos
+  - Filtros por período e categoria
+  - Exportação de dados
+  - Comparativos mensais/anuais
+
+5. **Configurações e Perfil**
+  - Dados pessoais do usuário
+  - Preferências da aplicação
+  - Categorias personalizadas
+  - Configurações de notificações
+\n\n`,
+    emptyMsg: "Nenhum projeto de interface encontrado.",
+  },
+];
+
+function getAllFilesByName(dir, filename) {
   let files = [];
   const items = fs.readdirSync(dir, { withFileTypes: true });
   for (const item of items) {
     const fullPath = path.join(dir, item.name);
     if (item.isDirectory()) {
-      files = files.concat(getAllTestPlans(fullPath));
-    } else if (item.name === "Plano de Testes de Software.md") {
+      files = files.concat(getAllFilesByName(fullPath, filename));
+    } else if (item.name === filename) {
       files.push(fullPath);
     }
   }
   return files;
 }
 
-function main() {
-  const testPlanFiles = getAllTestPlans(requisitosDir);
-  let output = "";
+function aggregateFiles({ output, searchFile, header, emptyMsg }) {
+  // Clean output file before running
+  if (fs.existsSync(output)) {
+    fs.unlinkSync(output);
+  }
 
-  if (testPlanFiles.length === 0) {
-    output += "Nenhum plano de testes encontrado.";
+  const foundFiles = getAllFilesByName(requisitosDir, searchFile);
+  let outputContent = header || "";
+
+  if (foundFiles.length === 0) {
+    outputContent += emptyMsg;
   } else {
-    testPlanFiles.forEach((file) => {
+    foundFiles.forEach((file) => {
       const content = fs.readFileSync(file, "utf-8");
-      output += content.trim() + "\n\n";
+      outputContent += content.trim() + "\n\n";
     });
   }
 
-  fs.writeFileSync(outputFile, output, "utf-8");
-  console.log(`Arquivo global criado em: ${outputFile}`);
+  fs.writeFileSync(output, outputContent, "utf-8");
+  console.log(`Arquivo global criado em: ${output}`);
 }
 
-main();
-mainUsab();
-mainInterface();
+// Executa todas as agregações configuradas
+aggregations.forEach(aggregateFiles);
