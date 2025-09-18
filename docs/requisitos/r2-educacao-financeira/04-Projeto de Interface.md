@@ -8,19 +8,20 @@ O diagrama a seguir representa o fluxo de interação do usuário para acessar, 
 
 ```mermaid
 graph TD
-    A[1. Usuário clica em 'Educação Financeira'] --> B[2. Frontend solicita lista de conteúdos];
-    B --> C[3. Backend retorna a lista];
-    C --> D[4. Frontend exibe os conteúdos];
-    D --> E{5. Usuário decide a ação};
-    
-    E -- Leitura --> F[6a. App abre o link original do conteúdo];
-    
-    E -- Curtir --> G[6b. Clica no ícone 'Curtir'];
-    G --> H[7b. Frontend envia POST de Curtir Conteúdo];
-    H --> I[8b. Backend salva a curtida];
-    I --> J[9b. UI atualiza o ícone para 'curtido'];
-    
-    E -- Ver Curtidos --> K[6c. Clica no filtro 'Meus Curtidos'];
-    K --> L[7c. Frontend solicita conteúdos curtidos];
-    L --> M[8c. Backend retorna a lista de curtidos];
+    A(Usuário clica em 'Educação Financeira') --> B[Frontend solicita lista de conteúdos];
+    B --> C[Backend retorna a lista];
+    C --> D[Frontend exibe os conteúdos];
+    D --> E{Usuário decide a ação};
+
+    E -- Leitura --> F[App abre o link original do conteúdo];
+
+    E -- Curtir --> G[Clica no ícone 'Curtir'];
+    G --> H[Frontend envia POST de Curtir Conteúdo];
+    H --> I[Backend salva a curtida];
+    I --> J[UI atualiza o ícone para 'curtido'];
+
+    E -- Ver Curtidos --> K[Clica no filtro 'Meus Curtidos'];
+    K --> L[Frontend solicita conteúdos curtidos];
+    L --> M(Backend retorna a lista de curtidos);
     M --> D;
+```
