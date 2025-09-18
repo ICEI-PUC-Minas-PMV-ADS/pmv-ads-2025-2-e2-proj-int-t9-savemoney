@@ -1,4 +1,4 @@
-# Plano de Testes de Software — R8 Personalização do Tema
+# Plano de Testes de Software — R8 Personalização do Tema Dark e Light
 
 ## 1. Introdução
 

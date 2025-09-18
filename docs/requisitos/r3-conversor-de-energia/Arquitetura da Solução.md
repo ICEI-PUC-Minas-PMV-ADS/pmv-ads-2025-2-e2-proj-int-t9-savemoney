@@ -92,11 +92,11 @@ O modelo conceitual agora inclui a entidade API, que representa as fontes extern
 
 **Entidades:**
 
-- **Usuário:** `id_usuario`, `nome`, `estado`, `consumo_medio_mensal`
-- **Conversao:** `id_conversao`, `data_hora`, `valor_entrada`, `tipo_entrada`, `valor_saida`, `tipo_saida`, `tarifa_utilizada`, `tipo_dispositivo`, `tempo_uso`
-- **Tarifa:** `id_tarifa`, `estado`, `modalidade`, `bandeira_tarifaria`, `valor_por_kwh`, `data_atualizacao`
-- **API:** `id_api`, `nome_api`, `endpoint_api`, `token`
-- **Dica:** `id_dica`, `titulo`, `conteudo`, `tipo_dica`
+- **Usuário:** `cod_usuario`, `nome`, `estado`, `consumo_medio_mensal`
+- **Conversao:** `cod_conversao`, `data_hora`, `valor_entrada`, `tipo_entrada`, `valor_saida`, `tipo_saida`, `tarifa_utilizada`, `tipo_dispositivo`, `tempo_uso`
+- **Tarifa:** `cod_tarifa`, `estado`, `modalidade`, `bandeira_tarifaria`, `valor_por_kwh`, `data_atualizacao`
+- **API:** `cod_api`, `nome_api`, `endpoint_api`, `token`
+- **Dica:** `cod_dica`, `titulo`, `conteudo`, `tipo_dica`
 
 **Relacionamentos:**
 
@@ -112,7 +112,7 @@ O esquema do banco de dados para suportar o armazenamento de dados.
 ```sql
 -- Tabela para armazenar informações dos usuários
 CREATE TABLE Usuario (
-    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    cod_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL,
     estado VARCHAR(50) NOT NULL,
     consumo_medio_mensal DECIMAL(10, 2)
@@ -120,7 +120,7 @@ CREATE TABLE Usuario (
 
 -- Tabela para registrar as APIs externas de tarifa
 CREATE TABLE ApiExterna (
-    id_api INT PRIMARY KEY AUTO_INCREMENT,
+    cod_api INT PRIMARY KEY AUTO_INCREMENT,
     nome_api VARCHAR(100) NOT NULL,
     endpoint_api VARCHAR(255) NOT NULL,
     token_api VARCHAR(255),
@@ -128,37 +128,37 @@ CREATE TABLE ApiExterna (
 );
 
 -- Tabela para armazenar as tarifas de energia
-CREATE TABLE Tarifa (
-    id_tarifa INT PRIMARY KEY AUTO_INCREMENT,
-    id_api INT,
+CREATE TABLE Tarifa_Conversao_Energia (
+    cod_tarifa INT PRIMARY KEY AUTO_INCREMENT,
+    cod_api INT,
     estado VARCHAR(50) NOT NULL,
     modalidade ENUM('Rede Convencional', 'Solar On-grid', 'Solar Off-grid', 'Outro') NOT NULL,
     bandeira_tarifaria ENUM('Verde', 'Amarela', 'Vermelha 1', 'Vermelha 2') NOT NULL,
     valor_por_kwh DECIMAL(8, 4) NOT NULL,
     data_atualizacao DATE NOT NULL,
-    FOREIGN KEY (id_api) REFERENCES ApiExterna(id_api),
+    FOREIGN KEY (cod_api) REFERENCES ApiExterna(cod_api),
     UNIQUE (estado, modalidade, bandeira_tarifaria)
 );
 
 -- Tabela para armazenar o histórico de conversões
-CREATE TABLE Historico_Conversao (
-    id_historico INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario INT,
-    data_hora DATETIME NOT NULL,
+CREATE TABLE Historico_Conversao_Energia (
+    cod_historico INT PRIMARY KEY AUTO_INCREMENT,
+    cod_usuario INT,
+    data_criacao DATETIME DEFAULT GETDATE(),
     valor_entrada DECIMAL(10, 2) NOT NULL,
     tipo_entrada ENUM('kWh', 'R$') NOT NULL,
     valor_saida DECIMAL(10, 2) NOT NULL,
     tipo_saida ENUM('kWh', 'R$') NOT NULL,
-    tarifa_utilizada DECIMAL(8, 4) NOT NULL,
+    cod_tarifa DECIMAL(8, 4) NOT NULL,
     tipo_dispositivo VARCHAR(50),
     tempo_uso VARCHAR(50), -- Campo para armazenar a unidade de tempo ou uso (Ex: "por hora", "por km")
     dados_graficos_json JSON, -- Campo para armazenar dados de gráficos
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+    FOREIGN KEY (cod_usuario) REFERENCES Usuario(cod_usuario)
 );
 
 -- Tabela para armazenar as dicas de economia
-CREATE TABLE Dica (
-    id_dica INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE Dica_Conversao_Energia (
+    cod_dica INT PRIMARY KEY AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
     conteudo TEXT NOT NULL,
     tipo_dica ENUM('Eficiencia', 'Energia Solar', 'Educacional', 'Veiculo Eletrico', 'Ar Condicionado') NOT NULL

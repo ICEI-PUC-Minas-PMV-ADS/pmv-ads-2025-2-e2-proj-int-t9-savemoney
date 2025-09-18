@@ -17,18 +17,12 @@ classDiagram
         +PreferenciaTema obterPreferencia()
     }
 
-    class PreferenciaTema {
-        -int id
-        -string tema
-        -string esquemaCores
-        -string corPrimaria
-        -string corSecundaria
-        -string tipografia
-        -string espacamento
-        -string bordas
-        -string sombras
-        -datetime atualizadoEm
-        +validar()
+    class PreferenciasUsuario {
+        -int cod_theme
+        -int cod_usuario
+        -string theme_name
+        -string theme_json
+        -datetime data_criacao
     }
 
     class ServicoFrontend {
@@ -52,10 +46,10 @@ classDiagram
         +void removerDados(tabela, id)
     }
 
-    Usuario "1" -- "1" PreferenciaTema : tem
+    Usuario "1" -- "1" PreferenciasUsuario : tem
     ServicoFrontend "1" -- "1" ServicoBackend : usa
     ServicoBackend "1" -- "1" BancoDados : interage
-    PreferenciaTema "1" -- "1" ServicoFrontend : é gerido por
+    PreferenciasUsuario "1" -- "1" ServicoFrontend : é gerido por
 ```
 
 
@@ -71,15 +65,11 @@ classDiagram
 
 **Atributos de UserPreference:**
 
-- Id
-- UserId
-- ThemeName
-- Colors (JSON)
-- Typography (JSON)
-- Layout (JSON)
-- Borders (JSON)
-- Shadows (JSON)
-- UpdatedAt
+- cod_theme
+- cod_usuario
+- theme_name
+- theme_json (JSON)
+- data_criacao
 
 **Relacionamentos:**
 
@@ -89,17 +79,13 @@ classDiagram
 ### 3.2 Projeto da Base de Dados (Esquema Lógico)
 
 ```sql
-CREATE TABLE UserPreferences (
-    Id INT PRIMARY KEY IDENTITY,
-    UserId INT NOT NULL,
-    ThemeName NVARCHAR(50),      -- Claro, Escuro, Custom
-    Colors NVARCHAR(MAX),        -- JSON com cores
-    Typography NVARCHAR(MAX),    -- JSON com fonte, tamanho, peso
-    Layout NVARCHAR(MAX),        -- JSON com espaçamento, densidade
-    Borders NVARCHAR(MAX),       -- JSON com border-radius
-    Shadows NVARCHAR(MAX),       -- JSON com intensidade de sombra
-    UpdatedAt DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (UserId) REFERENCES Users(Id)
+CREATE TABLE PreferenciasUsuario (
+    cod_theme INT PRIMARY KEY IDENTITY,
+    cod_usuario INT NOT NULL,
+    theme_name NVARCHAR(50),
+    theme JSON,
+    data_criacao DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (cod_usuario) REFERENCES Users(Id)
 );
 ```
 
