@@ -1,4 +1,4 @@
-# Plano de Testes de Software — R2 Educação Financeira Save Money com JavaScript
+# Plano de Testes de Software — R2 Educação Financeira
 
 ## 1. Introdução
 
