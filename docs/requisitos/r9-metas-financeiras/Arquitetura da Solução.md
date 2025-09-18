@@ -1,5 +1,3 @@
-
-
 # Arquitetura da Solução — R9 Metas Financeiras
 
 ## 1. Introdução
@@ -92,41 +90,48 @@ CREATE TABLE Aporte (
 ### 4.1 Lógica dos Métodos da Classe MetaFinanceira
 
 **validarMeta()**
+
 - Verifica se `valor_objetivo` é um número válido e maior que zero.
 - Verifica se `titulo` está preenchido.
 - Verifica se `data_limite` (se informada) é uma data futura.
 - Retorna `true` se todos os dados são válidos, `false` caso contrário.
 
 **estaConcluida()**
+
 - Retorna `true` se `valor_atual` >= `valor_objetivo`.
 
 ### 4.2 Lógica dos Métodos do Serviço de Metas Financeiras
 
 **criarMeta()**
+
 1. Recebe uma instância de MetaFinanceira.
 2. Valida os dados.
 3. Insere a meta no banco de dados.
 4. Retorna confirmação de inclusão.
 
 **removerMeta()**
+
 1. Remove a meta do banco de dados pelo id.
 2. Remove os aportes associados.
 
 **atualizarMeta()**
+
 1. Valida os dados recebidos.
 2. Atualiza a meta existente no banco de dados.
 
 **listarMetas()**
+
 1. Busca todas as metas financeiras do usuário.
 2. Retorna a lista de metas.
 
 **registrarAporte()**
+
 1. Recebe o id da meta e o valor do aporte.
 2. Valida o valor do aporte (>0).
 3. Insere o aporte na tabela de aportes.
 4. Atualiza o valor_atual da meta.
 
 **listarAportes()**
+
 1. Busca todos os aportes de uma meta.
 2. Retorna a lista de aportes.
-

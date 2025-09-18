@@ -32,40 +32,37 @@
   - Configurações de notificações
 
 
-# Projeto de Interface — R3 Conversor de Energia
+# Projeto de Interface — R1 Controle Financeiro
 
 ## 1. Modelos Funcionais
 
 ### 1.1 Diagrama de Fluxo (Fluxograma)
 
-Este diagrama representa o fluxo de execução para a funcionalidade de conversão de energia, desde a entrada de dados do usuário até a exibição do resultado e das dicas.
+Este diagrama representa o fluxo de execução para a funcionalidade de registro de receitas e despesas, desde a entrada de dados do usuário até a confirmação do registro e atualização do saldo.
 
 ```mermaid
 graph TD
-    A([Usuário acessa o Conversor]) --> B[Informar valor, estado, modalidade, tipo de dispositivo e tempo de uso]
+    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo (receita/despesa), data e descrição]
     B --> C{"Dados válidos e completos?"}
-    C -- Sim --> D[Chamar TarifaService para buscar a tarifa]
+    C -- Sim --> D[Registrar no sistema]
     C -- Não --> E[Exibir mensagem de erro: Dados inválidos ou incompletos]
     E --> B
-    D --> F{"Tarifa encontrada?"}
-    F -- Sim --> G[Calcular conversão]
-    F -- Não --> H{Notificar: Tarifa indisponível, usar média?}
-    H -- Sim --> I[Usar tarifa média nacional]
-    H -- Não --> J[Permitir inserção manual]
-    J --> K[Calcular conversão com tarifa manual]
-    I --> K
-    G --> L[Gerar Dicas Personalizadas]
-    K --> L
-    L --> M{"Tipo de gráfico desejado?"}
-    M -- "Pizza" --> N1[Gerar Gráfico de Pizza]
-    M -- "Barra" --> N2[Gerar Gráfico de Barras]
-    M -- "Linha" --> N3[Gerar Gráfico de Linhas]
-    N1 --> O[Exibir resultado, dicas e gráfico de pizza]
-    N2 --> O[Exibir resultado, dicas e gráfico de barras]
-    N3 --> O[Exibir resultado, dicas e gráfico de linhas]
-    O --> P[Opcional: Salvar histórico de conversão e gráficos]
-    P --> Q([FIM])
+    D --> F[Atualizar saldo e histórico do usuário]
+    F --> G[Exibir confirmação e novo saldo]
+    G --> H([FIM])
 ```
+
+## 2. Protótipos de Telas
+
+- Tela de Cadastro de Receita/Despesa: Campos para valor, categoria, tipo, data e descrição, botão de salvar.
+- Tela de Listagem: Exibe histórico de registros financeiros, filtros por período, categoria e tipo.
+- Tela de Saldo: Mostra saldo atual, total de receitas e despesas.
+
+## 3. Navegação
+
+- O usuário pode acessar o cadastro a partir do menu principal.
+- Após o registro, retorna à tela de listagem com atualização automática.
+- Opção de editar ou remover registros existentes.
 
 # Projeto de Interface — R2 Educação Financeira
 
@@ -143,21 +140,42 @@ graph TD
     J --> K
 ```
 
-# Projeto de Interface — R3 Conversor de Energia
+# Projeto de Interface — R6/R7 Pessoa Física/Jurídica
 
 ## 1. Modelos Funcionais
 
 ### 1.1 Diagrama de Fluxo (Fluxograma)
 
-Este diagrama representa o fluxo de execução para a funcionalidade de conversão de energia, desde a entrada de dados do usuário até a exibição do resultado e das dicas.
+Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pessoa Física e Pessoa Jurídica, desde a entrada dos dados até a diferenciação de funcionalidades.
 
 ```mermaid
 graph TD
-    A[Usuário insere os dados do cadastro] --> B{Verificar tipo de pessoa, validar dados obrigatórios, validar email e senha};
-    B --> C{Criar Hash da senha};
-    C --> D{Registrar usuário no banco de dados};
-    M --> N[Fim];
+    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário (PF/PJ)}
+    B -- Pessoa Física --> C[Preencher nome, e-mail, senha, CPF]
+    B -- Pessoa Jurídica --> D[Preencher razão social, e-mail, senha, CNPJ]
+    C --> E[Validar dados e senha]
+    D --> E
+    E -- Dados válidos --> F[Registrar usuário no sistema]
+    E -- Dados inválidos --> G[Exibir mensagem de erro]
+    F --> H[Usuário acessa painel conforme tipo]
+    G --> B
+    H --> I([FIM])
 ```
+
+## 2. Protótipos de Telas
+
+- Tela de Cadastro: Seleção de tipo (PF/PJ), campos dinâmicos para CPF ou CNPJ, nome ou razão social, e-mail, senha.
+- Tela de Login: E-mail e senha.
+- Tela de Perfil: Exibe dados do usuário, tipo de conta, opção de editar informações.
+- Painel Pessoa Física: Funcionalidades voltadas para controle financeiro pessoal, metas, histórico.
+- Painel Pessoa Jurídica: Funcionalidades para gestão financeira empresarial, relatórios, fluxo de caixa.
+
+## 3. Navegação
+
+- O usuário pode alternar entre cadastro e login.
+- Após cadastro/login, é direcionado ao painel correspondente ao tipo de usuário.
+- Opção de editar perfil e trocar tipo de conta (se permitido).
+- Funcionalidades e menus adaptados conforme PF ou PJ.
 
 # Projeto de Interface — R8 Personalização do Tema
 
@@ -195,58 +213,61 @@ Este diagrama representa o fluxo de execução para a funcionalidade de metas fi
 
 ```mermaid
 graph TD
-        A([Usuário acessa Metas Financeiras]) --> B[Exibir lista de metas do usuário]
-        B --> C{Deseja criar nova meta?}
-        C -- Sim --> D[Preencher dados da meta: título, valor objetivo, data limite, descrição]
-        D --> E{Dados válidos?}
-        E -- Não --> F[Exibir mensagem de erro]
-        F --> D
-        E -- Sim --> G[Salvar meta]
-        G --> B
-        C -- Não --> H{Seleciona meta existente?}
-        H -- Sim --> I[Exibir detalhes da meta]
-        I --> J{Deseja registrar aporte?}
-        J -- Sim --> K[Preencher valor do aporte]
-        K --> L{Valor válido?}
-        L -- Não --> M[Exibir erro de valor]
-        M --> K
-        L -- Sim --> N[Registrar aporte e atualizar valor atual]
-        N --> I
-        J -- Não --> O{Deseja editar ou remover meta?}
-        O -- Editar --> P[Editar dados da meta]
-        P --> E
-        O -- Remover --> Q[Remover meta e aportes]
-        Q --> B
-        O -- Nenhuma --> B
-        H -- Não --> B
-        I --> R{Meta concluída?}
-        R -- Sim --> S[Exibir mensagem de parabéns]
-        S --> B
-        R -- Não --> B
-    
+    A([Usuário acessa Metas Financeiras]) --> B[Exibir lista de metas do usuário]
+    B --> C{Deseja criar nova meta?}
+    C -- Sim --> D[Preencher dados da meta: título, valor objetivo, data limite, descrição]
+    D --> E{Dados válidos?}
+    E -- Não --> F[Exibir mensagem de erro]
+    F --> D
+    E -- Sim --> G[Salvar meta]
+    G --> B
+    C -- Não --> H{Seleciona meta existente?}
+    H -- Sim --> I[Exibir detalhes da meta]
+    I --> J{Deseja registrar aporte?}
+    J -- Sim --> K[Preencher valor do aporte]
+    K --> L{Valor válido?}
+    L -- Não --> M[Exibir erro de valor]
+    M --> K
+    L -- Sim --> N[Registrar aporte e atualizar valor atual]
+    N --> I
+    J -- Não --> O{Deseja editar ou remover meta?}
+    O -- Editar --> P[Editar dados da meta]
+    P --> E
+    O -- Remover --> Q[Remover meta e aportes]
+    Q --> B
+    O -- Nenhuma --> B
+    H -- Não --> B
+    I --> R{Meta concluída?}
+    R -- Sim --> S[Exibir mensagem de parabéns]
+    S --> B
+    R -- Não --> B
+
 ```
 
 ### 1.2 Protótipos de Telas (Sugestão)
 
 - **Tela de Listagem de Metas:**
-    - Lista todas as metas do usuário, mostrando título, valor objetivo, valor atual, progresso (%) e status (em andamento/concluída).
-    - Botão para criar nova meta.
-    - Ações: visualizar detalhes, editar, remover.
+
+  - Lista todas as metas do usuário, mostrando título, valor objetivo, valor atual, progresso (%) e status (em andamento/concluída).
+  - Botão para criar nova meta.
+  - Ações: visualizar detalhes, editar, remover.
 
 - **Tela de Detalhes da Meta:**
-    - Exibe informações completas da meta.
-    - Lista de aportes realizados (data, valor).
-    - Campo para registrar novo aporte.
-    - Indicador visual de progresso (barra ou círculo).
-    - Botão para editar/remover meta.
+
+  - Exibe informações completas da meta.
+  - Lista de aportes realizados (data, valor).
+  - Campo para registrar novo aporte.
+  - Indicador visual de progresso (barra ou círculo).
+  - Botão para editar/remover meta.
 
 - **Tela de Criação/Edição de Meta:**
-    - Formulário para inserir/editar título, valor objetivo, data limite, descrição.
-    - Validação de campos obrigatórios.
+
+  - Formulário para inserir/editar título, valor objetivo, data limite, descrição.
+  - Validação de campos obrigatórios.
 
 - **Feedback Visual:**
-    - Mensagens de sucesso, erro e conclusão de meta.
-    - Indicadores de progresso e status.
+  - Mensagens de sucesso, erro e conclusão de meta.
+  - Indicadores de progresso e status.
 
 # Projeto de Interface — R10 Dashboard Personalizado
 

@@ -1,4 +1,3 @@
-
 # Arquitetura da Solução — R10 Dashboard Personalizado
 
 ## 1. Introdução
@@ -88,29 +87,36 @@ CREATE TABLE Widget (
 ### 4.1 Lógica dos Métodos do Dashboard Personalizado
 
 **customizarDashboard(configuracao)**
+
 - Permite ao usuário definir a disposição, tipos e configurações dos widgets do seu painel financeiro.
 - Salva a configuração no banco de dados, associada ao usuário.
 
 **adicionarWidget(widget)**
+
 - Adiciona um novo widget ao dashboard do usuário.
 - Atualiza a configuração e salva.
 
 **removerWidget(widgetId)**
+
 - Remove um widget do dashboard pelo identificador.
 - Atualiza a configuração e salva.
 
 **moverWidget(widgetId, novaPosicao)**
+
 - Permite ao usuário reorganizar a ordem dos widgets via drag and drop.
 - Atualiza a posição do widget e salva a nova ordem.
 
 **atualizarConfiguracao(config)** (na classe Widget)
+
 - Permite alterar as configurações específicas de cada widget (ex: tipo de gráfico, filtros, cores, etc).
 
 **salvarConfiguracao()**
+
 - Persiste a configuração atual do dashboard e widgets no banco de dados.
 
 **Observação:**
 O dashboard personalizado permite ao usuário:
+
 - Adicionar, remover e reordenar widgets (drag and drop).
 - Configurar cada widget (tipo, dados exibidos, visualização).
 - Salvar e restaurar layouts personalizados.
