@@ -2,7 +2,7 @@
 
 ## Descrição Geral
 
-Oferecer aos usuários uma suíte de calculadoras interativas (Metas, Ponto de Equilíbrio) para auxiliar no planejamento financeiro, apoiada por um módulo de cadastro de produtos para usuários de negócios.
+Oferecer aos usuários uma suíte de calculadoras interativas (Metas, Ponto de Equilíbrio) para auxiliar no planejamento financeiro. As ferramentas operam em tempo real, com cálculos executados no navegador a partir de dados inseridos manualmente pelo usuário.
 
 ---
 

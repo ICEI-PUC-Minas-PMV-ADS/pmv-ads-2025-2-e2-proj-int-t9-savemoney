@@ -36,17 +36,6 @@ A tarefa dada ao usuário foi: **"Imagine que você tem uma pequena empresa. Pro
 | Usuário 4 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
 | Usuário 5 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
 
-### Cenário 3: Interação e Gerenciamento de Conteúdo
-A tarefa dada ao usuário foi: **"Navegue pela lista de conteúdos, salve 3 que você ache interessantes usando o ícone de 'Curtir'. Depois, encontre a sua lista de conteúdos curtidos."**
-
-| **Usuário** | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** (Onde clicou errado, etc.) | **Feedback Qualitativo do Usuário** |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| Usuário 1 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
-| Usuário 2 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
-| Usuário 3 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
-| Usuário 4 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
-| Usuário 5 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
-
 ---
 
 ## Relatório dos testes de usabilidade
@@ -56,28 +45,26 @@ A tarefa dada ao usuário foi: **"Navegue pela lista de conteúdos, salve 3 que 
 ### Análise Quantitativa
 - **Taxa de sucesso (Cenário 1):** [X]% dos usuários concluíram a tarefa.
 - **Taxa de sucesso (Cenário 2):** [Y]% dos usuários concluíram a tarefa.
-- **Taxa de sucesso (Cenário 3):** [Z]% dos usuários concluíram a tarefa.
 - **Tempo médio para completar Cenário 1:** [Tempo médio em segundos].
 - **Tempo médio para completar Cenário 2:** [Tempo médio em segundos].
-- **Tempo médio para completar Cenário 3:** [Tempo médio em segundos].
 - **Número médio de erros cometidos:** [Média geral ou por cenário].
 
 ### Análise Qualitativa e Padrões Identificados
 A partir do feedback dos usuários e da observação, foram identificados os seguintes padrões:
 
-- **Principais dificuldades:** **[Exemplo: A maioria dos usuários (4 de 5) demorou a encontrar a seção "Meus Curtidos", indicando que o filtro/aba não está em um local intuitivo.]**
-- **Pontos positivos:** **[Exemplo: Todos os usuários elogiaram a clareza dos cards de conteúdos, afirmando que o título, resumo e fonte eram suficientes para decidir se o conteúdo era relevante.]**
-- **Sugestões dos usuários:** **[Exemplo: O Usuário 2 sugeriu a inclusão de filtros por categoria (ex: "Investimentos", "Negócios") na tela principal para facilitar ainda mais a descoberta.]**
+- **Principais dificuldades:** **[Exemplo: Alguns usuários (2 de 5) expressaram o desejo de filtrar o conteúdo por categorias, como "Investimentos" ou "Negócios", uma funcionalidade não presente no MVP, o que tornou a busca por temas específicos um pouco mais demorada.]**
+- **Pontos positivos:** **[Exemplo: Todos os usuários elogiaram a clareza dos cards de conteúdos, afirmando que o título, resumo e fonte eram suficientes para decidir se o conteúdo era relevante. A abertura do link externo foi considerada uma ação intuitiva.]**
+- **Sugestões dos usuários:** **[Exemplo: O Usuário 2 sugeriu que a fonte da notícia tivesse um destaque maior ou um logo, para aumentar a credibilidade e a identificação da origem do conteúdo.]**
 
 ### Problemas Identificados e Priorização
 
 1.  **Crítico:** **[Exemplo: Nenhum problema crítico que impede o uso da funcionalidade foi identificado.]**
-2.  **Moderado:** **[Exemplo: A localização da lista de conteúdos "Curtidos" é pouco clara, dificultando o acesso a uma funcionalidade chave. (Afeta Cenário 3)]**
-3.  **Leve:** **[Exemplo: O ícone de "Curtir" não dá um feedback visual imediato muito forte, alguns usuários clicaram duas vezes achando que a primeira não tinha funcionado.]**
+2.  **Moderado:** **[Exemplo: A ausência de uma função de busca ou filtro torna a descoberta de conteúdo específico uma tarefa dependente de rolagem manual, o que pode frustrar usuários que procuram por um tópico exato.]**
+3.  **Leve:** **[Exemplo: A transição para o navegador externo foi um pouco abrupta para alguns usuários. Uma indicação visual de que eles estão prestes a sair do aplicativo poderia melhorar a experiência.]**
 
 ### Plano de Ação e Melhorias Propostas
-Com base na análise, a equipe propõe as seguintes ações a serem priorizadas na próxima Sprint:
+Com base na análise, a equipe propõe as seguintes ações a serem priorizadas em futuras Sprints:
 
-- **Ação 1 (Correção - Prioridade Alta):** Mover o acesso à lista de "Meus Curtidos" para um local mais visível, como uma aba proeminente no topo da tela, ao lado de "Todos os Conteúdos".
-- **Ação 2 (Melhoria - Prioridade Média):** Adicionar uma microanimação mais evidente ao ícone de "Curtir" quando ele é pressionado.
-- **Ação 3 (Nova Feature - Backlog):** Criar uma nova *issue* para adicionar a funcionalidade de filtros por categoria na tela de listagem de conteúdos, conforme sugestão dos usuários.
+- **Ação 1 (Melhoria - Prioridade Alta):** Implementar uma funcionalidade de filtro por categorias (ex: "Investimentos", "Negócios") no topo da tela de listagem de conteúdos para facilitar a descoberta.
+- **Ação 2 (Melhoria - Prioridade Média):** Adicionar o logo da fonte da notícia nos cards de conteúdo para aumentar a identificação e a confiança.
+- **Ação 3 (Melhoria - Prioridade Baixa):** Adicionar um ícone de "link externo" nos cards para sinalizar ao usuário que ele será redirecionado para fora do aplicativo ao clicar.

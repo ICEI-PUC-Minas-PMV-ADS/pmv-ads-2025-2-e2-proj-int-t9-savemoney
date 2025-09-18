@@ -37,7 +37,7 @@ A tarefa dada ao usuário foi: **"Imagine que você quer economizar R$ 12.000 pa
 | Usuário 5 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
 
 ### Cenário 3: Uso da Calculadora de Ponto de Equilíbrio (Persona: Maria)
-A tarefa dada ao usuário foi: **"1º: Cadastre um novo produto: um 'Cheesecake' que custa R$ 5 para fazer e você vende por R$ 15. 2º: Considerando custos fixos de R$ 3.000, use a calculadora para descobrir quantos cheesecakes você precisa vender no mês para não ter prejuízo."**
+A tarefa dada ao usuário foi: **"Imagine que seus custos fixos mensais são de R$ 3.000. Use a calculadora para descobrir quantos 'Cheesecakes' (que custam R$ 5 para fazer e você vende por R$ 15) você precisa vender no mês para não ter prejuízo."**
 
 | **Usuário** | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** (Onde clicou errado, etc.) | **Feedback Qualitativo do Usuário** |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -60,24 +60,24 @@ A tarefa dada ao usuário foi: **"1º: Cadastre um novo produto: um 'Cheesecake'
 - **Tempo médio para completar Cenário 1:** [Tempo médio em segundos].
 - **Tempo médio para completar Cenário 2:** [Tempo médio em segundos].
 - **Tempo médio para completar Cenário 3:** [Tempo médio em segundos].
-- **Taxa de abandono (Cenário 3):** [A]% dos usuários não conseguiram concluir a tarefa.
+- **Número médio de erros cometidos:** [Média geral ou por cenário].
 
 ### Análise Qualitativa e Padrões Identificados
 A partir do feedback dos usuários e da observação, foram identificados os seguintes padrões:
 
-- **Principais dificuldades:** **[Exemplo: 3 de 5 usuários tiveram dificuldade em encontrar o botão "Gerenciar Produtos" dentro da tela da calculadora, pois esperavam que essa função estivesse em uma área de "Configurações" do perfil PJ.]**
+- **Principais dificuldades:** **[Exemplo: Usuários do perfil "Maria" (3 de 5 testados) relataram que ter que digitar os dados do produto (preço e custo) toda vez que usam a calculadora é repetitivo e gostariam de poder salvar seus produtos mais comuns.]**
 - **Pontos positivos:** **[Exemplo: Os gráficos gerados em ambas as calculadoras foram universalmente elogiados como "claros", "visuais" e "motivadores", especialmente o de projeção de metas.]**
 - **Sugestões dos usuários:** **[Exemplo: O Usuário 2 (perfil "Maria") sugeriu que, na Calculadora de Ponto de Equilíbrio, o resultado pudesse ser exibido não só em "unidades por mês", mas também em "unidades por dia" e "faturamento mensal necessário".]**
 
 ### Problemas Identificados e Priorização
 
-1.  **Crítico:** **[Exemplo: O fluxo para cadastrar um produto e depois usá-lo na calculadora (Cenário 3) foi considerado longo e confuso, levando a uma alta taxa de abandono. Isso impede o uso de uma funcionalidade chave para a persona Maria.]**
-2.  **Moderado:** **[Exemplo: Usuários não tinham certeza se os "Custos Fixos" eram mensais ou anuais, pois o campo não tinha essa especificação, gerando dúvidas que podem levar a cálculos errados.]**
+1.  **Crítico:** **[Exemplo: Nenhum problema crítico que impede o uso da funcionalidade foi identificado.]**
+2.  **Moderado:** **[Exemplo: A falta de persistência de dados na Calculadora de Ponto de Equilíbrio foi a principal reclamação dos usuários com perfil de negócios, tornando a ferramenta útil para uma simulação rápida, mas pouco prática para uso recorrente.]**
 3.  **Leve:** **[Exemplo: Na Calculadora de Metas, o campo para o prazo poderia ser mais intuitivo, talvez oferecendo opções como "1 ano", "2 anos" além de apenas digitar o número de meses.]**
 
 ### Plano de Ação e Melhorias Propostas
-Com base na análise, a equipe propõe as seguintes ações a serem priorizadas na próxima Sprint:
+Com base na análise, a equipe propõe as seguintes ações a serem consideradas em futuras Sprints:
 
-- **Ação 1 (Correção - Prioridade Alta):** Simplificar o fluxo do Cenário 3. Na tela da Calculadora de Ponto de Equilíbrio, adicionar um botão `+ Adicionar Novo Produto` ao lado do seletor. Este botão abrirá um modal rápido para o cadastro, evitando que o usuário precise sair da tela de cálculo.
+- **Ação 1 (Nova Feature - Prioridade Alta):** Criar uma nova *issue* para uma "Versão 2" das Ferramentas Interativas, que implemente um sistema de backend para permitir que os usuários salvem seus produtos, resolvendo a principal dor identificada nos testes.
 - **Ação 2 (Melhoria - Prioridade Média):** Adicionar textos de ajuda (`labels` ou `tooltips`) mais claros nos campos das calculadoras, especificando as unidades (ex: "Custos Fixos (Mensal)", "Prazo (em meses)").
-- **Ação 3 (Nova Feature - Backlog):** Criar uma nova *issue* para implementar as sugestões de visualização de resultados na Calculadora de Ponto de Equilíbrio (unidades/dia, faturamento/mês).
+- **Ação 3 (Melhoria - Backlog):** Implementar as sugestões de visualização de resultados na Calculadora de Ponto de Equilíbrio (unidades/dia, faturamento/mês).

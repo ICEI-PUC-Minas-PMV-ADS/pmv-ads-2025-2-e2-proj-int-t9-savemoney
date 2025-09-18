@@ -2,7 +2,7 @@
 
 ## Descrição Geral
 
-Disponibilizar aos usuários um feed de conteúdos educativos (notícias e artigos) agregados de fontes externas, com a funcionalidade de "Curtir" para salvar os itens de interesse.
+Disponibilizar aos usuários um feed de conteúdos educativos (notícias e artigos) agregados de fontes externas, para visualização e leitura em tempo real.
 
 ---
 
