@@ -128,7 +128,7 @@ CREATE TABLE ApiExterna (
 );
 
 -- Tabela para armazenar as tarifas de energia
-CREATE TABLE Tarifa (
+CREATE TABLE Tarifa_Conversao_Energia (
     cod_tarifa INT PRIMARY KEY AUTO_INCREMENT,
     cod_api INT,
     estado VARCHAR(50) NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE Tarifa (
 );
 
 -- Tabela para armazenar o histórico de conversões
-CREATE TABLE Historico_Conversao (
+CREATE TABLE Historico_Conversao_Energia (
     cod_historico INT PRIMARY KEY AUTO_INCREMENT,
     cod_usuario INT,
     data_hora DATETIME NOT NULL,
@@ -157,7 +157,7 @@ CREATE TABLE Historico_Conversao (
 );
 
 -- Tabela para armazenar as dicas de economia
-CREATE TABLE Dica (
+CREATE TABLE Dica_Conversao_Energia (
     cod_dica INT PRIMARY KEY AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
     conteudo TEXT NOT NULL,
