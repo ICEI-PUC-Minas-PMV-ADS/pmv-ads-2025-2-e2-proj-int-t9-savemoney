@@ -67,128 +67,6 @@ graph TD
     P --> Q([FIM])
 ```
 
-# Projeto de Interface — R10 Dashboard Personalizado
-
-## 1. Modelos Funcionais
-
-### 1.1 Diagrama de Fluxo (Fluxograma)
-
-Este diagrama representa o fluxo de customização do dashboard financeiro, incluindo adição, remoção, configuração e reordenação (drag and drop) de widgets.
-
-```mermaid
-graph TD
-    A([Usuário acessa o Dashboard]) --> B[Visualiza painel com widgets]
-    B --> C{Deseja adicionar widget?}
-    C -- Sim --> D[Seleciona tipo e configura widget]
-    D --> E[Widget adicionado ao painel]
-    C -- Não --> F{Deseja remover widget?}
-    F -- Sim --> G[Remove widget do painel]
-    F -- Não --> H{Deseja reordenar widgets?}
-    H -- Sim --> I[Arrasta e solta widget na nova posição]
-    I --> J[Ordem dos widgets atualizada]
-    H -- Não --> K{Deseja editar configuração de um widget?}
-    K -- Sim --> L[Edita e salva configuração do widget]
-    L --> M[Widget atualizado]
-    K -- Não --> N[Fim da customização]
-    E --> B
-    G --> B
-    J --> B
-    M --> B
-    N --> O([FIM])
-```
-
-# Projeto de Interface — R11 Avisos e Notificações
-
-## 1. Modelos Funcionais
-
-### 1.1 Diagrama de Fluxo (Fluxograma)
-
-Este diagrama representa o fluxo de exibição e interação com avisos e notificações, incluindo visualização, marcação como lida e atualização de indicadores visuais.
-
-```mermaid
-graph TD
-    A([Usuário acessa o sistema]) --> B[Visualiza painel de notificações]
-    B --> C{Há novas notificações?}
-    C -- Sim --> D[Exibe alerta visual e mensagem]
-    D --> E[Usuário lê notificação]
-    E --> F[Marca notificação como lida]
-    F --> G[Indicador visual atualizado]
-    C -- Não --> H{Deseja ver histórico?}
-    H -- Sim --> I[Exibe histórico de notificações]
-    H -- Não --> J[Fim da interação]
-    G --> B
-    I --> B
-    J --> K([FIM])
-```
-
-# Projeto de Interface — R15 Ferramentas Interativas
-
-## 1. Modelos Funcionais
-
-### 1.1 Diagrama de Fluxo (Fluxograma)
-
-O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas, escolher uma calculadora e interagir com e o fluxograma detalha os dois principais casos de uso do MVP: a "Calculadora de Metas" (com lógica no frontend) e a "Calculadora de Ponto de Equilíbrio", que requer comunicação com o backend para gerenciar uma lista de produtos cadastrados pelo usuário.
-
-```mermaid
-graph TD
-    A(Usuário clica em 'Ferramentas') --> B[Abre a tela 'Hub de Ferramentas'];
-    B --> C{Usuário escolhe a calculadora};
-
-    C -- 'Calculadora de Metas' --> D[Abre a tela da Calculadora de Metas];
-    D --> E[Usuário preenche os campos da meta];
-    E --> F[Clica em 'Calcular'];
-    F --> G[Lógica JavaScript calcula e exibe o resultado];
-
-    C -- 'Ponto de Equilíbrio' --> H[Abre a tela da Calculadora de Ponto de Equilíbrio];
-    H --> I[Frontend solicita produtos via GET /api/produtos];
-    I --> J[Frontend popula o seletor de produtos];
-    J --> K{Precisa gerenciar produtos?};
-
-    K -- Sim --> L[Abre modal de gestão de produtos];
-    L --> M[Usuário salva produto via POST /api/produtos];
-    M --> I;
-
-    K -- Não --> N[Usuário preenche 'Custos Fixos'];
-    N --> O[Usuário seleciona um produto da lista];
-    O --> P[Clica em 'Calcular'];
-    P --> Q(Lógica JavaScript calcula e exibe o resultado);
-```
-
-# Projeto de Interface — R3 Conversor de Energia
-
-## 1. Modelos Funcionais
-
-### 1.1 Diagrama de Fluxo (Fluxograma)
-
-Este diagrama representa o fluxo de execução para a funcionalidade de conversão de energia, desde a entrada de dados do usuário até a exibição do resultado e das dicas.
-
-```mermaid
-graph TD
-    A([Usuário acessa o Conversor]) --> B[Informar valor, estado, modalidade, tipo de dispositivo e tempo de uso]
-    B --> C{"Dados válidos e completos?"}
-    C -- Sim --> D[Chamar TarifaService para buscar a tarifa]
-    C -- Não --> E[Exibir mensagem de erro: Dados inválidos ou incompletos]
-    E --> B
-    D --> F{"Tarifa encontrada?"}
-    F -- Sim --> G[Calcular conversão]
-    F -- Não --> H[Notificar: Tarifa indisponível, usar média?]
-    H -- Sim --> I[Usar tarifa média nacional]
-    H -- Não --> J[Permitir inserção manual]
-    J --> K[Calcular conversão com tarifa manual]
-    I --> K
-    G --> L[Gerar Dicas Personalizadas]
-    K --> L
-    L --> M{"Tipo de gráfico desejado?"}
-    M -- "Pizza" --> N1[Gerar Gráfico de Pizza]
-    M -- "Barra" --> N2[Gerar Gráfico de Barras]
-    M -- "Linha" --> N3[Gerar Gráfico de Linhas]
-    N1 --> O[Exibir resultado, dicas e gráfico de pizza]
-    N2 --> O[Exibir resultado, dicas e gráfico de barras]
-    N3 --> O[Exibir resultado, dicas e gráfico de linhas]
-    O --> P[Opcional: Salvar histórico de conversão e gráficos]
-    P --> Q([FIM])
-```
-
 # Projeto de Interface — R2 Educação Financeira
 
 ## 1. Modelos Funcionais
@@ -380,4 +258,125 @@ graph TD
 - **Feedback Visual:**
     - Mensagens de sucesso, erro e conclusão de meta.
     - Indicadores de progresso e status.
+
+# Projeto de Interface — R10 Dashboard Personalizado
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de customização do dashboard financeiro, incluindo adição, remoção, configuração e reordenação (drag and drop) de widgets.
+
+```mermaid
+graph TD
+    A([Usuário acessa o Dashboard]) --> B[Visualiza painel com widgets]
+    B --> C{Deseja adicionar widget?}
+    C -- Sim --> D[Seleciona tipo e configura widget]
+    D --> E[Widget adicionado ao painel]
+    C -- Não --> F{Deseja remover widget?}
+    F -- Sim --> G[Remove widget do painel]
+    F -- Não --> H{Deseja reordenar widgets?}
+    H -- Sim --> I[Arrasta e solta widget na nova posição]
+    I --> J[Ordem dos widgets atualizada]
+    H -- Não --> K{Deseja editar configuração de um widget?}
+    K -- Sim --> L[Edita e salva configuração do widget]
+    L --> M[Widget atualizado]
+    K -- Não --> N[Fim da customização]
+    E --> B
+    G --> B
+    J --> B
+    M --> B
+    N --> O([FIM])
+```
+
+# Projeto de Interface — R11 Avisos e Notificações
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de exibição e interação com avisos e notificações, incluindo visualização, marcação como lida e atualização de indicadores visuais.
+
+```mermaid
+graph TD
+    A([Usuário acessa o sistema]) --> B[Visualiza painel de notificações]
+    B --> C{Há novas notificações?}
+    C -- Sim --> D[Exibe alerta visual e mensagem]
+    D --> E[Usuário lê notificação]
+    E --> F[Marca notificação como lida]
+    F --> G[Indicador visual atualizado]
+    C -- Não --> H{Deseja ver histórico?}
+    H -- Sim --> I[Exibe histórico de notificações]
+    H -- Não --> J[Fim da interação]
+    G --> B
+    I --> B
+    J --> K([FIM])
+```
+
+# Projeto de Interface — R15 Ferramentas Interativas
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas, escolher uma calculadora e interagir com e o fluxograma detalha os dois principais casos de uso do MVP: a "Calculadora de Metas" (com lógica no frontend) e a "Calculadora de Ponto de Equilíbrio", que requer comunicação com o backend para gerenciar uma lista de produtos cadastrados pelo usuário.
+
+```mermaid
+graph TD
+    A(Usuário clica em 'Ferramentas') --> B[Abre a tela 'Hub de Ferramentas'];
+    B --> C{Usuário escolhe a calculadora};
+
+    C -- 'Calculadora de Metas' --> D[Abre a tela da Calculadora de Metas];
+    D --> E[Usuário preenche os campos da meta];
+    E --> F[Clica em 'Calcular'];
+    F --> G[Lógica JavaScript calcula e exibe o resultado];
+
+    C -- 'Ponto de Equilíbrio' --> H[Abre a tela da Calculadora de Ponto de Equilíbrio];
+    H --> I[Frontend solicita produtos via GET /api/produtos];
+    I --> J[Frontend popula o seletor de produtos];
+    J --> K{Precisa gerenciar produtos?};
+
+    K -- Sim --> L[Abre modal de gestão de produtos];
+    L --> M[Usuário salva produto via POST /api/produtos];
+    M --> I;
+
+    K -- Não --> N[Usuário preenche 'Custos Fixos'];
+    N --> O[Usuário seleciona um produto da lista];
+    O --> P[Clica em 'Calcular'];
+    P --> Q(Lógica JavaScript calcula e exibe o resultado);
+```
+
+# Projeto de Interface — R16 Histórico Financeiro
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de visualização do histórico financeiro, desde a seleção do período até a exibição dos saldos e movimentações.
+
+```mermaid
+graph TD
+    A([Usuário acessa Histórico Financeiro]) --> B[Seleciona período de consulta]
+    B --> C[Buscar movimentações e saldos]
+    C --> D{Movimentações encontradas?}
+    D -- Sim --> E[Exibir lista de movimentações e gráfico de saldo]
+    D -- Não --> F[Exibir mensagem: Nenhuma movimentação encontrada]
+    E --> G[Permitir exportação do relatório]
+    G --> H([FIM])
+    F --> H
+```
+
+## 2. Protótipos de Telas
+
+- Tela de seleção de período
+- Lista de movimentações (com filtros por categoria, tipo, valor)
+- Gráfico de evolução do saldo
+- Botão para exportar relatório (PDF/Excel)
+
+## 3. Requisitos de Interface
+
+- Interface clara e intuitiva
+- Gráficos responsivos
+- Filtros avançados para busca de movimentações
+- Opção de exportação de dados
 

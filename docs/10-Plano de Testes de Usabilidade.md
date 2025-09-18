@@ -13,81 +13,6 @@ O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuár
 - **Satisfação com as Dicas:** As dicas personalizadas são úteis e fáceis de entender?
   - _Teste:_ Após a conversão, perguntar aos usuários se as dicas exibidas foram relevantes para o perfil deles e se a linguagem utilizada foi clara.
 
-# Plano de Teste de Usabilidade — R10 Dashboard Personalizado
-
-## 1. Introdução
-
-O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com o dashboard personalizado, widgets configuráveis e drag and drop.
-
-## 2. Aspectos de Usabilidade a serem testados
-
-- **Clareza da Customização:** O usuário entende como adicionar, remover e reordenar widgets?
-  - _Teste:_ Observar usuários realizando customizações e pedir para descreverem o que cada ação faz.
-- **Facilidade do Drag and Drop:** O usuário consegue arrastar e soltar widgets sem dificuldades?
-  - _Teste:_ Medir o tempo e a taxa de sucesso ao reordenar widgets usando drag and drop.
-- **Satisfação com a Personalização:** O painel atende às necessidades e preferências do usuário?
-  - _Teste:_ Após customizar o dashboard, perguntar sobre satisfação, utilidade e clareza das opções de configuração.
-- **Persistência das Configurações:** O layout e as preferências do usuário permanecem após logout/login?
-  - _Teste:_ Solicitar que o usuário personalize o painel, faça logout/login e verifique se as configurações foram mantidas.
-
-# Plano de Teste de Usabilidade — R11 Avisos e Notificações
-
-## 1. Introdução
-
-O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com o sistema de avisos e notificações, incluindo alertas de progresso e indicadores visuais.
-
-## 2. Aspectos de Usabilidade a serem testados
-
-- **Clareza dos Avisos:** O usuário entende o significado das notificações e alertas apresentados?
-  - _Teste:_ Observar usuários interagindo com notificações e pedir para descreverem o que cada alerta significa.
-- **Facilidade de Interação:** O usuário consegue visualizar, marcar como lida e acessar o histórico de notificações sem dificuldades?
-  - _Teste:_ Medir o tempo e a taxa de sucesso ao realizar essas ações.
-- **Satisfação com Indicadores Visuais:** Os indicadores visuais (badges, barras, alertas) são úteis e compreensíveis?
-  - _Teste:_ Após interagir com indicadores, perguntar sobre satisfação, utilidade e clareza dos mesmos.
-- **Persistência das Notificações:** As notificações e indicadores permanecem após logout/login?
-  - _Teste:_ Solicitar que o usuário interaja com notificações, faça logout/login e verifique se as informações foram mantidas.
-
-# Plano de Teste de Usabilidade — R15 Ferramentas Interativas
-
-## 1. Introdução
-
-O plano de usabilidade tem como objetivo avaliar a clareza, eficiência e satisfação do usuário ao interagir com as Ferramentas Interativas. O foco é garantir que a experiência de uso das calculadoras seja intuitiva, que os resultados sejam compreensíveis e que as ferramentas ofereçam valor real para o planejamento financeiro das personas do projeto (João e Maria).
-
-## 2. Aspectos de Usabilidade a serem testados
-
-- **Facilidade de Acesso e Navegação**
-  O usuário consegue encontrar a seção de "Ferramentas" e entender as opções disponíveis no "Hub"?
-  **Teste:** Entregar uma tarefa de exploração ao usuário: "Encontre no aplicativo a área onde você pode fazer simulações e cálculos financeiros". Observar se o usuário encontra o item de menu "Ferramentas" sem hesitação. Ao chegar na tela do Hub, perguntar o que ele espera que cada opção ("Calculadora de Metas", "Calculadora de Ponto de Equilíbrio") faça.
-
-- **Intuitividade da Calculadora de Metas (Foco: João)**
-  O usuário entende como preencher os campos da calculadora e considera o resultado útil para seu planejamento?
-  **Teste:** Entregar uma tarefa específica para a persona **João (Estudante)**: "Imagine que você quer economizar R$ 12.000 para uma viagem daqui a 2 anos. Use a ferramenta de metas para descobrir quanto você precisa guardar por mês". Observar se os campos são autoexplicativos e se o usuário consegue interpretar o resultado e o gráfico de projeção corretamente.
-
-- **Eficiência do Fluxo de Ponto de Equilíbrio (Foco: Maria)**
-  O fluxo de cadastrar um produto e usá-lo na calculadora é coeso e sem atritos para a usuária?
-  **Teste:** Entregar uma tarefa em duas partes para a persona **Maria (Empreendedora)**: "1. Primeiro, cadastre um novo produto da sua cafeteria: um 'Bolo de Chocolate' que você vende por R$ 20 e tem um custo de R$ 8 para fazer. 2. Depois, considerando que seus custos fixos mensais são de R$ 4.000, use a calculadora para descobrir quantos bolos você precisa vender para 'empatar' o mês." Observar se ela encontra a opção "Gerenciar Produtos" e se consegue usar o produto recém-criado no cálculo.
-
-- **Clareza e Valor Percebido dos Resultados**
-  Os gráficos e os textos de resultado são fáceis de entender e ajudam o usuário a tomar decisões?
-  **Teste:** Após a conclusão de cada tarefa acima, fazer perguntas qualitativas ao usuário: "O que este gráfico significa para você?", "Este resultado te ajuda a tomar alguma decisão?", "Você confiaria nestes números para planejar suas finanças/seu negócio? Por quê?".
-
----
-
-# Plano de Teste de Usabilidade — R3 Conversor de Energia
-
-## 1. Introdução
-
-O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com o conversor de energia.
-
-## 2. Aspectos de Usabilidade a serem testados
-
-- **Clareza da Visualização de Dados:** O usuário entende o que os gráficos representam?
-  - _Teste:_ Exibir os gráficos para um grupo de usuários e pedir para que expliquem o que as barras ou linhas representam. Avaliar a clareza dos títulos e rótulos do gráfico.
-- **Eficiência na Simulação Financeira:** O quão fácil é para o usuário realizar a simulação para energia solar?
-  - _Teste:_ Medir o tempo que leva para um usuário encontrar e interagir com a ferramenta de simulação.
-- **Satisfação com as Dicas:** As dicas personalizadas são úteis e fáceis de entender?
-  - _Teste:_ Após a conversão, perguntar aos usuários se as dicas exibidas foram relevantes para o perfil deles e se a linguagem utilizada foi clara.
-
 # Plano de Teste de Usabilidade — R2 Educação Financeira
 
 ## 1. Introdução
@@ -191,4 +116,79 @@ O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuár
   - _Teste:_ Analisar a compreensão dos usuários sobre mensagens exibidas após ações (criar, editar, concluir meta).
 - **Satisfação Geral:** O usuário sente-se motivado a usar a funcionalidade para organizar suas finanças?
   - _Teste:_ Aplicar questionário de satisfação após uso da funcionalidade.
+
+# Plano de Teste de Usabilidade — R10 Dashboard Personalizado
+
+## 1. Introdução
+
+O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com o dashboard personalizado, widgets configuráveis e drag and drop.
+
+## 2. Aspectos de Usabilidade a serem testados
+
+- **Clareza da Customização:** O usuário entende como adicionar, remover e reordenar widgets?
+  - _Teste:_ Observar usuários realizando customizações e pedir para descreverem o que cada ação faz.
+- **Facilidade do Drag and Drop:** O usuário consegue arrastar e soltar widgets sem dificuldades?
+  - _Teste:_ Medir o tempo e a taxa de sucesso ao reordenar widgets usando drag and drop.
+- **Satisfação com a Personalização:** O painel atende às necessidades e preferências do usuário?
+  - _Teste:_ Após customizar o dashboard, perguntar sobre satisfação, utilidade e clareza das opções de configuração.
+- **Persistência das Configurações:** O layout e as preferências do usuário permanecem após logout/login?
+  - _Teste:_ Solicitar que o usuário personalize o painel, faça logout/login e verifique se as configurações foram mantidas.
+
+# Plano de Teste de Usabilidade — R11 Avisos e Notificações
+
+## 1. Introdução
+
+O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com o sistema de avisos e notificações, incluindo alertas de progresso e indicadores visuais.
+
+## 2. Aspectos de Usabilidade a serem testados
+
+- **Clareza dos Avisos:** O usuário entende o significado das notificações e alertas apresentados?
+  - _Teste:_ Observar usuários interagindo com notificações e pedir para descreverem o que cada alerta significa.
+- **Facilidade de Interação:** O usuário consegue visualizar, marcar como lida e acessar o histórico de notificações sem dificuldades?
+  - _Teste:_ Medir o tempo e a taxa de sucesso ao realizar essas ações.
+- **Satisfação com Indicadores Visuais:** Os indicadores visuais (badges, barras, alertas) são úteis e compreensíveis?
+  - _Teste:_ Após interagir com indicadores, perguntar sobre satisfação, utilidade e clareza dos mesmos.
+- **Persistência das Notificações:** As notificações e indicadores permanecem após logout/login?
+  - _Teste:_ Solicitar que o usuário interaja com notificações, faça logout/login e verifique se as informações foram mantidas.
+
+# Plano de Teste de Usabilidade — R15 Ferramentas Interativas
+
+## 1. Introdução
+
+O plano de usabilidade tem como objetivo avaliar a clareza, eficiência e satisfação do usuário ao interagir com as Ferramentas Interativas. O foco é garantir que a experiência de uso das calculadoras seja intuitiva, que os resultados sejam compreensíveis e que as ferramentas ofereçam valor real para o planejamento financeiro das personas do projeto (João e Maria).
+
+## 2. Aspectos de Usabilidade a serem testados
+
+- **Facilidade de Acesso e Navegação**
+  O usuário consegue encontrar a seção de "Ferramentas" e entender as opções disponíveis no "Hub"?
+  **Teste:** Entregar uma tarefa de exploração ao usuário: "Encontre no aplicativo a área onde você pode fazer simulações e cálculos financeiros". Observar se o usuário encontra o item de menu "Ferramentas" sem hesitação. Ao chegar na tela do Hub, perguntar o que ele espera que cada opção ("Calculadora de Metas", "Calculadora de Ponto de Equilíbrio") faça.
+
+- **Intuitividade da Calculadora de Metas (Foco: João)**
+  O usuário entende como preencher os campos da calculadora e considera o resultado útil para seu planejamento?
+  **Teste:** Entregar uma tarefa específica para a persona **João (Estudante)**: "Imagine que você quer economizar R$ 12.000 para uma viagem daqui a 2 anos. Use a ferramenta de metas para descobrir quanto você precisa guardar por mês". Observar se os campos são autoexplicativos e se o usuário consegue interpretar o resultado e o gráfico de projeção corretamente.
+
+- **Eficiência do Fluxo de Ponto de Equilíbrio (Foco: Maria)**
+  O fluxo de cadastrar um produto e usá-lo na calculadora é coeso e sem atritos para a usuária?
+  **Teste:** Entregar uma tarefa em duas partes para a persona **Maria (Empreendedora)**: "1. Primeiro, cadastre um novo produto da sua cafeteria: um 'Bolo de Chocolate' que você vende por R$ 20 e tem um custo de R$ 8 para fazer. 2. Depois, considerando que seus custos fixos mensais são de R$ 4.000, use a calculadora para descobrir quantos bolos você precisa vender para 'empatar' o mês." Observar se ela encontra a opção "Gerenciar Produtos" e se consegue usar o produto recém-criado no cálculo.
+
+- **Clareza e Valor Percebido dos Resultados**
+  Os gráficos e os textos de resultado são fáceis de entender e ajudam o usuário a tomar decisões?
+  **Teste:** Após a conclusão de cada tarefa acima, fazer perguntas qualitativas ao usuário: "O que este gráfico significa para você?", "Este resultado te ajuda a tomar alguma decisão?", "Você confiaria nestes números para planejar suas finanças/seu negócio? Por quê?".
+
+---
+
+# Plano de Teste de Usabilidade — R16 Histórico Financeiro
+
+## 1. Introdução
+
+O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com a funcionalidade de histórico financeiro.
+
+## 2. Aspectos de Usabilidade a serem testados
+
+- **Clareza da Visualização de Saldos:** O usuário entende o que os gráficos e saldos representam?
+  - _Teste:_ Exibir os gráficos e saldos para um grupo de usuários e pedir para que expliquem o que as informações representam. Avaliar a clareza dos títulos e rótulos.
+- **Eficiência na Consulta:** O quão fácil é para o usuário consultar o histórico e aplicar filtros?
+  - _Teste:_ Medir o tempo que leva para um usuário encontrar e filtrar movimentações por período ou categoria.
+- **Satisfação com a Exportação:** O recurso de exportação de relatório é útil e fácil de usar?
+  - _Teste:_ Após a exportação, perguntar aos usuários se o formato e conteúdo do relatório atendem suas necessidades.
 
