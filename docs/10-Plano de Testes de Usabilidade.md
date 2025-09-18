@@ -17,17 +17,13 @@ O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuár
 
 ## 1. Introdução
 
-O plano de usabilidade tem como objetivo avaliar a clareza, a eficiência e o valor percebido pelo usuário ao interagir com a funcionalidade de Educação Financeira. O foco é garantir que a experiência de descoberta e gerenciamento de conteúdo seja intuitiva e útil para as personas do projeto (João e Maria).
+O plano de usabilidade tem como objetivo avaliar a clareza, a eficiência e o valor percebido pelo usuário ao interagir com a funcionalidade de Educação Financeira. O foco é garantir que a experiência de descoberta de conteúdo seja intuitiva e útil para as personas do projeto (João e Maria), considerando que a funcionalidade opera em tempo real, sem salvar interações do usuário.
 
 ## 2. Aspectos de Usabilidade a serem testados
 
 - **Facilidade de Descoberta do Conteúdo**
   O usuário consegue encontrar facilmente conteúdos que são relevantes para suas necessidades?
   **Teste:** Entregar uma tarefa específica para a persona. Para **João (Estudante)**: "Encontre um conteúdo (notícia ou artigo) que te ajude a economizar dinheiro para uma viagem". Para **Maria (Empreendedora)**: "Procure por um conteúdo sobre gestão financeira para o seu negócio". Observar o tempo e os cliques necessários para encontrar um item relevante.
-
-- **Eficiência da Interação**
-  As ações de "Curtir" e acessar os conteúdos "Curtidos" são rápidas e intuitivas?
-  **Teste:** Solicitar ao usuário: "Navegue pela lista e salve (curta) 3 conteúdos que te interessam. Em seguida, acesse a sua lista de conteúdos curtidos". Observar se o usuário entende o ícone de "Curtir" e se encontra facilmente a seção "Meus Curtidos".
 
 - **Clareza e Valor Percebido**
   A apresentação do conteúdo (título, resumo, fonte) é clara o suficiente para o usuário decidir se quer ler? A funcionalidade é vista como um diferencial útil?
@@ -167,15 +163,13 @@ O plano de usabilidade tem como objetivo avaliar a clareza, eficiência e satisf
   O usuário entende como preencher os campos da calculadora e considera o resultado útil para seu planejamento?
   **Teste:** Entregar uma tarefa específica para a persona **João (Estudante)**: "Imagine que você quer economizar R$ 12.000 para uma viagem daqui a 2 anos. Use a ferramenta de metas para descobrir quanto você precisa guardar por mês". Observar se os campos são autoexplicativos e se o usuário consegue interpretar o resultado e o gráfico de projeção corretamente.
 
-- **Eficiência do Fluxo de Ponto de Equilíbrio (Foco: Maria)**
-  O fluxo de cadastrar um produto e usá-lo na calculadora é coeso e sem atritos para a usuária?
-  **Teste:** Entregar uma tarefa em duas partes para a persona **Maria (Empreendedora)**: "1. Primeiro, cadastre um novo produto da sua cafeteria: um 'Bolo de Chocolate' que você vende por R$ 20 e tem um custo de R$ 8 para fazer. 2. Depois, considerando que seus custos fixos mensais são de R$ 4.000, use a calculadora para descobrir quantos bolos você precisa vender para 'empatar' o mês." Observar se ela encontra a opção "Gerenciar Produtos" e se consegue usar o produto recém-criado no cálculo.
+- **Intuitividade da Calculadora de Ponto de Equilíbrio (Foco: Maria)**
+  O usuário consegue inserir os dados necessários para o cálculo de forma clara e sem dificuldades?
+  **Teste:** Entregar uma tarefa específica para a persona **Maria (Empreendedora)**: "Imagine que seus custos fixos mensais são de R$ 4.000. Use a calculadora para descobrir quantos 'Bolos de Chocolate' (que você vende por R$ 20 e têm um custo de R$ 8 para fazer) você precisa vender para 'empatar' o mês." Observar se ela consegue preencher todos os campos manualmente sem confusão.
 
 - **Clareza e Valor Percebido dos Resultados**
   Os gráficos e os textos de resultado são fáceis de entender e ajudam o usuário a tomar decisões?
   **Teste:** Após a conclusão de cada tarefa acima, fazer perguntas qualitativas ao usuário: "O que este gráfico significa para você?", "Este resultado te ajuda a tomar alguma decisão?", "Você confiaria nestes números para planejar suas finanças/seu negócio? Por quê?".
-
----
 
 # Plano de Teste de Usabilidade — R16 Histórico Financeiro
 

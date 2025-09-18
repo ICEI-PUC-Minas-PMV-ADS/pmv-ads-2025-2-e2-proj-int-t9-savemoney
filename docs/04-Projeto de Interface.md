@@ -77,23 +77,12 @@ O diagrama a seguir representa o fluxo de interação do usuário para acessar, 
 
 ```mermaid
 graph TD
-    A(Usuário clica em 'Educação Financeira') --> B[Frontend solicita lista de conteúdos];
-    B --> C[Backend retorna a lista];
-    C --> D[Frontend exibe os conteúdos];
-    D --> E{Usuário decide a ação};
-
-    E -- Leitura --> F[App abre o link original do conteúdo];
-
-    E -- Curtir --> G[Clica no ícone 'Curtir'];
-    G --> H[Frontend envia POST de Curtir Conteúdo];
-    H --> I[Backend salva a curtida];
-    I --> J[UI atualiza o ícone para 'curtido'];
-
-    E -- Ver Curtidos --> K[Clica no filtro 'Meus Curtidos'];
-    K --> L[Frontend solicita conteúdos curtidos];
-    L --> M(Backend retorna a lista de curtidos);
-    M --> D;
-```
+    A[Usuário clica em 'Educação Financeira'] --> B[Frontend solicita lista de conteúdos via API];
+    B --> C[Backend busca conteúdo de fontes externas];
+    C --> D[Backend retorna a lista para o Frontend];
+    D --> E[Frontend exibe a lista de conteúdos];
+    E --> F[Usuário clica em um conteúdo para ler];
+    F --> G[App abre o link original do conteúdo em um navegador/WebView];
 
 # Projeto de Interface — R3 Conversor de Energia
 
@@ -319,32 +308,22 @@ graph TD
 
 ### 1.1 Diagrama de Fluxo (Fluxograma)
 
-O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas, escolher uma calculadora e interagir com e o fluxograma detalha os dois principais casos de uso do MVP: a "Calculadora de Metas" (com lógica no frontend) e a "Calculadora de Ponto de Equilíbrio", que requer comunicação com o backend para gerenciar uma lista de produtos cadastrados pelo usuário.
+O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas e utilizar as calculadoras. Conforme a decisão de arquitetura, ambas as ferramentas operam inteiramente no frontend (client-side), com os cálculos sendo executados em tempo real a partir dos dados inseridos manualmente pelo usuário.
 
 ```mermaid
 graph TD
-    A(Usuário clica em 'Ferramentas') --> B[Abre a tela 'Hub de Ferramentas'];
+    A[Usuário clica em 'Ferramentas' no menu] --> B[Abre a tela 'Hub de Ferramentas'];
     B --> C{Usuário escolhe a calculadora};
-
+    
     C -- 'Calculadora de Metas' --> D[Abre a tela da Calculadora de Metas];
     D --> E[Usuário preenche os campos da meta];
     E --> F[Clica em 'Calcular'];
     F --> G[Lógica JavaScript calcula e exibe o resultado];
-
+    
     C -- 'Ponto de Equilíbrio' --> H[Abre a tela da Calculadora de Ponto de Equilíbrio];
-    H --> I[Frontend solicita produtos via GET /api/produtos];
-    I --> J[Frontend popula o seletor de produtos];
-    J --> K{Precisa gerenciar produtos?};
-
-    K -- Sim --> L[Abre modal de gestão de produtos];
-    L --> M[Usuário salva produto via POST /api/produtos];
-    M --> I;
-
-    K -- Não --> N[Usuário preenche 'Custos Fixos'];
-    N --> O[Usuário seleciona um produto da lista];
-    O --> P[Clica em 'Calcular'];
-    P --> Q(Lógica JavaScript calcula e exibe o resultado);
-```
+    H --> I[Usuário preenche Custos Fixos, Preço de Venda e Custo Variável];
+    I --> J[Clica em 'Calcular'];
+    J --> K[Lógica JavaScript calcula e exibe o resultado];
 
 # Projeto de Interface — R16 Histórico Financeiro
 

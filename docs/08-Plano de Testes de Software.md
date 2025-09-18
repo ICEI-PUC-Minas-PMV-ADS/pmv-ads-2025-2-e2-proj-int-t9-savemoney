@@ -23,20 +23,16 @@ Este plano de testes de software foca em garantir que a funcionalidade de conver
 
 ## 1. Introdução
 
-O plano de testes foca em garantir a funcionalidade completa do módulo de Educação Financeira. Os testes cobrem a API REST para gerenciamento de conteúdo e curtidas, a integridade dos dados no banco e o comportamento do serviço de agregação de conteúdo externo, assegurando que toda a lógica de backend funcione conforme especificado.
+O plano de testes foca em garantir a funcionalidade completa do módulo de Educação Financeira. Conforme a arquitetura *stateless* (sem banco de dados), os testes cobrem a capacidade da API de atuar como um *proxy*, buscando conteúdo de fontes externas em tempo real e gerenciando a lógica da newsletter, assegurando que o backend funcione conforme especificado.
 
 ## 2. Casos de Teste
 
 | ID | Funcionalidade | Pré-condições | Ações | Resultados Esperados |
 | :--- | :--- | :--- | :--- | :--- |
-| **CT-R2-001** | API - Listar conteúdos agregados teste testestes | O serviço de agregação já populou a tabela `conteudos_agregados` com pelo menos 5 itens. | 1. Realizar uma requisição `GET` para o endpoint `/api/educacao`. | A API deve retornar status `200 OK` e um JSON contendo a lista de conteúdos. |
-| **CT-R2-002** | API - Curtir um conteúdo | Usuário está logado. <br> Existe um conteúdo com `id=1`. <br> O usuário ainda não curtiu o conteúdo `id=1`. | 1. Realizar uma requisição `POST` para `/api/educacao/1/curtir`. | A API retorna `201 Created` ou `200 OK`. <br> Um registro associando o usuário ao conteúdo `id=1` é criado na tabela `conteudos_curtidos`. |
-| **CT-R2-003** | API - Listar conteúdos curtidos | Usuário está logado e já curtiu 2 conteúdos específicos. | 1. Realizar uma requisição `GET` para `/api/educacao/curtidos`. | A API retorna `200 OK` e um JSON contendo a lista com os dados completos dos 2 conteúdos curtidos. |
-| **CT-R2-004** | API - Descurtir um conteúdo | Usuário está logado e já curtiu o conteúdo com `id=1`. | 1. Realizar uma requisição `DELETE` para `/api/educacao/1/descurtir`. | A API retorna `200 OK` ou `204 No Content`. <br> O registro correspondente é removido da tabela `conteudos_curtidos`. |
-| **CT-R2-005** | API - Validação (Curtir conteúdo inexistente) | Usuário está logado. | 1. Realizar uma requisição `POST` para `/api/educacao/999/curtir`, onde o `id=999` não existe. | A API retorna erro `404 Not Found`. Nenhum registro é criado no banco de dados. |
-| **CT-R2-006** | API - Segurança de endpoint | Nenhuma. | 1. Realizar uma requisição `POST` para `/api/educacao/1/curtir` sem um token de autenticação válido. | A API retorna erro `401 Unauthorized`. |
-| **CT-R2-007** | Backend - Prevenção de duplicatas no agregador | A tabela `conteudos_agregados` já contém um item com a `url_original` "https://portal.com/noticia-A". | 1. Executar o serviço de agregação de conteúdo, que tenta buscar a mesma "noticia-A". | O serviço finaliza a execução sem erros. A "noticia-A" **não** é inserida novamente. A tabela continua com uma única entrada para essa URL. |
-| **CT-R2-008** | Backend - Lógica da Newsletter | A tabela `conteudos_agregados` contém pelo menos 10 itens. | 1. Executar o serviço de envio de newsletter. | O serviço seleciona os 3 conteúdos mais recentes e dispara o processo de envio de e-mail, sem falhar. |
+| **CT-R2-001** | API - Listar conteúdos em tempo real | O serviço externo (API de Notícias) está online e funcionando. | 1. Realizar uma requisição `GET` para o endpoint `/api/educacao`. | A API deve retornar status `200 OK` e um JSON contendo uma lista de conteúdos buscada da fonte externa. |
+| **CT-R2-002** | API - Tratamento de falha do serviço externo | O serviço externo (API de Notícias) está offline ou retorna um erro. | 1. Realizar uma requisição `GET` para o endpoint `/api/educacao`. | A API deve tratar o erro de forma graciosa e retornar um status apropriado (ex: `502 Bad Gateway` ou `503 Service Unavailable`) com uma mensagem de erro clara. |
+| **CT-R2-003** | Backend - Lógica da Newsletter | O serviço externo (API de Notícias) está online. | 1. Executar o serviço de envio de newsletter. | O serviço deve buscar com sucesso os conteúdos da fonte externa, selecionar os 3 mais recentes e disparar o processo de envio de e-mail, sem falhar. |
+| **CT-R2-004** | API - Validação do contrato de dados | O serviço externo retorna dados em um formato inesperado (ex: um campo obrigatório como `titulo` vem nulo). | 1. Realizar uma requisição `GET` para o endpoint `/api/educacao`. | A API deve ser resiliente, podendo filtrar o item malformado ou retornar um erro `500 Internal Server Error` com um log detalhado, em vez de quebrar a aplicação. |
 
 # Plano de Testes de Software — R3 Conversor de Energia
 
@@ -157,22 +153,17 @@ Este plano de testes de software foca em garantir que a funcionalidade de avisos
 
 ## 1. Introdução
 
-O plano de testes foca em garantir a funcionalidade completa do módulo de Ferramentas Interativas. Os testes cobrem a API REST para o gerenciamento de produtos cadastrados pelo usuário, a segurança e a integridade dos dados, e também a lógica de cálculo client-side das calculadoras, assegurando que tanto o backend quanto o frontend funcionem conforme especificado.
+O plano de testes foca em garantir a funcionalidade completa do módulo de Ferramentas Interativas. Conforme a arquitetura 100% client-side, os testes se concentram na validação da lógica de cálculo implementada em JavaScript e no tratamento de entradas de dados do usuário diretamente no frontend, assegurando que as calculadoras sejam precisas e robustas.
 
 ## 2. Casos de Teste
 
 | ID | Funcionalidade | Pré-condições | Ações | Resultados Esperados |
 | :--- | :--- | :--- | :--- | :--- |
-| **CT-R15-001** | API - Cadastrar novo produto | Usuário (perfil PJ, "Maria") está logado. | 1. Realizar uma requisição `POST` para `/api/produtos` com dados válidos (nome: "Café Expresso", preco_venda: 5.00, custo_variavel: 1.00). | A API retorna `201 Created` e o JSON do novo produto. O produto é salvo no banco associado ao `id_usuario` correto. |
-| **CT-R15-002** | API - Listar produtos do usuário | Usuário "Maria" está logado e tem 3 produtos cadastrados. Usuário "João" está logado e não tem produtos. | 1. "Maria" realiza `GET` para `/api/produtos`. <br> 2. "João" realiza `GET` para `/api/produtos`. | 1. A API retorna `200 OK` e uma lista com os 3 produtos de Maria. <br> 2. A API retorna `200 OK` e uma lista vazia. |
-| **CT-R15-003** | API - Editar um produto existente | Usuário "Maria" está logado. Existe um produto com `id=1` pertencente a ela. | 1. Realizar uma requisição `PUT` para `/api/produtos/1` alterando o `preco_venda` para `6.00`. | A API retorna `200 OK`. O campo `preco_venda` do produto `id=1` é atualizado no banco. |
-| **CT-R15-004** | API - Excluir um produto | Usuário "Maria" está logado. Existe um produto com `id=1` pertencente a ela. | 1. Realizar uma requisição `DELETE` para `/api/produtos/1`. | A API retorna `204 No Content` ou `200 OK`. O produto `id=1` é removido da tabela `produtos`. |
-| **CT-R15-005** | API - Segurança (Acesso indevido) | Usuário "João" está logado. O produto `id=1` pertence à "Maria". | 1. "João" tenta realizar um `PUT` ou `DELETE` no endpoint `/api/produtos/1`. | A API retorna erro `403 Forbidden` ou `404 Not Found`. Nenhuma alteração é feita no produto da Maria. |
-| **CT-R15-006** | API - Validação de dados | Usuário "Maria" está logado. | 1. Realizar `POST` para `/api/produtos` com `preco_venda` com valor negativo. | A API retorna erro `400 Bad Request` com uma mensagem de validação clara. Nenhum produto é salvo. |
-| **CT-R15-007** | Frontend - Lógica da Calculadora de Metas | Nenhuma. | 1. Executar a função de cálculo no frontend com os parâmetros: `objetivo=12000`, `prazo=24`. | A função JavaScript deve retornar o resultado `500`. |
-| **CT-R15-008** | Frontend - Lógica da Calculadora de Ponto de Equilíbrio | Nenhuma. | 1. Executar a função de cálculo no frontend com: `custosFixos=3000`, `produto={preco_venda: 10, custo_variavel: 4}`. | A função JavaScript deve retornar o resultado `500` (unidades). |
-
----
+| **CT-R15-001** | Frontend - Lógica da Calculadora de Metas | Nenhuma. | 1. Na Calculadora de Metas, inserir `Valor do Objetivo = 12000` e `Prazo = 24 meses`. <br> 2. Clicar em "Calcular". | A interface deve exibir o resultado "R$ 500,00 por mês". O cálculo JavaScript deve retornar `500`. |
+| **CT-R15-002** | Frontend - Lógica da Calculadora de Ponto de Equilíbrio | Nenhuma. | 1. Na Calculadora de Ponto de Equilíbrio, inserir `Custos Fixos = 3000`, `Preço de Venda = 10`, `Custo Variável = 4`. <br> 2. Clicar em "Calcular". | A interface deve exibir o resultado "500 unidades". O cálculo JavaScript deve retornar `500`. |
+| **CT-R15-003** | Frontend - Validação de Entrada (Calculadora de Metas) | Nenhuma. | 1. Na Calculadora de Metas, deixar o campo `Prazo` em branco ou com valor `0`. <br> 2. Clicar em "Calcular". | O sistema não deve quebrar. Uma mensagem de erro amigável deve ser exibida ao usuário (ex: "O prazo deve ser maior que zero"). |
+| **CT-R15-004** | Frontend - Validação de Entrada (Calculadora de Ponto de Equilíbrio) | Nenhuma. | 1. Na Calculadora de Ponto de Equilíbrio, inserir um `Preço de Venda` menor que o `Custo Variável`. <br> 2. Clicar em "Calcular". | O sistema não deve quebrar. Uma mensagem de erro deve ser exibida (ex: "O preço de venda deve ser maior que o custo"). |
+| **CT-R15-005** | Frontend - Tratamento de Divisão por Zero | Nenhuma. | 1. Na Calculadora de Ponto de Equilíbrio, inserir `Preço de Venda` igual ao `Custo Variável` (ex: 10 e 10). <br> 2. Clicar em "Calcular". | O sistema não deve retornar "Infinity" ou quebrar. Uma mensagem de erro clara deve ser exibida ao usuário. |
 
 # Plano de Testes de Software — R16 Histórico Financeiro
 
