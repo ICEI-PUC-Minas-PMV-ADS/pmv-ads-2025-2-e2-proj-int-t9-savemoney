@@ -144,7 +144,7 @@ CREATE TABLE Tarifa_Conversao_Energia (
 CREATE TABLE Historico_Conversao_Energia (
     cod_historico INT PRIMARY KEY AUTO_INCREMENT,
     cod_usuario INT,
-    data_hora DATETIME NOT NULL,
+    data_criacao DATETIME DEFAULT GETDATE(),
     valor_entrada DECIMAL(10, 2) NOT NULL,
     tipo_entrada ENUM('kWh', 'R$') NOT NULL,
     valor_saida DECIMAL(10, 2) NOT NULL,
