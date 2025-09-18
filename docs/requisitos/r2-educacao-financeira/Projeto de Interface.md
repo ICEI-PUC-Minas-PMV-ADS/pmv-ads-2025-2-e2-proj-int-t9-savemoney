@@ -8,10 +8,10 @@ O diagrama a seguir representa o fluxo de interação do usuário para acessar, 
 
 ```mermaid
 graph TD
-    A[Usuário clica em 'Educação Financeira'] --> B[Frontend solicita lista de conteúdos via API];
+    A([Usuário clica em 'Educação Financeira']) --> B[Frontend solicita lista de conteúdos via API];
     B --> C[Backend busca conteúdo de fontes externas];
     C --> D[Backend retorna a lista para o Frontend];
     D --> E[Frontend exibe a lista de conteúdos];
     E --> F[Usuário clica em um conteúdo para ler];
-    F --> G[App abre o link original do conteúdo em um navegador/WebView];
+    F --> G([App abre o link original do conteúdo em um navegador/WebView]);
 ```
