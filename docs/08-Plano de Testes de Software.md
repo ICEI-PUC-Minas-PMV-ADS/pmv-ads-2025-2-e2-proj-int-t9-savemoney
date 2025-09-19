@@ -71,7 +71,7 @@ Este plano de testes de software foca em garantir que a funcionalidade de geraç
 
 ---
 
-# Plano de Testes de Software — R8 Personalização do Tema Dark e Light
+# Plano de Testes de Software — R8 Personalização do Tema
 
 ## 1. Introdução
 
