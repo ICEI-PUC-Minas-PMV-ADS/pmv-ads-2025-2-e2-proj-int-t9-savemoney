@@ -8,7 +8,7 @@ Este diagrama representa o fluxo de execução para a funcionalidade de registro
 
 ```mermaid
 graph TD
-    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo (receita/despesa), data e descrição]
+    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo: receita ou despesa, data e descrição]
     B --> C{"Dados válidos e completos?"}
     C -- Sim --> D[Registrar no sistema]
     C -- Não --> E[Exibir mensagem de erro: Dados inválidos ou incompletos]

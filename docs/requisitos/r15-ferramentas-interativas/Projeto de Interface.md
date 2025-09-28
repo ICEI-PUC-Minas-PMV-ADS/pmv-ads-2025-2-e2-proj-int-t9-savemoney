@@ -8,15 +8,16 @@ O diagrama a seguir representa a jornada do usuário para acessar o hub de ferra
 
 ```mermaid
 graph TD
-    A[Usuário clica em 'Ferramentas' no menu] --> B[Abre a tela 'Hub de Ferramentas'];
+    A([Usuário clica em 'Ferramentas' no menu]) --> B[Abre a tela 'Hub de Ferramentas'];
     B --> C{Usuário escolhe a calculadora};
     
     C -- 'Calculadora de Metas' --> D[Abre a tela da Calculadora de Metas];
     D --> E[Usuário preenche os campos da meta];
     E --> F[Clica em 'Calcular'];
-    F --> G[Lógica JavaScript calcula e exibe o resultado];
+    F --> G([Lógica JavaScript calcula e exibe o resultado]);
     
     C -- 'Ponto de Equilíbrio' --> H[Abre a tela da Calculadora de Ponto de Equilíbrio];
     H --> I[Usuário preenche Custos Fixos, Preço de Venda e Custo Variável];
     I --> J[Clica em 'Calcular'];
-    J --> K[Lógica JavaScript calcula e exibe o resultado];
+    J --> K([Lógica JavaScript calcula e exibe o resultado]);
+```

@@ -8,7 +8,7 @@ O diagrama a seguir representa o fluxo de interação do usuário para personali
 
 ```mermaid
 graph TD
-    A[Usuário acessa as Configurações] --> B{Solicitar preferências do backend};
+    A(Usuário acessa as Configurações) --> B{Solicitar preferências do backend};
     B --> C[GET /api/preferences];
     C --> D[Backend consulta Banco de Dados];
     D --> E[Backend retorna preferências salvas ou padrão];
@@ -18,7 +18,7 @@ graph TD
     H -- Sim --> I[POST/PUT /api/preferences];
     I --> J[Backend salva/atualiza no Banco de Dados];
     J --> K[Confirmação de sucesso];
-    H -- Não --> L[Fim];
+    H -- Não --> L(Fim);
     K --> L;
 ```
 

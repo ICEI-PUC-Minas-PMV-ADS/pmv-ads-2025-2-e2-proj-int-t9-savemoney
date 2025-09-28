@@ -42,7 +42,7 @@ Este diagrama representa o fluxo de execução para a funcionalidade de registro
 
 ```mermaid
 graph TD
-    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo (receita/despesa), data e descrição]
+    A([Usuário acessa o Controle Financeiro]) --> B[Informar valor, categoria, tipo: receita ou despesa, data e descrição]
     B --> C{"Dados válidos e completos?"}
     C -- Sim --> D[Registrar no sistema]
     C -- Não --> E[Exibir mensagem de erro: Dados inválidos ou incompletos]
@@ -74,12 +74,13 @@ O diagrama a seguir representa o fluxo de interação do usuário para acessar, 
 
 ```mermaid
 graph TD
-    A[Usuário clica em 'Educação Financeira'] --> B[Frontend solicita lista de conteúdos via API];
+    A([Usuário clica em 'Educação Financeira']) --> B[Frontend solicita lista de conteúdos via API];
     B --> C[Backend busca conteúdo de fontes externas];
     C --> D[Backend retorna a lista para o Frontend];
     D --> E[Frontend exibe a lista de conteúdos];
     E --> F[Usuário clica em um conteúdo para ler];
-    F --> G[App abre o link original do conteúdo em um navegador/WebView];
+    F --> G([App abre o link original do conteúdo em um navegador/WebView]);
+```
 
 # Projeto de Interface — R3 Conversor de Energia
 
@@ -150,7 +151,7 @@ Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pess
 
 ```mermaid
 graph TD
-    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário (PF/PJ)}
+    A([Usuário acessa tela de cadastro]) --> B{Seleciona tipo de usuário: PF ou PJ}
     B -- Pessoa Física --> C[Preencher nome, e-mail, senha, CPF]
     B -- Pessoa Jurídica --> D[Preencher razão social, e-mail, senha, CNPJ]
     C --> E[Validar dados e senha]
@@ -187,7 +188,7 @@ O diagrama a seguir representa o fluxo de interação do usuário para personali
 
 ```mermaid
 graph TD
-    A[Usuário acessa as Configurações] --> B{Solicitar preferências do backend};
+    A(Usuário acessa as Configurações) --> B{Solicitar preferências do backend};
     B --> C[GET /api/preferences];
     C --> D[Backend consulta Banco de Dados];
     D --> E[Backend retorna preferências salvas ou padrão];
@@ -197,7 +198,7 @@ graph TD
     H -- Sim --> I[POST/PUT /api/preferences];
     I --> J[Backend salva/atualiza no Banco de Dados];
     J --> K[Confirmação de sucesso];
-    H -- Não --> L[Fim];
+    H -- Não --> L(Fim);
     K --> L;
 ```
 
@@ -333,18 +334,19 @@ O diagrama a seguir representa a jornada do usuário para acessar o hub de ferra
 
 ```mermaid
 graph TD
-    A[Usuário clica em 'Ferramentas' no menu] --> B[Abre a tela 'Hub de Ferramentas'];
+    A([Usuário clica em 'Ferramentas' no menu]) --> B[Abre a tela 'Hub de Ferramentas'];
     B --> C{Usuário escolhe a calculadora};
     
     C -- 'Calculadora de Metas' --> D[Abre a tela da Calculadora de Metas];
     D --> E[Usuário preenche os campos da meta];
     E --> F[Clica em 'Calcular'];
-    F --> G[Lógica JavaScript calcula e exibe o resultado];
+    F --> G([Lógica JavaScript calcula e exibe o resultado]);
     
     C -- 'Ponto de Equilíbrio' --> H[Abre a tela da Calculadora de Ponto de Equilíbrio];
     H --> I[Usuário preenche Custos Fixos, Preço de Venda e Custo Variável];
     I --> J[Clica em 'Calcular'];
-    J --> K[Lógica JavaScript calcula e exibe o resultado];
+    J --> K([Lógica JavaScript calcula e exibe o resultado]);
+```
 
 # Projeto de Interface — R16 Histórico Financeiro
 
