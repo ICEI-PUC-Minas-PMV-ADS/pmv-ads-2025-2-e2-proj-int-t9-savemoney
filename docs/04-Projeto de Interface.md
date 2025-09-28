@@ -31,6 +31,65 @@
   - Categorias personalizadas
   - Configurações de notificações
 
+## Diagrama de Fluxo Geral do Save Money v2
+
+O diagrama a seguir representa a jornada completa do usuário dentro do aplicativo, desde o primeiro contato até a utilização das funcionalidades chave. Ele integra os fluxos das duas personas principais, João (Pessoa Física) e Maria (Pessoa Jurídica), em um único mapa de interação para fornecer uma visão holística do sistema
+
+```mermaid
+graph TD
+    subgraph "1. Onboarding e Autenticacao"
+        Start([Início]) --> TelaLogin[Tela de Login];
+        TelaLogin --> A{Possui conta?};
+        A -- Não --> TelaCadastro[Tela de Cadastro];
+        TelaCadastro --> B{Seleciona tipo: PF ou PJ};
+        B -- "Pessoa Fisica (Joao)" --> PreenchePF["Preenche dados PF"];
+        B -- "Pessoa Juridica (Maria)" --> PreenchePJ["Preenche dados PJ"];
+        PreenchePF --> ValidaCadastro{Valida Dados};
+        PreenchePJ --> ValidaCadastro;
+        ValidaCadastro -- Válido --> CriaConta[Cria conta e loga];
+        ValidaCadastro -- Inválido --> TelaCadastro;
+        
+        A -- Sim --> PreencheLogin[Preenche e-mail e senha];
+        PreencheLogin --> ValidaLogin{Autentica Usuário};
+        ValidaLogin -- Sucesso --> Dashboard;
+        ValidaLogin -- Falha --> TelaLogin;
+        CriaConta --> MensagemBoasVindas["Exibe 'Boas-Vindas!'"];
+        MensagemBoasVindas --> Dashboard;
+    end
+
+    subgraph "2. Hub Principal - Dashboard"
+        Dashboard[Dashboard Principal] --> Menu{Usuário escolhe funcionalidade};
+    end
+
+    subgraph "3. Fluxos de Tarefas Principais"
+        Menu -- "Controle Financeiro" --> AddDespesa[Tela de Nova Despesa];
+        AddDespesa --> PreencheDespesa["Preenche valor e data"];
+        PreencheDespesa --> Categoria{Seleciona Categoria?};
+        Categoria -- Sim --> SalvaDespesa[Salva Despesa];
+        Categoria -- Não --> AddDespesa;
+        SalvaDespesa --> ConfirmaDespesa[Exibe confirmação];
+        ConfirmaDespesa --> Dashboard;
+
+        Menu -- "Relatorios" --> TelaRelatorios[Tela de Relatórios];
+        TelaRelatorios --> FiltraRelatorio[Seleciona tipo e período];
+        FiltraRelatorio --> GeraRelatorio[Gera e exibe relatório];
+        GeraRelatorio --> Exporta{Deseja exportar?};
+        Exporta -- Sim --> IniciaDownload[Inicia download];
+        Exporta -- Não --> TelaRelatorios;
+        IniciaDownload --> TelaRelatorios;
+
+        Menu -- "Metas Financeiras" --> TelaMetas[Tela de Metas];
+        Menu -- "Ferramentas Interativas" --> TelaFerramentas[Hub de Ferramentas];
+        Menu -- "Educacao Financeira" --> TelaEducacao[Feed de Conteúdos];
+        Menu -- "Configuracoes" --> TelaConfig[Tela de Configurações];
+    end
+
+    TelaMetas --> End([Fim do Fluxo]);
+    TelaFerramentas --> End;
+    TelaEducacao --> End;
+    TelaConfig --> End;
+
+```
 
 # Projeto de Interface — R1 Controle Financeiro
 
