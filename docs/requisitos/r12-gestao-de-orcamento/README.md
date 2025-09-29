@@ -2,9 +2,7 @@
 
 ## Descrição Geral
 
-Permitir ao usuário gerar relatórios detalhados, diagnósticos e resultados a partir dos dados financeiros cadastrados no sistema.
-
----
+Permitir o planejamento e controle de orçamentos, com a definição de limites de gastos mensais por categoria para os usuários.
 
 ### Documentos Relacionados
 
