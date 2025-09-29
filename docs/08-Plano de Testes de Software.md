@@ -71,6 +71,26 @@ Este plano de testes de software foca em garantir que a funcionalidade de geraç
 
 ---
 
+# Plano de Testes de Software — R5 Exportação e Compartilhamento
+
+## 1. Introdução
+Este plano de testes de software tem como objetivo validar a funcionalidade de **Exportação e Compartilhamento (R5)** no sistema SaveMoney V2.  
+Essa funcionalidade deve permitir que usuários exportem relatórios financeiros nos formatos PDF e Excel e compartilhem esses arquivos utilizando as opções nativas do dispositivo (ex: WhatsApp, E-mail, Google Drive).
+
+---
+
+## 2. Casos de Teste
+
+| ID     | Funcionalidade                        | Pré-condições                                                                 | Ações                                                                                  | Resultados Esperados                                                                                   |
+| ------ | ------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| CT-201 | Exportação em PDF                     | Relatório gerado e exibido na tela                                            | 1. Clicar em **Exportar**.<br>2. Selecionar formato PDF.<br>3. Confirmar exportação.   | O sistema deve gerar e baixar o arquivo PDF, mantendo integridade, layout e dados do relatório.         |
+| CT-202 | Exportação em Excel                   | Relatório gerado e exibido na tela                                            | 1. Clicar em **Exportar**.<br>2. Selecionar formato Excel.<br>3. Confirmar exportação. | O sistema deve gerar e baixar o arquivo Excel (.xlsx), mantendo integridade, layout e dados do relatório. |
+| CT-203 | Compartilhamento de PDF               | Arquivo PDF exportado disponível no dispositivo                               | 1. Clicar em **Compartilhar**.<br>2. Selecionar arquivo PDF.<br>3. Escolher app (ex: WhatsApp). | O sistema deve abrir o menu de compartilhamento nativo e permitir envio do PDF pelo app escolhido.      |
+| CT-204 | Compartilhamento de Excel             | Arquivo Excel exportado disponível no dispositivo                             | 1. Clicar em **Compartilhar**.<br>2. Selecionar arquivo Excel.<br>3. Escolher app.     | O sistema deve abrir o menu de compartilhamento nativo e permitir envio do Excel pelo app escolhido.    |
+| CT-205 | Mensagem de erro na exportação        | Falha na geração do arquivo (ex: erro de conexão, dados inconsistentes)        | 1. Tentar exportar relatório.<br>2. Simular falha no backend.                          | O sistema deve exibir mensagem de erro clara, informando o motivo da falha e sugerindo ação corretiva.  |
+| CT-206 | Restrições de permissão no dispositivo| Dispositivo com restrições de armazenamento ou compartilhamento                | 1. Tentar exportar ou compartilhar relatório.<br>2. Negar permissão de acesso.         | O sistema deve informar ao usuário sobre a restrição e orientar como conceder permissão, se aplicável.  |
+| CT-207 | Exportação com filtros aplicados      | Relatório gerado com filtros específicos                                      | 1. Aplicar filtros.<br>2. Exportar relatório em PDF e Excel.                           | Os arquivos exportados devem refletir exatamente os dados filtrados, sem divergências.                  |
+
 # Plano de Testes de Software — R8 Personalização do Tema
 
 ## 1. Introdução
@@ -145,6 +165,56 @@ Este plano de testes de software foca em garantir que a funcionalidade de avisos
 | CT-003 | Exibir histórico de notificações        | Notificações já recebidas                     | 1. Acessar histórico de notificações.                                                | Histórico exibe todas as notificações anteriores, lidas e não lidas.                 |
 | CT-004 | Atualizar indicador visual              | Indicador visual disponível                   | 1. Realizar ação que altera status (ex: progresso).                                  | Indicador visual é atualizado conforme novo status.                                  |
 | CT-005 | Persistência após logout/login          | Notificações e indicadores salvos             | 1. Fazer logout.<br>2. Fazer login novamente.<br>3. Acessar painel de notificações.   | Notificações e indicadores permanecem conforme última configuração salva.            |
+
+# Plano de Testes de Software — R12 Gestão de Orçamento
+
+## 1. Introdução
+
+Este plano de testes de software foca em garantir que a funcionalidade de Gestão de Orçamento opere conforme a especificação, validando a criação, atualização, remoção e consulta de orçamentos mensais por categoria.
+
+## 2. Casos de Teste
+
+| ID         | Funcionalidade                   | Pré-condições                                                                              | Ações                                                                                                          | Resultados Esperados                                                                                                                      |
+| ---------- | -------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| CT-R12-001 | Criar um novo orçamento          | Usuário autenticado. Categoria "Lazer" existe.                                             | 1. Enviar via API os dados para um novo orçamento: categoriaId="Lazer", valor_limite=500.00, mes=10, ano=2025. | A API deve retornar 201 Created. Um novo registro de orçamento deve ser criado no banco de dados com os valores corretos.                 |
+| CT-R12-002 | Listar orçamentos do mês         | Usuário autenticado possui 2 orçamentos criados para o mês 10/2025.                        | 1. Solicitar via API a lista de orçamentos para o período de 10/2025.                                          | A API deve retornar 200 OK e uma lista contendo exatamente os 2 orçamentos criados para aquele mês.                                       |
+| CT-R12-003 | Atualizar um orçamento existente | Usuário autenticado. Existe um orçamento para "Lazer" com valor_limite=500.00.             | 1. Enviar uma requisição PUT para atualizar o orçamento, alterando o valor_limite para 600.00.                 | A API deve retornar 200 OK. O registro do orçamento no banco de dados deve ser atualizado com o novo valor.                               |
+| CT-R12-004 | Excluir um orçamento             | Usuário autenticado. Existe um orçamento para a categoria "Lazer".                         | 1. Enviar uma requisição DELETE para remover o orçamento da categoria "Lazer".                                 | A API deve retornar 204 No Content ou 200 OK. O registro do orçamento deve ser removido do banco de dados.                                |
+| CT-R12-005 | Prevenir orçamento duplicado     | Já existe um orçamento para "Lazer" no mês 10/2025.                                        | 1. Tentar criar um segundo orçamento para "Lazer" no mesmo mês e ano (10/2025).                                | A API deve retornar um erro 409 Conflict, informando que o orçamento já existe. Nenhum novo registro deve ser criado.                     |
+| CT-R12-006 | Validação de dados de entrada    | Usuário autenticado.                                                                       | 1. Tentar criar um orçamento com valor_limite negativo (-100).                                                 | A API deve retornar um erro 400 Bad Request com uma mensagem de validação clara. Nenhum orçamento deve ser salvo.                         |
+| CT-R12-007 | Verificar status de um orçamento | Usuário tem um orçamento de R$ 500 para "Lazer" e já gastou R$ 350 nessa categoria no mês. | 1. Solicitar via API o status do orçamento de "Lazer".                                                         | A API deve retornar 200 OK e um objeto contendo o limite, o valor gasto e o saldo restante (ex: { limite: 500, gasto: 350, saldo: 150 }). |
+
+# Plano de Testes de Software — R13 Análise de Tendências
+
+## 1. Introdução
+Este plano de testes de software foca em garantir que a funcionalidade de Análise de Tendências opere conforme a especificação, validando a corretude do algoritmo de análise e o tratamento de diferentes cenários de dados históricos do usuário.
+
+## 2. Casos de Teste
+
+| ID | Funcionalidade | Pré-condições | Ações | Resultados Esperados |
+|---|---|---|---|---|
+| CT-R13-001 | Identificar Tendência de Alta | Usuário autenticado possui despesas na categoria "Lazer" com aumento consistente nos últimos 3 meses (ex: R$100, R$200, R$400). | 1. Solicitar via API a análise de tendência para a categoria "Lazer" no período de 3 meses. | A API deve retornar 200 OK e um objeto de análise indicando `tipoTendencia: "Alta"` e uma descrição textual correspondente. |
+| CT-R13-002 | Identificar Tendência de Baixa | Usuário autenticado possui despesas na categoria "Transporte" com queda consistente nos últimos 3 meses (ex: R$300, R$150, R$50). | 1. Solicitar via API a análise de tendência para a categoria "Transporte". | A API deve retornar 200 OK e um objeto de análise indicando `tipoTendencia: "Baixa"` e uma descrição textual correspondente. |
+| CT-R13-003 | Identificar Tendência Estável | Usuário autenticado possui despesas na categoria "Alimentação" com valores relativamente constantes (ex: R$500, R$510, R$495). | 1. Solicitar via API a análise de tendência para a categoria "Alimentação". | A API deve retornar 200 OK e um objeto de análise indicando `tipoTendencia: "Estável"`. |
+| CT-R13-004 | Tratamento de Dados Insuficientes | Usuário autenticado possui transações em apenas um único mês. | 1. Solicitar via API a análise de tendência. | O sistema não deve quebrar. A API deve retornar uma resposta controlada (ex: 200 OK com uma mensagem "Dados insuficientes para análise"). |
+| CT-R13-005 | Análise com Períodos Diferentes | Usuário possui 6 meses de dados, com uma tendência de alta nos últimos 3 meses, mas uma média estável nos 6 meses. | 1. Solicitar a análise para o período de "3 meses". <br> 2. Solicitar a análise para o período de "6 meses". | Os resultados devem ser consistentes com cada período. A primeira análise deve retornar "Alta", e a segunda deve retornar "Estável". |
+| CT-R13-006 | Análise sem dados no período | Usuário autenticado não possui nenhuma despesa registrada no período solicitado (ex: últimos 30 dias). | 1. Solicitar via API a análise de tendência para o período sem dados. | A API deve retornar uma resposta controlada, informando que não há transações para analisar naquele período. |
+
+# Plano de Testes de Software — R14 Projeção Financeira
+
+## 1. Introdução
+Este plano de testes de software foca em garantir que a funcionalidade de Projeção Financeira opere conforme a especificação, validando a precisão do algoritmo de cálculo e o tratamento de diferentes cenários de dados históricos.
+
+## 2. Casos de Teste
+
+| ID | Funcionalidade | Pré-condições | Ações | Resultados Esperados |
+|---|---|---|---|---|
+| CT-R14-001 | Projeção com fluxo de caixa positivo | Usuário autenticado com histórico financeiro estável onde a média de receitas é maior que a de despesas (ex: +R$1.000/mês). | 1. Solicitar via API uma projeção financeira para os próximos 6 meses. | A API deve retornar 200 OK. O gráfico e o resumo da projeção devem mostrar um crescimento consistente do saldo ao longo dos 6 meses. |
+| CT-R14-002 | Projeção com fluxo de caixa negativo | Usuário autenticado com histórico financeiro estável onde a média de despesas é maior que a de receitas (ex: -R$500/mês). | 1. Solicitar via API uma projeção financeira para os próximos 6 meses. | A API deve retornar 200 OK. O gráfico e o resumo da projeção devem mostrar uma queda consistente do saldo ao longo dos 6 meses. |
+| CT-R14-003 | Tratamento de dados insuficientes para projeção | Usuário autenticado com menos de 2 meses de histórico de transações. | 1. Solicitar via API uma projeção financeira. | O sistema não deve quebrar. A API deve retornar uma resposta controlada (ex: 200 OK com uma mensagem "Dados insuficientes para uma projeção precisa"). |
+| CT-R14-004 | Projeção para novo usuário sem transações | Usuário recém-cadastrado, sem nenhuma receita ou despesa registrada. | 1. Acessar a funcionalidade de projeção financeira. | O sistema deve exibir uma mensagem amigável, informando que é necessário registrar movimentações antes de gerar uma projeção. |
+| CT-R14-005 | Validação de diferentes períodos de projeção | Usuário autenticado com histórico financeiro estável. | 1. Gerar uma projeção para 3 meses. <br> 2. Gerar uma projeção para 12 meses. | Ambos os relatórios devem ser gerados com sucesso. A projeção de 12 meses deve ser uma extensão lógica da projeção de 3 meses, seguindo a mesma média. |
+| CT-R14-006 | Impacto de transação atípica | Usuário possui histórico estável, mas com um grande ganho único (ex: venda de um carro) no último mês. | 1. Solicitar uma projeção financeira. | O algoritmo de projeção deve ser robusto o suficiente para não superestimar drasticamente os ganhos futuros com base em um evento único e não recorrente. |
 
 # Plano de Testes de Software — R15 Ferramentas Interativas
 
