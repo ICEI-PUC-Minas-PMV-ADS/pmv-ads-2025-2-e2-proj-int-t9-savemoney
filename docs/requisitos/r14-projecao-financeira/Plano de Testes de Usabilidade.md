@@ -1,14 +1,16 @@
-# Plano de Teste de Usabilidade — R4 Relatórios, Diagnósticos e Resultados
+# Plano de Teste de Usabilidade — R14 Projeção Financeira
 
 ## 1. Introdução
 
-O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com a funcionalidade de geração de relatórios, diagnósticos e resultados.
+O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com a funcionalidade de Projeção Financeira, incluindo a clareza dos gráficos, filtros e resumo apresentado.
 
 ## 2. Aspectos de Usabilidade a serem testados
 
-- **Clareza da Visualização dos Relatórios:** O usuário entende as informações apresentadas nos relatórios e diagnósticos?
-  - _Teste:_ Exibir relatórios para um grupo de usuários e pedir para que expliquem os principais dados e conclusões. Avaliar a clareza dos títulos, legendas e seções do relatório.
-- **Eficiência na Geração de Relatórios:** O quão fácil é para o usuário gerar e exportar um relatório?
-  - _Teste:_ Medir o tempo que leva para um usuário encontrar, configurar filtros e gerar um relatório.
-- **Satisfação com Recomendações e Diagnósticos:** As recomendações e diagnósticos apresentados são úteis e fáceis de entender?
-  - _Teste:_ Após a geração do relatório, perguntar aos usuários se as recomendações e diagnósticos exibidos foram relevantes e se a linguagem utilizada foi clara.
+- **Clareza da Visualização da Projeção:** O usuário entende as informações apresentadas no gráfico de projeção e no resumo textual?
+  - _Teste:_ Exibir a tela de projeção financeira para um grupo de usuários e pedir para que expliquem o saldo projetado e os principais dados do gráfico. Avaliar a clareza dos títulos, legendas e explicações.
+- **Facilidade de Uso dos Filtros:** O usuário consegue selecionar facilmente o período para projeção?
+  - _Teste:_ Solicitar que o usuário selecione diferentes períodos (ex: 3, 6, 12 meses) e gere uma projeção. Medir o tempo e a facilidade de compreensão dos controles.
+- **Compreensão do Resumo da Projeção:** O resumo apresentado é útil e fácil de entender?
+  - _Teste:_ Após a geração da projeção, perguntar aos usuários se o resumo exibido foi relevante e se a linguagem utilizada foi clara.
+- **Eficiência na Exportação dos Resultados:** O usuário consegue exportar ou salvar a projeção sem dificuldades?
+  - _Teste:_ Solicitar que o usuário utilize a funcionalidade de exportação (PDF/CSV) e avaliar se o processo é intuitivo.

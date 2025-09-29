@@ -3,7 +3,73 @@ const path = require("path");
 
 const requisitosDir = path.join(__dirname, "requisitos");
 
-// Configuração dos tipos de agregação
+// Função para obter o conteúdo dos wireframes do template padrão
+function getWireframesSection(templatePath) {
+  if (!fs.existsSync(templatePath)) return "";
+  const content = fs.readFileSync(templatePath, "utf-8");
+  // Pega tudo a partir de "## Wireframes"
+  const match = content.match(/## Wireframes\s*([\s\S]*)/m);
+  return match ? match[1].trim() : "";
+}
+
+// Caminho do template padrão
+const templatePadraoPath = path.join(
+  __dirname,
+  "06-Template Padrão da Aplicação.md"
+);
+
+// Conteúdo fixo das principais telas e funcionalidades
+function getFixedScreensSection() {
+  return `## Principais Telas e Funcionalidades
+
+1. **Tela Inicial Pública / Sobre Nós**
+  - Apresenta a missão do sistema, opções de login, cadastro, funcionalidades e newsletters
+
+2. **Tela de Login**
+  - Permite acessar o sistema informando e-mail e senha
+
+3. **Tela de Cadastro**
+  - Permite criar uma conta, selecionando o tipo de pessoa e preenchendo os dados obrigatórios
+
+4. **Dashboard Principal**
+  - Exibe navegação para todas as principais funcionalidades do sistema
+
+5. **Receitas**
+  - Visualizar, cadastrar, editar e excluir receitas, com informações detalhadas e filtros
+
+6. **Despesas**
+  - Visualizar, cadastrar, editar e excluir despesas, com informações detalhadas e filtros
+
+7. **Investimentos**
+  - Gerenciar investimentos, exibir status, rentabilidade e histórico
+
+8. **Relatórios**
+  - Exibe gráficos e resumos financeiros para análise do usuário
+
+9. **Perfil do Usuário**
+  - Visualizar e editar informações pessoais, contato e configurações da conta
+
+10. **Contato**
+  - Entrar em contato com a equipe de suporte por meio de formulário
+
+11. **Configurações**
+  - Editar dados pessoais, contato, endereço e personalizar o tema
+
+12. **Conversor de Moedas**
+  - Ferramenta para conversão de moedas, com histórico e dicas
+
+13. **Conversor de Energia**
+  - Ferramenta para simulação e cálculo de consumo de energia
+
+14. **Dicas de Energia**
+  - Exibe dicas personalizadas relacionadas ao consumo de energia
+
+\n`;
+}
+
+// Wireframes extraídos do template padrão
+const wireframesSection = getWireframesSection(templatePadraoPath);
+
 const aggregations = [
   {
     output: path.join(__dirname, "08-Plano de Testes de Software.md"),
@@ -20,39 +86,12 @@ const aggregations = [
   {
     output: path.join(__dirname, "04-Projeto de Interface.md"),
     searchFile: "Projeto de Interface.md",
-    header: `# Projeto de Interface
-
-#### Principais Telas e Funcionalidades
-
-1. **Tela de Login e Cadastro**
-  - Formulário de autenticação
-  - Processo de registro de novos usuários
-  - Recuperação de senha
-
-2. **Dashboard Principal**
-  - Visão geral das finanças
-  - Gráficos de receitas vs despesas
-  - Resumo mensal e anual
-  - Navegação para funcionalidades principais
-
-3. **Gestão de Transações**
-  - Formulário para adicionar receitas e despesas
-  - Lista de transações com filtros
-  - Edição e exclusão de transações
-  - Categorização automática e manual
-
-4. **Relatórios e Análises**
-  - Gráficos interativos
-  - Filtros por período e categoria
-  - Exportação de dados
-  - Comparativos mensais/anuais
-
-5. **Configurações e Perfil**
-  - Dados pessoais do usuário
-  - Preferências da aplicação
-  - Categorias personalizadas
-  - Configurações de notificações
-\n\n`,
+    header:
+      "# Projeto de Interface\n\n" +
+      getFixedScreensSection() +
+      (wireframesSection
+        ? "## Wireframes\n\n" + wireframesSection + "\n\n"
+        : ""),
     emptyMsg: "Nenhum projeto de interface encontrado.",
   },
 ];

@@ -1,110 +1,173 @@
-
 # Projeto de Interface
-
-> **Pré-requisito:** [Documentação de Especificação](2-Especificação%20do%20Projeto.md)
-
-## Visão Geral
-
-Visão geral da interação do usuário pelas telas do sistema. Esta seção apresenta as principais interfaces da plataforma e os fluxogramas que detalham a jornada do usuário e as interações com cada funcionalidade principal do sistema.
 
 ## Principais Telas e Funcionalidades
 
-- **Tela de Login e Cadastro**
-    - Formulário de autenticação
-    - Processo de registro de novos usuários
-    - Recuperação de senha
+1. **Tela Inicial Pública / Sobre Nós**
+  - Apresenta a missão do sistema, opções de login, cadastro, funcionalidades e newsletters
 
-- **Dashboard Principal**
-    - Visão geral das finanças
-    - Gráficos de receitas vs despesas
-    - Resumo mensal e anual
-    - Navegação para funcionalidades principais
+2. **Tela de Login**
+  - Permite acessar o sistema informando e-mail e senha
 
-- **Gestão de Transações**
-    - Formulário para adicionar receitas e despesas
-    - Lista de transações com filtros
-    - Edição e exclusão de transações
-    - Categorização automática e manual
+3. **Tela de Cadastro**
+  - Permite criar uma conta, selecionando o tipo de pessoa e preenchendo os dados obrigatórios
 
-- **Relatórios e Análises**
-    - Gráficos interativos
-    - Filtros por período e categoria
-    - Exportação de dados
-    - Comparativos mensais/anuais
+4. **Dashboard Principal**
+  - Exibe navegação para todas as principais funcionalidades do sistema
 
-- **Configurações e Perfil**
-    - Dados pessoais do usuário
-    - Preferências da aplicação
-    - Categorias personalizadas
-    - Configurações de notificações
+5. **Receitas**
+  - Visualizar, cadastrar, editar e excluir receitas, com informações detalhadas e filtros
 
-## Diagrama de Fluxo Geral do Save Money v2
+6. **Despesas**
+  - Visualizar, cadastrar, editar e excluir despesas, com informações detalhadas e filtros
 
-O diagrama a seguir representa a jornada completa do usuário dentro do aplicativo, desde o primeiro contato até a utilização das funcionalidades chave. Ele integra os fluxos das duas personas principais, João (Pessoa Física) e Maria (Pessoa Jurídica), em um único mapa de interação para fornecer uma visão holística do sistema.
+7. **Investimentos**
+  - Gerenciar investimentos, exibir status, rentabilidade e histórico
 
-Snippet de código
+8. **Relatórios**
+  - Exibe gráficos e resumos financeiros para análise do usuário
 
-```mermaid
-graph TD
-    subgraph "1. Onboarding e Autenticacao"
-        Start([Início]) --> TelaLogin[Tela de Login];
-        TelaLogin --> A{Possui conta?};
-        A -- Não --> TelaCadastro[Tela de Cadastro];
-        TelaCadastro --> B{Seleciona tipo: PF ou PJ};
-        B -- "Pessoa Fisica (Joao)" --> PreenchePF["Preenche dados PF"];
-        B -- "Pessoa Juridica (Maria)" --> PreenchePJ["Preenche dados PJ"];
-        PreenchePF --> ValidaCadastro{Valida Dados};
-        PreenchePJ --> ValidaCadastro;
-        ValidaCadastro -- Válido --> CriaConta[Cria conta e loga];
-        ValidaCadastro -- Inválido --> TelaCadastro;
-        
-        A -- Sim --> PreencheLogin[Preenche e-mail e senha];
-        PreencheLogin --> ValidaLogin{Autentica Usuário};
-        ValidaLogin -- Sucesso --> Dashboard;
-        ValidaLogin -- Falha --> TelaLogin;
-        CriaConta --> MensagemBoasVindas["Exibe 'Boas-Vindas!'"];
-        MensagemBoasVindas --> Dashboard;
-    end
+9. **Perfil do Usuário**
+  - Visualizar e editar informações pessoais, contato e configurações da conta
 
-    subgraph "2. Hub Principal - Dashboard"
-        Dashboard[Dashboard Principal] --> Menu{Usuário escolhe funcionalidade};
-    end
+10. **Contato**
+  - Entrar em contato com a equipe de suporte por meio de formulário
 
-    subgraph "3. Fluxos de Tarefas Principais"
-        Menu -- "Controle Financeiro" --> AddDespesa[Tela de Nova Despesa];
-        AddDespesa --> PreencheDespesa["Preenche valor e data"];
-        PreencheDespesa --> Categoria{Seleciona Categoria?};
-        Categoria -- Sim --> SalvaDespesa[Salva Despesa];
-        Categoria -- Não --> AddDespesa;
-        SalvaDespesa --> ConfirmaDespesa[Exibe confirmação];
-        ConfirmaDespesa --> Dashboard;
+11. **Configurações**
+  - Editar dados pessoais, contato, endereço e personalizar o tema
 
-        Menu -- "Relatorios" --> TelaRelatorios[Tela de Relatórios];
-        TelaRelatorios --> FiltraRelatorio[Seleciona tipo e período];
-        FiltraRelatorio --> GeraRelatorio[Gera e exibe relatório];
-        GeraRelatorio --> Exporta{Deseja exportar?};
-        Exporta -- Sim --> IniciaDownload[Inicia download];
-        Exporta -- Não --> TelaRelatorios;
-        IniciaDownload --> TelaRelatorios;
+12. **Conversor de Moedas**
+  - Ferramenta para conversão de moedas, com histórico e dicas
 
-        Menu -- "Metas Financeiras" --> TelaMetas[Tela de Metas];
-        Menu -- "Ferramentas Interativas" --> TelaFerramentas[Hub de Ferramentas];
-        Menu -- "Educacao Financeira" --> TelaEducacao[Feed de Conteúdos];
-        Menu -- "Configuracoes" --> TelaConfig[Tela de Configurações];
-    end
+13. **Conversor de Energia**
+  - Ferramenta para simulação e cálculo de consumo de energia
 
-    TelaMetas --> End([Fim do Fluxo]);
-    TelaFerramentas --> End;
-    TelaEducacao --> End;
-    TelaConfig --> End;
-```
-Fluxogramas Detalhados por Funcionalidade
+14. **Dicas de Energia**
+  - Exibe dicas personalizadas relacionadas ao consumo de energia
 
-R1 — Controle Financeiro
+
+## Wireframes
+
+Abaixo estão os wireframes que ilustram o template padrão da aplicação, com seus respectivos títulos e descrições.
+
+### Tela Inicial Pública / Sobre Nós
+
+Apresenta a missão do sistema, opções de login, cadastro, funcionalidades e newsletters.
+
+![Tela Sobre Nós](img/wireframes/home-publica.png)
+
+---
+
+### Tela Dashboard
+
+Exibe navegação para todas as principais funcionalidades do sistema.
+
+![Tela Dashboard](img/wireframes/dashboard.png)
+
+---
+
+### Tela de Login
+
+Permite acessar o sistema informando e-mail e senha.
+
+![Tela de Login](img/wireframes/login.png)
+
+---
+
+### Tela de Cadastro
+
+Permite criar uma conta, selecionando o tipo de pessoa e preenchendo os dados obrigatórios.
+
+![Tela de Cadastro](img/wireframes/registrar.png)
+
+---
+
+### Tela de Receitas
+
+Permite visualizar, cadastrar, editar e excluir receitas, com informações detalhadas e filtros.
+
+![Tela de Receitas](img/wireframes/receitas.png)
+
+---
+
+### Tela de Despesas
+
+Permite visualizar, cadastrar, editar e excluir despesas, com informações detalhadas e filtros.
+
+![Tela de Despesas](img/wireframes/despesas.png)
+
+---
+
+### Tela de Investimentos
+
+Permite gerenciar investimentos, exibir status, rentabilidade e histórico.
+
+![Tela de Investimentos](img/wireframes/investimentos.png)
+
+---
+
+### Tela de Relatórios
+
+Exibe gráficos e resumos financeiros para análise do usuário.
+
+![Tela de Relatórios](img/wireframes/relatorios.png)
+
+---
+
+### Tela de Perfil do Usuário
+
+Permite visualizar e editar informações pessoais, contato e configurações da conta.
+
+![Tela de Perfil do Usuário](img/wireframes/perfil.png)
+
+---
+
+### Tela de Contato
+
+Permite entrar em contato com a equipe de suporte por meio de formulário.
+
+![Tela de Contato](img/wireframes/contato.png)
+
+---
+
+### Tela de Configurações
+
+Permite editar dados pessoais, contato, endereço e personalizar o tema.
+
+![Tela de Configurações](img/wireframes/configuracao.png)
+
+---
+
+### Tela Conversor de Moedas
+
+Ferramenta para conversão de moedas, com histórico e dicas.
+
+![Tela Conversor de Moedas](img/wireframes/conversor-moedas.png)
+
+---
+
+### Tela Conversor de Energia
+
+Ferramenta para simulação e cálculo de consumo de energia.
+
+![Tela Conversor de Energia](img/wireframes/conversor-energia.png)
+
+---
+
+### Tela Dicas de Energia
+
+Exibe dicas personalizadas relacionadas ao consumo de energia.
+
+![Tela Dicas de Energia](img/wireframes/conversor-energia-dicas.png)
+
+---
+
+# Projeto de Interface — R1 Controle Financeiro
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
 
 Este diagrama representa o fluxo de execução para a funcionalidade de registro de receitas e despesas, desde a entrada de dados do usuário até a confirmação do registro e atualização do saldo.
-
-Snippet de código
 
 ```mermaid
 graph TD
@@ -117,33 +180,26 @@ graph TD
     F --> G[Exibir confirmação e novo saldo]
     G --> H([FIM])
 ```
-Protótipos de Telas
 
-### Protótipos de Telas
+## 2. Protótipos de Telas
 
-- **Tela de Cadastro de Receita/Despesa:**
-    - Campos para valor, categoria, tipo, data e descrição
-    - Botão de salvar
+- Tela de Cadastro de Receita/Despesa: Campos para valor, categoria, tipo, data e descrição, botão de salvar.
+- Tela de Listagem: Exibe histórico de registros financeiros, filtros por período, categoria e tipo.
+- Tela de Saldo: Mostra saldo atual, total de receitas e despesas.
 
-- **Tela de Listagem:**
-    - Exibe histórico de registros financeiros
-    - Filtros por período, categoria e tipo
+## 3. Navegação
 
-- **Tela de Saldo:**
-    - Mostra saldo atual, total de receitas e despesas
-
-#### Navegação
 - O usuário pode acessar o cadastro a partir do menu principal.
 - Após o registro, retorna à tela de listagem com atualização automática.
 - Opção de editar ou remover registros existentes.
 
-O diagrama a seguir representa o fluxo de interação do usuário para acessar e visualizar o conteúdo educativo.
+# Projeto de Interface — R2 Educação Financeira
 
-### R2 — Educação Financeira
+## 1. Modelos Funcionais
 
-O diagrama a seguir representa o fluxo de interação do usuário para acessar e visualizar o conteúdo educativo.
+### 1.1 Diagrama de Fluxo (Fluxograma)
 
-Snippet de código
+O diagrama a seguir representa o fluxo de interação do usuário para acessar, interagir (curtir) e visualizar o conteúdo educativo, detalhando a comunicação com o backend para buscar artigos agregados e gerenciar os favoritos do usuário.
 
 ```mermaid
 graph TD
@@ -155,13 +211,13 @@ graph TD
     F --> G([App abre o link original do conteúdo em um navegador/WebView]);
 ```
 
+# Projeto de Interface — R3 Conversor de Energia
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
 Este diagrama representa o fluxo de execução para a funcionalidade de conversão de energia, desde a entrada de dados do usuário até a exibição do resultado e das dicas.
-
-### R3 — Conversor de Energia
-
-Este diagrama representa o fluxo de execução para a funcionalidade de conversão de energia, desde a entrada de dados do usuário até a exibição do resultado e das dicas.
-
-Snippet de código
 
 ```mermaid
 graph TD
@@ -190,13 +246,13 @@ graph TD
     P --> Q([FIM])
 ```
 
-Este diagrama representa o fluxo de execução para a funcionalidade de geração de relatórios, desde a solicitação do usuário até a exibição do relatório detalhado.
+# Projeto de Interface — R4 Relatórios, Diagnósticos e Resultados
 
-### R4 — Relatórios, Diagnósticos e Resultados
+## 1. Modelos Funcionais
 
-Este diagrama representa o fluxo de execução para a funcionalidade de geração de relatórios, desde a solicitação do usuário até a exibição do relatório detalhado.
+### 1.1 Diagrama de Fluxo (Fluxograma)
 
-Snippet de código
+Este diagrama representa o fluxo de execução para a funcionalidade de geração de relatórios, diagnósticos e resultados, desde a solicitação do usuário até a exibição do relatório detalhado.
 
 ```mermaid
 graph TD
@@ -213,13 +269,44 @@ graph TD
     I -- Não --> K([FIM])
     J --> K
 ```
-Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pessoa Física e Pessoa Jurídica.
 
-### R6/R7 — Cadastro Pessoa Física/Jurídica
+# Projeto de Interface — R5 Exportação e Compartilhamento
+## 1. Modelos Funcionais
+### 1.1 Diagrama de Fluxo (Fluxograma)
+Este diagrama representa o fluxo de interação do usuário para as funcionalidades de exportação e compartilhamento de um relatório. O fluxo se inicia a partir do momento em que um relatório (requisito R4) já está sendo exibido na tela, detalhando os passos para a geração do arquivo no backend e a subsequente ação de compartilhamento no frontend.
 
-Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pessoa Física e Pessoa Jurídica.
+```mermaid
+graph TD
+    A[Usuário visualiza um relatório na tela] --> B[Clica no botão 'Exportar'];
+    B --> C{Escolhe o formato do arquivo};
+    C -- PDF --> D["Frontend envia requisição para API (formato=PDF)"];
+    C -- Excel --> E["Frontend envia requisição para API (formato=Excel)"];
 
-Snippet de código
+    subgraph Processamento no Backend
+        D --> F[Backend gera o arquivo .pdf];
+        E --> G[Backend gera o arquivo .xlsx];
+    end
+
+    F --> H[Backend retorna o arquivo para download];
+    G --> H;
+
+    H --> I[Navegador inicia o download do arquivo];
+    I --> J{Deseja compartilhar o arquivo?};
+    J -- Sim --> K[Clica no botão 'Compartilhar'];
+    K --> L[Frontend aciona a API de compartilhamento nativa do dispositivo];
+    L --> M[Usuário seleciona app (WhatsApp, E-mail, etc.) e envia];
+
+    J -- Não --> N([Fim da Interação]);
+    M --> N;
+```
+
+# Projeto de Interface — R6/R7 Pessoa Física/Jurídica
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de cadastro e uso do sistema por usuários Pessoa Física e Pessoa Jurídica, desde a entrada dos dados até a diferenciação de funcionalidades.
 
 ```mermaid
 graph TD
@@ -234,39 +321,29 @@ graph TD
     G --> B
     H --> I([FIM])
 ```
-Protótipos de Telas
 
-### Protótipos de Telas
+## 2. Protótipos de Telas
 
-- **Tela de Cadastro:**
-    - Seleção de tipo (PF/PJ)
-    - Campos dinâmicos para CPF ou CNPJ, nome ou razão social, e-mail, senha
+- Tela de Cadastro: Seleção de tipo (PF/PJ), campos dinâmicos para CPF ou CNPJ, nome ou razão social, e-mail, senha.
+- Tela de Login: E-mail e senha.
+- Tela de Perfil: Exibe dados do usuário, tipo de conta, opção de editar informações.
+- Painel Pessoa Física: Funcionalidades voltadas para controle financeiro pessoal, metas, histórico.
+- Painel Pessoa Jurídica: Funcionalidades para gestão financeira empresarial, relatórios, fluxo de caixa.
 
-- **Tela de Login:**
-    - E-mail e senha
+## 3. Navegação
 
-- **Tela de Perfil:**
-    - Exibe dados do usuário, tipo de conta, opção de editar informações
-
-- **Painel Pessoa Física:**
-    - Funcionalidades voltadas para controle financeiro pessoal, metas, histórico
-
-- **Painel Pessoa Jurídica:**
-    - Funcionalidades para gestão financeira empresarial, relatórios, fluxo de caixa
-
-#### Navegação
 - O usuário pode alternar entre cadastro e login.
 - Após cadastro/login, é direcionado ao painel correspondente ao tipo de usuário.
 - Opção de editar perfil e trocar tipo de conta (se permitido).
 - Funcionalidades e menus adaptados conforme PF ou PJ.
 
-O diagrama a seguir representa o fluxo de interação do usuário para personalizar e salvar o tema.
+# Projeto de Interface — R8 Personalização do Tema
 
-### R8 — Personalização do Tema
+## 1. Modelos Funcionais
 
-O diagrama a seguir representa o fluxo de interação do usuário para personalizar e salvar o tema.
+### 1.1 Diagrama de Fluxo (Fluxograma)
 
-Snippet de código
+O diagrama a seguir representa o fluxo de interação do usuário para personalizar e salvar o tema, detalhando a comunicação com o backend e a persistência.
 
 ```mermaid
 graph TD
@@ -283,13 +360,16 @@ graph TD
     H -- Não --> L(Fim);
     K --> L;
 ```
+
+---
+
+# Projeto de Interface — R9 Metas Financeiras
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
 Este diagrama representa o fluxo de execução para a funcionalidade de metas financeiras, desde a criação da meta até o acompanhamento e conclusão.
-
-### R9 — Metas Financeiras
-
-Este diagrama representa o fluxo de execução para a funcionalidade de metas financeiras, desde a criação da meta até o acompanhamento e conclusão.
-
-Snippet de código
 
 ```mermaid
 graph TD
@@ -321,14 +401,41 @@ graph TD
     R -- Sim --> S[Exibir mensagem de parabéns]
     S --> B
     R -- Não --> B
+
 ```
-Este diagrama representa o fluxo de customização do dashboard financeiro.
 
-### R10 — Dashboard Personalizado
+### 1.2 Protótipos de Telas (Sugestão)
 
-Este diagrama representa o fluxo de customização do dashboard financeiro.
+- **Tela de Listagem de Metas:**
 
-Snippet de código
+  - Lista todas as metas do usuário, mostrando título, valor objetivo, valor atual, progresso (%) e status (em andamento/concluída).
+  - Botão para criar nova meta.
+  - Ações: visualizar detalhes, editar, remover.
+
+- **Tela de Detalhes da Meta:**
+
+  - Exibe informações completas da meta.
+  - Lista de aportes realizados (data, valor).
+  - Campo para registrar novo aporte.
+  - Indicador visual de progresso (barra ou círculo).
+  - Botão para editar/remover meta.
+
+- **Tela de Criação/Edição de Meta:**
+
+  - Formulário para inserir/editar título, valor objetivo, data limite, descrição.
+  - Validação de campos obrigatórios.
+
+- **Feedback Visual:**
+  - Mensagens de sucesso, erro e conclusão de meta.
+  - Indicadores de progresso e status.
+
+# Projeto de Interface — R10 Dashboard Personalizado
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de customização do dashboard financeiro, incluindo adição, remoção, configuração e reordenação (drag and drop) de widgets.
 
 ```mermaid
 graph TD
@@ -351,13 +458,14 @@ graph TD
     M --> B
     N --> O([FIM])
 ```
-Este diagrama representa o fluxo de exibição e interação com avisos e notificações.
 
-### R11 — Avisos e Notificações
+# Projeto de Interface — R11 Avisos e Notificações
 
-Este diagrama representa o fluxo de exibição e interação com avisos e notificações.
+## 1. Modelos Funcionais
 
-Snippet de código
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de exibição e interação com avisos e notificações, incluindo visualização, marcação como lida e atualização de indicadores visuais.
 
 ```mermaid
 graph TD
@@ -374,13 +482,164 @@ graph TD
     I --> B
     J --> K([FIM])
 ```
-O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas e utilizar as calculadoras.
 
-### R15 — Ferramentas Interativas
+# Projeto de Interface — R12 Gestão de Orçamento
 
-O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas e utilizar as calculadoras.
+## 1. Modelos Funcionais
 
-Snippet de código
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de execução para a funcionalidade de gestão de orçamentos, desde a solicitação do usuário até a criação, consulta e ajuste de orçamentos mensais por categoria.
+
+```mermaid
+graph TD
+    A([Usuário acessa Gestão de Orçamento]) --> B[Selecionar categoria e período (mês/ano)]
+    B --> C{Deseja criar, editar ou consultar?}
+    C -- Criar --> D[Informar valor limite e confirmar]
+    D --> E[Validar dados de entrada]
+    E -- Válido --> F[Salvar orçamento no banco de dados]
+    E -- Inválido --> G[Exibir mensagem de erro e solicitar correção]
+    F --> H[Exibir confirmação de criação]
+    G --> B
+
+    C -- Editar --> I[Selecionar orçamento existente]
+    I --> J[Alterar valor limite e confirmar]
+    J --> E
+
+    C -- Consultar --> K[Listar orçamentos do período]
+    K --> L[Exibir detalhes: categoria, limite, gasto, saldo]
+    L --> M{Deseja ajustar orçamento?}
+    M -- Sim --> I
+    M -- Não --> N([FIM])
+    H --> N
+```
+
+# Projeto de Interface — R13 Análise de Tendências
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de execução para a funcionalidade de análise de tendências financeiras, desde a solicitação do usuário até a exibição dos resultados e recomendações.
+
+```mermaid
+graph TD
+    A([Usuário acessa Análise de Tendências]) --> B[Selecionar categoria, período e filtros]
+    B --> C{"Dados suficientes para análise?"}
+    C -- Sim --> D[Chamar ServicoAnaliseTendencia para gerar análise]
+    C -- Não --> E[Exibir mensagem: Dados insuficientes]
+    E --> B
+    D --> F{"Análise gerada com sucesso?"}
+    F -- Sim --> G[Exibir tendência, gráfico e recomendações]
+    F -- Não --> H[Exibir mensagem de erro: Falha na análise]
+    G --> I{Deseja exportar ou salvar?}
+    I -- Sim --> J[Exportar/Salvar análise]
+    I -- Não --> K([FIM])
+    J --> K
+```
+
+### 1.2 Telas Principais
+
+#### Tela: Dashboard de Tendências
+
+- **Componentes:**
+  - Filtros de período (ex: últimos 3, 6, 12 meses)
+  - Filtro de categoria (dropdown)
+  - Botão "Analisar"
+  - Lista de tendências por categoria (exibe tipo da tendência: Alta, Baixa, Estável)
+  - Gráfico de linha com evolução dos gastos no período selecionado
+  - Recomendações e descrição textual da análise
+  - Botão "Exportar" (PDF/CSV)
+
+#### Tela: Detalhe da Tendência
+
+- **Componentes:**
+  - Nome da categoria analisada
+  - Gráfico detalhado dos valores mensais
+  - Texto explicativo da tendência identificada
+  - Recomendações personalizadas
+  - Botão "Voltar" para o dashboard
+
+### 1.3 Comportamento Esperado
+
+- Ao acessar a Análise de Tendências, o usuário pode selecionar uma categoria e um período.
+- O sistema exibe o resultado da análise, incluindo:
+  - Tipo de tendência (Alta, Baixa, Estável)
+  - Gráfico de evolução dos gastos
+  - Recomendações e explicações em linguagem simples
+- Caso não haja dados suficientes, uma mensagem informativa é exibida.
+- O usuário pode exportar o resultado da análise.
+
+## 2. Observações
+
+- A interface deve ser responsiva e acessível.
+- Os gráficos devem ser claros, com legendas e destaques para mudanças significativas.
+- Recomendações devem ser objetivas e contextualizadas conforme o padrão identificado.
+
+# Projeto de Interface — R14 Projeção Financeira
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de execução para a funcionalidade de Projeção Financeira, desde a solicitação do usuário até a exibição da projeção e exportação dos resultados.
+
+```mermaid
+graph TD
+    A([Usuário acessa Projeção Financeira]) --> B[Seleciona o período para a projeção (ex: 6, 12 meses)]
+    B --> C{"Existem dados históricos suficientes?"}
+    C -- Sim --> D[Backend calcula a projeção]
+    C -- Não --> E[Exibir mensagem: Dados insuficientes para projetar]
+    E --> B
+    D --> F{"Projeção gerada com sucesso?"}
+    F -- Sim --> G[Exibir projeção: gráfico e resumo]
+    F -- Não --> H[Exibir mensagem de erro: Falha ao gerar projeção]
+    G --> I{Deseja exportar ou salvar?}
+    I -- Sim --> J[Exportar/Salvar projeção]
+    I -- Não --> K([FIM])
+    J --> K
+```
+
+### 1.2 Telas Principais
+
+#### Tela: Projeção Financeira
+
+- **Componentes:**
+  - Filtro de período para projeção (ex: dropdown com 3, 6, 12 meses)
+  - Botão "Gerar Projeção"
+  - Gráfico de linhas mostrando a evolução do saldo projetado mês a mês
+  - Resumo textual da projeção (ex: "Seu saldo projetado para 6 meses é R$ X.XXX,XX")
+  - Mensagens de erro ou alerta caso não haja dados suficientes
+  - Botão "Exportar" (PDF/CSV)
+
+#### Tela: Detalhe da Projeção
+
+- **Componentes:**
+  - Gráfico detalhado com valores de saldo projetado por mês
+  - Tabela opcional com os valores mês a mês
+  - Texto explicativo sobre a metodologia da projeção
+  - Botão "Voltar" para a tela principal
+
+### 1.3 Comportamento Esperado
+
+- O usuário seleciona o período desejado e solicita a projeção.
+- O sistema exibe o gráfico de saldo projetado e um resumo textual.
+- Caso não haja dados suficientes, uma mensagem informativa é exibida.
+- O usuário pode exportar a projeção em PDF ou CSV.
+
+## 2. Observações
+
+- A interface deve ser responsiva e acessível.
+- Os gráficos devem ser claros, com legendas e destaques para variações relevantes.
+- O resumo textual deve ser objetivo e fácil de entender.
+
+# Projeto de Interface — R15 Ferramentas Interativas
+
+## 1. Modelos Funcionais
+
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+O diagrama a seguir representa a jornada do usuário para acessar o hub de ferramentas e utilizar as calculadoras. Conforme a decisão de arquitetura, ambas as ferramentas operam inteiramente no frontend (client-side), com os cálculos sendo executados em tempo real a partir dos dados inseridos manualmente pelo usuário.
 
 ```mermaid
 graph TD
@@ -397,13 +656,14 @@ graph TD
     I --> J[Clica em 'Calcular'];
     J --> K([Lógica JavaScript calcula e exibe o resultado]);
 ```
-Este diagrama representa o fluxo de visualização do histórico financeiro.
 
-### R16 — Histórico Financeiro
+# Projeto de Interface — R16 Histórico Financeiro
 
-Este diagrama representa o fluxo de visualização do histórico financeiro.
+## 1. Modelos Funcionais
 
-Snippet de código
+### 1.1 Diagrama de Fluxo (Fluxograma)
+
+Este diagrama representa o fluxo de visualização do histórico financeiro, desde a seleção do período até a exibição dos saldos e movimentações.
 
 ```mermaid
 graph TD
@@ -416,3 +676,18 @@ graph TD
     G --> H([FIM])
     F --> H
 ```
+
+## 2. Protótipos de Telas
+
+- Tela de seleção de período
+- Lista de movimentações (com filtros por categoria, tipo, valor)
+- Gráfico de evolução do saldo
+- Botão para exportar relatório (PDF/Excel)
+
+## 3. Requisitos de Interface
+
+- Interface clara e intuitiva
+- Gráficos responsivos
+- Filtros avançados para busca de movimentações
+- Opção de exportação de dados
+

@@ -76,6 +76,67 @@ O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuár
 - **Satisfação com Recomendações e Diagnósticos:** As recomendações e diagnósticos apresentados são úteis e fáceis de entender?
   - _Teste:_ Após a geração do relatório, perguntar aos usuários se as recomendações e diagnósticos exibidos foram relevantes e se a linguagem utilizada foi clara.
 
+# Plano de Teste de Usabilidade — R5 Exportação e Compartilhamento
+
+## 1. Introdução
+O objetivo deste plano é avaliar a **facilidade de uso** e a **experiência do usuário** na funcionalidade de **Exportação e Compartilhamento (R5)** do sistema SaveMoney V2.  
+Os testes buscarão identificar problemas de usabilidade relacionados à clareza, eficiência e relevância das opções de exportação e compartilhamento, garantindo que tanto usuários pessoa física (PF) quanto pessoa jurídica (PJ) consigam exportar e compartilhar relatórios sem dificuldades.
+
+---
+
+## 2. Aspectos de Usabilidade a serem testados
+
+### 2.1 Clareza das Opções de Exportação e Compartilhamento
+- **Objetivo:** Avaliar se os usuários conseguem identificar e entender facilmente as opções de exportar e compartilhar relatórios.
+- **Procedimento de Teste:**  
+  1. Exibir um relatório pronto na tela.  
+  2. Solicitar que o usuário localize e explique as opções de exportação (PDF/Excel) e compartilhamento.  
+  3. Avaliar clareza dos ícones, botões, textos e instruções.
+- **Critério de Sucesso:** Pelo menos 80% dos usuários devem identificar corretamente as opções e descrever sua finalidade sem ajuda.
+
+---
+
+### 2.2 Eficiência no Processo de Exportação e Compartilhamento
+- **Objetivo:** Verificar se os usuários conseguem exportar e compartilhar relatórios de forma simples, rápida e intuitiva.
+- **Procedimento de Teste:**  
+  1. Solicitar que o usuário exporte um relatório em PDF e em Excel.  
+  2. Solicitar que o usuário compartilhe o arquivo gerado via WhatsApp ou E-mail.  
+  3. Medir o tempo necessário para:  
+     - Localizar as opções de exportação e compartilhamento.  
+     - Realizar a exportação e o compartilhamento sem erros.
+- **Critério de Sucesso:** Usuários devem conseguir concluir cada tarefa em menos de 2 minutos, sem erros críticos de navegação.
+
+---
+
+### 2.3 Satisfação com o Processo de Exportação e Compartilhamento
+- **Objetivo:** Avaliar se o processo de exportação e compartilhamento é considerado **fácil, útil e relevante** pelos usuários.
+- **Procedimento de Teste:**  
+  1. Após exportar e compartilhar um relatório, solicitar feedback sobre a experiência.  
+  2. Perguntar se o processo atendeu às expectativas e se recomendariam a funcionalidade.  
+  3. Avaliar clareza da linguagem, facilidade de uso e utilidade percebida.
+- **Critério de Sucesso:** Pelo menos 75% dos usuários devem avaliar o processo como “fácil” e “útil” em questionário pós-uso.
+
+---
+
+## 3. Métricas de Usabilidade
+- **Eficiência:** Tempo médio gasto para exportar e compartilhar um relatório.
+- **Eficácia:** Percentual de usuários que completam corretamente as tarefas sem ajuda.
+- **Satisfação:** Feedback qualitativo via questionário (escala Likert de 1 a 5) sobre clareza, facilidade e utilidade das opções.
+
+---
+
+## 4. Participantes
+- **João (PF):** Estudante que precisa exportar e compartilhar relatórios pessoais.
+- **Maria (PJ):** Empreendedora que precisa enviar relatórios gerenciais para parceiros ou contador.
+
+---
+
+## 5. Critérios de Aceitação
+A funcionalidade R5 será considerada **usável** se:  
+1. 80% dos usuários identificarem corretamente as opções de exportação e compartilhamento.  
+2. 80% concluírem as tarefas dentro do tempo limite estabelecido.  
+3. 75% avaliarem o processo como fácil e útil.
+
 # Plano de Teste de Usabilidade — R6/R7 Pessoa Física/Jurífica
 
 ## 1. Introdução
@@ -163,6 +224,99 @@ O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuár
   - _Teste:_ Após interagir com indicadores, perguntar sobre satisfação, utilidade e clareza dos mesmos.
 - **Persistência das Notificações:** As notificações e indicadores permanecem após logout/login?
   - _Teste:_ Solicitar que o usuário interaja com notificações, faça logout/login e verifique se as informações foram mantidas.
+
+# Plano de Teste de Usabilidade — R12 Gestão de Orçamento
+
+## 1. Introdução
+
+O objetivo deste plano é avaliar a **facilidade de uso** e a **experiência do usuário** na funcionalidade de **Gestão de Orçamento (R12)** do sistema SaveMoney V2.  
+Os testes buscarão identificar problemas de usabilidade relacionados à clareza, eficiência e relevância das opções de criação, consulta e ajuste de orçamentos mensais por categoria.
+
+---
+
+## 2. Aspectos de Usabilidade a serem testados
+
+### 2.1 Clareza das Opções de Orçamento
+- **Objetivo:** Avaliar se os usuários conseguem identificar e entender facilmente as opções para criar, visualizar e editar orçamentos.
+- **Procedimento de Teste:**  
+  1. Solicitar que o usuário localize e explique as opções de orçamento no sistema.  
+  2. Avaliar clareza dos ícones, botões, textos e instruções.
+- **Critério de Sucesso:** Pelo menos 80% dos usuários devem identificar corretamente as opções e descrever sua finalidade sem ajuda.
+
+---
+
+### 2.2 Eficiência no Processo de Criação e Ajuste de Orçamento
+- **Objetivo:** Verificar se os usuários conseguem criar, consultar e ajustar orçamentos de forma simples, rápida e intuitiva.
+- **Procedimento de Teste:**  
+  1. Solicitar que o usuário crie um novo orçamento para uma categoria.  
+  2. Solicitar que o usuário ajuste o valor de um orçamento existente.  
+  3. Medir o tempo necessário para completar cada tarefa sem erros.
+- **Critério de Sucesso:** Usuários devem conseguir concluir cada tarefa em menos de 2 minutos, sem erros críticos de navegação.
+
+---
+
+### 2.3 Satisfação com o Processo de Gestão de Orçamento
+- **Objetivo:** Avaliar se o processo de gestão de orçamento é considerado **fácil, útil e relevante** pelos usuários.
+- **Procedimento de Teste:**  
+  1. Após criar e ajustar um orçamento, solicitar feedback sobre a experiência.  
+  2. Perguntar se o processo atendeu às expectativas e se recomendariam a funcionalidade.  
+  3. Avaliar clareza da linguagem, facilidade de uso e utilidade percebida.
+- **Critério de Sucesso:** Pelo menos 75% dos usuários devem avaliar o processo como “fácil” e “útil” em questionário pós-uso.
+
+---
+
+## 3. Métricas de Usabilidade
+- **Eficiência:** Tempo médio gasto para criar e ajustar um orçamento.
+- **Eficácia:** Percentual de usuários que completam corretamente as tarefas sem ajuda.
+- **Satisfação:** Feedback qualitativo via questionário (escala Likert de 1 a 5) sobre clareza, facilidade e utilidade das opções.
+
+---
+
+## 4. Participantes
+- **João (PF):** Usuário que deseja controlar gastos pessoais por categoria.
+- **Maria (PJ):** Usuária que precisa planejar orçamentos mensais para diferentes áreas do negócio.
+
+---
+
+## 5. Critérios de Aceitação
+A funcionalidade R12 será considerada **usável** se:  
+1. 80% dos usuários identificarem corretamente as opções de orçamento.  
+2. 80% concluírem as tarefas dentro do tempo limite estabelecido.  
+3. 75% avaliarem o processo como fácil e útil.
+
+# Plano de Teste de Usabilidade — R13 Análise de Tendências
+
+## 1. Introdução
+
+O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com a funcionalidade de Análise de Tendências, incluindo a clareza dos gráficos, filtros e recomendações apresentadas.
+
+## 2. Aspectos de Usabilidade a serem testados
+
+- **Clareza da Visualização das Tendências:** O usuário entende as informações apresentadas nos gráficos e nas tendências identificadas?
+  - _Teste:_ Exibir a tela de análise de tendências para um grupo de usuários e pedir para que expliquem o tipo de tendência apresentada (Alta, Baixa, Estável) e os principais dados do gráfico. Avaliar a clareza dos títulos, legendas e explicações.
+- **Facilidade de Uso dos Filtros:** O usuário consegue selecionar facilmente o período e a categoria para análise?
+  - _Teste:_ Solicitar que o usuário selecione diferentes períodos e categorias e inicie uma análise. Medir o tempo e a facilidade de compreensão dos controles.
+- **Compreensão das Recomendações:** As recomendações apresentadas são úteis e fáceis de entender?
+  - _Teste:_ Após a análise, perguntar aos usuários se as recomendações exibidas foram relevantes e se a linguagem utilizada foi clara.
+- **Eficiência na Exportação dos Resultados:** O usuário consegue exportar ou salvar a análise sem dificuldades?
+  - _Teste:_ Solicitar que o usuário utilize a funcionalidade de exportação (PDF/CSV) e avaliar se o processo é intuitivo.
+
+# Plano de Teste de Usabilidade — R14 Projeção Financeira
+
+## 1. Introdução
+
+O objetivo deste plano é avaliar a facilidade de uso e a experiência do usuário com a funcionalidade de Projeção Financeira, incluindo a clareza dos gráficos, filtros e resumo apresentado.
+
+## 2. Aspectos de Usabilidade a serem testados
+
+- **Clareza da Visualização da Projeção:** O usuário entende as informações apresentadas no gráfico de projeção e no resumo textual?
+  - _Teste:_ Exibir a tela de projeção financeira para um grupo de usuários e pedir para que expliquem o saldo projetado e os principais dados do gráfico. Avaliar a clareza dos títulos, legendas e explicações.
+- **Facilidade de Uso dos Filtros:** O usuário consegue selecionar facilmente o período para projeção?
+  - _Teste:_ Solicitar que o usuário selecione diferentes períodos (ex: 3, 6, 12 meses) e gere uma projeção. Medir o tempo e a facilidade de compreensão dos controles.
+- **Compreensão do Resumo da Projeção:** O resumo apresentado é útil e fácil de entender?
+  - _Teste:_ Após a geração da projeção, perguntar aos usuários se o resumo exibido foi relevante e se a linguagem utilizada foi clara.
+- **Eficiência na Exportação dos Resultados:** O usuário consegue exportar ou salvar a projeção sem dificuldades?
+  - _Teste:_ Solicitar que o usuário utilize a funcionalidade de exportação (PDF/CSV) e avaliar se o processo é intuitivo.
 
 # Plano de Teste de Usabilidade — R15 Ferramentas Interativas
 
