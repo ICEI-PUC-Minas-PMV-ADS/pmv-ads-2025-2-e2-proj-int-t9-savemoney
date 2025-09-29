@@ -1,6 +1,7 @@
-
 # Arquitetura da Solução — R12 Gestão de Orçamento
+
 ## 1. Introdução
+
 Este documento detalha a arquitetura da solução para o requisito R12 - Gestão de Orçamento. O foco é permitir que o usuário planeje e controle seus gastos, definindo limites mensais para categorias específicas (ex: Lazer, Alimentação), com suporte completo de backend e persistência no banco de dados.
 
 ## 2. Diagrama de Classes
@@ -41,23 +42,23 @@ classDiagram
     ServicoOrcamento "1" -- "*" Orcamento : gerencia
 ```
 
-
 ## 3. Modelos de Dados
+
 ### 3.1 Modelo Entidade Relacionamento (Conceitual)
 
 **Entidades:**
+
 - Usuario: cod_usuario, nome
 - Categoria: cod_categoria, nome
 - Orcamento: cod_orcamento, cod_usuario (FK), cod_categoria (FK), valor_limite, mes, ano
 
 **Relacionamentos:**
+
 - Usuario 1:N Orcamento
 
 - Categoria 1:N Orcamento
 
 ### 3.2 Projeto da Base de Dados (Esquema Lógico)
-
-
 
 ```sql
 -- Tabela para armazenar os orçamentos mensais por categoria para cada usuário
@@ -80,6 +81,7 @@ CREATE TABLE Orcamentos (
 ### 4.1 Lógica dos Métodos da Classe Orcamento
 
 **validarDados()**
+
 - Verifica se valor_limite é um número positivo.
 
 - Verifica se mes está entre 1 e 12.
