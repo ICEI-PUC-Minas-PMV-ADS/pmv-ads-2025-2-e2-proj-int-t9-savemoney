@@ -2,8 +2,7 @@
 
 ## Descrição Geral
 
-Permitir ao usuário gerar relatórios detalhados, diagnósticos e resultados a partir dos dados financeiros cadastrados no sistema.
-
+Permitir ao usuário consultar projeções financeiras futuras, calculadas com base em seu histórico de receitas e despesas.
 ---
 
 ### Documentos Relacionados
