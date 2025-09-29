@@ -1,10 +1,8 @@
-# R4 - Relatórios, Diagnósticos e Resultados
+# R13 - Análise de Tendências
 
 ## Descrição Geral
 
-Permitir ao usuário gerar relatórios detalhados, diagnósticos e resultados a partir dos dados financeiros cadastrados no sistema.
-
----
+Permitir ao usuário visualizar análises de tendências financeiras, identificando padrões de aumento ou diminuição de gastos em categorias específicas ao longo do tempo.
 
 ### Documentos Relacionados
 
