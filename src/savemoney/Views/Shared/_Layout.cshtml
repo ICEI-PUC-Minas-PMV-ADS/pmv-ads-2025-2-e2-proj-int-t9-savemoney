@@ -37,13 +37,13 @@
                     <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                 </li>
             }
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Política de Privacidade</a>
-            </li>
             @if(User.Identity.IsAuthenticated)
             {
                 <li class="nav-item">
-                    Ola, @User.Identity.Name <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">Sair</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraMetas">Calculadora Metas</a>
+                </li>
+                <li class="nav-item">
+                   <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">Sair</a>
                 </li>
             }
             else
