@@ -126,15 +126,15 @@ export default class CatedralHeader extends CatedralComponent {
           align-items: center;
           justify-content: center;
         }
-        .profile-btn {
-          background: none;
-          border: none;
-          font-size: 1.5rem;
-          cursor: pointer;
-          margin-left: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        ::slotted([slot="profile"]) {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .dropdown {
           position: absolute;
@@ -169,12 +169,7 @@ export default class CatedralHeader extends CatedralComponent {
             }
           </button>
           <span class="header-title">${title}</span>
-          <button class="profile-btn" aria-label="Perfil">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M4 20c0-4 8-6 8-6s8 2 8 6"/>
-            </svg>
-          </button>
+          <slot name="profile"></slot>
         </div>
         <div class="dropdown" id="catedral-header-dropdown">
           <slot>Menu padrão (slot vazio)</slot>
