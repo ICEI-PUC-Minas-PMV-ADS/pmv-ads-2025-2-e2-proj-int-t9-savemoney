@@ -61,6 +61,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <span class="material-icons">privacy_tip</span>Privacidade
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">
                             <span class="material-icons">logout</span>Sair
                         </a>
@@ -68,6 +73,11 @@
                 }
                 else
                 {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <span class="material-icons">privacy_tip</span>Privacidade
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">
                             <span class="material-icons">login</span>Login
