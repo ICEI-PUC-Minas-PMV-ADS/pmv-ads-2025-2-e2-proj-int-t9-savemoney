@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using savemoney.Services; // importa o services da api para implementar as dependencias
 
 namespace savemoney
 {
@@ -27,7 +28,13 @@ namespace savemoney
                     options.AccessDeniedPath = "/Usuarios/AccessDenied/";
                     options.LoginPath = "/Usuarios/Login/";
                 });
-
+            // Inicio do código para injetar uma nova instancia pronta (NoticiasService)
+            // Registra o HttpClient para que possa ser injetado no nosso serviço
+            builder.Services.AddHttpClient();
+            // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
+            builder.Services.AddScoped<NoticiasService>();
+            // Fim do codigo de injeção de dependencias de NoticiasService.
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

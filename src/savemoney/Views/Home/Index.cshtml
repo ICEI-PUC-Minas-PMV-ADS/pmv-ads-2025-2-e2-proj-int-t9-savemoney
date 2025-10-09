@@ -2,6 +2,27 @@
     ViewData["Title"] = "Home";
 }
 
+
+Não achei o header para inserir os links abaixo:
+<nav>
+        <ul>
+            <li>
+                <a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas">Link para a Calculadora de Metas</a>
+            </li>
+            <li>
+                <a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Link para a
+                    CalculadoraDeEquilibrio</a>
+            </li>
+            <li>
+                <a asp-controller="EducacaoFinanceira" asp-action="Index">Educação financeira</a>
+            </li>
+            <li>
+                @{ // Link de Metas Financeiras
+                // <a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Planejamento de Metas</a>
+            }</li>
+        </ul>
+    </nav>
+
 <div class="mission-box">
     <span class="material-icons mission-icon">rocket_launch</span>
     <div class="mission-content">
@@ -17,7 +38,7 @@
         <span class="material-icons feature-icon">savings</span>
         <div class="feature-title">Controle Financeiro</div>
         <div class="feature-desc">
-            Gerencie suas receitas e despesas de forma eficiente, com categorização automática e relatórios detalhados.
+      d      Gerencie suas receitas e despesas de forma eficiente, com categorização automática e relatórios detalhados.
         </div>
     </div>
     <div class="feature-box">

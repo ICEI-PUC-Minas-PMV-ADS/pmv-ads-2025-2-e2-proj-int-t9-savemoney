@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Encodings.Web;
 
-namespace savemoney.Controllers;
+namespace ferramentas.Controllers;
 
 public class FerramentasController : Controller
 {

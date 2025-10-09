@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    @{
+        ViewData["Title"] = "EducacaoFinanceira";
+    }
+
+    <h1>Educação Financeira</h1>
+    <div id="noticias-container" class="row">
+        <!-- O JavaScript vai inserir os cartões de notícias aqui -->
+    </div>
+    <!-- No final de Views/EducacaoFinanceira/Index.cshtml -->
+    @section Scripts {
+        <script src="~/js/educacao.js"></script>
+    }
+</body>
+
+</html>
