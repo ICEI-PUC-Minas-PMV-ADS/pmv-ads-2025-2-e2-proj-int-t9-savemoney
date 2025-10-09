@@ -66,6 +66,18 @@
                 <!-- A lógica aqui mostra o menu principal apenas se o usuário estiver LOGADO -->
                 @if(User.Identity.IsAuthenticated)
                 {
+                    <!-- ====================================================== -->
+                    <!-- LINKS PARA AS FUNCIONALIDADES PRINCIPAIS -->
+                    <!-- ====================================================== -->
+                    
+                    <!-- Link para a página de Educação Financeira -->
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="EducacaoFinanceira" asp-action="Index">
+                            <span class="material-icons">school</span>Educação Financeira
+                        </a>
+                    </li>
+
+                    <!-- Links para as Ferramentas (R15) -->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraDeMetas">
                             <span class="material-icons">calculate</span>Calculadora de Metas
@@ -73,25 +85,21 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">
-                            <span class="material-icons">calculate</span>Calculadora de Equilibrio
+                            <span class="material-icons">insights</span>Ponto de Equilíbrio
                         </a>
                     </li>
+
+                    <!-- Link para o Conversor de Energia (R3) -->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="ConversorEnergias" asp-action="Index">
                             <span class="material-icons">bolt</span>Conversor de Energia
                         </a>
                     </li>
-                    
-                    <!-- ====================================================== -->
-                    <!-- AQUI ESTÁ O NOVO LINK QUE EU ADICIONEI -->
-                    <!-- Ele aponta para o EducacaoFinanceiraController e a action Index -->
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EducacaoFinanceira" asp-action="Index">
-                            <span class="material-icons">school</span>Educação Financeira
-                        </a>
-                    </li>
-                    <!-- ====================================================== -->
 
+                    <!-- ====================================================== -->
+                    <!-- LINKS DE NAVEGAÇÃO GERAL -->
+                    <!-- ====================================================== -->
+                    
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
                             <span class="material-icons">privacy_tip</span>Privacidade
@@ -141,3 +149,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

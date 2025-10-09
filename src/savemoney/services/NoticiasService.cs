@@ -1,34 +1,43 @@
-namespace savemoney.Services;
-// Esta classe é responsável por buscar as noticias
-public class NoticiasService
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+
+namespace savemoney.Services
 {
-    //HttpClient é a ferramenta do C# para fazer pedidos na net
-    private readonly HttpClient _HttpClient;
-    private readonly IConfiguration _configuration;
-
-    // Este é o construtor. Ele recebe as "Ferramentas" de que precisa para trabalhar
-    public NoticiasService(HttpClient httpClient, IConfiguration configuration)
+    public class NoticiasService
     {
-        _HttpClient = httpClient;
-        _configuration = configuration;
-    }
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-    // Este é o metodo princiapl
-    public async Task<string> BuscarNoticias()
-    {
-        // 1- Lê a chave da API que está no appsettings.Development.json
-        var apiKey = _configuration["NewsApi:ApiKey"];
+        public NoticiasService(HttpClient httpClient, IConfiguration configuration)
+        {
+            _httpClient = httpClient;
+            _configuration = configuration;
+        }
 
-        // 2- Monta a URL da api externa. Este exemplo, busca noticias de negocios no Brasil
-        var url = $"https://newsapi.org/v2/top-headlines?country=br&category=business&apiKey={apiKey}";
+        public async Task<string> BuscarNoticias()
+        {
+            var apiKey = _configuration["NewsApi:ApiKey"];
 
-        //3 -Adionar um cabeçalho obrigatorio para a NewsApi
-        _HttpClient.DefaultRequestHeaders.Add("User-Agent", "SaveMoneyApp/1.0");
+            // --- CORREÇÃO APLICADA AQUI ---
+            // Definimos as fontes de notícias em que confiamos.
+            var fontes = "info-money,google-news-br,globo";
 
-        // 4 - fazer o pedido GET e obter a resposta como uma string de texto JSON
-        var responseJsonString = await _HttpClient.GetStringAsync(url);
+            // Mudamos a URL para usar o endpoint 'top-headlines' com o parâmetro 'sources'.
+            // Isto é muito mais preciso do que pesquisar por uma palavra-chave em todo o lado.
+            var url = $"https://newsapi.org/v2/top-headlines?sources={fontes}&apiKey={apiKey}";
 
-        // 5- retornar a string JSON que recebemos
-        return responseJsonString;
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("User-Agent", "SaveMoneyApp/1.0");
+
+            var response = await _httpClient.SendAsync(request);
+
+            // Garante que o pedido foi bem-sucedido
+            response.EnsureSuccessStatusCode();
+
+            var responseJsonString = await response.Content.ReadAsStringAsync();
+
+            return responseJsonString;
+        }
     }
 }
