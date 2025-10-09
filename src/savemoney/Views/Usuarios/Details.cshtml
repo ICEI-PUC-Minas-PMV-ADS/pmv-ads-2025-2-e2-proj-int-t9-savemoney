@@ -4,55 +4,68 @@
     ViewData["Title"] = "Detalhes";
 }
 
-<h1>Detalhes</h1>
-
-<div>
-    <h4>Usuário</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Documento)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Documento)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DataCadastro)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DataCadastro)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Perfil)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Perfil)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TipoUsuario)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TipoUsuario)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a>
-    @if (User.IsInRole("Administrador"))
-    {
-        <br/>
-        <a asp-action="Index">Voltar para a Lista</a>
-    }
+<div class="container d-flex flex-column align-items-center justify-content-center">
+    <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%;">
+        <div class="text-center mb-4">
+            <span class="material-icons md-48" style="font-size: 48px;">person</span>
+            <h1 class="h3 mb-0">Detalhes do Usuário</h1>
+        </div>
+        <dl class="row mb-0">
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">badge</span>
+                @Html.DisplayNameFor(model => model.Nome)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Nome)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">email</span>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">assignment_ind</span>
+                @Html.DisplayNameFor(model => model.Documento)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Documento)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">calendar_today</span>
+                @Html.DisplayNameFor(model => model.DataCadastro)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.DataCadastro)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">supervisor_account</span>
+                @Html.DisplayNameFor(model => model.Perfil)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Perfil)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">account_tree</span>
+                @Html.DisplayNameFor(model => model.TipoUsuario)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.TipoUsuario)
+            </dd>
+        </dl>
+        <div class="d-flex flex-column gap-2 mt-4">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary w-100">
+                <span class="material-icons align-middle me-1" style="font-size: 20px;">edit</span>
+                Editar
+            </a>
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-action="Index" class="btn btn-link w-100">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">arrow_back</span>
+                    Voltar para a Lista
+                </a>
+            }
+        </div>
+    </div>
 </div>
