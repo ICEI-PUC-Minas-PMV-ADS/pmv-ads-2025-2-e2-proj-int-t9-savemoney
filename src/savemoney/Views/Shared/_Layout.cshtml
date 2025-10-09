@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Savemoney</title>
+    <title>@ViewData["Title"] - Save Money</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Licorice&display=swap" rel="stylesheet" />
@@ -46,8 +46,13 @@
                 @if(User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraMetas">
-                            <span class="material-icons">calculate</span>Calculadora Metas
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraDeMetas">
+                            <span class="material-icons">calculate</span>Calculadora de Metas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">
+                            <span class="material-icons">calculate</span>Calculadora de Equilibrio
                         </a>
                     </li>
                     <li class="nav-item">
@@ -72,11 +77,9 @@
             </ul>
         </nav>
     </catedral-header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main" class="pb-5 pt-5">
+        @RenderBody()
+    </main>
 
     <footer class="border-top footer text-muted">
         <div class="container text-center">

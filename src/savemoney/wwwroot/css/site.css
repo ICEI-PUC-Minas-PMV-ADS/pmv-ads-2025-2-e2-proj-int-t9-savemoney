@@ -149,7 +149,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 4rem 0;
+    padding: 4rem 0;
+    background: url('/assets/map-world.jpg') center center/cover no-repeat;
 }
 
 .login-card {
