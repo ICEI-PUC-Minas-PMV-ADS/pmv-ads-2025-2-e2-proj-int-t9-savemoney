@@ -24,3 +24,152 @@ body {
 .body-hidden {
     visibility: hidden;
 }
+
+.container {
+    margin-top: 2rem;
+}
+
+.header-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.header-navigation a {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.header-navigation a:hover {
+    background: #fff;
+    color: #125ea2;
+}
+
+.features-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.feature-box {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 24px 20px;
+    width: 320px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s;
+}
+
+.feature-box:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    font-size: 40px;
+    color: #1976d2;
+    margin-bottom: 16px;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.feature-desc {
+    font-size: 1rem;
+    color: #444;
+    text-align: center;
+}
+
+.mission-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.mission-desc {
+    font-size: 1rem;
+    color: #444;
+}
+
+.mission-box {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+    background: #f5faff;
+    border-left: 6px solid #1976d2;
+    border-radius: 10px;
+    padding: 32px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.mission-icon {
+    font-size: 48px;
+    color: #1976d2;
+    margin-right: 18px;
+}
+
+.mission-content {
+    flex: 1;
+}
+
+@media (max-width: 900px) {
+    .features-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-box {
+        width: 90%;
+    }
+
+    .mission-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4rem 0;
+}
+
+.login-card {
+    background: #fff;
+    padding: 36px 32px 28px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    width: 100%;
+    max-width: 370px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.login-card h2 {
+    font-weight: 700;
+}
+
+.btn-link {
+    color: #1976d2;
+    text-decoration: underline;
+    font-weight: 500;
+}

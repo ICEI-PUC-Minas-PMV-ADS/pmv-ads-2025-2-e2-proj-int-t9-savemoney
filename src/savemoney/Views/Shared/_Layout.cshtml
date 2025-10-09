@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Licorice&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/savemoney.styles.css" asp-append-version="true" />
@@ -14,32 +15,57 @@
 </head>
 <body class="body-hidden">
     <catedral-header title="Save Money">
-        <ul>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-            </li>
-            @if (User.IsInRole("Administrador") && User.Identity.IsAuthenticated)
-            { 
+        @{
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        }
+        <a slot="profile"
+           asp-controller="Usuarios"
+           asp-action="@(User.Identity.IsAuthenticated ? "Details" : "Login")"
+           asp-route-id="@(User.Identity.IsAuthenticated ? userId : null)"
+           aria-label="Perfil">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 8-6 8-6s8 2 8 6" />
+            </svg>
+        </a>
+        <nav class="header-navigation">
+            <ul>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                        <span class="material-icons">home</span>Home
+                    </a>
                 </li>
-            }
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Política de Privacidade</a>
-            </li>
-            @if(User.Identity.IsAuthenticated)
-            {
-                <li class="nav-item">
-                    Ola, @User.Identity.Name <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">Sair</a>
-                </li>
-            }
-            else
-            {
-                <li class="nav-item">
-                   <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">Login</a>
-                </li>
-            }
-        </ul>
+                @if (User.IsInRole("Administrador") && User.Identity.IsAuthenticated)
+                { 
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">
+                            <span class="material-icons">group</span>Usuarios
+                        </a>
+                    </li>
+                }
+                @if(User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraMetas">
+                            <span class="material-icons">calculate</span>Calculadora Metas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">
+                            <span class="material-icons">logout</span>Sair
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">
+                            <span class="material-icons">login</span>Login
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
     </catedral-header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -48,7 +74,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
+        <div class="container text-center">
             &copy; 2025 - savemoney - <a asp-area="" asp-controller="Home" asp-action="Privacy">Política de Privacidade</a>
             <catedral-logo></catedral-logo>
         </div>

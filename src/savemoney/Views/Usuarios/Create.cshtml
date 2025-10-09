@@ -1,58 +1,89 @@
 ﻿@model savemoney.Models.Usuario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar";
 }
 
-<h1>Create</h1>
-
-<h4>Usuario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="container d-flex flex-column align-items-center justify-content-center">
+    <div class="card shadow-sm p-4" style="max-width: 450px; width: 100%;">
+        <div class="text-center mb-4">
+            <span class="material-icons md-48" style="font-size: 48px;">person_add</span>
+            <h1 class="h3 mb-0">Criar Usuário</h1>
+        </div>
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+            <div class="mb-3">
+                <label asp-for="Nome" class="form-label">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">person</span>
+                    Nome
+                </label>
                 <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
+                <span asp-validation-for="Nome" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">email</span>
+                    Email
+                </label>
                 <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Senha" class="control-label"></label>
-                <input asp-for="Senha" class="form-control" />
-                <span asp-validation-for="Senha" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="Documento" class="form-label">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">badge</span>
+                    Documento
+                </label>
+                <input asp-for="Documento" class="form-control" />
+                <span asp-validation-for="Documento" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DataCriacao" class="control-label"></label>
-                <input asp-for="DataCriacao" class="form-control" />
-                <span asp-validation-for="DataCriacao" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="Senha" class="form-label">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">lock</span>
+                    Senha
+                </label>
+                <input asp-for="Senha" class="form-control" type="password" />
+                <span asp-validation-for="Senha" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DataAtualizacao" class="control-label"></label>
-                <input asp-for="DataAtualizacao" class="form-control" />
-                <span asp-validation-for="DataAtualizacao" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="Perfil" class="form-label">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">supervisor_account</span>
+                    Perfil
+                </label>
+                <select asp-for="Perfil" class="form-select" asp-items="Html.GetEnumSelectList<Perfil>()"></select>
+                <span asp-validation-for="Perfil" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Perfil" class="control-label"></label>
-                <select asp-for="Perfil" class="form-control" asp-items="Html.GetEnumSelectList<Perfil>()"></select>
-                <span asp-validation-for="Perfil" class="text-danger"></span>
+            @if (User.IsInRole("Administrador"))
+            {
+                <div class="mb-3">
+                    <label asp-for="TipoUsuario" class="form-label">
+                        <span class="material-icons align-middle me-1" style="font-size: 20px;">account_tree</span>
+                        Tipo de Usuário
+                    </label>
+                    <select asp-for="TipoUsuario" class="form-select" asp-items="Html.GetEnumSelectList<TipoUsuario>()"></select>
+                    <span asp-validation-for="TipoUsuario" class="text-danger small"></span>
+                </div>
+            }
+            <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">check_circle</span>
+                    Criar
+                </button>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            @if (User.IsInRole("Administrador"))
+            {
+                <div class="text-center">
+                    <a asp-action="Index" class="btn btn-link">
+                        <span class="material-icons align-middle me-1" style="font-size: 20px;">arrow_back</span>
+                        Voltar para a lista
+                    </a>
+                </div>
+            }
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
