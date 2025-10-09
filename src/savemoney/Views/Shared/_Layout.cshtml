@@ -10,20 +10,35 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/savemoney.styles.css" asp-append-version="true" />
-    <script src="~/lib/catedral/catedral.js"></script>
+    <script src="~/lib/catedral/catedral.js" type="module" asp-append-version="true"></script>
 </head>
-<body>
+<body class="body-hidden">
     <catedral-header title="Save Money">
         <ul>
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
-            </li>
+            @if (User.IsInRole("Administrador") && User.Identity.IsAuthenticated)
+            { 
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                </li>
+            }
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Política de Privacidade</a>
             </li>
+            @if(User.Identity.IsAuthenticated)
+            {
+                <li class="nav-item">
+                    Ola, @User.Identity.Name <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">Sair</a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                   <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">Login</a>
+                </li>
+            }
         </ul>
     </catedral-header>
     <div class="container">
