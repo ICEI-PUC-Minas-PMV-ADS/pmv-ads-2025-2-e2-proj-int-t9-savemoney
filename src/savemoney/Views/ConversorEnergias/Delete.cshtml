@@ -1,0 +1,59 @@
+﻿@model savemoney.Models.ConversorEnergia
+
+@{
+    ViewData["Title"] = "Excluir Conversão";
+}
+
+<div class="container py-4 d-flex flex-column align-items-center">
+    <h1 class="mb-3 text-center text-danger">
+        <span class="material-icons align-middle" style="font-size:2rem;">delete_forever</span>
+        Excluir Conversão
+    </h1>
+
+    <div class="card shadow-sm mb-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-3 text-danger">
+                <span class="material-icons align-middle">warning</span>
+                Tem certeza que deseja excluir esta conversão?
+            </h5>
+            <dl class="row mb-0">
+                <dt class="col-sm-5 text-secondary">Valor Base</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.ValorBase)</dd>
+
+                <dt class="col-sm-5 text-secondary">Tipo Valor</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.TipoValor)</dd>
+
+                <dt class="col-sm-5 text-secondary">Estado</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.Estado)</dd>
+
+                <dt class="col-sm-5 text-secondary">Modalidade</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.Modalidade)</dd>
+
+                <dt class="col-sm-5 text-secondary">Bandeira Tarifária</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.BandeiraTarifaria)</dd>
+
+                <dt class="col-sm-5 text-secondary">Tipo Dispositivo</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.TipoDispositivo)</dd>
+
+                <dt class="col-sm-5 text-secondary">Tempo de Uso</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.TempoUso)</dd>
+
+                <dt class="col-sm-5 text-secondary">Consumo Mensal</dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => model.ConsumoMensal)</dd>
+            </dl>
+        </div>
+        <div class="card-footer bg-white border-0 d-flex justify-content-between">
+            <form asp-action="Delete" class="mb-0">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    <span class="material-icons align-middle">delete</span>
+                    Excluir
+                </button>
+            </form>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <span class="material-icons align-middle">arrow_back</span>
+                Cancelar
+            </a>
+        </div>
+    </div>
+</div>

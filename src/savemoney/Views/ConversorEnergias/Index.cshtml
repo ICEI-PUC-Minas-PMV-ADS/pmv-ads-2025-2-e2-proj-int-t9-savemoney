@@ -1,0 +1,93 @@
+﻿@model IEnumerable<savemoney.Models.ConversorEnergia>
+
+@{
+    ViewData["Title"] = "Conversor de Energia";
+    var hasData = Model != null && Model.Any();
+}
+
+<div class="container py-4 d-flex flex-column align-items-center">
+
+    <h1 class="mb-4 text-center">
+        <span class="material-icons align-middle text-primary" style="font-size:2rem;">bolt</span>
+        Conversor de Energia
+    </h1>
+
+    <div class="card shadow-sm mb-4" style="max-width: 700px; border: none;">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-3">
+                <span class="material-icons align-middle text-info" style="font-size:1.5rem;">info</span>
+                Como funciona o conversor?
+            </h5>
+            <ul class="list-unstyled mb-0 text-secondary">
+                <li>
+                    <span class="material-icons align-middle text-success" style="font-size:1.1rem;">check_circle</span>
+                    Informe os dados do aparelho, como potência e tempo de uso diário.
+                </li>
+                <li>
+                    <span class="material-icons align-middle text-success" style="font-size:1.1rem;">check_circle</span>
+                    O conversor calcula automaticamente.
+                </li>
+                <li>
+                    <span class="material-icons align-middle text-success" style="font-size:1.1rem;">check_circle</span>
+                    Salve e acompanhe o histórico das suas conversões para comparar e analisar.
+                </li>
+            </ul>
+            <div class="text-center mt-3">
+                <a class="btn btn-success btn-lg" asp-action="Create">
+                    <span class="material-icons align-middle">add_circle</span>
+                    <span class="align-middle">Criar Nova Conversão</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (hasData)
+    {
+        <h2 class="mt-4 mb-3 text-center">
+            <span class="material-icons align-middle text-secondary">history</span>
+            Histórico de Conversões
+        </h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4 justify-content-center" style="width: 100%;">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">
+                                <span class="material-icons align-middle text-primary" style="font-size:1.2rem;">electrical_services</span>
+                                @item.TipoDispositivo
+                            </h5>
+                            <ul class="list-group list-group-flush mb-2">
+                                <li class="list-group-item px-0 py-1"><strong>Valor Base:</strong> @item.ValorBase</li>
+                                <li class="list-group-item px-0 py-1"><strong>Tipo Valor:</strong> @item.TipoValor</li>
+                                <li class="list-group-item px-0 py-1"><strong>Estado:</strong> @item.Estado</li>
+                                <li class="list-group-item px-0 py-1"><strong>Modalidade:</strong> @item.Modalidade</li>
+                                <li class="list-group-item px-0 py-1"><strong>Bandeira Tarifária:</strong> @item.BandeiraTarifaria</li>
+                                <li class="list-group-item px-0 py-1"><strong>Tempo de Uso:</strong> @item.TempoUso</li>
+                                <li class="list-group-item px-0 py-1"><strong>Consumo Mensal:</strong> @item.ConsumoMensal</li>
+                            </ul>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-sm btn-primary me-1" asp-action="Edit" asp-route-id="@item.Id" title="Editar">
+                                    <span class="material-icons align-middle">edit</span>
+                                </a>
+                                <a class="btn btn-sm btn-info me-1" asp-action="Details" asp-route-id="@item.Id" title="Detalhes">
+                                    <span class="material-icons align-middle">visibility</span>
+                                </a>
+                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id" title="Excluir">
+                                    <span class="material-icons align-middle">delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary d-flex align-items-center justify-content-center text-center mt-4" role="alert" style="max-width: 600px;">
+            <span class="material-icons me-2">history</span>
+            Nenhuma conversão foi realizada ainda.
+        </div>
+    }
+</div>
