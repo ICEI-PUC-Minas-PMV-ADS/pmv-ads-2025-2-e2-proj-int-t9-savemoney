@@ -64,6 +64,21 @@ export default class CatedralHeader extends CatedralComponent {
       btn.removeEventListener('click', this.toggleMenu); // evita múltiplos listeners
       btn.addEventListener('click', this.toggleMenu);
     }
+
+    // Adiciona o event listener ao overlay para fechar o menu ao clicar
+    const overlay = this.shadowRoot && this.shadowRoot.querySelector('.dropdown-overlay');
+    if (overlay) {
+      overlay.removeEventListener('click', this._closeMenuOnOverlayClick);
+      this._closeMenuOnOverlayClick = (e) => {
+        e.stopPropagation();
+        if (this.menuOpen) {
+          this.menuOpen = false;
+          this.render();
+        }
+      };
+      overlay.addEventListener('click', this._closeMenuOnOverlayClick);
+    }
+
     // Loga o conteúdo real do slot após renderização
     const slot = this.shadowRoot && this.shadowRoot.querySelector('slot');
     if (slot) {
@@ -80,7 +95,6 @@ export default class CatedralHeader extends CatedralComponent {
   }
 
   template() {
-    console.log("[CatedralHeader] template render", { menuOpen: this.menuOpen, title: this.getAttribute("title") });
     const title = this.getAttribute("title") || "Título";
     const menuOpen = this.menuOpen;
     return `
@@ -107,7 +121,7 @@ export default class CatedralHeader extends CatedralComponent {
           margin: .5rem;
           position: sticky;
           top: 1rem;
-          z-index: 100;
+          z-index: 110;
           width: 100%;
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
@@ -128,30 +142,54 @@ export default class CatedralHeader extends CatedralComponent {
           justify-content: center;
         }
         ::slotted([slot="profile"]) {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-left: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          margin-left: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .dropdown {
           position: absolute;
           top: 100%;
           left: 0;
-          z-index: 10;
+          z-index: 110;
           min-width: 220px;
           background: #eee;
           border-radius: 1rem;
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
           margin-top: 0.5rem;
           padding: 0.5rem;
-          display: ${this.menuOpen ? "block" : "none"};
+          opacity: 0;
+          transform: translateY(-10px);
+          pointer-events: none;
+          transition: opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1);
+        }
+        .dropdown.active {
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
         }
         .dropdown slot {
           display: block;
+        }
+        .dropdown-overlay {
+          position: fixed;
+          inset: 0;
+          width: 100vw;
+          height: 100vh;
+          z-index: 105;
+          background: rgba(0,0,0,0.5);
+          backdrop-filter: blur(4px) grayscale(0.7);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        .dropdown-overlay.active {
+          opacity: 1;
+          pointer-events: auto;
         }
       </style>
       <div class="container-header">
@@ -172,9 +210,10 @@ export default class CatedralHeader extends CatedralComponent {
           <span class="header-title">${title}</span>
           <slot name="profile"></slot>
         </div>
-        <div class="dropdown" id="catedral-header-dropdown">
+        <div class="dropdown${menuOpen ? ' active' : ''}" id="catedral-header-dropdown">
           <slot>Menu padrão (slot vazio)</slot>
         </div>
+        <div class="dropdown-overlay${menuOpen ? ' active' : ''}"></div>
       </div>
     `;
   }
