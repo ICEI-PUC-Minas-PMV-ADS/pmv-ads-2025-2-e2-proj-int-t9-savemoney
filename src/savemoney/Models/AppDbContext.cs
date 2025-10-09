@@ -9,5 +9,6 @@ namespace savemoney.Models
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<ConversorEnergia> ConversoresEnergia { get; set; }
     }
 }
