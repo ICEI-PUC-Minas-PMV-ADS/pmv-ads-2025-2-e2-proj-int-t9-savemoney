@@ -108,6 +108,7 @@ export default class CatedralHeader extends CatedralComponent {
           position: sticky;
           top: 1rem;
           z-index: 100;
+          width: 100%;
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .header-title {
@@ -146,7 +147,7 @@ export default class CatedralHeader extends CatedralComponent {
           border-radius: 1rem;
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
           margin-top: 0.5rem;
-          padding: 0.5rem 0;
+          padding: 0.5rem;
           display: ${this.menuOpen ? "block" : "none"};
         }
         .dropdown slot {

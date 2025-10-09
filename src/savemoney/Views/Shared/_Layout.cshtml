@@ -28,32 +28,44 @@
                 <path d="M4 20c0-4 8-6 8-6s8 2 8 6" />
             </svg>
         </a>
-        <ul>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-            </li>
-            @if (User.IsInRole("Administrador") && User.Identity.IsAuthenticated)
-            { 
+        <nav class="header-navigation">
+            <ul>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                        <span class="material-icons">home</span>Home
+                    </a>
                 </li>
-            }
-            @if(User.Identity.IsAuthenticated)
-            {
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraMetas">Calculadora Metas</a>
-                </li>
-                <li class="nav-item">
-                   <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">Sair</a>
-                </li>
-            }
-            else
-            {
-                <li class="nav-item">
-                   <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">Login</a>
-                </li>
-            }
-        </ul>
+                @if (User.IsInRole("Administrador") && User.Identity.IsAuthenticated)
+                { 
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">
+                            <span class="material-icons">group</span>Usuarios
+                        </a>
+                    </li>
+                }
+                @if(User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Ferramentas" asp-action="CalculadoraMetas">
+                            <span class="material-icons">calculate</span>Calculadora Metas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Logout">
+                            <span class="material-icons">logout</span>Sair
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">
+                            <span class="material-icons">login</span>Login
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
     </catedral-header>
     <div class="container">
         <main role="main" class="pb-3">
