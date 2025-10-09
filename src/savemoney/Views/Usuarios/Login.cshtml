@@ -27,9 +27,14 @@
             </div>
             <p>@ViewBag.Message</p>
         </form>
+        <div class="form-group mt-3">
+            <a asp-action="Create" class="btn btn-primary">Criar novo usuário</a>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

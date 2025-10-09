@@ -11,17 +11,30 @@ namespace savemoney.Models
         public required string Nome { get; set; }
         [Required(ErrorMessage = "O e-mail é obrigatório.")]
         public required string Email { get; set; }
+        [Required(ErrorMessage = "O documento é obrigatório.")]
+        public required string Documento { get; set; }
         [Required(ErrorMessage = "A senha é obrigatório.")]
         [DataType(DataType.Password)]
         public required string Senha { get; set; }
-        public DateTime DataCriacao { get; set; }
-        public DateTime DataAtualizacao { get; set; }
-        [Required(ErrorMessage = "O perfil é obrigatório.")]
+        public DateTime DataCadastro { get; set; }
+
+        [Required(ErrorMessage = "O perfil da conta é obrigatório.")]
         public Perfil Perfil { get; set; }
+
+        [Required(ErrorMessage = "O tipo de usuário é obrigatório.")]
+        public TipoUsuario TipoUsuario { get; set; }
     }
 
-    public enum Perfil {
+    public enum Perfil
+    {
+        Fisica,
+        Juridica
+    }
+
+    public enum TipoUsuario
+    {
         Administrador,
-        UsuarioComum
+        Moderador,
+        Usuario
     }
 }
