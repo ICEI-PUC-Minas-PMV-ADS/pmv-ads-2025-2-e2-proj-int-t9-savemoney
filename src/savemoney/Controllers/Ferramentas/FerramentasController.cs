@@ -1,17 +1,34 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using savemoney.Models;
 
-namespace ferramentas.Controllers;
-
-public class FerramentasController : Controller
+namespace savemoney.Controllers
 {
-    // GET: /CalculadoraDeMetas/
-    public IActionResult CalculadoraDeMetas()
+    public class FerramentasController : Controller
     {
-        return View();
-    }
-    // GET: /CalculadoraDeEquilibrio/
-    public IActionResult CalculadoraDeEquilibrio()
-    {
-        return View();
+        private readonly ILogger<FerramentasController> _logger;
+
+        public FerramentasController(ILogger<FerramentasController> logger)
+        {
+            _logger = logger;
+        }
+
+        // GET: /Ferramentas/CalculadoraDeMetas/
+        public IActionResult CalculadoraDeMetas()
+        {
+            return View();
+        }
+
+        // GET: /Ferramentas/CalculadoraDeEquilibrio/
+        public IActionResult CalculadoraDeEquilibrio()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }
