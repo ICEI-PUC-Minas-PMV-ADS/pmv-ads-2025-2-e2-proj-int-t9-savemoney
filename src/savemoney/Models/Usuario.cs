@@ -7,15 +7,20 @@ namespace savemoney.Models
     public class Usuario
     {
         public int Id { get; set; }
+
         [Required(ErrorMessage = "O nome é obrigatório.")]
         public required string Nome { get; set; }
+
         [Required(ErrorMessage = "O e-mail é obrigatório.")]
         public required string Email { get; set; }
+
         [Required(ErrorMessage = "O documento é obrigatório.")]
         public required string Documento { get; set; }
+
         [Required(ErrorMessage = "A senha é obrigatório.")]
         [DataType(DataType.Password)]
         public required string Senha { get; set; }
+
         public DateTime DataCadastro { get; set; }
 
         [Required(ErrorMessage = "O perfil da conta é obrigatório.")]
