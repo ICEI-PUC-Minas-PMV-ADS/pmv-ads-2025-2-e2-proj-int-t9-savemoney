@@ -5,13 +5,13 @@ using savemoney.Services;
 
 namespace savemoney.Controllers;
 
-public class EducacaoFinanceiraController : Controller
+public class NoticiasController : Controller
 {
     // Controller "Orquesta", recebe o pedido, chama o Service para fazer o trabalho, e devolve a resposta.
     private readonly NoticiasService _noticiasService;
 
     //o serviço é injetado aqui pelo sistemas e guardado na nossa variável privada
-    public EducacaoFinanceiraController(NoticiasService noticiasService)
+    public NoticiasController(NoticiasService noticiasService)
     {
         _noticiasService = noticiasService;
     }
