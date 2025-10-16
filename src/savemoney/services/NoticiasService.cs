@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Net;
 
 namespace savemoney.Services
 {
@@ -17,7 +18,7 @@ namespace savemoney.Services
             _configuration = configuration;
         }
 
-        public async Task<string> BuscarNoticias()
+        public async Task<string> BuscarNoticiasAsync(string termoDeBusca)
         {
             var apiKey = _configuration["GNews:ApiKey"];
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -33,7 +34,9 @@ namespace savemoney.Services
             }
 
             // Adiciona o filtro de notícias financeiras (business)
+            var termoCodificado = WebUtility.UrlEncode(termoDeBusca);
             var url = $"https://gnews.io/api/v4/top-headlines?lang=pt&topic=business&token={apiKey}";
+            // var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&token={apiKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "SaveMoneyApp/1.0");

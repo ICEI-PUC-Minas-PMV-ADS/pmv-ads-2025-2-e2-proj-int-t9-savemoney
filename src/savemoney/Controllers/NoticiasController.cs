@@ -26,20 +26,20 @@ public class NoticiasController : Controller
     A Rota será /EducacaoFinanceira/GetNoticias
     */
     [HttpGet]
-    public async Task<IActionResult> GetNoticias()
+    public async Task<IActionResult> GetNoticias([FromQuery] string termo)
     {
         try
         {
             // Aqui chama o serviço que faz todo o trabalho pesado
-            var noticiasJson = await _noticiasService.BuscarConteudoAsync(); //Auteração da definição BuscarNoticias() para BuscarConteudoAsync() para corrigir erro de compilação
+            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termo);
 
             // Aqui ele repassa a resposta.
-            return Content(noticiasJson, "application/Json");
+            return Content(noticiasJson, "application/json");
         }
         catch (Exception ex)
         {
             return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
         }
     }
-    
+
 }
