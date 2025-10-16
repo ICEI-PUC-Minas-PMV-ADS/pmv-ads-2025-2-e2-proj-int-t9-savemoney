@@ -1,0 +1,136 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educação Financeira</title>
+</head>
+
+<body>
+    @{
+        ViewData["Title"] = "Educação Financeira";
+    }
+
+    <!-- =================================================================== -->
+    <!-- AULA DE BOOTSTRAP: ESTRUTURA E ESPAÇAMENTO -->
+    <!-- =================================================================== -->
+    <!-- 
+    <div class="container my-5">:
+    - .container: Cria um contentor de largura fixa e centralizado na página. É a base para a maioria dos layouts.
+    - .my-5: Adiciona uma margem no eixo Y (vertical). 'm' para margin, 'y' para o eixo (top e bottom), e '5' é o maior nível de espaçamento. Isso cria um espaço em cima e embaixo da nossa seção.
+-->
+    <div class="container my-5">
+
+        <!-- =================================================================== -->
+        <!-- AULA DE BOOTSTRAP: TEXTO -->
+        <!-- =================================================================== -->
+        <!-- 
+        <div class="text-center mb-5">:
+        - .text-center: Centraliza todo o texto dentro desta div.
+        - .mb-5: Adiciona uma margem embaixo ('bottom') de tamanho 5, para separar este cabeçalho dos cards.
+    -->
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <span class="material-icons md-48 text-warning mb-3" style="font-size: 64px;">
+                        construction
+                    </span>
+                    <h1 class="display-5 mb-3">Educação Financeira</h1>
+                    <p class="lead mb-4">
+                        Esta funcionalidade está em desenvolvimento.<br>
+                        Em breve você poderá utilizar a pagina de educação financeira para seus artigos e noticias
+                    </p>
+                    <div class="alert alert-info d-inline-block" role="alert">
+                        <span class="material-icons align-middle me-2">
+                            info
+                        </span>
+                        Não deixe de visitar nossas api de noticias e artigos cientificos sobre o mundo das finanças.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- AULA DE BOOTSTRAP: O SISTEMA DE GRID (LINHAS E COLUNAS) -->
+        <!-- =================================================================== -->
+        <!-- 
+        <div class="row g-4 justify-content-center">:
+        - .row: Define uma "linha" horizontal para organizar o nosso conteúdo em colunas. É a base do grid system.
+        - .g-4: Adiciona um "gutter" (espaçamento) de tamanho 4 entre as colunas, tanto horizontal quanto verticalmente.
+        - .justify-content-center: Uma classe de Flexbox que centraliza as nossas colunas na linha, caso elas não ocupem todo o espaço.
+    -->
+        <div class="row g-4 justify-content-center">
+
+            <!-- Coluna para o card de Notícias -->
+            <!-- 
+            <div class="col-lg-5 col-md-6">:
+            - O Bootstrap divide a tela em 12 colunas imaginárias.
+            - .col-lg-5: Em telas grandes ('lg' para large), esta coluna ocupará 5 de 12 espaços.
+            - .col-md-6: Em telas médias ('md' para medium), esta coluna ocupará 6 de 12 espaços (metade da tela).
+            - Em telas pequenas, por padrão, ela ocupará 100% da largura, empilhando os cards.
+        -->
+            <div class="col-lg-5 col-md-6">
+                <!-- =================================================================== -->
+                <!-- AULA DE BOOTSTRAP: CARDS -->
+                <!-- =================================================================== -->
+                <!-- 
+                <div class="card h-100 shadow-sm">:
+                - .card: A classe principal que cria o componente "card".
+                - .h-100: Faz com que a altura do card seja 100% da altura da sua coluna. Isso garante que os dois cards na mesma linha tenham a mesma altura.
+                - .shadow-sm: Adiciona uma sombra pequena e sutil ao card, dando profundidade.
+            -->
+                <div class="card h-100 shadow-sm">
+                    <!-- Imagem do card. Usei um placeholder de placehold.co -->
+                    <img src="https://placehold.co/600x400/8B5CF6/FFFFFF?text=Notícias" class="card-img-top"
+                        alt="Capa da seção de notícias">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">Notícias do Dia</h5>
+                        <p class="card-text">Mantenha-se atualizado com as últimas notícias do mercado financeiro de
+                            fontes confiáveis.</p>
+
+                        <!-- =================================================================== -->
+                        <!-- AULA DE BOOTSTRAP: LINKS E BOTÕES -->
+                        <!-- =================================================================== -->
+                        <!-- 
+                        <a asp-controller="Noticias" ...>:
+                        - AQUI ESTÁ A CORREÇÃO DO DIRETÓRIO: Em vez de um 'href="#"', eu uso os Tag Helpers do ASP.NET Core.
+                        - asp-controller="Noticias": Aponta para o seu NoticiasController.
+                        - asp-action="Index": Aponta para o método Index() dentro daquele controller.
+                        - .btn e .btn-primary: Classes do Bootstrap para estilizar o link como um botão azul primário.
+                        - .mt-auto: Uma classe mágica de Flexbox. Como o card-body é um flex-column, isso empurra o botão para a base do card, alinhando os botões de ambos os cards.
+                    -->
+                        <a asp-controller="Noticias" asp-action="Index" class="btn btn-primary mt-auto">Acessar
+                            Notícias</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna para o card de Artigos -->
+            <div class="col-lg-5 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <img src="https://placehold.co/600x400/A78BFA/FFFFFF?text=Artigos" class="card-img-top"
+                        alt="Capa da seção de artigos">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">Artigos Acadêmicos</h5>
+                        <p class="card-text">Aprofunde o seu conhecimento com pesquisas e artigos científicos sobre
+                            finanças e economia.</p>
+
+                        <!-- 
+                        - asp-controller="Artigos": Aponta para o futuro ArtigosController que vamos criar.
+                        - .btn-outline-primary: Estiliza o botão com um fundo transparente e borda azul.
+                    -->
+                        <a asp-controller="Artigos" asp-action="Index" class="btn btn-outline-primary mt-auto">Explorar
+                            Artigos</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
