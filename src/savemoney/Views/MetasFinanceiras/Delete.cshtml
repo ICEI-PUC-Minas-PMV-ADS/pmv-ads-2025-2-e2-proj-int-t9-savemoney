@@ -1,0 +1,45 @@
+@model savemoney.Models.MetaFinanceira
+
+@{
+    ViewData["Title"] = "Remover Meta";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+    <div class="alert alert-danger" role="alert">
+        <h4>Tem certeza que deseja remover a meta "@Model.Titulo"?</h4>
+        <p><strong>Atenção:</strong> Todos os aportes relacionados a esta meta também serão excluídos permanentemente.
+            Esta ação não pode ser desfeita.</p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Titulo)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Titulo)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.ValorObjetivo)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.ValorObjetivo)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.ValorAtual)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.ValorAtual)
+                </dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                <input type="submit" value="Remover Permanentemente" class="btn btn-danger" />
+            </form>
+        </div>
+    </div>
+</div>

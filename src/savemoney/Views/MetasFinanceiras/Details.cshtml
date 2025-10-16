@@ -1,0 +1,119 @@
+@model savemoney.Models.MetaFinanceira
+
+@{
+    ViewData["Title"] = "Detalhes da Meta";
+}
+
+<div class="container mt-5">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">@Model.Titulo</h4>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger">Remover</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Descricao)</dt>
+                <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Descricao) ? "N/A" : Model.Descricao)</dd>
+                
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ValorObjetivo)</dt>
+                <dd class="col-sm-9">@Model.ValorObjetivo.ToString("C")</dd>
+                
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ValorAtual)</dt>
+                <dd class="col-sm-9 fw-bold @(Model.EstaConcluida ? "text-success" : "text-primary")">@Model.ValorAtual.ToString("C")</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DataLimite)</dt>
+                <dd class="col-sm-9">@(Model.DataLimite.HasValue ? Model.DataLimite.Value.ToShortDateString() : "Sem prazo")</dd>
+            </dl>
+
+            <div class="mt-4">
+                <h5>Progresso</h5>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar progress-bar-striped @(Model.EstaConcluida ? "bg-success" : "bg-primary")" 
+                         role="progressbar" 
+                         style="width: @((Model.Progresso * 100).ToString("0.##").Replace(",", "."))%" 
+                         aria-valuenow="@Model.ValorAtual" 
+                         aria-valuemin="0" 
+                         aria-valuemax="@Model.ValorObjetivo">
+                        @((Model.Progresso * 100).ToString("0"))%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h5>Registrar Aporte</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.EstaConcluida)
+                    {
+                        <div class="alert alert-success">
+                            Meta já concluída. Novos aportes continuarão sendo registrados.
+                        </div>
+                    }
+                    <form asp-action="RegistrarAporte" method="post">
+                        <input type="hidden" name="MetaFinanceiraId" value="@Model.Id" />
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">R$</span>
+                            <input type="number" step="0.01" class="form-control" name="ValorAporte" placeholder="Valor do aporte" required>
+                            <button class="btn btn-success" type="submit">Aportar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h5>Histórico de Aportes</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Aportes == null || !Model.Aportes.Any())
+                    {
+                        <p class="text-muted">Nenhum aporte registrado ainda.</p>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var aporte in Model.Aportes)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @aporte.DataAporte.ToShortDateString()
+                                    <span class="badge bg-primary rounded-pill">@aporte.Valor.ToString("C")</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 mb-5">
+        <a asp-action="Index" class="btn btn-secondary">Voltar para a Lista de Metas</a>
+    </div>
+</div>
