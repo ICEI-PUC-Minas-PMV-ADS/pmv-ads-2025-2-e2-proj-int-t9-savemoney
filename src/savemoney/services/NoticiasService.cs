@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Collections.Generic;
-using savemoney.Service;
 
 namespace savemoney.Services
 {
-    public class NoticiasService : IConteudoService
+    public class NoticiasService
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
@@ -18,7 +17,7 @@ namespace savemoney.Services
             _configuration = configuration;
         }
 
-        public async Task<string> BuscarConteudoAsync()
+        public async Task<string> BuscarNoticias()
         {
             var apiKey = _configuration["GNews:ApiKey"];
             if (string.IsNullOrWhiteSpace(apiKey))
