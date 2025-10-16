@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const container = document.getElementById('noticias-container');
 
         try {
-            const apiUrl = '/EducacaoFinanceira/GetNoticias';
+            const apiUrl = '/Noticias/GetNoticias';
 
             const response = await fetch(apiUrl);
 
@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const dadosCompletos = await response.json();
 
-            // Garante que a estrutura esperada está presente
+            // Garante que a estrutura esperada estï¿½ presente
             if (!dadosCompletos || !Array.isArray(dadosCompletos.articles)) {
-                throw new Error("A resposta da API não continha a propriedade 'articles' esperada.");
+                throw new Error("A resposta da API nï¿½o continha a propriedade 'articles' esperada.");
             }
 
-            // Se status for error, mostra mensagem amigável
+            // Se status for error, mostra mensagem amigï¿½vel
             if (dadosCompletos.status !== "ok") {
-                container.innerHTML = '<div class="alert alert-danger text-center">Não foi possível carregar as notícias no momento.</div>';
+                container.innerHTML = '<div class="alert alert-danger text-center">Nï¿½o foi possï¿½vel carregar as notï¿½cias no momento.</div>';
                 return;
             }
 
@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
             container.innerHTML = '';
 
             if (listaDeNoticias.length === 0) {
-                container.innerHTML = '<div class="alert alert-info text-center">Nenhuma notícia encontrada no momento.</div>';
+                container.innerHTML = '<div class="alert alert-info text-center">Nenhuma notï¿½cia encontrada no momento.</div>';
                 return;
             }
 
             listaDeNoticias.forEach(noticia => {
-                // Garante valores padrão para todos os campos
-                const title = noticia.title || "Sem título";
+                // Garante valores padrï¿½o para todos os campos
+                const title = noticia.title || "Sem tï¿½tulo";
                 const description = noticia.description || "Clique para ler mais na fonte original.";
                 const url = noticia.url || "#";
                 const imageUrl = noticia.urlToImage || 'https://placehold.co/600x400/6a0dad/white?text=Noticia';
@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         } catch (error) {
-            console.error("Falha ao carregar notícias:", error);
-            container.innerHTML = `<div class="alert alert-danger text-center">Desculpe, não foi possível carregar as notícias. Verifique a consola (F12) para mais detalhes do erro.</div>`;
+            console.error("Falha ao carregar notï¿½cias:", error);
+            container.innerHTML = `<div class="alert alert-danger text-center">Desculpe, nï¿½o foi possï¿½vel carregar as notï¿½cias. Verifique a consola (F12) para mais detalhes do erro.</div>`;
         }
     }
 

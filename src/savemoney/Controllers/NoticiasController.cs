@@ -28,10 +28,12 @@ public class NoticiasController : Controller
     [HttpGet]
     public async Task<IActionResult> GetNoticias([FromQuery] string termo)
     {
+        var termoDeBusca = string.IsNullOrWhiteSpace(termo) ? "finanças" : termo;
+
         try
         {
             // Aqui chama o serviço que faz todo o trabalho pesado
-            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termo);
+            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termoDeBusca);
 
             // Aqui ele repassa a resposta.
             return Content(noticiasJson, "application/json");

@@ -35,14 +35,26 @@ namespace savemoney.Services
 
             // Adiciona o filtro de notícias financeiras (business)
             var termoCodificado = WebUtility.UrlEncode(termoDeBusca);
-            var url = $"https://gnews.io/api/v4/top-headlines?lang=pt&topic=business&token={apiKey}";
-            // var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&token={apiKey}";
+            // var url = $"https://gnews.io/api/v4/top-headlines?lang=pt&topic=business&token={apiKey}";
+            var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&token={apiKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "SaveMoneyApp/1.0");
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            // response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var erro = new
+                {
+                    status = "error",
+                    message = $"Erro ao comunicar com a API de notícias. Status: {response.StatusCode}",
+                    totalResults = 0,
+                    articles = new List<object>()
+                };
+                return JsonSerializer.Serialize(erro);
+            }
 
             var responseJsonString = await response.Content.ReadAsStringAsync();
 
