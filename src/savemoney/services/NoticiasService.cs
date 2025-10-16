@@ -103,22 +103,5 @@ namespace savemoney.Services
             }
         }
     }
-
-    // Métodos de extensão para facilitar o tratamento de campos ausentes
-    public static class JsonExtensions
-    {
-        public static string GetPropertyOrDefault(this JsonElement element, string property, string defaultValue)
-        {
-            if (element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String)
-                return value.GetString();
-            return defaultValue;
-        }
-
-        public static int GetPropertyOrDefault(this JsonElement element, string property, int defaultValue)
-        {
-            if (element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var intValue))
-                return intValue;
-            return defaultValue;
-        }
-    }
 }
+

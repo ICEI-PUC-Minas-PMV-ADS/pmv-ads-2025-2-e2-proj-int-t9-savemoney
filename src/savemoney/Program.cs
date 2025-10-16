@@ -33,8 +33,8 @@ namespace savemoney
             builder.Services.AddHttpClient();
             // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
             builder.Services.AddScoped<NoticiasService>();
-            // Fim do codigo de injeção de dependencias de NoticiasService.
-            
+            builder.Services.AddScoped<ArtigosService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

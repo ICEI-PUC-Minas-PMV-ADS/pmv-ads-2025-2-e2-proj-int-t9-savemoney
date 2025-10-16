@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Artigos Acadêmicos";
+}
+
+<div class="container my-5">
+    <h1 class="text-center mb-4 fw-bold">Artigos Acadêmicos sobre Finanças</h1>
+    <p class="text-center mb-5 text-muted">Explore pesquisas e estudos recentes. Ordenados por relevância/citações (Fonte: <a href="https://openalex.org/" target="_blank" rel="noopener noreferrer">OpenAlex</a>).</p>
+
+    <div id="artigos-container" class="d-flex flex-column gap-4">
+        <div class="d-flex justify-content-center my-5" id="loading-spinner">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/artigos.js" asp-append-version="true"></script>
+}
