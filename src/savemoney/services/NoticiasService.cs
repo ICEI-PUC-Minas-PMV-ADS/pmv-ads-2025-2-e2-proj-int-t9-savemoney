@@ -70,20 +70,20 @@ namespace savemoney.Services
                     foreach (var article in articlesElement.EnumerateArray())
                     {
                         articles.Add(new
-                        {
+                        {
                             // Passamos null como padrão para GetPropertyOrDefault, 
                             // e usamos '??' para garantir um valor final se o resultado for nulo.
-                            title = article.GetPropertyOrDefault("title", null) ?? "Sem título",
-                            description = article.GetPropertyOrDefault("description", null) ?? "Sem descrição",
-                            url = article.GetPropertyOrDefault("url", null) ?? "#",
+                            title = article.GetPropertyOrDefault("title", null) ?? "Sem título",
+                            description = article.GetPropertyOrDefault("description", null) ?? "Sem descrição",
+                            url = article.GetPropertyOrDefault("url", null) ?? "#",
 
                             // Estes campos podem permanecer nulos, então a implementação anterior já estava correta:
-                            urlToImage = article.GetPropertyOrDefault("image", null),
-                            publishedAt = article.GetPropertyOrDefault("publishedAt", null),
-                            
+                            urlToImage = article.GetPropertyOrDefault("image", null),
+                            publishedAt = article.GetPropertyOrDefault("publishedAt", null),
+
                             // A lógica da fonte já trata corretamente o potencial nulo de GetString()
                             source = article.TryGetProperty("source", out var source) && source.TryGetProperty("name", out var name) ? name.GetString() : null
-                        });
+                        });
                     }
                 }
 
