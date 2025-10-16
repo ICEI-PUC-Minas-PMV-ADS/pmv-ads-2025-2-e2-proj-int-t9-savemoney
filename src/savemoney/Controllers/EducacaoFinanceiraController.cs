@@ -31,7 +31,7 @@ public class EducacaoFinanceiraController : Controller
         try
         {
             // Aqui chama o serviço que faz todo o trabalho pesado
-            var noticiasJson = await _noticiasService.BuscarNoticias();
+            var noticiasJson = await _noticiasService.BuscarConteudoAsync(); //Auteração da definição BuscarNoticias() para BuscarConteudoAsync() para corrigir erro de compilação
 
             // Aqui ele repassa a resposta.
             return Content(noticiasJson, "application/Json");
