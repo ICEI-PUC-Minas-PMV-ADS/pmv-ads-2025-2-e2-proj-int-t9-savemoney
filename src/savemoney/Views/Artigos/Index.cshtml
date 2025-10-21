@@ -1,19 +1,101 @@
 @{
-    ViewData["Title"] = "Artigos Acadêmicos";
+    ViewData["Title"] = "Artigos sobre Educação Financeira";
 }
 
-<div class="container my-5">
-    <h1 class="text-center mb-4 fw-bold">Artigos Acadêmicos sobre Finanças</h1>
-    <p class="text-center mb-5 text-muted">Explore pesquisas e estudos recentes. Ordenados por relevância/citações (Fonte: <a href="https://openalex.org/" target="_blank" rel="noopener noreferrer">OpenAlex</a>).</p>
+@* --- ESTILOS DA PÁGINA --- *@
+@* Se você não adicionou @RenderSectionAsync("Styles", required: false) no _Layout.cshtml, mantenha assim. 
+   Se você adicionou, envolva essas tags <link> em @section Styles { ... } *@
 
-    <div id="artigos-container" class="d-flex flex-column gap-4">
-        <div class="d-flex justify-content-center my-5" id="loading-spinner">
-            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-                <span class="visually-hidden">Carregando...</span>
-            </div>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+@* Importa a fonte Manrope e os ícones Material Symbols *@
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/artigos.css" asp-append-version="true" />
+
+@* --- FIM DOS ESTILOS --- *@
+
+
+@* Imagem de fundo - Definida via CSS para melhor controle e facilidade de troca *@
+<div class="background-fixed-image" aria-hidden="true"></div>
+
+
+<main class="content-wrapper">
+    <div class="container-artigos">
+        <div class="header-artigos">
+            <h1>Artigos Academicos</h1>
+            <p>
+                Explore pesquisas acadêmicas focadas em finanças pessoais, investimentos e economia comportamental. (Fonte: <a href="https://openalex.org/" target="_blank" rel="noopener noreferrer">OpenAlex</a>)
+            </p>
         </div>
+
+        @* Formulário de Busca para melhor acessibilidade e controle (Enter) *@
+        <form id="form-busca" class="filter-bar glass-effect" onsubmit="return false;">
+            <div class="filter-grid">
+                <div class="filter-search">
+                    <span class="material-symbols-outlined icon-search">search</span>
+                    <input type="text" id="filtro-texto" class="input-style" placeholder="Digite palavras-chave..." />
+                </div>
+                
+                @* NOVO: Filtro de Tópico *@
+                 <div class="filter-topic">
+                    <select id="filtro-topico" class="select-style">
+                        <option value="EducacaoFinanceira">Educação Financeira</option>
+                        <option value="Investimentos">Investimentos</option>
+                        <option value="EconomiaComportamental">Economia Comportamental</option>
+                        <option value="Criptoativos">Criptoativos e Blockchain</option>
+                        <option value="MercadoDeCapitais">Mercado de Capitais</option>
+                        <option value="">Todos os Tópicos Financeiros</option>
+                    </select>
+                </div>
+
+                @* NOVO: Filtro de Região *@
+                <div class="filter-region">
+                    <select id="filtro-regiao" class="select-style">
+                        <option value="BR">Brasil</option>
+                        <option value="GLOBAL">Global</option>
+                    </select>
+                </div>
+
+                <div class="filter-sort">
+                    <select id="filtro-ordem" class="select-style">
+                        <option value="relevance">Relevância (Citações)</option>
+                        <option value="newest">Mais Recentes</option>
+                    </select>
+                </div>
+
+                @* NOVO: Botão de Ação *@
+                 <div class="filter-button-container">
+                    <button type="submit" id="btn-pesquisar" class="btn-action">
+                        Pesquisar
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div id="artigos-container" class="artigos-grid">
+            @* Os artigos serão carregados aqui *@
+        </div>
+
+        @* Contêiner de Loading (agora fora do grid principal) *@
+        <div class="loading-container" id="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Carregando...</p>
+        </div>
+
+         <div id="status-message-container" style="display: none;">
+            <div id="status-message" class="status-message"></div>
+         </div>
+        
+         @* NOVO: Contêiner de Paginação *@
+        <div class="pagination-container" id="pagination-container" style="display: none;">
+             <button id="btn-exibir-mais" class="btn-action btn-show-more">
+                Exibir Mais Artigos
+            </button>
+        </div>
+
     </div>
-</div>
+</main>
 
 @section Scripts {
     <script src="~/js/artigos.js" asp-append-version="true"></script>
