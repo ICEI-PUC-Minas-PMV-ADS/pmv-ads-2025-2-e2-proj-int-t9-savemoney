@@ -11,8 +11,8 @@ namespace savemoney
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();  // <-- pacote do NuGet para compilar e visualizar as alterações em tempo real.
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); 
             builder.Services.AddDbContext<Models.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

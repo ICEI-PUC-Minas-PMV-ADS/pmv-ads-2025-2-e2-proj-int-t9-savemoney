@@ -1,0 +1,338 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Manrope, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    /* Empilha header, main, footer */
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* O header vai ocupar o proprio espaço */
+header {
+    flex-shrink: 0;
+}
+
+/* Main agora é apenas o contêiner principal para as seções */
+main {
+    flex-grow: 1;
+}
+
+/* ===================================== */
+/* SEÇÃO HERO (A primeira seção com fundo) */
+/* ===================================== */
+
+/* Movido os estilos de fundo e centralização do 'main' original para cá */
+.hero-section {
+    background-image: url(../assets/background-image-educacao.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Garante que a seção hero ocupe pelo menos a altura da tela */
+    min-height: 100vh;
+    /* Posição para o overlay */
+    position: relative;
+    isolation: isolate;
+}
+
+/* O Overlay escuro */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* Adicionado padding para garantir respiro */
+    padding: 5rem 0;
+    gap: 4rem; /* Espaço entre o texto e os cards */
+}
+
+.intro-text {
+    text-align: center;
+    max-width: 53rem;
+    padding: 0 1rem;
+    color: #ffffff;
+}
+
+.intro-text p {
+    font-size: 1.25rem;
+}
+
+.intro-text h1 {
+    font-size: 4.5rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.cards-container {
+    display: flex;
+    /* Habilitamos o wrap para que os cards quebrem de linha automaticamente se não couberem */
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.card {
+    padding: 2rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 30rem;
+    /* Permite crescer (1), encolher (1) com base de 280px (Melhor responsividade) */
+    flex: 1 1 280px;
+}
+
+/* Rotação inicial (será removida no mobile/tablet) */
+.card-left {
+    transform: rotate(-6deg);
+}
+
+.card-right {
+    transform: rotate(6deg);
+}
+
+/* O hover funciona para ambos */
+.card:hover {
+    transform: rotate(0deg);
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card h5 {
+    text-align: center;
+    font-size: 1.5em;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.card p {
+    font-size: 1em;
+    margin: 0 0 1.5em;
+    color: white;
+}
+
+/* Estilo base para os botões */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    /* TÉCNICA CRÍTICA: Empurra o botão para o final do contêiner flexível (.card-content) */
+    margin-top: auto;
+    /* Garante que o botão ocupe a largura toda do card */
+    display: block;
+    width: 100%;
+}
+
+/* Botão "News" (Azul com texto branco) */
+.btn-news {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+.btn-news:hover {
+    background-color: #2563eb;
+}
+
+/* Botão "Articles" (Branco com texto azul) */
+.btn-articles {
+    background-color: #ffffff;
+    color: #3b82f6;
+}
+
+.btn-articles:hover {
+    background-color: #f1f5f9;
+}
+
+/* ===================================== */
+/* NOVA SEÇÃO DE INFORMAÇÕES FINANCEIRAS */
+/* ===================================== */
+
+.financial-info-section {
+    /* Cor de fundo cinza claro semelhante à imagem */
+    background-color: #f8f9fa;
+    /* Padding vertical generoso e padding horizontal para segurança */
+    padding: 6rem 1rem;
+    text-align: center;
+}
+
+/* Container utilitário para centralizar e limitar a largura */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-header {
+    /* Limita a largura do texto para melhor leitura */
+    max-width: 800px;
+    /* Centraliza o bloco e adiciona margem inferior */
+    margin: 0 auto 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    /* Cor escura para o título principal (Inspirado em Slate 900) */
+    color: #0f172a;
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    font-size: 1.125rem;
+    /* Cor cinza médio para o subtítulo (Inspirado em Slate 600) */
+    color: #475569;
+}
+
+.info-cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    /* Permite que os cards quebrem linha automaticamente em telas menores */
+    flex-wrap: wrap;
+}
+
+.info-card {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    /* Sombra sutil para dar profundidade, como no design */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    max-width: 450px;
+    /* Alinha o texto do card à esquerda */
+    text-align: left;
+    /* Garante que a imagem interna respeite o border-radius do card */
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    /* Permite crescer/encolher com base de 300px */
+    flex: 1 1 300px;
+}
+
+/* Efeito de levantar o card ao passar o mouse */
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card img {
+    width: 100%;
+    /* Altura fixa para manter a consistência do layout */
+    height: 250px;
+    /* Garante que a imagem cubra a área designada sem distorcer */
+    object-fit: cover;
+    display: block;
+}
+
+.info-card-content {
+    padding: 1.5rem;
+}
+
+.info-card-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.info-card-content p {
+    font-size: 1rem;
+    color: #475569;
+    margin: 0;
+}
+
+/* ===================================== */
+/* MEDIA QUERIES (Responsividade)        */
+/* ===================================== */
+
+/* Tablets (e.g., iPads) - Telas menores que 992px */
+@media (max-width: 992px) {
+    .intro-text h1 {
+        font-size: 3.5rem; /* Diminuir o título principal */
+    }
+
+    .intro-text p {
+        font-size: 1.125rem;
+    }
+
+    /* Remover a rotação nos cards de vidro em tablets, pois eles começarão a empilhar devido ao flex-wrap */
+    .card-left,
+    .card-right {
+        transform: rotate(0deg);
+    }
+    
+    /* Garante que os cards ocupem a maior largura possível quando empilhados */
+    .card {
+        max-width: 100%;
+    }
+
+    .section-header h2 {
+        font-size: 2rem; /* Diminuir o título da seção */
+    }
+
+    .financial-info-section {
+        padding: 4rem 1rem; /* Menos padding vertical */
+    }
+}
+
+/* Smartphones (e.g., iPhones, Android) - Telas menores que 768px */
+@media (max-width: 768px) {
+    
+    /* Otimização para Mobile: background-attachment: fixed pode causar lentidão ou problemas visuais em alguns dispositivos móveis. */
+    .hero-section {
+        background-attachment: scroll;
+    }
+
+    .intro-text h1 {
+        font-size: 2.5rem; /* Título ainda menor */
+    }
+
+    .intro-text p {
+        font-size: 1rem;
+    }
+    
+    .main-content {
+        gap: 3rem; /* Reduzir o gap na seção hero */
+        padding: 4rem 0;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .section-header p {
+        font-size: 1rem;
+    }
+
+    .info-card img {
+        height: 200px; /* Altura da imagem menor em mobile */
+    }
+}
