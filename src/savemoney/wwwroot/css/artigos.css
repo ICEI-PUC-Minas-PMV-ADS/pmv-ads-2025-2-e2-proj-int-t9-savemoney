@@ -23,9 +23,9 @@
 ========================================================== */
 
 /* OPÇÃO 1: Padrão de Rede Neural (Original do Mockup) */
-.background-fixed-image {
+/* .background-fixed-image {
     background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuALK9OFZW-21lj2y9CrnXAC3APme0fJkCpVrhHenf7FD0w8xhdzNhLkGEJS67keXtAbgpgql6IDK5Rlth9kabiNoq0SKBPaRrlDyfCi2GJZq23vbdh3xgAvtXJk38mL2d9i7rA_DjJsLdWL2NwV0iiGnTUuyqlrAHT5AVM1n8V_wdf0dJPJ_xuOweZ-lX1kJ9cqMopjxNBBus_6f_gDR7KPCVQrCS7sKSaXvEeh4FOEDC4WsAsa1Kw-DIi6ckXlidCL-hRsYNyVVJ4');
-}
+} */
 
 /* OPÇÃO 2: Gráficos Financeiros Abstratos (via Unsplash) */
 /*
@@ -42,11 +42,10 @@
 */
 
 /* OPÇÃO 4: Arquitetura Moderna (Foco e Clareza) (via Unsplash) */
-/*
+
 .background-fixed-image {
     background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop');
 }
-*/
 
 /* OPÇÃO 5: Conceito de Blockchain (Tecnologia Financeira) (via Unsplash) */
 /*
