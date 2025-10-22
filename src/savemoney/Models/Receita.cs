@@ -9,7 +9,7 @@ namespace savemoney.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Nome da receita é obrigatório.")]
-        public required string Titulo { get; set; }
+        public string  Titulo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Valor da receita é obrigatório.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Informe um valor maior que Zero (0)")]

@@ -15,9 +15,12 @@ namespace savemoney.Controllers
         }
 
         // Get Recietas
+
+     
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Receitas.ToListAsync());
+            var receitas = await _context.Receitas.ToListAsync();
+            return View(receitas);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -30,6 +33,11 @@ namespace savemoney.Controllers
             return View(receita);   
         }
 
+     
+        public IActionResult Create()
+        {
+            return View();
+        }
         //Post Receita/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

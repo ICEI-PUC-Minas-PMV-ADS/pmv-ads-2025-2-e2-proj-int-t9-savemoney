@@ -11,7 +11,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Título</th>
+                <th>Nome</th>
                 <th>Valor</th>
                 <th>Data</th>
                 <th>Categoria</th>
@@ -25,6 +25,7 @@
                 <td>@item.Valor.ToString("C")</td>
                 <td>@item.Data.ToShortDateString()</td>
                 <td>@item.Categoria</td>
+                <td>@item.Descricao</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Visualizar</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
