@@ -1,160 +1,186 @@
-/* Definindo variáveis CSS baseadas na configuração Tailwind fornecida */
-:root {
-  --color-primary: #1791cf;
-  --color-background-light: #f6f7f8;
-  --color-foreground-light: #111827;
-  --color-subtle-light: #6b7280;
-  --font-display: "Manrope", sans-serif;
-  --border-radius-xl: 0.75rem; /* Equivalente a rounded-xl */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Manrope", sans-serif;
 }
 
-/* Aplicando estilos gerais. Adicionamos um wrapper para definir o fundo e a fonte da seção, similar ao body do exemplo Tailwind */
-.news-page-wrapper {
-  background-color: var(--color-background-light);
-  font-family: var(--font-display);
-  color: var(--color-foreground-light);
-  padding: 4rem 1.5rem; /* Equivalente a py-16 px-6 */
-  min-height: 50vh;
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
 }
 
-/* Equivalente a max-w-7xl mx-auto */
-.news-section-container {
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Estilização do Título e Subtítulo */
-.news-header {
+main {
+  min-height: 100vh;
+  width: 100%;
   text-align: center;
-  margin-bottom: 3rem; /* Equivalente a mb-12 */
 }
 
-.news-title {
-  font-size: 3rem; /* text-5xl */
-  font-weight: 800; /* font-extrabold */
-  margin-bottom: 1rem;
+.main-container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 6rem 1rem 2rem 1rem;
+  text-align: center;
 }
 
-/* Adicionando responsividade ao título como no exemplo original (md:text-7xl) */
-@media (min-width: 768px) {
-  .news-title {
-    font-size: 4.5rem; /* text-7xl */
-  }
+.title-page {
+  margin-bottom: 1.1rem;
+  margin-top: 3rem;
 }
 
-.news-subtitle {
-  font-size: 1.125rem; /* text-lg */
-  color: var(--color-subtle-light);
-  max-width: 768px; /* max-w-3xl */
-  margin-left: auto;
-  margin-right: auto;
+.title-page h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
 }
 
-/* --- Estilização do Card (Visando as classes geradas pelo JS) --- */
-
-/* O JS gera 'card-link' envolvendo o card */
-.card-link {
-  text-decoration: none; /* Remove o sublinhado padrão do link */
-  color: inherit; /* Mantém a cor do texto */
-  display: block;
+.main-paragraph {
+  margin-top: 0;
+  margin-bottom: 2.5rem;
 }
 
-.card-link:hover {
-  text-decoration: none;
-  color: inherit;
+.main-paragraph p {
+  font-size: 1.15rem;
+  color: #555555;
+  margin: 0;
 }
 
-/* O JS gera 'news-card' */
-.news-card {
-  border: none; /* Remove a borda padrão do Bootstrap */
-  background-color: white;
-  border-radius: var(--border-radius-xl);
-  /* Sombra equivalente a shadow-lg */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  /* Transição equivalente a transition-all duration-300 */
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+/* --- 3. Container da Barra de Busca --- */
+
+.search-container {
+  display: flex;
+  align-items: center; 
+  max-width: 60%; 
+  margin: 2rem auto; 
+  position: relative;
 }
 
-/* Efeito de Hover (equivalente a hover:-translate-y-1 hover:shadow-2xl) */
-.card-link:hover .news-card {
-  transform: translateY(-0.25rem);
-  /* Sombra equivalente a shadow-2xl */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+.search-container::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900; 
+  content: "\f002"; 
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  color: #6c757d;
+  pointer-events: none;
+  z-index: 1;
 }
 
-/* Imagem do Card (O JS usa 'card-img-top') */
-.news-card .card-img-top {
-  height: 12rem; /* Equivalente a h-48 */
-  object-fit: cover; /* Essencial para <img> replicar bg-cover */
-  object-position: center;
-  /* Garante que os cantos superiores respeitem o raio do card */
-  border-top-left-radius: var(--border-radius-xl);
-  border-top-right-radius: var(--border-radius-xl);
+/* --- 4. Input e Botão de Busca --- */
+
+.search-input {
+  flex-grow: 1;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  outline: none;
+  height: 3.5rem;
+  box-sizing: border-box;
+  padding: 1rem 1rem 1rem 3.5rem;
 }
 
-/* Corpo do Card (O JS usa 'card-body') */
-.news-card .card-body {
-  padding: 1.5rem; /* Equivalente a p-6 */
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
 }
 
-/* Título do Card (O JS usa 'card-title') */
-.news-card .card-title {
-  font-size: 1.25rem; /* text-xl */
-  font-weight: 700; /* font-bold */
-  margin-bottom: 0.75rem; /* mb-3 */
-  color: var(--color-foreground-light);
+.action-search-button {
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0 1.5rem; 
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-left: 0.5rem; 
+  height: 3.5rem;
+  box-sizing: border-box;
 }
 
-/* Texto do Card (O JS usa 'card-text') */
-.news-card .card-text {
-  font-size: 0.875rem; /* text-sm */
-  color: var(--color-subtle-light);
+.action-search-button:hover {
+  background-color: #0056b3;
 }
 
-/* --- Loader Personalizado (Replicando o loader do Tailwind sem mudar o HTML) --- */
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+#noticias-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  /* padding: 24px; */ /* Espaçamento interno ao redor do container, avaliar o retorno apos os requests voltar*/
 }
 
-/* Centraliza e estiliza o container do spinner (equivalente a flex-col gap-4) */
-.spinner-container {
+.meu-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%; /* Garante que ocupe a largura total na grade */
-  text-align: center;
-  padding: 2rem 0;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
 }
 
-/* Esconde o spinner padrão do Bootstrap (spinner-border) */
-.spinner-container .spinner-border {
-  display: none;
+.meu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Cria o loader personalizado usando um pseudo-elemento ::before */
-.spinner-container::before {
-  content: "";
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: inline-block;
-  /* Usamos a cor primária, pois o fundo é claro (o exemplo Tailwind usava branco, mas em fundo escuro) */
-  border-top: 4px solid var(--color-primary);
-  border-right: 4px solid transparent;
-  box-sizing: border-box;
-  animation: spin 1s linear infinite;
+.meu-card-imagem {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 
-/* Adiciona o texto de carregamento usando um pseudo-elemento ::after */
-.spinner-container::after {
-  content: "Buscando as últimas notícias..."; /* Fetching the latest news... */
-  font-size: 1.125rem; /* text-lg */
-  color: var(--color-subtle-light);
+.meu-card-conteudo {
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.meu-card-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.meu-card-descricao {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.carregar-mais-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 50%;
+}
+.carregar-mais-button > button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
 }
