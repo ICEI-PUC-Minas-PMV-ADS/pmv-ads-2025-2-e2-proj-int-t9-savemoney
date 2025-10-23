@@ -184,3 +184,63 @@ main {
   cursor: pointer;
   font-size: 1rem;
 }
+@media (max-width: 768px) {
+  .main-container {
+    max-width: 90%;
+    padding-top: 4rem;
+  }
+
+  .title-page h1 {
+    font-size: 2.75rem;
+  }
+
+  .search-container {
+    max-width: 80%;
+  }
+
+  .carregar-mais-button {
+    width: 60%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    max-width: 95%;
+    padding-top: 3rem;
+  }
+
+  .title-page {
+    margin-top: 1.5rem;
+  }
+
+  .title-page h1 {
+    font-size: 2.1rem;
+  }
+
+  .main-paragraph p {
+    font-size: 1rem;
+  }
+
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 95%;
+  }
+
+  .search-input {
+    margin-bottom: 0.5rem;
+  }
+
+  .action-search-button {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  #noticias-container {
+    grid-template-columns: 1fr;
+  }
+
+  .carregar-mais-button {
+    width: 90%;
+  }
+}
