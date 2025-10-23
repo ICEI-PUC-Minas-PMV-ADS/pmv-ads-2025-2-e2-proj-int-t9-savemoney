@@ -1,14 +1,25 @@
 @{
     ViewData["Title"] = "Educação Financeira";
 }
+@section css {
+    <link rel="stylesheet" href="~/css/noticias.css" asp-append-version="true" />
+}
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-<div class="news-section-container">
-    <h1 class="text-center mb-4 fw-bold">Últimas Notícias Financeiras</h1>
+<div class="news-page-wrapper">
+    <div class="news-section-container">
+        <div class="news-header">
+            <h1 class="news-title">Notícias do Mercado Financeiro</h1>
+            <p class="news-subtitle">Fique atualizado com notícias em tempo real do mundo financeiro.</p>
+        </div>
 
-    <div id="noticias-container" class="row g-4 justify-content-center">
-        <div class="spinner-container">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Carregando...</span>
+        <div id="noticias-container" class="row g-5 justify-content-center">
+            <div class="spinner-container">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
             </div>
         </div>
     </div>

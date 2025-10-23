@@ -17,7 +17,7 @@
     <!-- Links para as folhas de estilo (CSS). O '~/' é um atalho para a pasta wwwroot -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
+    @await RenderSectionAsync("css", required: false)
     <!-- Link para o meu componente de Web Components 'catedral', que vai gerir o header e outras partes -->
     <script src="~/lib/catedral/catedral.js" type="module" asp-append-version="true"></script>
 </head>

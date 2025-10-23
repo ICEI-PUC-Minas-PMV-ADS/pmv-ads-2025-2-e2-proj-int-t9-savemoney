@@ -1,0 +1,160 @@
+/* Definindo variáveis CSS baseadas na configuração Tailwind fornecida */
+:root {
+  --color-primary: #1791cf;
+  --color-background-light: #f6f7f8;
+  --color-foreground-light: #111827;
+  --color-subtle-light: #6b7280;
+  --font-display: "Manrope", sans-serif;
+  --border-radius-xl: 0.75rem; /* Equivalente a rounded-xl */
+}
+
+/* Aplicando estilos gerais. Adicionamos um wrapper para definir o fundo e a fonte da seção, similar ao body do exemplo Tailwind */
+.news-page-wrapper {
+  background-color: var(--color-background-light);
+  font-family: var(--font-display);
+  color: var(--color-foreground-light);
+  padding: 4rem 1.5rem; /* Equivalente a py-16 px-6 */
+  min-height: 50vh;
+}
+
+/* Equivalente a max-w-7xl mx-auto */
+.news-section-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Estilização do Título e Subtítulo */
+.news-header {
+  text-align: center;
+  margin-bottom: 3rem; /* Equivalente a mb-12 */
+}
+
+.news-title {
+  font-size: 3rem; /* text-5xl */
+  font-weight: 800; /* font-extrabold */
+  margin-bottom: 1rem;
+}
+
+/* Adicionando responsividade ao título como no exemplo original (md:text-7xl) */
+@media (min-width: 768px) {
+  .news-title {
+    font-size: 4.5rem; /* text-7xl */
+  }
+}
+
+.news-subtitle {
+  font-size: 1.125rem; /* text-lg */
+  color: var(--color-subtle-light);
+  max-width: 768px; /* max-w-3xl */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Estilização do Card (Visando as classes geradas pelo JS) --- */
+
+/* O JS gera 'card-link' envolvendo o card */
+.card-link {
+  text-decoration: none; /* Remove o sublinhado padrão do link */
+  color: inherit; /* Mantém a cor do texto */
+  display: block;
+}
+
+.card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* O JS gera 'news-card' */
+.news-card {
+  border: none; /* Remove a borda padrão do Bootstrap */
+  background-color: white;
+  border-radius: var(--border-radius-xl);
+  /* Sombra equivalente a shadow-lg */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  /* Transição equivalente a transition-all duration-300 */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Efeito de Hover (equivalente a hover:-translate-y-1 hover:shadow-2xl) */
+.card-link:hover .news-card {
+  transform: translateY(-0.25rem);
+  /* Sombra equivalente a shadow-2xl */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Imagem do Card (O JS usa 'card-img-top') */
+.news-card .card-img-top {
+  height: 12rem; /* Equivalente a h-48 */
+  object-fit: cover; /* Essencial para <img> replicar bg-cover */
+  object-position: center;
+  /* Garante que os cantos superiores respeitem o raio do card */
+  border-top-left-radius: var(--border-radius-xl);
+  border-top-right-radius: var(--border-radius-xl);
+}
+
+/* Corpo do Card (O JS usa 'card-body') */
+.news-card .card-body {
+  padding: 1.5rem; /* Equivalente a p-6 */
+}
+
+/* Título do Card (O JS usa 'card-title') */
+.news-card .card-title {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 700; /* font-bold */
+  margin-bottom: 0.75rem; /* mb-3 */
+  color: var(--color-foreground-light);
+}
+
+/* Texto do Card (O JS usa 'card-text') */
+.news-card .card-text {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--color-subtle-light);
+}
+
+/* --- Loader Personalizado (Replicando o loader do Tailwind sem mudar o HTML) --- */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Centraliza e estiliza o container do spinner (equivalente a flex-col gap-4) */
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%; /* Garante que ocupe a largura total na grade */
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* Esconde o spinner padrão do Bootstrap (spinner-border) */
+.spinner-container .spinner-border {
+  display: none;
+}
+
+/* Cria o loader personalizado usando um pseudo-elemento ::before */
+.spinner-container::before {
+  content: "";
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  /* Usamos a cor primária, pois o fundo é claro (o exemplo Tailwind usava branco, mas em fundo escuro) */
+  border-top: 4px solid var(--color-primary);
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: spin 1s linear infinite;
+}
+
+/* Adiciona o texto de carregamento usando um pseudo-elemento ::after */
+.spinner-container::after {
+  content: "Buscando as últimas notícias..."; /* Fetching the latest news... */
+  font-size: 1.125rem; /* text-lg */
+  color: var(--color-subtle-light);
+}
