@@ -1,37 +1,38 @@
 @model IEnumerable<savemoney.Models.Receita>
 
-    @{
-        ViewData["Title"] = "Receitas";
+@{
+    ViewData["Title"] = "Receitas";
+}
+
+<h1>Receitas</h1>
+
+<p><a class="btn btn-primary" asp-action="Create">Cadastrar nova receita</a></p>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Categoria</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Titulo</td>
+            <td>@item.Valor.ToString("C")</td>
+            <td>@item.Data.ToShortDateString()</td>
+            <td>@item.Categoria</td>
+            <td>@item.Descricao</td>
+            <td class="text-nowrap">
+                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id">Visualizar</a>
+                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            </td>
+        </tr>
     }
-
-    <h1>Receitas</h1>
-
-    <p><a class="btn btn-primary" asp-action="Create">Cadastrar nova receita</a></p>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Valor</th>
-                <th>Data</th>
-                <th>Categoria</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model)
-        {
-            <tr> 
-                <td>@item.Titulo</td>
-                <td>@item.Valor.ToString("C")</td>
-                <td>@item.Data.ToShortDateString()</td>
-                <td>@item.Categoria</td>
-                <td>@item.Descricao</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Visualizar</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    </tbody>
+</table>
