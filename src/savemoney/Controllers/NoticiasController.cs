@@ -33,7 +33,7 @@ public class NoticiasController : Controller
         try
         {
             // Aqui chama o serviço que faz todo o trabalho pesado
-            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termoDeBusca);
+            var noticiasJson = await _noticiasService.BuscarNoticias();
 
             // Aqui ele repassa a resposta.
             return Content(noticiasJson, "application/json");
