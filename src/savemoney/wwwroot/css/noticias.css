@@ -115,7 +115,7 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-  /* padding: 24px; */ /* Espaçamento interno ao redor do container, avaliar o retorno apos os requests voltar*/
+  padding: 24px; /* Espaçamento interno ao redor do container, avaliar o retorno apos os requests voltar*/
 }
 
 .meu-card {
