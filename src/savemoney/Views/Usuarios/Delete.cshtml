@@ -1,0 +1,75 @@
+﻿@model savemoney.Models.Usuario
+
+@{
+    ViewData["Title"] = "Excluir";
+}
+
+<div class="container d-flex flex-column align-items-center justify-content-center">
+    <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%; border-radius: 16px;">
+        <div class="text-center mb-4">
+            <span class="material-icons md-48 text-danger" style="font-size: 48px;">delete_forever</span>
+            <h1 class="h3 mb-2 text-danger">Excluir Usuário</h1>
+            <h5 class="mb-0">Tem certeza de que deseja excluir este usuário?</h5>
+        </div>
+        <dl class="row mb-0">
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">badge</span>
+                @Html.DisplayNameFor(model => model.Nome)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Nome)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">email</span>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">assignment_ind</span>
+                @Html.DisplayNameFor(model => model.Documento)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Documento)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">calendar_today</span>
+                @Html.DisplayNameFor(model => model.DataCadastro)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.DataCadastro)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">supervisor_account</span>
+                @Html.DisplayNameFor(model => model.Perfil)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Perfil)
+            </dd>
+            <dt class="col-sm-4 d-flex align-items-center">
+                <span class="material-icons me-2" style="font-size: 20px;">account_tree</span>
+                @Html.DisplayNameFor(model => model.TipoUsuario)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.TipoUsuario)
+            </dd>
+        </dl>
+        <form asp-action="Delete" class="mt-4">
+            <input type="hidden" asp-for="Id" />
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <span class="material-icons align-middle me-1" style="font-size: 20px;">delete</span>
+                    Excluir
+                </button>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a asp-action="Index" class="btn btn-link">
+                        <span class="material-icons align-middle me-1" style="font-size: 20px;">arrow_back</span>
+                        Voltar para a Lista
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>

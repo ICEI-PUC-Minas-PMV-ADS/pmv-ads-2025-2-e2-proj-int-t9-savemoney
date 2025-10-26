@@ -1,0 +1,86 @@
+﻿@model savemoney.Models.ConversorEnergia
+
+@{
+    ViewData["Title"] = "Nova Conversão de Energia";
+}
+
+<div class="container py-4 d-flex flex-column align-items-center">
+    <h1 class="mb-3 text-center">
+        <span class="material-icons align-middle text-primary" style="font-size:2rem;">bolt</span>
+        Conversão de Energia
+    </h1>
+
+    <div class="card shadow-sm mb-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-3">
+                <span class="material-icons align-middle text-info" style="font-size:1.5rem;">info</span>
+                Preencha os dados para calcular o consumo
+            </h5>
+            <form asp-action="Create" autocomplete="off">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+                <div class="mb-3">
+                    <label asp-for="ValorBase" class="form-label"></label>
+                    <input asp-for="ValorBase" class="form-control" placeholder="Ex: 1000 (Watts ou R$)" />
+                    <span asp-validation-for="ValorBase" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="TipoValor" class="form-label"></label>
+                    <select asp-for="TipoValor" class="form-select" asp-items="ViewBag.TipoValorOptions">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <span asp-validation-for="TipoValor" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Estado" class="form-label"></label>
+                    <select asp-for="Estado" class="form-select" asp-items="ViewBag.EstadosBrasil">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <span asp-validation-for="Estado" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Modalidade" class="form-label"></label>
+                    <input asp-for="Modalidade" class="form-control" placeholder="Ex: Convencional, Branca" />
+                    <span asp-validation-for="Modalidade" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="BandeiraTarifaria" class="form-label"></label>
+                    <input asp-for="BandeiraTarifaria" class="form-control" placeholder="Ex: Verde, Amarela, Vermelha" />
+                    <span asp-validation-for="BandeiraTarifaria" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="TipoDispositivo" class="form-label"></label>
+                    <select asp-for="TipoDispositivo" class="form-select" asp-items="ViewBag.Dispositivos">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <span asp-validation-for="TipoDispositivo" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="TempoUso" class="form-label"></label>
+                    <input asp-for="TempoUso" class="form-control" placeholder="Ex: 5 horas/dia" />
+                    <span asp-validation-for="TempoUso" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConsumoMensal" class="form-label"></label>
+                    <input asp-for="ConsumoMensal" class="form-control" />
+                    <span asp-validation-for="ConsumoMensal" class="text-danger small"></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <span class="material-icons align-middle">arrow_back</span>
+                        Voltar
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <span class="material-icons align-middle">check_circle</span>
+                        Salvar Conversão
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

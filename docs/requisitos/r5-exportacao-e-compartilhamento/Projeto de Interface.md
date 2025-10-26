@@ -22,7 +22,7 @@ graph TD
     I --> J{Deseja compartilhar o arquivo?};
     J -- Sim --> K[Clica no botão 'Compartilhar'];
     K --> L[Frontend aciona a API de compartilhamento nativa do dispositivo];
-    L --> M[Usuário seleciona app (WhatsApp, E-mail, etc.) e envia];
+    L --> M[Usuário seleciona app WhatsApp, E-mail, etc. e envia];
 
     J -- Não --> N([Fim da Interação]);
     M --> N;

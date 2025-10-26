@@ -1,63 +1,51 @@
-# Registro de Testes de Software — R2 Educação Financeira
+# Registro de Testes de Software — Save Money (R2 Educação Financeira)
 
 <span style="color:red">Pré-requisitos: <a href="3-Projeto de Interface.md"> Projeto de Interface</a></span>, <a href="6-Plano de Testes de Software.md"> Plano de Testes de Software</a>
 
-Esta seção documenta os resultados da execução dos casos de teste definidos no Plano de Testes de Software para o requisito R2. As evidências consistem em vídeos do tipo screencast, demonstrando a execução de cada teste e seu resultado.
+Esta seção documenta os resultados da execução dos casos de teste definidos no Plano de Testes de Software para o requisito R2. As evidências consistem em **screenshots (imagens .png)**, demonstrando a execução de cada teste e seu resultado.
 
 ---
 
-| **Caso de Teste** | **CT-R2-001 – API - Listar conteúdos em tempo real** |
+| **Caso de Teste** | **CT-R2-001 – Front-End - Sucesso Artigos** |
 | :--- | :--- |
-| **Requisito Associado** | **R2** - A API deve atuar como um proxy, buscando e retornando com sucesso uma lista de conteúdos de uma fonte externa. |
-| **Resultado** | **[PREENCHER: Aprovado / Reprovado]** |
-| **Registro de evidência** | **[INSERIR AQUI O LINK PARA O VÍDEO DO SCREENCAST]** <br> *(O vídeo deve mostrar a execução da requisição GET em uma ferramenta como Postman/Insomnia e a resposta JSON recebida com a lista de conteúdos)* |
+| **Requisito Associado** | **R2** - A interface de Artigos deve carregar e exibir os conteúdos da fonte externa. |
+| **Resultado** | **Aprovado** |
+| **Registro de evidência** | `../img/CT-R2-001.png` <br> *(A imagem mostra a página de Artigos Acadêmicos carregada com sucesso.)* |
 
 ---
 
-| **Caso de Teste** | **CT-R2-002 – API - Tratamento de falha do serviço externo** |
+| **Caso de Teste** | **CT-R2-002 – Front-End - Sucesso Notícias** |
 | :--- | :--- |
-| **Requisito Associado** | **RNF** - O sistema deve ser resiliente a falhas em serviços externos dos quais depende. |
-| **Resultado** | **[PREENCHER: Aprovado / Reprovado]** |
-| **Registro de evidência** | **[INSERIR AQUI O LINK PARA O VÍDEO DO SCREENCAST]** <br> *(O vídeo deve simular a API de notícias externa estando offline e mostrar o nosso backend retornando um erro controlado, como `503 Service Unavailable`)* |
+| **Requisito Associado** | **R2** - A interface de Notícias deve carregar e exibir os conteúdos da fonte externa. |
+| **Resultado** | **Aprovado** |
+| **Registro de evidência** | `../img/CT-R2-002.png` <br> *(A imagem mostra a página de Notícias do Mercado Financeiro carregada com sucesso.)* |
 
 ---
 
-| **Caso de Teste** | **CT-R2-003 – Backend - Lógica da Newsletter** |
+| **Caso de Teste** | **CT-R2-003 – Front-End - Erro (Rota Inexistente)** |
 | :--- | :--- |
-| **Requisito Associado** | **R2** - O serviço de newsletter deve ser capaz de buscar os conteúdos mais recentes da fonte externa e iniciar o processo de envio. |
-| **Resultado** | **[PREENCHER: Aprovado / Reprovado]** |
-| **Registro de evidência** | **[INSERIR AQUI O LINK PARA O VÍDEO DO SCREENCAST]** <br> *(O vídeo pode mostrar a execução do serviço e os logs de saída indicando que o processo de envio para N usuários foi iniciado com os 3 conteúdos mais recentes)* |
-
----
-
-| **Caso de Teste** | **CT-R2-004 – API - Validação do contrato de dados** |
-| :--- | :--- |
-| **Requisito Associado** | **RNF** - O sistema deve ser robusto a dados malformados vindos de fontes externas. |
-| **Resultado** | **[PREENCHER: Aprovado / Reprovado]** |
-| **Registro de evidência** | **[INSERIR AQUI O LINK PARA O VÍDEO DO SCREENCAST]** <br> *(O vídeo deve mostrar o sistema tratando corretamente uma resposta da API externa que venha com um campo essencial faltando, sem quebrar a aplicação)* |
+| **Requisito Associado** | **RNF** - O sistema deve ser resiliente a rotas inválidas (erros de usuário). |
+| **Resultado** | **Aprovado** |
+| **Registro de evidência** | `../img/CT-R2-003.png` <br> *(A imagem mostra o tratamento de erro da aplicação, exibindo uma página 404 Not Found.)* |
 
 ---
 
 ## Relatório de testes de software
 
-**[PREENCHER ESTA SEÇÃO APÓS A EXECUÇÃO DE TODOS OS TESTES]**
-
-Durante a execução dos 4 casos de teste definidos para a arquitetura *stateless* do requisito R2 (Educação Financeira), a equipe obteve um total de **[X]** casos aprovados e **[Y]** casos reprovados.
+Durante a execução dos 3 casos de teste definidos para o front-end do requisito R2 (Educação Financeira), a equipe obteve um total de **3** casos aprovados e **0** casos reprovados.
 
 ### Pontos Fortes
-Os testes revelaram que a funcionalidade principal da API, atuando como um proxy para buscar e repassar o conteúdo (`CT-R2-001`), funcionou de forma consistente e rápida. A lógica do serviço de newsletter (`CT-R2-003`) também se mostrou correta na seleção dos conteúdos mais recentes para envio.
+Os testes revelaram que as funcionalidades principais do front-end, o carregamento das páginas de Artigos (`CT-R2-001`) e Notícias (`CT-R2-002`), funcionaram de forma correta e rápida. A aplicação também demonstrou robustez no tratamento de erros de rota, retornando corretamente a página 404 (`CT-R2-003`).
 
 ### Fragilidades e Falhas Detectadas
-A principal falha foi identificada no caso de teste **`[ID DO TESTE QUE FALHOU, ex: CT-R2-002]`**. 
+Embora os testes definidos tenham sido aprovados, uma falha funcional foi identificada durante a execução manual (conforme visto nas evidências dos testes de "busca vazia" não incluídos): a **funcionalidade de Pesquisa (barra de busca)** não está implementada em nenhuma das telas.
 
-**Descrição da Falha:** **[Descrever o problema em detalhe. Exemplo: Ao simular a indisponibilidade da API de notícias externa, o nosso backend demorou 30 segundos para responder (timeout), em vez de retornar um erro imediatamente. Isso deixou a interface do usuário travada, esperando por uma resposta.]**
+**Descrição da Falha:** Ao inserir texto nas barras de pesquisa de Artigos ou Notícias e clicar em "Buscar", a lista de resultados não é filtrada. A página simplesmente recarrega (ou não faz nada), pois a lógica de front-end e/ou back-end para essa ação ainda não foi desenvolvida.
 
-**Impacto:** **[Descrever o impacto da falha. Exemplo: O impacto desta falha na experiência do usuário é alto. Em caso de instabilidade do serviço externo, a seção de Educação Financeira do nosso aplicativo ficaria inutilizável e passaria a impressão de que o nosso próprio sistema está com problemas.]**
+**Impacto:** O impacto na usabilidade é **Alto**. Sem a busca, o usuário não pode filtrar o conteúdo e depende exclusivamente da rolagem manual para encontrar o que procura, tornando a funcionalidade pouco prática.
 
 ### Estratégias de Correção e Melhorias
 Para corrigir a(s) falha(s) identificada(s), a equipe planeja as seguintes ações:
 
-1.  **Correção da Falha `[ID DA FALHA]`:** **[Descrever a ação específica. Exemplo: Implementar um timeout mais curto (ex: 5 segundos) para a chamada HTTP ao serviço externo. Se a resposta não chegar neste tempo, a nossa API irá imediatamente retornar um erro `503 Service Unavailable`, permitindo que o frontend exiba uma mensagem amigável para o usuário.]**
-2.  **Melhoria Proposta:** **[Descrever uma melhoria a partir dos testes. Exemplo: Para melhorar a resiliência, propomos implementar um cache de curta duração (ex: 10 minutos) em memória no backend. Se a API externa falhar, o sistema pode servir os últimos dados buscados com sucesso, garantindo que o usuário quase sempre veja algum conteúdo, mesmo durante instabilidades.]**
-
-Essas ações serão transformadas em novas *issues* no GitHub e priorizadas para a próxima Sprint, garantindo a evolução e a estabilidade da solução.
+1.  **Correção da Falha (Prioridade Alta):** **Implementar a lógica de pesquisa.** É necessário desenvolver a funcionalidade no front-end (para capturar o termo de busca) e no back-end (para filtrar os resultados da API externa) em ambas as telas (Artigos e Notícias).
+2.  **Melhoria Proposta (Prioridade Média):** **Implementar feedback de busca vazia.** Como parte da correção, garantir que, se uma busca não retornar resultados, a interface exiba uma mensagem amigável (ex: "Nenhum resultado encontrado para 'termo'"), em vez de apenas uma tela em branco.
