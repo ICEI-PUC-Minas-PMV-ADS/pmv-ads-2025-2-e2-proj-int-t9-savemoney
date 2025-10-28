@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Net;
 
 namespace savemoney.Services
 {
@@ -17,7 +18,7 @@ namespace savemoney.Services
             _configuration = configuration;
         }
 
-        public async Task<string> BuscarNoticias()
+        public async Task<string> BuscarNoticiasAsync(string termoDeBusca)
         {
             var apiKey = _configuration["GNews:ApiKey"];
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -33,13 +34,27 @@ namespace savemoney.Services
             }
 
             // Adiciona o filtro de notícias financeiras (business)
-            var url = $"https://gnews.io/api/v4/top-headlines?lang=pt&topic=business&token={apiKey}";
+            var termoCodificado = WebUtility.UrlEncode(termoDeBusca);
+            // var url = $"https://gnews.io/api/v4/top-headlines?lang=pt&topic=business&token={apiKey}";
+            var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&token={apiKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "SaveMoneyApp/1.0");
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            // response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var erro = new
+                {
+                    status = "error",
+                    message = $"Erro ao comunicar com a API de notícias. Status: {response.StatusCode}",
+                    totalResults = 0,
+                    articles = new List<object>()
+                };
+                return JsonSerializer.Serialize(erro);
+            }
 
             var responseJsonString = await response.Content.ReadAsStringAsync();
 
@@ -56,11 +71,17 @@ namespace savemoney.Services
                     {
                         articles.Add(new
                         {
-                            title = article.GetPropertyOrDefault("title", "Sem título"),
-                            description = article.GetPropertyOrDefault("description", "Sem descrição"),
-                            url = article.GetPropertyOrDefault("url", "#"),
+                            // Passamos null como padrão para GetPropertyOrDefault, 
+                            // e usamos '??' para garantir um valor final se o resultado for nulo.
+                            title = article.GetPropertyOrDefault("title", null) ?? "Sem título",
+                            description = article.GetPropertyOrDefault("description", null) ?? "Sem descrição",
+                            url = article.GetPropertyOrDefault("url", null) ?? "#",
+
+                            // Estes campos podem permanecer nulos, então a implementação anterior já estava correta:
                             urlToImage = article.GetPropertyOrDefault("image", null),
                             publishedAt = article.GetPropertyOrDefault("publishedAt", null),
+
+                            // A lógica da fonte já trata corretamente o potencial nulo de GetString()
                             source = article.TryGetProperty("source", out var source) && source.TryGetProperty("name", out var name) ? name.GetString() : null
                         });
                     }
@@ -88,22 +109,5 @@ namespace savemoney.Services
             }
         }
     }
-
-    // Métodos de extensão para facilitar o tratamento de campos ausentes
-    public static class JsonExtensions
-    {
-        public static string GetPropertyOrDefault(this JsonElement element, string property, string defaultValue)
-        {
-            if (element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String)
-                return value.GetString();
-            return defaultValue;
-        }
-
-        public static int GetPropertyOrDefault(this JsonElement element, string property, int defaultValue)
-        {
-            if (element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var intValue))
-                return intValue;
-            return defaultValue;
-        }
-    }
 }
+

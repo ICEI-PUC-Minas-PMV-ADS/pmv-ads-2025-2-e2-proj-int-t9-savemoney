@@ -11,8 +11,8 @@ namespace savemoney
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();  // <-- pacote do NuGet para compilar e visualizar as alterações em tempo real.
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); 
             builder.Services.AddDbContext<Models.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -33,8 +33,8 @@ namespace savemoney
             builder.Services.AddHttpClient();
             // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
             builder.Services.AddScoped<NoticiasService>();
-            // Fim do codigo de injeção de dependencias de NoticiasService.
-            
+            builder.Services.AddScoped<ArtigosService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

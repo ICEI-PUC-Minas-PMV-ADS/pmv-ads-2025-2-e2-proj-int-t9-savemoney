@@ -1,0 +1,246 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Manrope", sans-serif;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+main {
+  min-height: 100vh;
+  width: 100%;
+  text-align: center;
+}
+
+.main-container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 6rem 1rem 2rem 1rem;
+  text-align: center;
+}
+
+.title-page {
+  margin-bottom: 1.1rem;
+  margin-top: 3rem;
+}
+
+.title-page h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.main-paragraph {
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+}
+
+.main-paragraph p {
+  font-size: 1.15rem;
+  color: #555555;
+  margin: 0;
+}
+
+/* --- 3. Container da Barra de Busca --- */
+
+.search-container {
+  display: flex;
+  align-items: center; 
+  max-width: 60%; 
+  margin: 2rem auto; 
+  position: relative;
+}
+
+.search-container::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900; 
+  content: "\f002"; 
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  color: #6c757d;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --- 4. Input e Botão de Busca --- */
+
+.search-input {
+  flex-grow: 1;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  outline: none;
+  height: 3.5rem;
+  box-sizing: border-box;
+  padding: 1rem 1rem 1rem 3.5rem;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.action-search-button {
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0 1.5rem; 
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-left: 0.5rem; 
+  height: 3.5rem;
+  box-sizing: border-box;
+}
+
+.action-search-button:hover {
+  background-color: #0056b3;
+}
+
+#noticias-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 24px; /* Espaçamento interno ao redor do container, avaliar o retorno apos os requests voltar*/
+}
+
+.meu-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.meu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.meu-card-imagem {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.meu-card-conteudo {
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.meu-card-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.meu-card-descricao {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.carregar-mais-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 50%;
+}
+.carregar-mais-button > button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+@media (max-width: 768px) {
+  .main-container {
+    max-width: 90%;
+    padding-top: 4rem;
+  }
+
+  .title-page h1 {
+    font-size: 2.75rem;
+  }
+
+  .search-container {
+    max-width: 80%;
+  }
+
+  .carregar-mais-button {
+    width: 60%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    max-width: 95%;
+    padding-top: 3rem;
+  }
+
+  .title-page {
+    margin-top: 1.5rem;
+  }
+
+  .title-page h1 {
+    font-size: 2.1rem;
+  }
+
+  .main-paragraph p {
+    font-size: 1rem;
+  }
+
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 95%;
+  }
+
+  .search-input {
+    margin-bottom: 0.5rem;
+  }
+
+  .action-search-button {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  #noticias-container {
+    grid-template-columns: 1fr;
+  }
+
+  .carregar-mais-button {
+    width: 90%;
+  }
+}

@@ -6,7 +6,7 @@ O registro de testes de usabilidade é um documento onde são coletadas e organi
 
 Para garantir uma cobertura adequada do nosso público-alvo, os testes foram realizados com usuários que se encaixam nos perfis de nossas personas, João (jovem, estudante, confortável com tecnologia) e Maria (empreendedora, focada em negócios, com conhecimento prático de tecnologia).
 
-- **Usuário 1 (Perfil "João"):** 22 anos, estudante universitário, conhecimento avançado de tecnologia.
+- **Usuário 1 (Perfil "Isadora Patrocinio"):** 20 anos, estudante de concurso e CLT, conhecimento básico de tecnologia.
 - **Usuário 2 (Perfil "Maria"):** 42 anos, dona de um pequeno negócio, conhecimento intermediário de tecnologia, usa apps para gestão.
 - **Usuário 3 (Perfil "João"):** 25 anos, recém-formado, conhecimento avançado de tecnologia, busca organizar as finanças.
 - **Usuário 4 (Perfil "Maria"):** 38 anos, autônoma, conhecimento básico de tecnologia, usa principalmente para comunicação e redes sociais.
@@ -19,7 +19,7 @@ A tarefa dada ao usuário foi: **"Imagine que você está planejando uma viagem.
 
 | **Usuário** | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** (Onde clicou errado, etc.) | **Feedback Qualitativo do Usuário** |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Usuário 1 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
+| Usuário 1 | **[60 Segundos]** | **[3 cliques necessários]** | **[Sim]** | **[Não]** | **[Gostou da interface,e achou de fácil compreensão]** |
 | Usuário 2 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
 | Usuário 3 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |
 | Usuário 4 | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** | **[PREENCHER]** |

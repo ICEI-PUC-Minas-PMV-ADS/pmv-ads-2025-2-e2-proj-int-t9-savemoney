@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using savemoney.Models;
 
@@ -11,9 +12,11 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251022002530_M01-AddTableReceitas")]
+    partial class M01AddTableReceitas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,30 +24,6 @@ namespace savemoney.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("savemoney.Models.Aporte", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataAporte")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MetaFinanceiraId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MetaFinanceiraId");
-
-                    b.ToTable("Aportes");
-                });
 
             modelBuilder.Entity("savemoney.Models.ConversorEnergia", b =>
                 {
@@ -88,7 +67,7 @@ namespace savemoney.Migrations
                     b.ToTable("ConversoresEnergia");
                 });
 
-            modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
+            modelBuilder.Entity("savemoney.Models.Receita", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,32 +75,25 @@ namespace savemoney.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("DataLimite")
+                    b.Property<string>("Categoria")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ValorAtual")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal>("ValorObjetivo")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<double>("Valor")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("MetasFinanceiras");
+                    b.ToTable("Receitas");
                 });
 
             modelBuilder.Entity("savemoney.Models.Usuario", b =>
@@ -160,33 +132,6 @@ namespace savemoney.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
-                });
-
-            modelBuilder.Entity("savemoney.Models.Aporte", b =>
-                {
-                    b.HasOne("savemoney.Models.MetaFinanceira", "MetaFinanceira")
-                        .WithMany("Aportes")
-                        .HasForeignKey("MetaFinanceiraId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MetaFinanceira");
-                });
-
-            modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
-                {
-                    b.HasOne("savemoney.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
-                {
-                    b.Navigation("Aportes");
                 });
 #pragma warning restore 612, 618
         }
