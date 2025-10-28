@@ -1,0 +1,73 @@
+/* Estilos leves para combinar com a imagem de referência */
+body {
+    background-color: #f8f9fa; /* Fundo cinza claro */
+}
+
+.calculator-card, .results-card {
+    background-color: white;
+    border-radius: 1rem; /* Bordas bem arredondadas */
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra suave */
+}
+
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #6c757d; /* Cinza para os labels */
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.form-control {
+    border-radius: 0.5rem; /* Bordas arredondadas nos inputs */
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa; /* Fundo levemente cinza */
+}
+
+/* Garante que o input-group tenha as bordas arredondadas corretas */
+.input-group .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.input-group .btn-group label.btn:first-of-type {
+     border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0; /* Ajuste para o botão do meio */
+    border-bottom-right-radius: 0;
+}
+.input-group .btn-group label.btn:last-of-type {
+    border-top-left-radius: 0; /* Ajuste para o botão final */
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.btn-primary {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+}
+
+/* Estilos para o placeholder dos resultados */
+.results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: #6c757d;
+}
+
+.results-placeholder i {
+    font-size: 4rem; /* Tamanho do ícone */
+    margin-bottom: 1rem;
+    color: #adb5bd; /* Cor do ícone */
+}
+
+/* Estilos para os botões Meses/Anos */
+.btn-group > .btn-check:checked + .btn-outline-primary,
+.btn-group > .btn-check:checked + .btn-outline-secondary {
+    background-color: var(--bs-primary); /* Usa a cor primária do Bootstrap */
+    border-color: var(--bs-primary);
+    color: white;
+}

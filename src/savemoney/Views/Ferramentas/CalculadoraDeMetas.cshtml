@@ -2,23 +2,99 @@
     ViewData["Title"] = "Calculadora de Metas";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <span class="material-icons md-48 text-warning mb-3" style="font-size: 64px;">
-                construction
-            </span>
-            <h1 class="display-5 mb-3">Calculadora de Metas</h1>
-            <p class="lead mb-4">
-                Esta funcionalidade está em desenvolvimento.<br>
-                Em breve você poderá utilizar a Calculadora de Metas para planejar e acompanhar seus objetivos financeiros!
-            </p>
-            <div class="alert alert-info d-inline-block" role="alert">
-                <span class="material-icons align-middle me-2">
-                    info
-                </span>
-                Fique atento às próximas atualizações.
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SaveMoney</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Seu CSS customizado -->
+    <link rel="stylesheet" href="~/css/calculadoraMetas.css" />
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <!-- Seção de Título e Descrição -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10 text-center">
+                <h1 class="mb-3">Calculadora de Metas Financeiras</h1>
+                <p class="lead text-muted">
+                    Nossa ferramenta simples e motivadora ajuda você a planejar suas metas financeiras. Visualize seu caminho para o sucesso e transforme seus sonhos em marcos alcançáveis.
+                </p>
+                <hr class="my-4">
+                <h5 class="text-muted mb-3">Como usar:</h5>
+                <p class="text-muted">
+                    Preencha os campos abaixo com os detalhes da sua meta: descreva o objetivo, informe quanto você já tem para começar (investimento inicial), o tempo que pretende investir e a taxa de retorno anual esperada. Clique em "Calcular Simulação" para ver a projeção dos seus resultados!
+                </p>
+            </div>
+        </div>
+
+        <!-- Seção da Calculadora e Resultados -->
+        <div class="row justify-content-center g-4">
+            <!-- Coluna Esquerda: Formulário -->
+            <div class="col-lg-5 col-md-6">
+                <div class="calculator-card">
+                    <form id="goalForm">
+                        <!-- Objetivo Financeiro -->
+                        <div class="mb-3">
+                            <label for="financialGoal" class="form-label">Objetivo Financeiro</label>
+                            <input type="text" class="form-control" id="financialGoal" placeholder="Ex: Comprar um carro novo">
+                        </div>
+
+                        <!-- Investimento Inicial -->
+                        <div class="mb-3">
+                            <label for="initialInvestment" class="form-label">Investimento Inicial (R$)</label>
+                            <input type="number" step="0.01" class="form-control" id="initialInvestment" placeholder="1000.00" value="1000">
+                        </div>
+
+                        <!-- Tempo de Crescimento -->
+                        <div class="mb-3">
+                            <label for="timeForGrowth" class="form-label">Tempo de Crescimento</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="timeForGrowth" placeholder="10" value="10">
+                                <div class="btn-group" role="group" aria-label="Unidade de tempo">
+                                    <input type="radio" class="btn-check" name="timeUnit" id="months" autocomplete="off">
+                                    <label class="btn btn-outline-secondary" for="months">Meses</label>
+
+                                    <input type="radio" class="btn-check" name="timeUnit" id="years" autocomplete="off" checked>
+                                    <label class="btn btn-outline-primary active" for="years">Anos</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taxa de Retorno Anual -->
+                        <div class="mb-4">
+                            <label for="annualReturnRate" class="form-label">Taxa de Retorno Anual (%)</label>
+                            <input type="number" step="0.1" class="form-control" id="annualReturnRate" placeholder="8.0" value="8">
+                        </div>
+
+                        <!-- Botão de Calcular -->
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary" id="calculateBtn">Calcular Simulação</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Resultados -->
+            <div class="col-lg-5 col-md-6">
+                <div class="results-card h-100">
+                    <div id="resultsContent" class="results-placeholder">
+                        <i class="bi bi-graph-up"></i> <!-- Ícone -->
+                        <h5>Seus Resultados</h5>
+                        <p>Os resultados da sua simulação aparecerão aqui assim que você inserir os detalhes da sua meta.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Bootstrap JS Bundle (inclui Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Seu JavaScript para cálculo -->
+    <script src="~/js/calculadoraMetas.js"></script>
+</body>
+</html>
