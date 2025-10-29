@@ -12,8 +12,8 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251029010216_AddTableBudget")]
-    partial class AddTableBudget
+    [Migration("20251029012721_AddBudget")]
+    partial class AddBudget
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

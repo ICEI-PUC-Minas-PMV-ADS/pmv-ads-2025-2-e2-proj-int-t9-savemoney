@@ -4,8 +4,10 @@
 
 namespace savemoney.Migrations
 {
+    /// <inheritdoc />
     public partial class AddBudget : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -32,13 +34,13 @@ namespace savemoney.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            // Índice para melhorar performance nas consultas por UserId
             migrationBuilder.CreateIndex(
                 name: "IX_Budget_UserId",
                 table: "Budget",
                 column: "UserId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "Budget");
