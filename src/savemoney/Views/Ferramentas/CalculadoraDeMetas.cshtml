@@ -1,100 +1,255 @@
 ﻿@{
-    ViewData["Title"] = "Calculadora de Metas";
+    ViewData["Title"] = "Calculadora de Metas Financeiras";
 }
-
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
+    <!-- Section: Head -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SaveMoney</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <!-- Seu CSS customizado -->
-    <link rel="stylesheet" href="~/css/calculadoraMetas.css" />
+    <link rel="stylesheet" href="~/css/calculadoraMetas.css" asp-append-version="true" />
 </head>
+
 <body>
-    <div class="container mt-5 mb-5">
-        <!-- Seção de Título e Descrição -->
-        <div class="row justify-content-center mb-4">
+
+    <!-- Section: Hero -->
+    <div class="bg-primary text-white py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-4 mb-3 fw-bold">Calculadora de Meta Financeira</h1>
+                    <p class="lead mb-4">Descubra quanto precisa poupar mensalmente para alcançar seus objetivos
+                        financeiros.</p>
+                    <p>Seja uma viagem, a compra de um imóvel, ou a reforma dos seus sonhos, o planeamento é o primeiro
+                        passo. Use a nossa ferramenta para visualizar o caminho.</p>
+                    <a href="#calculadora" class="btn btn-light btn-lg mt-3 fw-bold">Começar a Simular</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Calculadora -->
+    <div class="container my-5" id="calculadora">
+
+        <!-- Section: Descrições -->
+        <div class="row justify-content-center mb-5">
             <div class="col-lg-10 text-center">
-                <h1 class="mb-3">Calculadora de Metas Financeiras</h1>
-                <p class="lead text-muted">
-                    Nossa ferramenta simples e motivadora ajuda você a planejar suas metas financeiras. Visualize seu caminho para o sucesso e transforme seus sonhos em marcos alcançáveis.
-                </p>
+                <h2 class="mb-3">Como Usar a Calculadora</h2>
+                <p class="text-muted">Preencha os campos abaixo com os detalhes da sua meta: informe o <strong>valor
+                        total do seu objetivo</strong>, quanto você <strong>já tem para começar</strong> (investimento
+                    inicial), em <strong>quanto tempo</strong> pretende alcançá-lo (meses ou anos) e a <strong>taxa de
+                        retorno anual</strong> esperada para seus investimentos. Clique em "Calcular Contribuição
+                    Mensal" para descobrir quanto precisa guardar todo mês!</p>
                 <hr class="my-4">
-                <h5 class="text-muted mb-3">Como usar:</h5>
-                <p class="text-muted">
-                    Preencha os campos abaixo com os detalhes da sua meta: descreva o objetivo, informe quanto você já tem para começar (investimento inicial), o tempo que pretende investir e a taxa de retorno anual esperada. Clique em "Calcular Simulação" para ver a projeção dos seus resultados!
-                </p>
             </div>
         </div>
 
-        <!-- Seção da Calculadora e Resultados -->
         <div class="row justify-content-center g-4">
-            <!-- Coluna Esquerda: Formulário -->
-            <div class="col-lg-5 col-md-6">
-                <div class="calculator-card">
+            <!-- Section: Formulário -->
+            <div class="col-lg-5 col-md-7">
+                <div class="card shadow-sm border-0 rounded-3 p-4">
+                    <h4 class="mb-4 text-center text-primary">Simule sua Meta</h4>
                     <form id="goalForm">
-                        <!-- Objetivo Financeiro -->
                         <div class="mb-3">
-                            <label for="financialGoal" class="form-label">Objetivo Financeiro</label>
-                            <input type="text" class="form-control" id="financialGoal" placeholder="Ex: Comprar um carro novo">
+                            <label for="goalValue" class="form-label">Valor do Objetivo (R$)</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control form-control-lg"
+                                id="goalValue" placeholder="Ex: 50000.00" required>
                         </div>
 
-                        <!-- Investimento Inicial -->
                         <div class="mb-3">
                             <label for="initialInvestment" class="form-label">Investimento Inicial (R$)</label>
-                            <input type="number" step="0.01" class="form-control" id="initialInvestment" placeholder="1000.00" value="1000">
+                            <input type="number" step="0.01" class="form-control form-control-lg" id="initialInvestment"
+                                placeholder="Ex: 1000.00" value="1000">
                         </div>
 
-                        <!-- Tempo de Crescimento -->
                         <div class="mb-3">
-                            <label for="timeForGrowth" class="form-label">Tempo de Crescimento</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="timeForGrowth" placeholder="10" value="10">
+                            <label for="timeForGrowth" class="form-label">Tempo para atingir a meta</label>
+                            <div class="input-group input-group-lg">
+                                <input type="number" class="form-control" id="timeForGrowth" placeholder="Ex: 5"
+                                    value="5" required min="1">
                                 <div class="btn-group" role="group" aria-label="Unidade de tempo">
-                                    <input type="radio" class="btn-check" name="timeUnit" id="months" autocomplete="off">
+                                    <input type="radio" class="btn-check" name="timeUnit" id="months"
+                                        autocomplete="off">
                                     <label class="btn btn-outline-secondary" for="months">Meses</label>
 
-                                    <input type="radio" class="btn-check" name="timeUnit" id="years" autocomplete="off" checked>
-                                    <label class="btn btn-outline-primary active" for="years">Anos</label>
+                                    <input type="radio" class="btn-check" name="timeUnit" id="years" autocomplete="off"
+                                        checked>
+                                    <label class="btn btn-outline-primary" for="years">Anos</label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Taxa de Retorno Anual -->
                         <div class="mb-4">
-                            <label for="annualReturnRate" class="form-label">Taxa de Retorno Anual (%)</label>
-                            <input type="number" step="0.1" class="form-control" id="annualReturnRate" placeholder="8.0" value="8">
+                            <label for="annualReturnRate" class="form-label">Taxa de retorno anual (%)</label>
+                            <input type="number" step="0.1" class="form-control form-control-lg" id="annualReturnRate"
+                                placeholder="Ex: 8.0" value="8">
                         </div>
 
-                        <!-- Botão de Calcular -->
                         <div class="d-grid">
-                            <button type="button" class="btn btn-primary" id="calculateBtn">Calcular Simulação</button>
+                            <button type="button" class="btn btn-primary btn-lg" id="calculateBtn">Calcular Contribuição
+                                Mensal</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Coluna Direita: Resultados -->
-            <div class="col-lg-5 col-md-6">
-                <div class="results-card h-100">
-                    <div id="resultsContent" class="results-placeholder">
-                        <i class="bi bi-graph-up"></i> <!-- Ícone -->
-                        <h5>Seus Resultados</h5>
-                        <p>Os resultados da sua simulação aparecerão aqui assim que você inserir os detalhes da sua meta.</p>
+            <!-- Section: Resultados -->
+            <div class="col-lg-5 col-md-7">
+                <div class="card shadow-sm border-0 rounded-3 p-4 h-100">
+                    <div id="resultsContent"
+                        class="d-flex flex-column justify-content-center align-items-center h-100 text-center text-muted">
+                        <i class="bi bi-calculator display-1 mb-3 text-secondary"></i>
+                        <h5 class="fw-bold">Contribuição Mensal</h5>
+                        <p>O valor da poupança mensal necessária para atingir seu objetivo financeiro aparecerá aqui.
+                        </p>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button id="copyLinkBtn" class="btn btn-sm btn-outline-secondary rounded-pill d-none">
+                            <i class="bi bi-share me-1"></i> Copiar Link da Simulação
+                        </button>
+                        <div id="copyFeedback" class="text-success small mt-2 d-none">Link copiado!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-10 text-center">
+                <p class="text-muted small">As informações fornecidas por esta ferramenta são apenas simulações e não
+                    compreendem uma assessoria de investimentos. Os resultados não refletem taxas, impostos, inflação ou
+                    outras considerações relevantes para um investidor. Consulte um profissional.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Acordeão de informações -->
+    <div class="bg-light py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h2 class="text-center mb-5 fw-bold">Entenda Mais Sobre Metas Financeiras</h2>
+
+                    <div class="accordion accordion-flush" id="infoAccordion">
+                        <div class="accordion-item border-bottom">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Como usar a calculadora de meta financeira?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                data-bs-parent="#infoAccordion">
+                                <div class="accordion-body text-muted">Comece com o campo "Valor do Objetivo", onde irá
+                                    inserir o valor necessário para realizar o objetivo. Em seguida, informe em
+                                    "Investimento Inicial" o valor que você possui para essa finalidade atualmente.
+                                    Outra informação necessária para o cálculo é o período de aplicação para cumprir o
+                                    objetivo. Caso você pretenda economizar dinheiro para seu casamento em 2 anos, por
+                                    exemplo, pode optar por 24 meses ou 2 anos na opção de "Tempo para atingir a meta".
+                                    Por último, em "Taxa de retorno anual", precisamos saber qual é o rendimento líquido
+                                    esperado por ano do seu investimento. Após inserir todos os dados, vamos calcular
+                                    automaticamente o valor necessário para poupar ao mês. Caso tenha vários objetivos
+                                    financeiros e com diferentes prazos para cada, use a calculadora individualmente, ou
+                                    seja, faça 1 simulação para cada objetivo.</div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-bottom">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    O que são as metas financeiras?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                data-bs-parent="#infoAccordion">
+                                <div class="accordion-body text-muted">As metas financeiras são o conjunto de objetivos
+                                    que pertencem ao setor das finanças pessoais e fazem parte de um planejamento. Não
+                                    basta querer R$1 milhão, é preciso traçar estratégias e criar uma organização para
+                                    que seja possível alcançar esse patrimônio. Caso contrário, todos nós estaríamos
+                                    cheios de metas, né? Se deseja conquistar saúde em suas finanças, confira outros
+                                    conteúdos em nossa plataforma.</div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-bottom">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Por que devo criar metas?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                data-bs-parent="#infoAccordion">
+                                <div class="accordion-body text-muted">Criar um orçamento pessoal, estabelecer objetivos
+                                    e economizar são partes de um pacote essencial para o equilíbrio financeiro e, como
+                                    consequência, para ter qualidade de vida. “Mas por que é tão importante fazê-las?”.
+                                    Além de permitir a criação de um planejamento estratégico, são capazes de te manter
+                                    motivado no processo. É só ao saber que o dinheiro vai ser direcionado para uma casa
+                                    própria, por exemplo, que você evita gastos supérfluos.</div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-bottom">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Como criá-las? (Método SMART)
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                                data-bs-parent="#infoAccordion">
+                                <div class="accordion-body text-muted">“Tá, mas como faço para criá-las?". Essa é uma
+                                    ótima pergunta, dado que existe o método SMART, o qual é um facilitador por elaborar
+                                    exigências:
+                                    <ul>
+                                        <li><strong>Específico (S):</strong> É necessário especificar o que você deseja
+                                            para que tenha ações focadas...</li>
+                                        <li><strong>Mensurável (M):</strong> O resultado da meta deve ser mensurável...
+                                        </li>
+                                        <li><strong>Alcançável (A):</strong> A meta precisa ser atingível...</li>
+                                        <li><strong>Relevante (R):</strong> Concentrar-se no que é importante...</li>
+                                        <li><strong>Prazo determinado (T):</strong> Determinar prazos é outro item
+                                            necessário...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFive" aria-expanded="false" aria-controls="#collapseFive">
+                                    Separe os períodos de concretização
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                                data-bs-parent="#infoAccordion">
+                                <div class="accordion-body text-muted">É importante separar suas metas em prazos para
+                                    distinguir o que é preciso para alcançar cada objetivo:
+                                    <ul>
+                                        <li><strong>Curto prazo:</strong> são os objetivos que devem ser atingidos em
+                                            até 2 anos...</li>
+                                        <li><strong>Médio prazo:</strong> trata-se daquelas que vão ser realizadas entre
+                                            3 e 10 anos...</li>
+                                        <li><strong>Longo prazo:</strong> é o que deve ser alcançado em 10 anos ou
+                                            mais...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle (inclui Popper) -->
+    <!-- Section: Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Seu JavaScript para cálculo -->
-    <script src="~/js/calculadoraMetas.js"></script>
+    <script src="~/js/calculadoraMetas.js" asp-append-version="true"></script>
 </body>
+
 </html>

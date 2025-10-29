@@ -1,73 +1,94 @@
-/* Estilos leves para combinar com a imagem de referência */
+/* Base / Layout */
 body {
-    background-color: #f8f9fa; /* Fundo cinza claro */
+    background-color: #f8f9fa;
+    color: #343a40;
 }
 
-.calculator-card, .results-card {
-    background-color: white;
-    border-radius: 1rem; /* Bordas bem arredondadas */
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra suave */
+/* Cards */
+.card {
+    border-radius: 0.75rem;
 }
 
+/* Form: labels e inputs */
 .form-label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    color: #6c757d; /* Cinza para os labels */
+    color: #495057;
     text-transform: uppercase;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.3rem;
 }
 
-.form-control {
-    border-radius: 0.5rem; /* Bordas arredondadas nos inputs */
-    border: 1px solid #dee2e6;
-    background-color: #f8f9fa; /* Fundo levemente cinza */
+.form-control-lg {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
 }
 
-/* Garante que o input-group tenha as bordas arredondadas corretas */
-.input-group .form-control {
+/* Input group (Meses / Anos) */
+.input-group-lg .form-control {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-.input-group .btn-group label.btn:first-of-type {
+.input-group-lg .btn-group > label.btn:last-of-type {
      border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 0; /* Ajuste para o botão do meio */
-    border-bottom-right-radius: 0;
+     border-bottom-left-radius: 0;
+     border-top-right-radius: 0.5rem;
+     border-bottom-right-radius: 0.5rem;
 }
-.input-group .btn-group label.btn:last-of-type {
-    border-top-left-radius: 0; /* Ajuste para o botão final */
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+.input-group-lg .btn-group > label.btn:first-of-type {
+     border-top-right-radius: 0;
+     border-bottom-right-radius: 0;
 }
 
-.btn-primary {
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-}
-
-/* Estilos para o placeholder dos resultados */
-.results-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    text-align: center;
-    color: #6c757d;
-}
-
-.results-placeholder i {
-    font-size: 4rem; /* Tamanho do ícone */
-    margin-bottom: 1rem;
-    color: #adb5bd; /* Cor do ícone */
-}
-
-/* Estilos para os botões Meses/Anos */
-.btn-group > .btn-check:checked + .btn-outline-primary,
-.btn-group > .btn-check:checked + .btn-outline-secondary {
-    background-color: var(--bs-primary); /* Usa a cor primária do Bootstrap */
+/* Buttons (estado ativo e inativo) */
+.btn-group > .btn-check:checked + .btn {
+    background-color: var(--bs-primary);
     border-color: var(--bs-primary);
     color: white;
 }
+.btn-group > .btn-check:not(:checked) + .btn-outline-primary {
+     border-color: var(--bs-primary);
+     color: var(--bs-primary);
+}
+.btn-group > .btn-check:not(:checked) + .btn-outline-secondary {
+     border-color: #6c757d;
+     color: #6c757d;
+}
+
+/* Botão principal */
+.btn-primary.btn-lg {
+    padding: 0.8rem 1.5rem;
+    font-weight: 500;
+}
+
+/* Placeholder resultados */
+#resultsContent.d-flex p {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Accordion / Informações */
+.accordion-flush .accordion-item {
+    background-color: transparent;
+}
+.accordion-flush .accordion-button {
+    background-color: transparent;
+    font-weight: 500;
+    box-shadow: none;
+}
+.accordion-flush .accordion-button:not(.collapsed) {
+    color: var(--bs-primary);
+    background-color: transparent;
+}
+.accordion-body ul {
+    padding-left: 1.5rem;
+}
+.accordion-body ul li {
+    margin-bottom: 0.5rem;
+}
+
+/* Feedback de cópia */
+#copyFeedback {
+    transition: opacity 0.5s ease-in-out;
+}
+

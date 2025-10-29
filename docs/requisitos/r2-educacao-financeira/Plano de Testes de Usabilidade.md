@@ -12,4 +12,4 @@ O plano de usabilidade tem como objetivo avaliar a clareza, a eficiência e o va
 
 - **Clareza e Valor Percebido**
   A apresentação do conteúdo (título, resumo, fonte) é clara o suficiente para o usuário decidir se quer ler? A funcionalidade é vista como um diferencial útil?
-  **Teste:** Após a interação, fazer perguntas qualitativas ao usuário: "Pelas informações mostradas, você conseguiu ter uma boa ideia do que se tratava o conteúdo?", "A informação da fonte (ex: 'Infomoney') é importante para você?", "Você se vê usando essa funcionalidade no seu dia a dia? Por quê?".
+  **Teste:** Após a interação, fazer perguntas qualitativas ao usuário: "Pelas informações mostradas, você conseguiu ter uma boa ideia do que se tratava o conteúdo?", "A informação da fonte (ex: 'Save money') é importante para você?", "Você se vê usando essa funcionalidade no seu dia a dia? Por quê?".
