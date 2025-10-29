@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace savemoney.Models
@@ -8,10 +8,10 @@ namespace savemoney.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Nome da receita é obrigatório.")]
+        [Required(ErrorMessage = "Nome da receita Ã© obrigatÃ³rio.")]
         public string  Titulo { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Valor da receita é obrigatório.")]
+        [Required(ErrorMessage = "Valor da receita Ã© obrigatÃ³rio.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Informe um valor maior que Zero (0)")]
         public double Valor { get; set; }
 
@@ -22,7 +22,7 @@ namespace savemoney.Models
         [Display(Name = "Categoria")]
         public string? Categoria { get; set; }
 
-        [Display(Name = "Descrição")]
+        [Display(Name = "DescriÃ§Ã£o")]
         public string? Descricao { get; set; }
     }
 }

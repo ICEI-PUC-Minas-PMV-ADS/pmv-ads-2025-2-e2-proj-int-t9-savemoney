@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using savemoney.Models;
 
 namespace savemoney.Models
 {
@@ -20,6 +21,9 @@ namespace savemoney.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<BudgetCategory> BudgetCategories { get; set; }
+
+        // Novo DbSet para o R13 - Gestão de Receitas
+        public DbSet<Receita> Receitas { get; set; }
 
         // Método para configurar os relacionamentos e comportamentos do banco de dados
         protected override void OnModelCreating(ModelBuilder modelBuilder)

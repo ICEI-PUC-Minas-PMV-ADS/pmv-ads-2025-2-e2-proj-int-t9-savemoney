@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using savemoney.Models; // Classe DTO
 using System.Collections.Generic; // Necessario para utilizar 'List<T>'
 using savemoney.Services;
@@ -32,10 +32,9 @@ public class NoticiasController : Controller
 
         try
         {
-            // Aqui chama o serviço que faz todo o trabalho pesado
-            var noticiasJson = await _noticiasService.BuscarNoticias();
+            // Corrigido para chamar o método correto com o parâmetro necessário
+            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termoDeBusca);
 
-            // Aqui ele repassa a resposta.
             return Content(noticiasJson, "application/json");
         }
         catch (Exception ex)
