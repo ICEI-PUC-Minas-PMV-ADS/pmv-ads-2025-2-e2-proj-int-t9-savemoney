@@ -19,7 +19,7 @@ namespace savemoney.Controllers
      
         public async Task<IActionResult> Index()
         {
-            var receitas = await _context.Receitas.ToListAsync();
+            var receitas = await _context.Set<Receita>().ToListAsync();
             return View(receitas);
         }
 
@@ -27,7 +27,7 @@ namespace savemoney.Controllers
         {
             if (id == null) return NotFound();
 
-            var receita = await _context.Receitas.FirstOrDefaultAsync(m => m.Id == id);
+            var receita = await _context.Set<Receita>().FirstOrDefaultAsync(m => m.Id == id);
             if (receita == null) return NotFound();
 
             return View(receita);   
@@ -56,7 +56,7 @@ namespace savemoney.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if(id == null) return NotFound();
-            var receita = await _context.Receitas.FindAsync(id);
+            var receita = await _context.Set<Receita>().FindAsync(id);
             if (receita == null) return NotFound();
             return View(receita);
         }
@@ -77,7 +77,7 @@ namespace savemoney.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Receitas.Any(e => e.Id == receita.Id)) return NotFound();
+                    if (!_context.Set<Receita>().Any(e => e.Id == receita.Id)) return NotFound();
                     else throw;
                 }
                 return RedirectToAction(nameof(Index));
@@ -90,7 +90,7 @@ namespace savemoney.Controllers
         {
             if (id == null) return NotFound();
 
-            var receita = await _context.Receitas.FirstOrDefaultAsync(m => m.Id == id);
+            var receita = await _context.Set<Receita>().FirstOrDefaultAsync(m => m.Id == id);
             if (receita == null) return NotFound();
             return View(receita);
         }
@@ -100,8 +100,8 @@ namespace savemoney.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var receita = await _context.Receitas.FindAsync(id);
-            if (receita != null) _context.Receitas.Remove(receita);
+            var receita = await _context.Set<Receita>().FindAsync(id);
+            if (receita != null) _context.Set<Receita>().Remove(receita);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
