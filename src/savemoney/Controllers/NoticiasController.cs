@@ -32,8 +32,8 @@ public class NoticiasController : Controller
 
         try
         {
-            // Corrigido para chamar o método correto com o parâmetro necessário
-            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termoDeBusca);
+            // Aqui chama o serviço que faz todo o trabalho pesado
+            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termoDeBusca); // Fix: Método assíncrono, termo de busca passado como parâmetro
 
             return Content(noticiasJson, "application/json");
         }
