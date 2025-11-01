@@ -15,7 +15,8 @@ namespace savemoney.Models
 
         // Dbset para Receitas e Despesas a fim de resolver os bugs no compilador *nota* apagar depois.
         public DbSet<Receita> Receitas { get; set; }
-
+        public DbSet<Despesa> Despesas { get; set; }
+        
         // Novos DbSets para o R9 - Metas Financeiras
         public DbSet<MetaFinanceira> MetasFinanceiras { get; set; }
         public DbSet<Aporte> Aportes { get; set; }

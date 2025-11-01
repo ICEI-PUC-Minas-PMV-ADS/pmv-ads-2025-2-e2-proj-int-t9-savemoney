@@ -62,7 +62,6 @@
                         </a>
                     </li>
                 }
-
                 <!-- A lógica aqui mostra o menu principal apenas se o usuário estiver LOGADO -->
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -76,9 +75,16 @@
                             <span class="material-icons">school</span>Educação Financeira
                         </a>
                     </li>
+                    <!-- Link para Gestao finacieira -->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Receitas" asp-action="Index">
                             <span class="material-icons">monetization_on</span>Receitas
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Despesas" asp-action="Index">
+                            <span class="material-icons">monetizati_on</span>Despesas
                         </a>
                     </li>
 
@@ -103,10 +109,6 @@
                         </a>
                     </li>
 
-                    <!-- Link para Relatórios -->
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Receitas" asp-action="Index">Receitas</a>
-                    </li>
                     <!--Link para metas financeiras-->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="MetasFinanceiras" asp-action="Index">
