@@ -49,24 +49,32 @@ namespace savemoney.Controllers
             return View();
         }
 
-        // POST: Budgets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            Budget budget,
-            List<BudgetCategory> Categories) // ← RECEBE A LISTA DE CATEGORIAS
+        public async Task<IActionResult> Create(Budget budget, List<BudgetCategory> Categories)
         {
             if (ModelState.IsValid)
             {
-                // Atribui as categorias ao orçamento
-                budget.Categories = Categories ?? new List<BudgetCategory>();
-
+                // 1. Adiciona o Budget primeiro (sem categorias)
                 _context.Add(budget);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // ← AQUI O ID É GERADO!
+
+                // 2. Agora associa as categorias ao Budget salvo
+                if (Categories != null && Categories.Any())
+                {
+                    foreach (var cat in Categories)
+                    {
+                        cat.BudgetId = budget.Id; // ← ESSA LINHA ESTAVA FALTANDO!
+                    }
+                    budget.Categories = Categories;
+                    _context.BudgetCategories.AddRange(Categories);
+                }
+
+                await _context.SaveChangesAsync(); // ← Salva as categorias
                 return RedirectToAction(nameof(Index));
             }
 
-            // Se der erro, recarrega as listas
+            // Recarrega ViewBag se erro
             ViewData["UserId"] = new SelectList(_context.Usuarios, "Id", "Documento", budget.UserId);
             ViewBag.Categories = _context.Categories.ToList();
             return View(budget);
