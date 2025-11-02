@@ -1,39 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using savemoney.Models; // Classe DTO
-using System.Collections.Generic; // Necessario para utilizar 'List<T>'
+using savemoney.Models;
+using System.Collections.Generic;
 using savemoney.Services;
 
 namespace savemoney.Controllers;
 
 public class NoticiasController : Controller
 {
-    // Controller "Orquesta", recebe o pedido, chama o Service para fazer o trabalho, e devolve a resposta.
     private readonly NoticiasService _noticiasService;
 
-    //o serviço é injetado aqui pelo sistemas e guardado na nossa variável privada
     public NoticiasController(NoticiasService noticiasService)
     {
         _noticiasService = noticiasService;
     }
 
-    // Esse método esta puxando a página
     public IActionResult Index()
     {
         return View();
     }
 
-    /* Este metodo serve para os DADOS JSON para a API
-    A Rota será /EducacaoFinanceira/GetNoticias
+    /* * PASSO 1: CORRIGIR ESTE MÉTODO
+     * * Rota: /Noticias/GetNoticias
+     * Aceita 'query' e 'page' do JavaScript.
     */
     [HttpGet]
-    public async Task<IActionResult> GetNoticias([FromQuery] string termo)
+    // MUDANÇA 1: A assinatura agora aceita 'query' e 'page'.
+    // 'page = 1' define um valor padrão se o front-end não enviar.
+    public async Task<IActionResult> GetNoticias([FromQuery] string query, [FromQuery] int page = 1)
     {
-        var termoDeBusca = string.IsNullOrWhiteSpace(termo) ? "finanças" : termo;
-
+        // MUDANÇA 2: Usamos o 'query' recebido. 
+        // Se estiver vazio, o service decidirá o padrão (ex: "finanças").
         try
         {
-            // Aqui chama o serviço que faz todo o trabalho pesado
-            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(termoDeBusca); // Fix: Método assíncrono, termo de busca passado como parâmetro
+            // MUDANÇA 3: Passamos AMBOS os parâmetros para o service.
+            // (Você precisará atualizar o 'BuscarNoticiasAsync' no seu service para aceitar isso)
+            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(query, page); 
 
             return Content(noticiasJson, "application/json");
         }
@@ -43,4 +44,32 @@ public class NoticiasController : Controller
         }
     }
 
+    /* * PASSO 2: ADICIONAR ESTE NOVO MÉTODO
+     * * Rota: /Noticias/GetSugestoes
+     * Aceita 'query' do JavaScript e retorna uma lista de strings.
+    */
+    [HttpGet]
+    public async Task<IActionResult> GetSugestoes([FromQuery] string query)
+    {
+        if (string.IsNullOrWhiteSpace(query) || query.Length < 2)
+        {
+            // Otimização: não buscar sugestões para queries curtas
+            return Json(new List<string>()); 
+        }
+
+        try
+        {
+            // (Você precisará criar 'BuscarSugestoesAsync' no seu service)
+            var sugestoes = await _noticiasService.BuscarSugestoesAsync(query);
+            
+            // Retorna um JSON array: ["sugestao1", "sugestao2"]
+            return Json(sugestoes); 
+        }
+        catch (Exception ex)
+        {
+            // Não quebre a aplicação se as sugestões falharem
+            Console.WriteLine($"Erro ao buscar sugestões: {ex.Message}");
+            return Json(new List<string>()); // Retorna lista vazia em caso de erro
+        }
+    }
 }
