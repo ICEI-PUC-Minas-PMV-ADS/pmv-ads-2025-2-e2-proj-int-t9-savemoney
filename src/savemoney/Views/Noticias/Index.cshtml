@@ -8,21 +8,35 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<!-- 
+  USANDO A SUA ARQUITETURA: 
+  Esta é a sua div de background fixo. Ela fica fora do <main>.
+-->
+<div class="background-fixed-image" aria-hidden="true"></div>
+
 <main>
-    <div class="title-page text-center mb-4">
-        <h1>Notícias do Mercado Financeiro</h1>
-    </div>
-    <div class="main-paragraph">
-        <p>Fique atualizado com notícias em tempo real do mundo financeiro.</p>
-    </div>
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Pesquisar...">
-        <button class="action-search-button">Buscar</button>
-    </div>
+    <section class="hero-section">
+        <div class="title-page text-center mb-4">
+            <h1>Notícias do Mercado Financeiro</h1>
+        </div>
+        <div class="main-paragraph">
+            <p>Fique atualizado com notícias em tempo real do mundo financeiro.</p>
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Pesquisar...">
+        </div>
+        <!-- div#search-suggestions REMOVIDO DAQUI -->
+    </section>
 
-    <div id="search-suggestions" class="suggestions-container"></div>
-
+    <!-- 
+      O container de notícias. 
+      O CSS o tornará transparente para ver o fundo fixo.
+    -->
     <div id="noticias-container" class=""></div>
-    <div class="carregar-mais-button"><button>Carregar mais notícias</button></div>
+    
+    <div class="carregar-mais-container">
+        <button id="btnCarregarMais" class="carregar-mais-button">Carregar mais notícias</button>
+    </div>
 </main>
 <script src="~/js/noticias.js" asp-append-version="true"></script>
