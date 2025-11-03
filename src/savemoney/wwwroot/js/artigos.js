@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Estado da Aplicação
     let currentPage = 1;
-    const PAGE_SIZE = 6; // Limite de 6 artigos por página
+    const PAGE_SIZE = 6;
     let isLoading = false;
-    let hasMoreData = true; // Controla a visibilidade do botão "Exibir Mais"
+    let hasMoreData = true;
 
-    // Elementos da UI
+
     const container = document.getElementById('artigos-container');
     const spinner = document.getElementById('loading-spinner');
     const statusMessageContainer = document.getElementById('status-message-container');
@@ -15,26 +15,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const filtroTexto = document.getElementById('filtro-texto');
     const filtroRegiao = document.getElementById('filtro-regiao');
     const filtroOrdem = document.getElementById('filtro-ordem');
-    // const filtroTopico = document.getElementById('filtro-topico'); // <-- MUDANÇA: Removido (causava o crash)
     const btnPesquisar = document.getElementById('btn-pesquisar');
     const paginationContainer = document.getElementById('pagination-container');
     const btnExibirMais = document.getElementById('btn-exibir-mais');
 
-    // Event Listeners
+    // 1. Iniciar nova busca
     if (formBusca) formBusca.addEventListener('submit', iniciarNovaBusca);
     if (btnExibirMais) btnExibirMais.addEventListener('click', carregarMaisArtigos);
 
-    // 1. Iniciar uma nova busca (acionado pelo botão ou Enter)
     function iniciarNovaBusca(event) {
         if (event) event.preventDefault();
-        currentPage = 1; // Reseta a página para 1
-        hasMoreData = true; // Reseta o estado da paginação
+        currentPage = 1; 
+        hasMoreData = true; 
         carregarArtigos(true);
     }
 
     // 2. Carregar mais artigos (paginação)
     function carregarMaisArtigos() {
-        currentPage++; // Incrementa a página
+        currentPage++;
         carregarArtigos(false);
     }
 
@@ -49,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
             searchTerm: filtroTexto.value.trim(),
             region: filtroRegiao.value,
             sortOrder: filtroOrdem.value,
-            // topic: filtroTopico.value, // <-- MUDANÇA: Removido (causava o crash)
             page: currentPage,
             pageSize: PAGE_SIZE
         });
@@ -68,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const dadosCompletos = await response.json();
 
-            // Validação da resposta
             if (!dadosCompletos || dadosCompletos.status !== "ok" || !Array.isArray(dadosCompletos.articles)) {
                 console.error("Resposta da API inválida:", dadosCompletos);
                 const mensagem = dadosCompletos.message || "Erro na comunicação com a API.";
@@ -78,10 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const listaDeArtigos = dadosCompletos.articles;
 
-            // (Seu código original para hasMoreData estava assim, vamos mantê-lo por enquanto)
             hasMoreData = dadosCompletos.hasNextPage || (listaDeArtigos.length === PAGE_SIZE);
             
-            // Renderiza os resultados
+
             renderizarArtigos(listaDeArtigos, isNewSearch);
 
 
@@ -95,9 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 4. Funções de Renderização e Estado
-    // (O código abaixo não precisa de NENHUMA alteração)
-
-    // Define o estado de carregamento (Spinner e Botões)
     function setLoadingState(loading, isNewSearch = false) {
         isLoading = loading;
         
@@ -106,19 +98,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (loading) {
             spinner.style.display = 'flex';
-            mostrarStatus(null); // Esconde mensagens de erro/status anteriores
+            mostrarStatus(null);
             if (isNewSearch) {
-                 // Limpa o container apenas se for uma nova busca
                 container.innerHTML = '';
                 paginationContainer.style.display = 'none'; 
             }
-            // Altera o texto do botão durante o carregamento
             if (currentPage > 1) {
                  btnExibirMais.textContent = "Carregando...";
             }
         } else {
             spinner.style.display = 'none';
-            // Restaura o texto do botão
             btnExibirMais.textContent = "Exibir Mais Artigos";
         }
     }
@@ -167,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 5. Funções Auxiliares (Formatação e Criação de Cards)
-    // (O código abaixo não precisa de NENHUMA alteração)
 
     // Processa e formata os dados de um único artigo
     function processarArtigo(artigo) {
@@ -195,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    // Função auxiliar para formatar autores
     function formatarAutores(autoresList) {
         if (!autoresList || autoresList.length === 0) {
             return "Autores não disponíveis";
@@ -207,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return autoresList.join(', ');
     }
 
-     // Função auxiliar para criar o HTML de cada artigo
     function criarCardArtigo(artigo) {
         const title = artigo.title || "Sem título";
         const url = artigo.url || "#";
@@ -216,7 +202,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const citedByCount = artigo.citedByCount || 0;
         const publicationYear = artigo.anoPublicacao;
 
-        // Trunca o abstract
         let abstractText = artigo.abstractText || "Abstract (Resumo) não disponível.";
         const maxLength = 160;
         if (abstractText.length > maxLength) {
@@ -248,6 +233,5 @@ document.addEventListener('DOMContentLoaded', function () {
         return cardHTML;
     }
 
-    // Inicia o carregamento inicial (Página 1, com filtros padrão)
     carregarArtigos(true);
 });

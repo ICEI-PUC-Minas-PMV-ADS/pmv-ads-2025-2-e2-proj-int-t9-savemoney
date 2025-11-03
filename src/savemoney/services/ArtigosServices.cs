@@ -20,7 +20,6 @@ namespace savemoney.Services
             _httpClient = httpClient;
         }
 
-        // Assinatura está CORRETA
         public async Task<string> BuscarArtigosAsync(ArtigoBuscaRequest request)
         {
             try
@@ -34,7 +33,7 @@ namespace savemoney.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    // Se a API retornar um erro (ex: 400, 404)
+
                     var errorBody = await response.Content.ReadAsStringAsync();
                     return RetornarErroPadronizado($"Erro da API OpenAlex: {response.StatusCode}. Detalhes: {errorBody}");
                 }
@@ -45,7 +44,7 @@ namespace savemoney.Services
             }
             catch (Exception ex)
             {
-                // Se o HANG acontecer (ex: Timeout), ele cairá aqui
+
                 return RetornarErroPadronizado($"Erro interno no serviço (Timeout?): {ex.Message}");
             }
         }
@@ -63,9 +62,7 @@ namespace savemoney.Services
             }
             else
             {
-                // <-- CORREÇÃO (O BUG ESTAVA AQUI)
-                // 'display_name.search' era inválido para /works.
-                // 'default.search' é o correto para busca genérica.
+
                 filters.Append("default.search:finance"); 
             }
             
@@ -153,7 +150,6 @@ namespace savemoney.Services
             }
         }
 
-        // --- Métodos Auxiliares (Seu código original, 100% correto) ---
 
         private static string ReconstruirAbstract(JsonElement invertedIndex)
         {

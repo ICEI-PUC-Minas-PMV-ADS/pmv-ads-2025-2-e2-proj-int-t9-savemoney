@@ -28,8 +28,7 @@ public class NoticiasController : Controller
         try
         {
 
-            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(query, page); 
-
+            var noticiasJson = await _noticiasService.BuscarNoticiasAsync(query, page);
             return Content(noticiasJson, "application/json");
         }
         catch (Exception ex)
@@ -44,21 +43,20 @@ public class NoticiasController : Controller
         if (string.IsNullOrWhiteSpace(query) || query.Length < 2)
         {
 
-            return Json(new List<string>()); 
+            return Json(new List<string>());
         }
 
         try
         {
 
             var sugestoes = await _noticiasService.BuscarSugestoesAsync(query);
-            
-            return Json(sugestoes); 
+            return Json(sugestoes);
         }
         catch (Exception ex)
         {
 
             Console.WriteLine($"Erro ao buscar sugestões: {ex.Message}");
-            return Json(new List<string>()); 
+            return Json(new List<string>());
         }
     }
 }

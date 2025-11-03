@@ -12,8 +12,6 @@ namespace savemoney.Models
 
         [FromQuery(Name = "sortOrder")]
         public string? SortOrder { get; set; }
-
-        // MUDANÇA: 'Topic' removido
         
         [FromQuery(Name = "page")]
         public int Page { get; set; } = 1;

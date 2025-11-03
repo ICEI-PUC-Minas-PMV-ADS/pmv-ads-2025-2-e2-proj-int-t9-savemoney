@@ -13,7 +13,7 @@ namespace savemoney.Models
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ConversorEnergia> ConversoresEnergia { get; set; }
 
-        // Dbset para Receitas e Despesas a fim de resolver os bugs no compilador *nota* apagar depois.
+        // Dbset para Receitas e Despesas a fim de resolver os bugs no compilador após o merge
         public DbSet<Receita> Receitas { get; set; }
 
         // Novos DbSets para o R9 - Metas Financeiras

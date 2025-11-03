@@ -1,4 +1,4 @@
-/* --- ADAPTADO: Paleta "Azul Noite" (da Memória) --- */
+
 :root {
   --bg-primary: #10111a;
   --bg-secondary: #0d0e16;
@@ -12,7 +12,7 @@
   --container-width: 1200px;
 }
 
-/* Reset básico e aplicação da fonte */
+
 * {
   margin: 0;
   padding: 0;
@@ -21,13 +21,11 @@
 }
 
 body {
-  /* O body é 'transparente' para o fundo fixo */
   background-color: transparent;
   color: var(--text-primary);
   min-height: 100vh;
 }
 
-/* --- ADAPTADO: Background Fixo (Sua Escolha) --- */
 .background-fixed-image {
   position: fixed;
   top: 0;
@@ -35,7 +33,7 @@ body {
   width: 100%;
   height: 100vh;
   z-index: -1;
-  /* CORREÇÃO: Imagem "Arquitetura" que você escolheu */
+
   background-image: url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop");
   background-size: cover;
   background-position: center;
@@ -43,13 +41,9 @@ body {
   filter: brightness(0.5);
 }
 
-/* Wrapper principal para o conteúdo 
-   CORREÇÃO: z-index: 1 garante a "clicabilidade"
-*/
 .content-wrapper {
   position: relative;
   z-index: 1;
-  /* ADAPTADO: Respeito pelo header flutuante (da memória) */
   padding: 120px 1.5rem 4rem 1.5rem;
 }
 
@@ -58,7 +52,6 @@ body {
   margin: 0 auto;
 }
 
-/* Cabeçalho da Página */
 .header-artigos {
   text-align: center;
   margin-bottom: 4rem;
@@ -67,28 +60,26 @@ body {
 .header-artigos h1 {
   font-size: 4.5rem;
   font-weight: 800;
-  color: var(--text-primary); /* ADAPTADO */
+  color: var(--text-primary); 
   margin-bottom: 1rem;
   line-height: 1.1;
 }
 
 .header-artigos p {
   font-size: 1.25rem;
-  color: var(--text-secondary); /* ADAPTADO */
+  color: var(--text-secondary); 
   max-width: 768px;
   margin: 0 auto;
 }
 
 .header-artigos a {
-  color: var(--accent-primary); /* ADAPTADO */
+  color: var(--accent-primary); 
   text-decoration: none;
 }
 .header-artigos a:hover {
   text-decoration: underline;
 }
 
-/* --- ADAPTADO: Efeito Glassmorphism (da Memória) --- */
-/* Aplicado na filter-bar */
 .glass-effect {
   background-color: rgba(13, 14, 22, 0.3);
   backdrop-filter: blur(8px);
@@ -98,11 +89,10 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Barra de Filtros */
+
 .filter-bar {
   padding: 1.5rem;
   margin-bottom: 3rem;
-  /* O 'box-shadow: var(--shadow-neon);' foi removido para usar o glass-effect */
 }
 
 .filter-grid {
@@ -112,31 +102,29 @@ body {
   align-items: center;
 }
 
-/* --- ADAPTADO: Inputs e Selects com Tema "Azul Noite" --- */
 .input-style,
 .select-style {
   width: 100%;
-  background-color: var(--bg-card); /* ADAPTADO */
-  border: 1px solid var(--border-color); /* ADAPTADO */
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
-  color: var(--text-primary); /* ADAPTADO */
+  color: var(--text-primary);
   transition: all 0.3s ease;
   font-size: 1rem;
 }
 
 .input-style::placeholder {
-  color: var(--text-secondary); /* ADAPTADO */
+  color: var(--text-secondary);
 }
 
 .input-style:focus,
 .select-style:focus {
   outline: none;
-  border-color: var(--accent-primary); /* ADAPTADO */
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); /* 'Glow' da memória */
+  border-color: var(--accent-primary); 
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); 
 }
 
-/* Seta do select adaptada para a paleta */
 .select-style {
   appearance: none;
   -webkit-appearance: none;
@@ -149,7 +137,6 @@ body {
   cursor: pointer;
 }
 
-/* Estilização específica dos campos */
 .filter-search {
   position: relative;
 }
@@ -159,20 +146,19 @@ body {
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary); /* ADAPTADO */
+  color: var(--text-secondary);
 }
 
 .filter-search input {
   padding-left: 3rem;
 }
 
-/* --- ADAPTADO: Botões com Tema "Azul Noite" --- */
 .btn-action {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  background-color: var(--accent-primary); /* ADAPTADO */
-  color: var(--btn-primary-text); /* ADAPTADO */
+  background-color: var(--accent-primary);
+  color: var(--btn-primary-text); 
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -181,16 +167,16 @@ body {
 }
 
 .btn-action:hover {
-  background-color: var(--accent-primary-hover); /* ADAPTADO */
+  background-color: var(--accent-primary-hover); 
 }
 
 .btn-action:disabled {
-  background-color: var(--border-color); /* ADAPTADO */
+  background-color: var(--border-color); 
   color: var(--text-secondary);
   cursor: not-allowed;
 }
 
-/* Botão Exibir Mais (Paginação) */
+
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -198,7 +184,7 @@ body {
 }
 
 .btn-show-more {
-  /* Estilo do .carregar-mais-button (da memória) */
+
   font-size: 1rem;
   font-weight: 700;
   color: var(--btn-primary-text);
@@ -210,7 +196,6 @@ body {
   transition: all 0.3s ease;
 }
 .btn-show-more:hover {
-  /* Hover 'glass' (da memória) */
   background-color: rgb(20, 30, 60, 0.5);
   backdrop-filter: blur(5px);
   box-shadow: 0 4px 15px rgba(20, 35, 59, 0.801);
@@ -221,16 +206,14 @@ body {
   cursor: not-allowed;
 }
 
-/* Grid de Artigos */
 .artigos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
 }
 
-/* --- CORREÇÃO: Card do Artigo (Preservando seu layout) --- */
+
 .article-card {
-  /* Estilização base do .meu-card (da memória) */
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -241,8 +224,6 @@ body {
   text-decoration: none;
   transition: all 0.3s ease;
   height: 100%;
-
-  /* Padding do seu layout original 'artigos' */
   padding: 1.5rem;
 }
 
@@ -252,23 +233,20 @@ body {
   border-color: var(--accent-primary);
 }
 
-/* CORREÇÃO: Estilos de card que eu "perdi" */
 .card-category {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--accent-primary); /* ADAPTADO */
+  color: var(--accent-primary);
   margin-bottom: 1rem;
   display: block;
 }
 
 .card-title {
-  font-size: 1.5rem; /* Tamanho original do card de artigo */
+  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
   color: var(--text-primary);
   transition: color 0.3s ease;
-
-  /* Correção de altura (da memória) */
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -284,18 +262,16 @@ body {
 
 .card-meta {
   font-size: 0.875rem;
-  color: var(--text-secondary); /* ADAPTADO */
+  color: var(--text-secondary); 
   margin-bottom: 1rem;
 }
 
 .card-abstract {
-  color: var(--text-secondary); /* ADAPTADO */
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
   font-size: 1rem;
   line-height: 1.6;
-  flex-grow: 1; /* Empurra o rodapé para baixo */
-
-  /* Correção de altura (da memória) */
+  flex-grow: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -307,7 +283,7 @@ body {
   display: inline-flex;
   align-items: center;
   font-weight: 600;
-  color: var(--accent-primary); /* ADAPTADO */
+  color: var(--accent-primary);
 }
 
 .card-link-icon {
@@ -319,20 +295,19 @@ body {
   transform: translateX(4px);
 }
 
-/* Loading Spinner e Status */
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem 0;
-  color: var(--text-secondary); /* ADAPTADO */
+  color: var(--text-secondary);
   grid-column: 1 / -1;
 }
 
 .spinner {
-  border: 4px solid var(--border-color); /* ADAPTADO */
-  border-top: 4px solid var(--accent-primary); /* ADAPTADO */
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-primary);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -349,7 +324,6 @@ body {
   }
 }
 
-/* ADAPTADO: Mensagens de status para o tema dark */
 .status-message {
   text-align: center;
   padding: 1.5rem;
