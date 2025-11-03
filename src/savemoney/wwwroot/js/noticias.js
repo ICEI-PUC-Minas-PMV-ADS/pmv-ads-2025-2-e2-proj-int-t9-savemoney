@@ -14,13 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let currentPage = 1;
   let currentQuery = "";
-  let isLoading = false; // Feedback do botão
+  let isLoading = false; 
 
   const container = document.getElementById("noticias-container");
   const searchInput = document.querySelector(".search-input");
   const btnCarregarMais = document.getElementById("btnCarregarMais"); 
-  
-  // REMOVIDO: suggestionsContainer
 
   async function carregarNoticias(query, page, isLoadMore = false) {
     if (isLoading) return; 
@@ -104,10 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
-
-  // REMOVIDO: fetchSuggestions, renderSuggestions, clearSuggestions
-
-  // --- MANIPULADORES DE EVENTOS ---
+  
   function handleSearchInput(event) {
     const query = event.target.value.trim();
     currentQuery = query;
@@ -116,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(`Busca (debounced) iniciada para: "${query}", Página: 1`);
     carregarNoticias(query, 1, false);
     
-    // REMOVIDO: fetchSuggestions(query);
+    
   }
 
   function handleLoadMore() {
@@ -124,14 +119,11 @@ document.addEventListener("DOMContentLoaded", function () {
     carregarNoticias(currentQuery, currentPage, true);
   }
 
-  // --- CONEXÃO DOS EVENT LISTENERS ---
+  
   const debouncedSearchHandler = debounce(handleSearchInput, 500);
   searchInput.addEventListener("input", debouncedSearchHandler);
 
   btnCarregarMais.addEventListener("click", handleLoadMore);
 
-  // REMOVIDO: suggestionsContainer.addEventListener
-  
-  // --- Carga Inicial ---
   carregarNoticias(currentQuery, currentPage);
 });

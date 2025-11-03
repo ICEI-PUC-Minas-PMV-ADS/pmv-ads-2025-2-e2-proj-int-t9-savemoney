@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Linq;
 using System;
+using savemoney.Models;
+using System.Text;
 
 namespace savemoney.Services
 {
-    // Certifique-se que o nome da classe é ArtigosService
     public class ArtigosService
     {
         private readonly HttpClient _httpClient;
@@ -19,79 +20,108 @@ namespace savemoney.Services
             _httpClient = httpClient;
         }
 
-        // ATUALIZADO: Adicionado '?' pois o termo pode vir nulo do Controller
-        public async Task<string> BuscarArtigosAsync(string? termoDeBusca)
+        // Assinatura está CORRETA
+        public async Task<string> BuscarArtigosAsync(ArtigoBuscaRequest request)
         {
-            // 1. Definir Termo Padrão (se necessário)
-            if (string.IsNullOrWhiteSpace(termoDeBusca))
+            try
             {
-                termoDeBusca = "finance OR investment OR \"financial education\" OR economics";
+                var url = ConstruirUrlOpenAlex(request);
+
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+                httpRequest.Headers.Add("User-Agent", USER_AGENT);
+
+                var response = await _httpClient.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    // Se a API retornar um erro (ex: 400, 404)
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    return RetornarErroPadronizado($"Erro da API OpenAlex: {response.StatusCode}. Detalhes: {errorBody}");
+                }
+
+                var responseJsonString = await response.Content.ReadAsStringAsync();
+                
+                return ProcessarRespostaOpenAlex(responseJsonString, request.PageSize);
             }
-
-            // termoDeBusca não é mais nulo aqui.
-            var termoCodificado = WebUtility.UrlEncode(termoDeBusca);
-
-            // 2. Construir URL
-            var url = $"https://api.openalex.org/works?search={termoCodificado}&sort=cited_by_count:desc&per-page=25";
-
-            // 3. Fazer a Requisição
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("User-Agent", USER_AGENT);
-
-            var response = await _httpClient.SendAsync(request);
-
-            // 4. Tratamento de Erros da API Externa
-            if (!response.IsSuccessStatusCode)
+            catch (Exception ex)
             {
-                return RetornarErroPadronizado($"Erro ao comunicar com a API OpenAlex. Status: {response.StatusCode}");
+                // Se o HANG acontecer (ex: Timeout), ele cairá aqui
+                return RetornarErroPadronizado($"Erro interno no serviço (Timeout?): {ex.Message}");
             }
-
-            var responseJsonString = await response.Content.ReadAsStringAsync();
-
-            // 5. Processar e Padronizar a Resposta
-            return ProcessarRespostaOpenAlex(responseJsonString);
         }
 
-        private string ProcessarRespostaOpenAlex(string jsonString)
+        
+        private string ConstruirUrlOpenAlex(ArtigoBuscaRequest request)
+        {
+            var baseUrl = "https://api.openalex.org/works";
+            var filters = new StringBuilder();
+
+            // --- 1. FILTRO DE TEXTO (SearchTerm) ---
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                filters.Append($"title_and_abstract.search:{WebUtility.UrlEncode(request.SearchTerm)}");
+            }
+            else
+            {
+                // <-- CORREÇÃO (O BUG ESTAVA AQUI)
+                // 'display_name.search' era inválido para /works.
+                // 'default.search' é o correto para busca genérica.
+                filters.Append("default.search:finance"); 
+            }
+            
+            // --- 2. FILTRO DE IDIOMA (Region) ---
+            if (request.Region == "BR")
+            {
+                if (filters.Length > 0) filters.Append(',');
+                filters.Append("language:pt");
+            }
+            
+            // --- 3. FILTRO DE ORDEM (Sort) ---
+            string sortOrder;
+            if (request.SortOrder == "newest")
+            {
+                sortOrder = "publication_date:desc";
+            }
+            else
+            {
+                sortOrder = "cited_by_count:desc";
+            }
+
+            // --- 4. PAGINAÇÃO ---
+            int page = request.Page > 0 ? request.Page : 1;
+            int pageSize = request.PageSize > 0 ? request.PageSize : 6;
+
+            // --- Montagem final da URL ---
+            return $"{baseUrl}?filter={filters.ToString()}&sort={sortOrder}&per-page={pageSize}&page={page}";
+        }
+
+        
+        private string ProcessarRespostaOpenAlex(string jsonString, int pageSize)
         {
             try
             {
                 using var doc = JsonDocument.Parse(jsonString);
                 var root = doc.RootElement;
-
                 var articles = new List<object>();
 
-                // Os resultados estão na propriedade 'results'
                 if (root.TryGetProperty("results", out var resultsElement) && resultsElement.ValueKind == JsonValueKind.Array)
                 {
                     foreach (var work in resultsElement.EnumerateArray())
                     {
-                        // Extração de Dados Básicos
-                        // Usamos "??" para garantir um valor padrão mesmo se a API retornar explicitamente "title": null
                         var title = work.GetPropertyOrDefault("title", null) ?? "Sem título";
-
-                        // ATUALIZADO: GetPropertyOrDefault agora aceita null como padrão.
-                        // Usamos o operador '??' (null-coalescing) para tentar o ID se o DOI for nulo.
-                        // Usamos GetPropertyOrDefault para o ID também, que é mais seguro.
-                        // Garantimos um fallback final para "#" caso ambos falhem.
                         var url = work.GetPropertyOrDefault("doi", null) ?? work.GetPropertyOrDefault("id", null) ?? "#";
-                        
-                        // A data pode ser nula.
                         var publicationDate = work.GetPropertyOrDefault("publication_date", null);
                         var citedByCount = work.GetPropertyOrDefault("cited_by_count", 0);
 
-                        // ATUALIZADO: Declarado como string? pois pode ser nulo.
                         string? abstractText = null;
                         if (work.TryGetProperty("abstract_inverted_index", out var abstractInvertedIndex) && abstractInvertedIndex.ValueKind == JsonValueKind.Object && abstractInvertedIndex.EnumerateObject().Any())
                         {
                             abstractText = ReconstruirAbstract(abstractInvertedIndex);
                         }
 
-                        // Extração de Autores e Fonte
                         var authorsList = ExtrairAutores(work);
                         string sourceName = ExtrairFonte(work);
 
-                        // Padronização do objeto para o frontend
                         articles.Add(new
                         {
                             title,
@@ -104,17 +134,18 @@ namespace savemoney.Services
                         });
                     }
                 }
+                
+                bool hasNextPage = articles.Count == pageSize;
 
-                // Retorno de sucesso padronizado
                 var padronizado = new
                 {
                     status = "ok",
                     totalResults = root.TryGetProperty("meta", out var meta) ? meta.GetPropertyOrDefault("count", articles.Count) : articles.Count,
-                    articles
+                    articles,
+                    hasNextPage
                 };
 
                 return JsonSerializer.Serialize(padronizado);
-
             }
             catch (Exception ex)
             {
@@ -122,17 +153,15 @@ namespace savemoney.Services
             }
         }
 
-        // --- Métodos Auxiliares ---
+        // --- Métodos Auxiliares (Seu código original, 100% correto) ---
 
         private static string ReconstruirAbstract(JsonElement invertedIndex)
         {
             var wordPositions = new SortedDictionary<int, string>();
-
             foreach (var property in invertedIndex.EnumerateObject())
             {
                 var word = property.Name;
                 var positions = property.Value;
-
                 if (positions.ValueKind == JsonValueKind.Array)
                 {
                     foreach (var position in positions.EnumerateArray())
@@ -156,11 +185,10 @@ namespace savemoney.Services
                 {
                     if (authorship.TryGetProperty("author", out var authorElement) && authorElement.TryGetProperty("display_name", out var nameElement))
                     {
-                        // ATUALIZADO: GetString() pode retornar nulo, verificamos antes de adicionar.
                         var name = nameElement.GetString();
                         if (!string.IsNullOrEmpty(name))
                         {
-                           authors.Add(name);
+                            authors.Add(name);
                         }
                     }
                 }
@@ -174,7 +202,6 @@ namespace savemoney.Services
                 primaryLocation.TryGetProperty("source", out var source) && source.ValueKind != JsonValueKind.Null &&
                 source.TryGetProperty("display_name", out var sourceDisplayName))
             {
-                // ATUALIZADO: GetString() pode retornar nulo. Usamos '??' para garantir um valor padrão.
                 return sourceDisplayName.GetString() ?? "Fonte desconhecida";
             }
             return "Fonte desconhecida";

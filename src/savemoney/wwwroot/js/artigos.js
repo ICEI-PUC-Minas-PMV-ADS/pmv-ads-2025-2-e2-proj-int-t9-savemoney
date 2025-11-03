@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const filtroTexto = document.getElementById('filtro-texto');
     const filtroRegiao = document.getElementById('filtro-regiao');
     const filtroOrdem = document.getElementById('filtro-ordem');
-    const filtroTopico = document.getElementById('filtro-topico');
+    // const filtroTopico = document.getElementById('filtro-topico'); // <-- MUDANÇA: Removido (causava o crash)
     const btnPesquisar = document.getElementById('btn-pesquisar');
     const paginationContainer = document.getElementById('pagination-container');
     const btnExibirMais = document.getElementById('btn-exibir-mais');
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
             searchTerm: filtroTexto.value.trim(),
             region: filtroRegiao.value,
             sortOrder: filtroOrdem.value,
-            topic: filtroTopico.value,
+            // topic: filtroTopico.value, // <-- MUDANÇA: Removido (causava o crash)
             page: currentPage,
             pageSize: PAGE_SIZE
         });
@@ -78,8 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const listaDeArtigos = dadosCompletos.articles;
 
-            // Gerencia a paginação
-            // Idealmente, o backend retorna 'hasNextPage'. Caso contrário, verificamos se o número de itens retornados é menor que o tamanho da página.
+            // (Seu código original para hasMoreData estava assim, vamos mantê-lo por enquanto)
             hasMoreData = dadosCompletos.hasNextPage || (listaDeArtigos.length === PAGE_SIZE);
             
             // Renderiza os resultados
@@ -96,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 4. Funções de Renderização e Estado
+    // (O código abaixo não precisa de NENHUMA alteração)
 
     // Define o estado de carregamento (Spinner e Botões)
     function setLoadingState(loading, isNewSearch = false) {
@@ -167,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 5. Funções Auxiliares (Formatação e Criação de Cards)
+    // (O código abaixo não precisa de NENHUMA alteração)
 
     // Processa e formata os dados de um único artigo
     function processarArtigo(artigo) {
@@ -174,17 +175,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
          // Tratamento robusto da data
          if (artigo.publicationDate) {
-            try {
-                // Adicionar 'T00:00:00' força o JS a interpretar como meia-noite local, 
-                // evitando erros de fuso horário ao analisar apenas a data (YYYY-MM-DD).
-                const data = new Date(artigo.publicationDate + 'T00:00:00');
-                if (!isNaN(data.getTime())) {
-                    anoPublicacao = data.getFullYear();
-                }
-            } catch (e) {
-                console.warn("Erro ao processar data:", artigo.publicationDate);
-            }
-        }
+             try {
+                 // Adicionar 'T00:00:00' força o JS a interpretar como meia-noite local, 
+                 // evitando erros de fuso horário ao analisar apenas a data (YYYY-MM-DD).
+                 const data = new Date(artigo.publicationDate + 'T00:00:00');
+                 if (!isNaN(data.getTime())) {
+                     anoPublicacao = data.getFullYear();
+                 }
+             } catch (e) {
+                 console.warn("Erro ao processar data:", artigo.publicationDate);
+             }
+         }
 
         const autoresFormatados = formatarAutores(artigo.authors);
         return {

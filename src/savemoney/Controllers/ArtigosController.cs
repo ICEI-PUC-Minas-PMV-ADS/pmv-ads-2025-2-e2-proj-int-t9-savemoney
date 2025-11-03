@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
 using savemoney.Services;
+using savemoney.Models; // <-- MUDANÇA 1: Adicionada a referência ao DTO
 
 namespace savemoney.Controllers
 {
@@ -25,19 +26,28 @@ namespace savemoney.Controllers
            A Rota será /Artigos/GetArtigos
         */
         [HttpGet]
-        public async Task<IActionResult> GetArtigos([FromQuery] string termo)
+        /* * MUDANÇA 2 (A MUDANÇA PRINCIPAL):
+         * Trocamos '([FromQuery] string termo)' por '([FromQuery] ArtigoBuscaRequest request)'.
+         * O ASP.NET Core vai ler todos os parâmetros da URL (searchTerm, region, page, etc.)
+         * e preencher o objeto 'request' automaticamente.
+         */
+        public async Task<IActionResult> GetArtigos([FromQuery] ArtigoBuscaRequest request)
         {
             try
             {
-                // Chama o serviço. O serviço já lida com o termo padrão se este for nulo.
-                var artigosJson = await _artigosService.BuscarArtigosAsync(termo);
+                /*
+                 * MUDANÇA 3:
+                 * Agora passamos o objeto 'request' completo para o serviço.
+                 * O serviço (no próximo passo) vai usá-lo para construir a URL da API.
+                 */
+                var artigosJson = await _artigosService.BuscarArtigosAsync(request);
 
                 // Retorna o JSON
                 return Content(artigosJson, "application/json");
             }
             catch (Exception ex)
             {
-                // Em caso de erro inesperado no nosso servidor (o serviço já trata erros da API externa)
+                // Em caso de erro inesperado no nosso servidor
                 return StatusCode(500, $"Ocorreu um erro interno no servidor: {ex.Message}");
             }
         }

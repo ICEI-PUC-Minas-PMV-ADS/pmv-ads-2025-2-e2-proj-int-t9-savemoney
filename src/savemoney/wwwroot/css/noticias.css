@@ -19,7 +19,6 @@
 }
 
 body {
-  /* O body é 'transparente' para o fundo fixo */
   background-color: transparent; 
   color: var(--text-primary);
   margin: 0;
@@ -27,9 +26,6 @@ body {
   min-height: 100vh;
 }
 
-/* PASSO 1: USANDO A SUA ARQUITETURA
-  Corrigido o caminho para 'assets' e a sintaxe do 'filter'.
-*/
 .background-fixed-image {
   position: fixed;
   top: 0;
@@ -37,34 +33,26 @@ body {
   width: 100%;
   height: 100vh;
   z-index: -1;
-  
-  /* CORREÇÃO: Caminho da imagem */
   background-image: url("../assets/hero-background-2.jpg");
   background-size: cover;
   background-position: center;
-
-  /* CORREÇÃO: 'filter' é uma propriedade separada */
   filter: brightness(0.5);
 }
 
 main {
   width: 100%;
   overflow-x: hidden;
-  /* Garante que o conteúdo role por cima do fundo fixo */
+
   position: relative;
   z-index: 2;
 }
 
-/* PASSO 2: A HERO SECTION
-  O fundo é 'transparente' para o background fixo aparecer.
-*/
+
 .hero-section {
   padding: 6rem 1.5rem 4rem 1.5rem;
-  /* Respeito pelo header flutuante */
   padding-top: 120px;
   text-align: center;
   position: relative;
-  /* Fundo transparente para ver a imagem fixa */
   background-color: transparent; 
 }
 
@@ -84,7 +72,6 @@ main {
   margin-right: auto;
 }
 
-/* --- BARRA DE BUSCA (SIMPLES) --- */
 .search-container {
   max-width: 700px;
   margin: 2rem auto;
@@ -112,7 +99,7 @@ main {
   border-radius: 50px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   outline: none;
-  height: 3.75rem; /* 60px */
+  height: 3.75rem;
   padding: 1rem 1.5rem 1rem 4rem;
   transition: all 0.3s ease;
 }
@@ -124,9 +111,6 @@ main {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }
 
-/* PASSO 3: SEÇÃO DOS CARDS
-  Fundo sólido (com contraste) para "cortar" a imagem de fundo.
-*/
 #noticias-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -142,7 +126,6 @@ main {
 
 }
 
-/* --- CORREÇÃO DOS CARDS (Alinhamento de Altura) --- */
 .meu-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -196,15 +179,12 @@ main {
   text-overflow: ellipsis;
 }
 
-/* PASSO 4: BOTÃO CARREGAR MAIS
-  Usando a sua classe 'display: flex' e alinhando ao fundo dos cards.
-*/
+
 .carregar-mais-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem 0 4rem 0;
-  /* Mesmo fundo da seção de cards */
 }
 
 .carregar-mais-button {
@@ -229,7 +209,6 @@ main {
   cursor: not-allowed;
 }
 
-/* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
   .hero-section {
     padding-top: 100px;
