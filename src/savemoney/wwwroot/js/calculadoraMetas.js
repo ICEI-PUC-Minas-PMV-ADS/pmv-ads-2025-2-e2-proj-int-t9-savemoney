@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function parseCurrency(value) {
         if (typeof value !== 'string' || !value) return 0;
-        const cleanedValue = value.replace(/R\$\s?/g, '').replace(/\./g, '').replace(',', '.');
+        const stringValue = String(value); 
+        const cleanedValue = stringValue.replace(/R\$\s?/g, '').replace(/\./g, '').replace(',', '.');
         return parseFloat(cleanedValue) || 0;
     }
 
@@ -53,28 +54,28 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsDiv.style.textAlign = 'left';
 
         const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-
+        
         let resultHTML = `
              <h4 class="mb-3">Resultado da Simulação</h4>
              <p><small>Para atingir <strong>${formatter.format(goalValue)}</strong></small></p>
              <p><small>Começando com ${formatter.format(initialInvestment)}</small></p>
              <p><small>Em ${timeValue} ${isYears ? (timeValue === 1 ? 'Ano' : 'Anos') : (timeValue === 1 ? 'Mês' : 'Meses')}</small></p>
              <p><small>Com taxa de ${rate.toFixed(1).replace('.', ',')}% ao ano</small></p>
-             <hr>
+             <hr style="border-color: var(--border-color);">
              <h5 class="mt-3">Você precisará poupar mensalmente:</h5>
-        `;
+         `;
 
         if (goalValue <= initialInvestment) {
-            resultHTML += `<h3 class="text-success">${formatter.format(0)}</h3>`;
-            resultHTML += `<p class="text-info small mt-2">Seu investimento inicial já atinge ou supera a meta!</p>`;
+            resultHTML += `<h3 style="color: var(--accent-primary);">${formatter.format(0)}</h3>`;
+            resultHTML += `<p class="small mt-2">Seu investimento inicial já atinge ou supera a meta!</p>`;
         } else if (monthlyContribution <= 0) {
-            resultHTML += `<h3 class="text-success">${formatter.format(0)}</h3>`;
-            resultHTML += `<p class="text-info small mt-2">Seu investimento inicial renderá o suficiente para atingir a meta, sem aportes!</p>`;
+            resultHTML += `<h3 style="color: var(--accent-primary);">${formatter.format(0)}</h3>`;
+            resultHTML += `<p class="small mt-2">Seu investimento inicial renderá o suficiente para atingir a meta, sem aportes!</p>`;
         } else {
-            resultHTML += `<h3 class="text-primary">${formatter.format(monthlyContribution)}</h3>`;
+            resultHTML += `<h3 style="color: var(--accent-primary);">${formatter.format(monthlyContribution)}</h3>`;
         }
 
-        resultHTML += `<p class="text-muted small mt-3">Nota: Simulação simplificada sem taxas, impostos ou inflação.</p>`;
+        resultHTML += `<p class="small mt-3" style="color: var(--text-secondary);">Nota: Simulação simplificada sem taxas, impostos ou inflação.</p>`;
 
         resultsDiv.innerHTML = resultHTML;
     }
@@ -85,11 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsDiv.classList.add('results-placeholder');
         resultsDiv.style.textAlign = 'center';
         resultsDiv.innerHTML = `
-             <i class="bi bi-exclamation-triangle display-4 text-danger mb-3"></i>
-             <h5 class="text-danger">Erro na Simulação</h5>
+             <i class="bi bi-exclamation-triangle results-icon" style="color: #F87171;"></i>
+             <h5 style="color: #F87171;">Erro na Simulação</h5>
              <p class="mb-0">${message}</p>
          `;
-        if(copyBtn) copyBtn.classList.add('d-none');
+        if(copyBtn) copyBtn.style.display = 'none';
     }
 
     function updateCopyLink(goal, initial, time, unit, rate) {
@@ -108,8 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
          });
         const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
         copyBtn.dataset.shareUrl = shareUrl;
-        copyBtn.classList.remove('d-none');
-        if(copyFeedback) copyFeedback.classList.add('d-none');
+        copyBtn.style.display = 'block';
+        if(copyFeedback) copyFeedback.style.display = 'none';
     }
 
     if (calculateBtn) {
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isYears = yearsRadio ? yearsRadio.checked : true;
             const annualReturnRate = parseCurrency(annualReturnRateInput.value);
 
+            // Validações
             if (goalValue <= 0) {
                 displayError("O valor do objetivo deve ser maior que zero.");
                 return;
@@ -133,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             if (annualReturnRate < 0) {
-                displayError("A taxa de retorno não pode ser negativa para calcular a contribuição necessária.");
+                displayError("A taxa de retorno não pode ser negativa.");
                 return;
             }
 
@@ -154,44 +156,36 @@ document.addEventListener('DOMContentLoaded', () => {
         copyBtn.addEventListener('click', () => {
             const urlToCopy = copyBtn.dataset.shareUrl;
             if (urlToCopy) {
-                const tempInput = document.createElement('textarea');
-                tempInput.value = urlToCopy;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                try {
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(urlToCopy).then(() => {
-                            if(copyFeedback) {
-                                copyFeedback.classList.remove('d-none');
-                                setTimeout(() => copyFeedback.classList.add('d-none'), 2000);
-                            }
-                        }).catch(err => {
-                            console.error('Erro ao copiar com Clipboard API:', err);
-                            copyUsingExecCommand(urlToCopy);
-                        });
-                    } else {
-                        copyUsingExecCommand(urlToCopy);
+                navigator.clipboard.writeText(urlToCopy).then(() => {
+                    if(copyFeedback) {
+                        copyFeedback.style.display = 'block';
+                        setTimeout(() => copyFeedback.style.display = 'none', 2000);
                     }
-                } catch (err) {
-                    console.error('Erro ao copiar link (execCommand):', err);
-                } finally {
-                    document.body.removeChild(tempInput);
-                }
+                }).catch(err => {
+                    console.error('Erro ao copiar com Clipboard API:', err);
+                    copyUsingExecCommand(urlToCopy); 
+                });
             }
         });
     }
 
     function copyUsingExecCommand(urlToCopy) {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = urlToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
         try {
             const successful = document.execCommand('copy');
             if (successful && copyFeedback) {
-                copyFeedback.classList.remove('d-none');
-                setTimeout(() => copyFeedback.classList.add('d-none'), 2000);
+                copyFeedback.style.display = 'block';
+                setTimeout(() => copyFeedback.style.display = 'none', 2000);
             } else if (!successful) {
                 console.error('Fallback execCommand falhou ao copiar.');
             }
         } catch(err) {
             console.error('Erro no fallback execCommand:', err);
+        } finally {
+            document.body.removeChild(tempInput);
         }
     }
 
@@ -227,8 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const timeUnitRadios = document.querySelectorAll('input[name="timeUnit"]');
-    const timeUnitLabels = document.querySelectorAll('label[for^="months"], label[for^="years"]');
-
+    
     timeUnitRadios.forEach(radio => {
         radio.addEventListener('change', function() {
             updateTimeUnitStyles();
@@ -236,22 +229,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateTimeUnitStyles() {
-        const checkedRadio = document.querySelector('input[name="timeUnit"]:checked');
-        if (!checkedRadio) return;
+        const monthsLabel = document.querySelector('label[for="months"]');
+        const yearsLabel = document.querySelector('label[for="years"]');
+        
+        if (!monthsLabel || !yearsLabel) return;
 
-        timeUnitLabels.forEach(label => {
-            label.classList.remove('btn-primary', 'active', 'btn-outline-primary');
-            label.classList.add('btn-outline-secondary');
-        });
-
-        const activeLabel = document.querySelector(`label[for="${checkedRadio.id}"]`);
-        if (activeLabel) {
-            activeLabel.classList.remove('btn-outline-secondary');
-            activeLabel.classList.add('btn-primary', 'active');
+        if (monthsRadio.checked) {
+            monthsLabel.classList.add('btn-toggle-active');
+            yearsLabel.classList.remove('btn-toggle-active');
+        } else {
+            yearsLabel.classList.add('btn-toggle-active');
+            monthsLabel.classList.remove('btn-toggle-active');
         }
     }
+
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded) {
+                header.setAttribute('aria-expanded', 'false');
+                content.setAttribute('aria-hidden', 'true');
+                content.style.maxHeight = null;
+                content.style.paddingBottom = null;
+            } else {
+                header.setAttribute('aria-expanded', 'true');
+                content.setAttribute('aria-hidden', 'false');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                content.style.paddingBottom = '1.5rem';
+            }
+        });
+    });
 
     updateTimeUnitStyles();
     fillFormFromUrlParams();
 });
-
