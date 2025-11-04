@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
              <p><small>Para atingir <strong>${formatter.format(goalValue)}</strong></small></p>
              <p><small>Começando com ${formatter.format(initialInvestment)}</small></p>
              <p><small>Em ${timeValue} ${isYears ? (timeValue === 1 ? 'Ano' : 'Anos') : (timeValue === 1 ? 'Mês' : 'Meses')}</small></p>
-             <p><small>Com taxa de ${rate.toFixed(1).replace('.', ',')}% ao ano</small></p>
+             <p><small>Com taxa de ${rate.toFixed(2).replace('.', ',')}% ao ano</small></p>
              <hr style="border-color: var(--border-color);">
              <h5 class="mt-3">Você precisará poupar mensalmente:</h5>
          `;
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const initialInvestment = parseCurrency(initialInvestmentInput.value);
             const timeForGrowth = parseInt(timeForGrowthInput.value) || 0;
             const isYears = yearsRadio ? yearsRadio.checked : true;
-            const annualReturnRate = parseCurrency(annualReturnRateInput.value);
+            const annualReturnRate = parseFloat(annualReturnRateInput.value.replace(',', '.'));
 
             // Validações
             if (goalValue <= 0) {
