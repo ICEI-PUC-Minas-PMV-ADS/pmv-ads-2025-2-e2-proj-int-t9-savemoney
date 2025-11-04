@@ -21,8 +21,14 @@ namespace savemoney.Controllers
         // GET: Budgets
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Budgets.Include(b => b.Usuario);
-            return View(await appDbContext.ToListAsync());
+            var budgets = await _context.Budgets
+                .Include(b => b.Usuario)
+                .Include(b => b.Categories)
+                    .ThenInclude(bc => bc.Category)
+                .OrderByDescending(b => b.Id)
+                .ToListAsync();
+
+            return View(budgets);
         }
 
         // GET: Budgets/Details/5
@@ -45,60 +51,74 @@ namespace savemoney.Controllers
         public IActionResult Create()
         {
             ViewData["UserId"] = new SelectList(_context.Usuarios, "Id", "Documento");
-            ViewBag.Categories = _context.Categories.ToList(); // ← ESSENCIAL PARA O DROPDOWN
+            ViewBag.Categories = _context.Categories
+                .Select(c => new { id = c.Id, name = c.Name })
+                .ToList();
+
             return View();
         }
 
+        // POST: Budgets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Budget budget, List<BudgetCategory> Categories)
         {
+            // REATIVADO: Validação
             if (ModelState.IsValid)
             {
-                // 1. Adiciona o Budget primeiro (sem categorias)
-                _context.Add(budget);
-                await _context.SaveChangesAsync(); // ← AQUI O ID É GERADO!
-
-                // 2. Agora associa as categorias ao Budget salvo
-                if (Categories != null && Categories.Any())
+                try
                 {
-                    foreach (var cat in Categories)
+                    // Valida UserId
+                    if (!_context.Usuarios.Any(u => u.Id == budget.UserId))
                     {
-                        cat.BudgetId = budget.Id; // ← ESSA LINHA ESTAVA FALTANDO!
+                        ModelState.AddModelError("UserId", "Usuário inválido.");
+                        return RecarregarView(budget);
                     }
-                    budget.Categories = Categories;
-                    _context.BudgetCategories.AddRange(Categories);
-                }
 
-                await _context.SaveChangesAsync(); // ← Salva as categorias
-                return RedirectToAction(nameof(Index));
+                    _context.Budgets.Add(budget);
+                    await _context.SaveChangesAsync();
+
+                    if (Categories != null && Categories.Any())
+                    {
+                        foreach (var cat in Categories)
+                        {
+                            if (cat.CategoryId <= 0 || cat.Limit <= 0)
+                                throw new InvalidOperationException("Categoria ou limite inválido.");
+
+                            cat.BudgetId = budget.Id;
+                        }
+                        _context.BudgetCategories.AddRange(Categories);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Erro ao salvar: " + (ex.InnerException?.Message ?? ex.Message));
+                }
             }
 
-            // Recarrega ViewBag se erro
-            ViewData["UserId"] = new SelectList(_context.Usuarios, "Id", "Documento", budget.UserId);
-            ViewBag.Categories = _context.Categories.ToList();
-            return View(budget);
+            return RecarregarView(budget);
         }
 
         // GET: Budgets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var budget = await _context.Budgets
-                .Include(b => b.Categories) // ← CARREGA AS CATEGORIAS JÁ SALVAS
+                .Include(b => b.Categories)
+                    .ThenInclude(bc => bc.Category)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
-            if (budget == null)
-            {
-                return NotFound();
-            }
+            if (budget == null) return NotFound();
 
             ViewData["UserId"] = new SelectList(_context.Usuarios, "Id", "Documento", budget.UserId);
-            ViewBag.Categories = _context.Categories.ToList();
+            ViewBag.Categories = _context.Categories
+                .Select(c => new { id = c.Id, name = c.Name })
+                .ToList();
+
             return View(budget);
         }
 
@@ -107,64 +127,64 @@ namespace savemoney.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Budget budget, List<BudgetCategory> Categories)
         {
-            if (id != budget.Id)
-            {
-                return NotFound();
-            }
+            if (id != budget.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Remove categorias antigas
-                    var existingCategories = _context.BudgetCategories
-                        .Where(bc => bc.BudgetId == budget.Id);
-                    _context.BudgetCategories.RemoveRange(existingCategories);
+                    // Remove antigas
+                    var existing = await _context.BudgetCategories
+                        .Where(bc => bc.BudgetId == budget.Id)
+                        .ToListAsync();
+                    _context.BudgetCategories.RemoveRange(existing);
 
-                    // Adiciona as novas
-                    budget.Categories = Categories ?? new List<BudgetCategory>();
-                    foreach (var cat in budget.Categories)
-                    {
-                        cat.BudgetId = budget.Id;
-                    }
-
+                    // Atualiza Budget
                     _context.Update(budget);
                     await _context.SaveChangesAsync();
+
+                    // Adiciona novas
+                    if (Categories != null && Categories.Any())
+                    {
+                        foreach (var cat in Categories)
+                        {
+                            cat.BudgetId = budget.Id;
+                        }
+                        _context.BudgetCategories.AddRange(Categories);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BudgetExists(budget.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!BudgetExists(budget.Id)) return NotFound();
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Erro ao atualizar: " + (ex.InnerException?.Message ?? ex.Message));
+                }
             }
 
             ViewData["UserId"] = new SelectList(_context.Usuarios, "Id", "Documento", budget.UserId);
-            ViewBag.Categories = _context.Categories.ToList();
+            ViewBag.Categories = _context.Categories
+                .Select(c => new { id = c.Id, name = c.Name })
+                .ToList();
+
             return View(budget);
         }
 
         // GET: Budgets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var budget = await _context.Budgets
                 .Include(b => b.Usuario)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (budget == null)
-            {
-                return NotFound();
-            }
+
+            if (budget == null) return NotFound();
 
             return View(budget);
         }
@@ -178,15 +198,21 @@ namespace savemoney.Controllers
             if (budget != null)
             {
                 _context.Budgets.Remove(budget);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BudgetExists(int id)
+        private bool BudgetExists(int id) => _context.Budgets.Any(e => e.Id == id);
+
+        // MÉTODO AUXILIAR
+        private IActionResult RecarregarView(Budget budget)
         {
-            return _context.Budgets.Any(e => e.Id == id);
+            ViewData["UserId"] = new SelectList(_context.Usuarios, "Id", "Documento", budget.UserId);
+            ViewBag.Categories = _context.Categories
+                .Select(c => new { id = c.Id, name = c.Name })
+                .ToList();
+            return View("Create", budget);
         }
     }
 }
