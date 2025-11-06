@@ -1,31 +1,78 @@
-@model savemoney.Models.Receita
+ï»¿@model savemoney.Models.Receita
 
 @{
-    ViewData["Title"] = "Detalhes da Receita";
+    ViewData["Title"] = "Details";
 }
 
-<h1>Detalhes da Receita</h1>
+<h1>Details</h1>
 
 <div>
-
-    <h4>Receitas</h4>
-    <hr /> 
+    <h4>Receita</h4>
+    <hr />
     <dl class="row">
-        <dt class="col-sm-2">Título</dt>
-        <dd class="col-sm-10">@Model.Titulo</dd>
-        <dt class="col-sm-2">Valor</dt>
-        <dd class="col-sm-10">@Model.Valor.ToString("C")</dd>
-        <dt class="col-sm-2">Data</dt>
-        <dd class="col-sm-10">@Model.Data.ToShortDateString()</dd>
-        <dt class="col-sm-2">Categoria</dt>
-        <dd class="col-sm-10">@Model.Categoria</dd>
-        <dt class="col-sm-2">Descrição</dt>
-        <dd class="col-sm-10">@Model.Descricao</dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Valor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Valor)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Data)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Data)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BudgetCategory)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BudgetCategory.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsRecurring)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsRecurring)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Frequency)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Frequency)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Interval)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Interval)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RecurrenceEndDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RecurrenceEndDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RecurrenceOccurrences)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RecurrenceOccurrences)
+        </dd>
     </dl>
-
 </div>
-
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
-</p>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

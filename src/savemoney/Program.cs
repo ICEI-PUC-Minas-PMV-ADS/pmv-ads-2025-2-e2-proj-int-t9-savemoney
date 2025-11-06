@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Services; // importa o services da api para implementar as dependencias
 
@@ -34,6 +34,9 @@ namespace savemoney
             // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
             builder.Services.AddScoped<NoticiasService>();
             builder.Services.AddScoped<ArtigosService>();
+            // Registrar serviço e opcional hosted job (ex.: gera ocorrências diariamente)
+            builder.Services.AddScoped<RecurrenceService>();
+
 
             var app = builder.Build();
 
