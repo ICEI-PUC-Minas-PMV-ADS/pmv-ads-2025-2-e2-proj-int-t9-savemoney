@@ -8,7 +8,6 @@ namespace savemoney.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Cria a tabela Category
             migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
@@ -16,30 +15,22 @@ namespace savemoney.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    IsPredefined = table.Column<bool>(type: "bit", nullable: false)
+                    IsPredefined = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true) // ADICIONADO
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
-                });
-
-            // Insere as 5 categorias predefinidas
-            migrationBuilder.InsertData(
-                table: "Category",
-                columns: new[] { "Id", "Name", "IsPredefined" },
-                values: new object[,]
-                {
-                    { 1, "Alimentação", true },
-                    { 2, "Lazer", true },
-                    { 3, "Transporte", true },
-                    { 4, "Moradia", true },
-                    { 5, "Despesas Operacionais", true }
+                    table.ForeignKey( // ADICIONADO
+                        name: "FK_Category_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "Id");
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // Remove a tabela se a migration for revertida
             migrationBuilder.DropTable(name: "Category");
         }
     }
