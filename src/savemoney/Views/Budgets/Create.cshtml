@@ -51,6 +51,12 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="UserId" class="form-label fw-bold"></label>
+                            <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId"></select>
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                        </div>
+
                         <!-- CATEGORIAS DINÂMICAS -->
                         <hr class="my-4" />
                         <h5 class="mb-3">Categorias do Orçamento</h5>
@@ -92,6 +98,8 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         let rowIndex = 0;
+
+        // USE ViewBag.Categories DIRETO (já é anon com id/name)
         const categories = @Html.Raw(Json.Serialize(ViewBag.Categories ?? new object[0]));
 
         function addCategoryRow() {
@@ -111,13 +119,13 @@
                            type="number"
                            step="0.01"
                            min="0.01"
-                           class="form-control form-control-sm"
+                           class="form-control form-select-sm"
                            placeholder="0,00"
                            required />
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm"
-                            onclick="this.closest('tr').remove(); updateRowIndices();">
+                            onclick="this.closest('tr').remove()">
                         Remover
                     </button>
                 </td>
@@ -125,21 +133,7 @@
             rowIndex++;
         }
 
-        // Atualiza índices após remover
-        function updateRowIndices() {
-            const rows = document.querySelectorAll('#categoriesTable tbody tr');
-            rows.forEach((row, index) => {
-                row.querySelector('select').name = `Categories[${index}].CategoryId`;
-                row.querySelector('input').name = `Categories[${index}].Limit`;
-            });
-            rowIndex = rows.length;
-        }
-
         // Adiciona linha ao carregar
-        document.addEventListener('DOMContentLoaded', () => {
-            if (document.querySelector('#categoriesTable tbody tr') === null) {
-                addCategoryRow();
-            }
-        });
+        document.addEventListener('DOMContentLoaded', addCategoryRow);
     </script>
 }

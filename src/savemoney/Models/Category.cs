@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace savemoney.Models
@@ -11,15 +12,11 @@ namespace savemoney.Models
 
         [Required(ErrorMessage = "O nome da categoria é obrigatório.")]
         [StringLength(100, ErrorMessage = "O nome da categoria deve ter no máximo 100 caracteres.")]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public bool IsPredefined { get; set; } // true = sistema, false = usuário
+        public bool IsPredefined { get; set; } // True para categorias padrão, False para personalizadas
 
-        // Apenas para categorias personalizadas
-        public int? UsuarioId { get; set; }
-        public virtual Usuario? Usuario { get; set; }
-
-        // Relacionamento N:N com Budget via BudgetCategory
+        // Relacionamento: Uma categoria pode estar em várias BudgetCategories
         public virtual ICollection<BudgetCategory> BudgetCategories { get; set; } = new List<BudgetCategory>();
     }
 }

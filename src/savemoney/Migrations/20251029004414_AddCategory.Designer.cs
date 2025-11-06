@@ -12,8 +12,8 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251106005419_AddCategoryFixed")]
-    partial class AddCategoryFixed
+    [Migration("20251029004414_AddCategory")]
+    partial class AddCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,12 +127,7 @@ namespace savemoney.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Category");
 
@@ -353,15 +348,6 @@ namespace savemoney.Migrations
                     b.Navigation("Budget");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("savemoney.Models.Category", b =>
-                {
-                    b.HasOne("savemoney.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
