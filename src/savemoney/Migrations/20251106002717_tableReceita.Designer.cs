@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using savemoney.Models;
 
@@ -11,9 +12,11 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251106002717_tableReceita")]
+    partial class tableReceita
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,12 +127,7 @@ namespace savemoney.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Category");
 
@@ -252,7 +250,7 @@ namespace savemoney.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BudgetCategoryId")
+                    b.Property<int>("BudgetCategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Data")
@@ -369,15 +367,6 @@ namespace savemoney.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("savemoney.Models.Category", b =>
-                {
-                    b.HasOne("savemoney.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
                 {
                     b.HasOne("savemoney.Models.Usuario", "Usuario")
@@ -393,7 +382,9 @@ namespace savemoney.Migrations
                 {
                     b.HasOne("savemoney.Models.BudgetCategory", "BudgetCategory")
                         .WithMany()
-                        .HasForeignKey("BudgetCategoryId");
+                        .HasForeignKey("BudgetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BudgetCategory");
                 });
