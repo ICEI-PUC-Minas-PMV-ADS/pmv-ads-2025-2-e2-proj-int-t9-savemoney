@@ -39,6 +39,15 @@ namespace savemoney.Models
                 .HasForeignKey(a => a.MetaFinanceiraId) // A chave estrangeira é MetaFinanceiraId
                 .OnDelete(DeleteBehavior.Cascade); // Habilita a exclusão em cascata
 
+            // === CONFIGURAÇÃO DA FK: Category → Usuario ===
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasOne(c => c.Usuario)
+                      .WithMany(u => u.Categories)  // Adicione esta propriedade no Usuario se não existir
+                      .HasForeignKey(c => c.UsuarioId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
             // Configuração para Budget e BudgetCategory: Exclusão em cascata
             modelBuilder.Entity<Budget>()
                 .HasMany(b => b.Categories)
