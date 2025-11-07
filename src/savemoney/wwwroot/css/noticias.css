@@ -1,3 +1,16 @@
+:root {
+  --bg-primary: #10111a;
+  --bg-secondary: #0d0e16;
+  --bg-card: #1b1d29;
+  --border-color: #2a2c3c;
+  --text-primary: #f5f5f5;
+  --text-secondary: #aaaaaa;
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #2563eb;
+  --btn-primary-text: #ffffff;
+  --container-width: 1200px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,242 +18,209 @@
   font-family: "Manrope", sans-serif;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  background-color: transparent; 
+  color: var(--text-primary);
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.background-fixed-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  background-image: url("../assets/hero-background-2.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5);
 }
 
 main {
-  min-height: 100vh;
   width: 100%;
-  text-align: center;
+  overflow-x: hidden;
+
+  position: relative;
+  z-index: 2;
 }
 
-.main-container {
-  max-width: 80%;
-  margin: 0 auto;
-  padding: 6rem 1rem 2rem 1rem;
-  text-align: center;
-}
 
-.title-page {
-  margin-bottom: 1.1rem;
-  margin-top: 3rem;
+.hero-section {
+  padding: 6rem 1.5rem 4rem 1.5rem;
+  padding-top: 120px;
+  text-align: center;
+  position: relative;
+  background-color: transparent; 
 }
 
 .title-page h1 {
   font-size: 3.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 0;
-}
-
-.main-paragraph {
-  margin-top: 0;
-  margin-bottom: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
 }
 
 .main-paragraph p {
-  font-size: 1.15rem;
-  color: #555555;
-  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* --- 3. Container da Barra de Busca --- */
-
 .search-container {
-  display: flex;
-  align-items: center; 
-  max-width: 60%; 
-  margin: 2rem auto; 
+  max-width: 700px;
+  margin: 2rem auto;
   position: relative;
 }
 
 .search-container::before {
   font-family: "Font Awesome 5 Free";
-  font-weight: 900; 
-  content: "\f002"; 
+  font-weight: 900;
+  content: "\f002";
   position: absolute;
-  left: 1.25rem;
+  left: 1.5rem;
   top: 50%;
-  transform: translateY(-50%); /* Centraliza verticalmente */
-  color: #6c757d;
-  pointer-events: none;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
   z-index: 1;
 }
 
-/* --- 4. Input e Botão de Busca --- */
-
 .search-input {
-  flex-grow: 1;
-  font-size: 1rem;
-  border: 1px solid #ced4da;
+  width: 100%;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 50px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   outline: none;
-  height: 3.5rem;
-  box-sizing: border-box;
-  padding: 1rem 1rem 1rem 3.5rem;
+  height: 3.75rem;
+  padding: 1rem 1.5rem 1rem 4rem;
+  transition: all 0.3s ease;
 }
-
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
 .search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
-}
-
-.action-search-button {
-  background-color: #007bff;
-  color: white;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 0 1.5rem; 
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  margin-left: 0.5rem; 
-  height: 3.5rem;
-  box-sizing: border-box;
-}
-
-.action-search-button:hover {
-  background-color: #0056b3;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }
 
 #noticias-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  padding: 24px; /* Espaçamento interno ao redor do container, avaliar o retorno apos os requests voltar*/
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  background-color: rgba(13, 14, 22, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(42,44,60, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
 }
 
 .meu-card {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: #333;
   transition: all 0.3s ease;
 }
-
 .meu-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-color: var(--accent-primary);
 }
-
 .meu-card-imagem {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
+  border-bottom: 1px solid var(--border-color);
 }
-
 .meu-card-conteudo {
-  padding: 16px;
-
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
-
 .meu-card-titulo {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin: 0 0 12px 0;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 3.6rem;
+}
+.meu-card-descricao {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.meu-card-descricao {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-  flex-grow: 1;
+
+.carregar-mais-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0 4rem 0;
 }
 
 .carregar-mais-button {
-  display: block;
-  margin: 20px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 50%;
-}
-.carregar-mais-button > button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
   font-size: 1rem;
+  font-weight: 700;
+  color: var(--btn-primary-text);
+  background-color: var(--accent-primary);
+  border: none;
+  border-radius: 50px;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-@media (max-width: 768px) {
-  .main-container {
-    max-width: 90%;
-    padding-top: 4rem;
-  }
+.carregar-mais-button:hover {
+  background-color: rgb(20, 30, 60, 0.5);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(20, 35, 59, 0.801);
+}
+.carregar-mais-button:disabled {
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
 
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 100px;
+  }
   .title-page h1 {
     font-size: 2.75rem;
   }
-
   .search-container {
-    max-width: 80%;
+    max-width: 90%;
   }
-
-  .carregar-mais-button {
-    width: 60%;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-container {
-    max-width: 95%;
-    padding-top: 3rem;
-  }
-
-  .title-page {
-    margin-top: 1.5rem;
-  }
-
-  .title-page h1 {
-    font-size: 2.1rem;
-  }
-
-  .main-paragraph p {
-    font-size: 1rem;
-  }
-
-  .search-container {
-    flex-direction: column;
-    align-items: stretch;
-    max-width: 95%;
-  }
-
-  .search-input {
-    margin-bottom: 0.5rem;
-  }
-
-  .action-search-button {
-    margin-left: 0;
-    width: 100%;
-  }
-
   #noticias-container {
     grid-template-columns: 1fr;
-  }
-
-  .carregar-mais-button {
-    width: 90%;
+    padding: 2rem 1rem;
   }
 }

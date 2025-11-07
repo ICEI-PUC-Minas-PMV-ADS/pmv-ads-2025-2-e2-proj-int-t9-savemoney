@@ -1,402 +1,390 @@
-/* Variáveis de cores atualizadas para um tema financeiro moderno (Teal) */
+
 :root {
-    /* Cor principal alterada para um Teal Sofisticado */
-    --primary-color: #14B8A6; /* Teal 500 */
-    --primary-color-hover: #0D9488; /* Teal 600 */
-    
-    --background-dark: #0D1A21;
-    --foreground-dark: #f9fafb;
-    --subtle-dark: #9ca3af;
-    
-    /* Cores para Glassmorphism e Inputs */
-    --card-dark-bg: rgba(26, 40, 49, 0.7);
-    --input-bg: rgba(13, 26, 33, 0.5);
-    
-    /* Bordas e Sombra Neon ajustadas para a nova cor principal */
-    --border-color: rgba(20, 184, 166, 0.2);
-    --border-input-color: rgba(20, 184, 166, 0.3);
-    --shadow-neon: 0 0 5px rgba(20, 184, 166, 0.4), 0 0 15px rgba(20, 184, 166, 0.3);
+  --bg-primary: #10111a;
+  --bg-secondary: #0d0e16;
+  --bg-card: #1b1d29;
+  --border-color: #2a2c3c;
+  --text-primary: #f5f5f5;
+  --text-secondary: #aaaaaa;
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #2563eb;
+  --btn-primary-text: #ffffff;
+  --container-width: 1200px;
 }
 
-/* ==========================================================
-   OPÇÕES DE IMAGEM DE FUNDO (Descomente a sua preferida)
-========================================================== */
 
-/* OPÇÃO 1: Padrão de Rede Neural (Original do Mockup) */
-/* .background-fixed-image {
-    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuALK9OFZW-21lj2y9CrnXAC3APme0fJkCpVrhHenf7FD0w8xhdzNhLkGEJS67keXtAbgpgql6IDK5Rlth9kabiNoq0SKBPaRrlDyfCi2GJZq23vbdh3xgAvtXJk38mL2d9i7rA_DjJsLdWL2NwV0iiGnTUuyqlrAHT5AVM1n8V_wdf0dJPJ_xuOweZ-lX1kJ9cqMopjxNBBus_6f_gDR7KPCVQrCS7sKSaXvEeh4FOEDC4WsAsa1Kw-DIi6ckXlidCL-hRsYNyVVJ4');
-} */
-
-/* OPÇÃO 2: Gráficos Financeiros Abstratos (via Unsplash) */
-/*
-.background-fixed-image {
-    background-image: url('https://images.unsplash.com/photo-1640340434887-153266007190?q=80&w=1920&auto=format&fit=crop');
-}
-*/
-
-/* OPÇÃO 3: Dados e Tecnologia (Visualização de Big Data) (via Unsplash) */
-/*
-.background-fixed-image {
-    background-image: url('https://images.unsplash.com/photo-1516387938699-a93567ec168e?q=80&w=1920&auto=format&fit=crop');
-}
-*/
-
-/* OPÇÃO 4: Arquitetura Moderna (Foco e Clareza) (via Unsplash) */
-
-.background-fixed-image {
-    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop');
-}
-
-/* OPÇÃO 5: Conceito de Blockchain (Tecnologia Financeira) (via Unsplash) */
-/*
-.background-fixed-image {
-     background-image: url('https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1920&auto=format&fit=crop');
-}
-*/
-
-
-/* Reset básico e aplicação da fonte */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Manrope', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Manrope", sans-serif;
 }
 
 body {
-    background-color: var(--background-dark);
-    color: var(--foreground-dark);
-    min-height: 100vh;
+  background-color: transparent;
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
-/* Configuração da Imagem de Fundo Fixa */
 .background-fixed-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: -1;
-    /* Escurece a imagem para melhor leitura do texto */
-    filter: brightness(0.5);
-    background-size: cover;
-    background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+
+  background-image: url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  /* Filter (da memória) */
+  filter: brightness(0.5);
 }
 
-/* Wrapper principal para o conteúdo */
 .content-wrapper {
-    position: relative;
-    z-index: 1;
-    padding: 6rem 1.5rem;
+  position: relative;
+  z-index: 1;
+  padding: 120px 1.5rem 4rem 1.5rem;
 }
 
 .container-artigos {
-    max-width: 1280px;
-    margin: 0 auto;
+  max-width: var(--container-width);
+  margin: 0 auto;
 }
 
-/* Cabeçalho da Página */
 .header-artigos {
-    text-align: center;
-    margin-bottom: 4rem;
+  text-align: center;
+  margin-bottom: 4rem;
 }
 
 .header-artigos h1 {
-    font-size: 4.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    line-height: 1.1;
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: var(--text-primary); 
+  margin-bottom: 1rem;
+  line-height: 1.1;
 }
 
 .header-artigos p {
-    font-size: 1.25rem;
-    color: var(--subtle-dark);
-    max-width: 768px;
-    margin: 0 auto;
+  font-size: 1.25rem;
+  color: var(--text-secondary); 
+  max-width: 768px;
+  margin: 0 auto;
 }
 
 .header-artigos a {
-    color: var(--primary-color);
-    text-decoration: none;
+  color: var(--accent-primary); 
+  text-decoration: none;
 }
 .header-artigos a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-/* Efeito Glassmorphism */
 .glass-effect {
-    background-color: var(--card-dark-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px); /* Suporte Safari */
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
+  background-color: rgba(13, 14, 22, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(42, 44, 60, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Barra de Filtros */
+
 .filter-bar {
-    padding: 1.5rem;
-    margin-bottom: 3rem;
-    box-shadow: var(--shadow-neon);
+  padding: 1.5rem;
+  margin-bottom: 3rem;
 }
 
-/* Usamos Grid para a barra de filtros para controle preciso do layout */
 .filter-grid {
-    display: grid;
-    gap: 1.5rem;
-    /* Layout Desktop: Busca (3 frações), Tópico (2), Região (1), Ordem (2), Botão (1) */
-    grid-template-columns: 3fr 2fr 1fr 2fr 1fr;
-    align-items: center;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 3fr 2fr 2fr 1fr;
+  align-items: center;
 }
 
-
-/* Estilos gerais para Inputs e Selects */
-.input-style, .select-style {
-    width: 100%;
-    background-color: var(--input-bg);
-    border: 1px solid var(--border-input-color);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    color: var(--foreground-dark);
-    transition: all 0.3s ease;
-    font-size: 1rem;
+.input-style,
+.select-style {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
 .input-style::placeholder {
-    color: var(--subtle-dark);
+  color: var(--text-secondary);
 }
 
-.input-style:focus, .select-style:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px var(--primary-color);
+.input-style:focus,
+.select-style:focus {
+  outline: none;
+  border-color: var(--accent-primary); 
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); 
 }
 
-/* Estilização customizada da seta do select */
 .select-style {
-    appearance: none;
-    -webkit-appearance: none;
-    /* Adiciona uma seta SVG como fundo */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239ca3af'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23AAAAAA'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+.select-style:hover, .select-style:hover option {
+  cursor: pointer;
 }
 
-/* Estilização específica dos campos */
 .filter-search {
-    position: relative;
+  position: relative;
 }
 
 .icon-search {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--subtle-dark);
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
 }
 
 .filter-search input {
-    padding-left: 3rem; /* Espaço para o ícone de busca */
+  padding-left: 3rem;
 }
 
-/* Estilo do Botão de Busca e Exibir Mais */
 .btn-action {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    background-color: var(--primary-color);
-    color: var(--background-dark); /* Texto escuro para melhor contraste */
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 1rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--accent-primary);
+  color: var(--btn-primary-text); 
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
 }
 
 .btn-action:hover {
-    background-color: var(--primary-color-hover);
+  background-color: var(--accent-primary-hover); 
 }
 
 .btn-action:disabled {
-    background-color: var(--subtle-dark);
-    cursor: not-allowed;
+  background-color: var(--border-color); 
+  color: var(--text-secondary);
+  cursor: not-allowed;
 }
 
-/* Botão Exibir Mais (Paginação) */
+
 .pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
 }
 
 .btn-show-more {
-    padding: 1rem 2.5rem;
-    font-size: 1.125rem;
+
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--btn-primary-text);
+  background-color: var(--accent-primary);
+  border: none;
+  border-radius: 50px;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-show-more:hover {
+  background-color: rgb(20, 30, 60, 0.5);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(20, 35, 59, 0.801);
+}
+.btn-show-more:disabled {
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+  cursor: not-allowed;
 }
 
-
-/* Grid de Artigos */
 .artigos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
 }
 
-/* Card do Artigo */
+
 .article-card {
-    padding: 1.5rem;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-decoration: none;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  height: 100%;
+  padding: 1.5rem;
 }
 
 .article-card:hover {
-    /* Levanta o card e intensifica a sombra neon */
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-neon);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-color: var(--accent-primary);
 }
 
-/* Conteúdo do Card */
 .card-category {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-    display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+  display: block;
 }
 
 .card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    color: var(--foreground-dark);
-    transition: color 0.3s ease;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 3.6rem;
 }
 
 .article-card:hover .card-title {
-    color: var(--primary-color);
+  color: var(--accent-primary);
 }
 
 .card-meta {
-    font-size: 0.875rem;
-    color: var(--subtle-dark);
-    margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary); 
+  margin-bottom: 1rem;
 }
 
 .card-abstract {
-    color: rgba(249, 250, 251, 0.9);
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
-    line-height: 1.6;
-    /* Empurra o rodapé do card para baixo */
-    flex-grow: 1;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Rodapé do Card (Link visual) */
 .card-footer-link {
-    display: inline-flex;
-    align-items: center;
-    font-weight: 600;
-    color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--accent-primary);
 }
 
 .card-link-icon {
-    margin-left: 0.25rem;
-    transition: transform 0.3s ease;
+  margin-left: 0.25rem;
+  transition: transform 0.3s ease;
 }
 
 .article-card:hover .card-link-icon {
-    transform: translateX(4px);
+  transform: translateX(4px);
 }
 
-/* Loading Spinner e Status */
 .loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 0;
-    color: var(--subtle-dark);
-    grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  color: var(--text-secondary);
+  grid-column: 1 / -1;
 }
 
-/* Spinner CSS Puro */
 .spinner {
-    border: 4px solid rgba(255, 255, 255, 0.2);
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .status-message {
-    text-align: center;
-    padding: 1.5rem;
-    background-color: rgba(255, 165, 0, 0.1);
-    color: #f9fafb;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 165, 0, 0.3);
-    max-width: 600px;
-    margin: 2rem auto 0;
+  text-align: center;
+  padding: 1.5rem;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  max-width: 600px;
+  margin: 2rem auto 0;
 }
 
 .status-error {
-    background-color: rgba(255, 0, 0, 0.1);
-    border-color: rgba(255, 0, 0, 0.3);
+  background-color: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.3);
 }
-
 
 /* Responsividade */
-
-/* Tablets grandes e Laptops pequenos (Ajuste do Grid de Filtros) */
 @media (max-width: 1200px) {
-    .filter-grid {
-        /* Layout Tablet: 2 Linhas */
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 1rem;
-    }
-
-    .filter-search { grid-column: 1 / 3; }
-    .filter-button-container { grid-column: 3 / 4; }
-    
-    .filter-topic { grid-column: 1 / 2; }
-    .filter-region { grid-column: 2 / 3; }
-    .filter-sort { grid-column: 3 / 4; }
+  .filter-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  .filter-search {
+    grid-column: 1 / 3;
+  }
+  .filter-button-container {
+    grid-column: 3 / 4;
+  }
+  .filter-topic {
+    grid-column: 1 / 2;
+  }
+  .filter-region {
+    grid-column: 2 / 3;
+  }
+  .filter-sort {
+    grid-column: 3 / 4;
+  }
 }
 
-
 @media (max-width: 768px) {
-    .content-wrapper {
-        padding: 4rem 1rem;
-    }
+  .content-wrapper {
+    padding: 100px 1rem 4rem 1rem;
+  }
+  .header-artigos h1 {
+    font-size: 2.5rem;
+  }
+  .header-artigos p {
+    font-size: 1rem;
+  }
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  .filter-search,
+  .filter-topic,
+  .filter-region,
+  .filter-sort,
+  .filter-button-container {
+    grid-column: auto;
+  }
 
-    .header-artigos h1 {
-        font-size: 2.5rem;
-    }
-
-    .header-artigos p {
-        font-size: 1rem;
-    }
-
-    .filter-grid {
-        /* Layout Mobile: Tudo empilhado */
-        grid-template-columns: 1fr;
-    }
-
-     .filter-search, .filter-topic, .filter-region, .filter-sort, .filter-button-container {
-        grid-column: auto;
-    }
-
-    .card-title {
-        font-size: 1.25rem;
-    }
+  .card-title {
+    font-size: 1.25rem;
+  }
 }

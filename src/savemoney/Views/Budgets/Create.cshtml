@@ -1,7 +1,6 @@
 ﻿@model savemoney.Models.Budget
 @{
     ViewData["Title"] = "Criar Orçamento";
-    var categories = ViewBag.Categories as List<savemoney.Models.Category>;
 }
 
 <div class="container mt-5">
@@ -13,7 +12,7 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="Create" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
                         <!-- DADOS DO ORÇAMENTO -->
                         <div class="row g-3 mb-4">
@@ -99,18 +98,19 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         let rowIndex = 0;
-        const categories = @Html.Raw(Json.Serialize(categories));
+
+        // USE ViewBag.Categories DIRETO (já é anon com id/name)
+        const categories = @Html.Raw(Json.Serialize(ViewBag.Categories ?? new object[0]));
 
         function addCategoryRow() {
             const table = document.querySelector('#categoriesTable tbody');
             const row = table.insertRow();
-
             row.innerHTML = `
                 <td>
                     <select name="Categories[${rowIndex}].CategoryId" class="form-select form-select-sm" required>
                         <option value="">Selecione uma categoria...</option>
-                        ${categories.map(cat =>
-                            `<option value="${cat.id}">${cat.name}</option>`
+                        ${categories.map(c =>
+                            `<option value="${c.id}">${c.name}</option>`
                         ).join('')}
                     </select>
                 </td>
@@ -119,7 +119,7 @@
                            type="number"
                            step="0.01"
                            min="0.01"
-                           class="form-control form-control-sm"
+                           class="form-control form-select-sm"
                            placeholder="0,00"
                            required />
                 </td>
@@ -133,9 +133,7 @@
             rowIndex++;
         }
 
-        // Adiciona uma linha ao carregar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            if (rowIndex === 0) addCategoryRow();
-        });
+        // Adiciona linha ao carregar
+        document.addEventListener('DOMContentLoaded', addCategoryRow);
     </script>
 }

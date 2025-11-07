@@ -1,88 +1,75 @@
-@* @using Microsoft.EntityFrameworkCore.Metadata.Internal *@
-<!DOCTYPE html>
-<html lang="en">
+@{
+    ViewData["Title"] = "Educação Financeira";
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educação Financeira</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/educacao.css">
-</head>
+@* --- ESTILOS DA PÁGINA --- *@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/educacao.css" asp-append-version="true" />
+@* --- FIM DOS ESTILOS --- *@
 
-<body>
-    @{
-        ViewData["Title"] = "Educação Financeira";
-    }
-    @* O Header deve ser inserido aqui se existir no seu layout *@
+<div class="background-fixed-image" aria-hidden="true"></div>
 
-    <main>
-        <section class="hero-section">
-            <div class="main-content">
-                <div class="intro-text">
-                    <div class="title-educacao-financeira">
-                        <h1>Educação Financeira</h1>
-                    </div>
-                    <div class="description-educacao-financeira">
-                        <p>Capacitando estudantes e proprietários de pequenos negócios com o conhecimento para navegar pelo
-                            mundo financeiro com confiança. Tenha acesso a notícias diárias do mercado e artigos acadêmicos
-                            aprofundados para se manter informado e tomar decisões financeiras sólidas.</p>
+
+<main class="content-wrapper">
+    <section class="hero-educacao">
+        <div class="main-content">
+            <div class="intro-text">
+                <div class="title-educacao-financeira">
+                    <h1>Educação Financeira</h1>
+                </div>
+                <div class="description-educacao-financeira">
+                    <p>Capacitando estudantes e proprietários de pequenos negócios com o conhecimento para navegar pelo
+                        mundo financeiro com confiança. Tenha acesso a notícias diárias do mercado e artigos acadêmicos
+                        aprofundados para se manter informado e tomar decisões financeiras sólidas.</p>
+                </div>
+            </div>
+
+            <div class="cards-container">
+                <div class="card card-left glass-effect">
+                    <div class="card-content">
+                        <h5>Notícias do Dia</h5>
+                        <p>Mantenha-se à frente com as últimas tendências de mercado e notícias, entregues
+                            diariamente para mantê-lo informado sobre o cenário financeiro.</p>
+                        <a asp-controller="Noticias" asp-action="Index" class="btn btn-news">Ver Notícias</a>
                     </div>
                 </div>
-                <div class="cards-container">
-                    <div class="card card-left">
-                        <div class="card-content">
-                            <h5>Notícias do Dia</h5>
-                            <p>Mantenha-se à frente com as últimas tendências de mercado e notícias, entregues
-                                diariamente para mantê-lo informado sobre o cenário financeiro.</p>
-                            @* Removida a classe 'mt-auto', o alinhamento agora é feito via CSS puro (.btn { margin-top: auto; }) *@
-                            <a asp-controller="Noticias" asp-action="Index" class="btn btn-news">Ver Notícias</a>
-                        </div>
-                    </div>
-                    <div class="card card-right">
-                        <div class="card-content">
-                            <h5>Artigos Acadêmicos</h5>
-                            <p>Aprofunde-se em tópicos financeiros complexos com nossa coleção de artigos acadêmicos, que
-                                fornecem insights e análises aprofundadas.</p>
-                            <a asp-controller="Artigos" asp-action="Index" class="btn btn-articles">Explorar
-                                Artigos</a>
-                        </div>
+                <div class="card card-right glass-effect">
+                    <div class="card-content">
+                        <h5>Artigos Acadêmicos</h5>
+                        <p>Aprofunde-se em tópicos financeiros complexos com nossa coleção de artigos acadêmicos, que
+                            fornecem insights e análises aprofundadas.</p>
+                        <a asp-controller="Artigos" asp-action="Index" class="btn btn-articles">Explorar Artigos</a>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="financial-info-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Mantenha-se Informado e Aprimore sua Perspicácia Financeira</h2>
-                    <p>Nossa plataforma oferece uma combinação de atualizações oportunas do mercado e artigos acadêmicos abrangentes, feitos sob medida para aprimorar sua educação financeira.</p>
-                </div>
-                <div class="info-cards-container">
-                    <div class="info-card">
-                        @* Lembre-se de ajustar o caminho 'src' para suas imagens *@
-                        <img src="~/assets/image-card-news.png" alt="Notícias do Mercado">
-                        <div class="info-card-content">
-                            <h3>Notícias Diárias do Mercado</h3>
-                            <p>Fique à frente com as últimas tendências e notícias do mercado, entregues diariamente para mantê-lo informado sobre o cenário financeiro.</p>
-                        </div>
+    <section class="info-section-educacao">
+        <div class="container">
+            <div class="section-header">
+                <h2>Mantenha-se Informado e Aprimore sua Perspicácia Financeira</h2>
+                <p>Nossa plataforma oferece uma combinação de atualizações oportunas do mercado e artigos acadêmicos abrangentes, feitos sob medida para aprimorar sua educação financeira.</p>
+            </div>
+            <div class="info-cards-container">
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop" alt="Pessoa lendo notícias financeiras em um tablet">
+                    <div class="info-card-content">
+                        <h3>Notícias Diárias do Mercado</h3>
+                        <p>Fique à frente com as últimas tendências e notícias do mercado, entregues diariamente para mantê-lo informado sobre o cenário financeiro.</p>
                     </div>
-                    <div class="info-card">
-                        <img src="~/assets/image-card-academic.png" alt="Artigos Acadêmicos">
-                        <div class="info-card-content">
-                            <h3>Artigos Acadêmicos Aprofundados</h3>
-                            <p>Mergulhe fundo em tópicos financeiros complexos com nossa coleção de artigos acadêmicos, que fornecem insights e análises aprofundadas.</p>
-                        </div>
+                </div>
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1516387938699-a93567ec168e?q=80&w=800&auto=format&fit=crop" alt="Biblioteca com livros de pesquisa acadêmica">
+                    <div class="info-card-content">
+                        <h3>Artigos Acadêmicos Aprofundados</h3>
+                        <p>Mergulhe fundo em tópicos financeiros complexos com nossa coleção de artigos acadêmicos, que fornecem insights e análises aprofundadas.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </main>
-
-    @* O Footer deve ser inserido aqui se existir no seu layout *@
-</body>
-
-</html>
+</main>

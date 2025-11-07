@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Services; // importa o services da api para implementar as dependencias
 
@@ -11,6 +12,10 @@ namespace savemoney
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(@"h:\root\home\maiconvts-001\www\site1\DataProtection-Keys"));
+            builder.Services.AddControllersWithViews();
+
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();  // <-- pacote do NuGet para compilar e visualizar as alterações em tempo real.
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); 
             builder.Services.AddDbContext<Models.AppDbContext>(options =>
@@ -34,6 +39,9 @@ namespace savemoney
             // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
             builder.Services.AddScoped<NoticiasService>();
             builder.Services.AddScoped<ArtigosService>();
+            // Registrar serviço e opcional hosted job (ex.: gera ocorrências diariamente)
+            builder.Services.AddScoped<RecurrenceService>();
+
 
             var app = builder.Build();
 
@@ -45,7 +53,7 @@ namespace savemoney
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); // desabilitado para rodar no servidor local (hospedagem gratuita)
             app.UseStaticFiles();
 
             app.UseRouting();

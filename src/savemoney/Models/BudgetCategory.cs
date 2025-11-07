@@ -31,6 +31,10 @@ namespace savemoney.Models
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; } = null!;
 
+
+        public virtual ICollection<Receita>? Receitas { get; set; }
+
+
         private decimal CalculateCurrentSpent()
         {
             // Placeholder: Somar despesas associadas quando Expense for implementada

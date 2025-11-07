@@ -1,38 +1,89 @@
 ﻿@model IEnumerable<savemoney.Models.Receita>
 
 @{
-    ViewData["Title"] = "Receitas";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Receitas</h1>
+<h1>Index</h1>
 
-<p><a class="btn btn-primary" asp-action="Create">Cadastrar nova receita</a></p>
-
-<table class="table table-striped table-hover">
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
     <thead>
         <tr>
-            <th>Nome</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Categoria</th>
-            <th>Descri��o</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BudgetCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsRecurring)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Frequency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Interval)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecurrenceEndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecurrenceOccurrences)
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
-    {
+@foreach (var item in Model) {
         <tr>
-            <td>@item.Titulo</td>
-            <td>@item.Valor.ToString("C")</td>
-            <td>@item.Data.ToShortDateString()</td>
-            <td>@item.Categoria</td>
-            <td>@item.Descricao</td>
-            <td class="text-nowrap">
-                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id">Visualizar</a>
-                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
-                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BudgetCategory.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsRecurring)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Frequency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Interval)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecurrenceEndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecurrenceOccurrences)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-    }
+}
     </tbody>
 </table>
