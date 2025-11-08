@@ -1,0 +1,241 @@
+﻿<!--Remove o Header do Catedral --->
+@{
+    Layout = "_LayoutLanding";
+}
+@{
+    ViewData["Title"] = "Calculadora de Metas Financeiras";
+}
+
+@* --- ESTILOS DA PÁGINA --- *@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="~/css/landingPage.css" asp-append-version="true" />
+@* --- FIM DOS ESTILOS --- *@
+
+<!--fazer o header normalmente, mas criar um icones, que esconde ele no topo da pagina, e 
+    quando clica no icone, ele puxa o header da pagina para baixo. -->
+<button id="toggle-header-btn" title="Mostrar/Esconder Menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12h18M3 6h18M3 18h18" />
+    </svg>
+</button>
+
+<header class="navbar">
+    <div class="container navbar-content">
+
+        <a href="#" class="logo">Save Money</a>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Controle</a></li>
+                <li><a href="#">Investir</a></li>
+
+                <li class="dropdown">
+                    <a href="#">Perfis</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Pessoa Física (R6)</a></li>
+                        <li><a href="#">Pessoa Jurídica (R7)</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#">Relatórios</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Diagnósticos (R4)</a></li>
+                        <li><a href="#">Análise de Tendências (R13)</a></li>
+                        <li><a href="#">Projeção Financeira (R14)</a></li>
+                        <li><a href="#">Exportar PDF/Excel (R5)</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">Metas</a></li>
+                <li><a href="#">Personalizar</a></li>
+            </ul>
+        </nav>
+
+        <a href="#" class="btn btn-secondary cta-button">Comece Grátis</a>
+    </div>
+</header>
+<section class="hero-section">
+    <div class="hero-content">
+        <span class="hero-eyebrow">Nossa Missão</span>
+        <h1>Simplifique sua gestão financeira.</h1>
+        <p class="subtitle">A plataforma premium que oferece ferramentas intuitivas para controle de gastos,
+            investimentos e
+            planejamento,
+            tudo em um só lugar.</p>
+        <div class="hero-buttons">
+            <a class="btn btn-secondary" href="">Comece Agora(É Grátis)</a>
+            <a class="btn btn-secondary" href="">Ver Funcionalidades</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow">Controle Financeiro</span>
+        <h2>Assuma o comando das suas finanças.</h2>
+        <p class="substitle">Gerencie suas receitas e despesas de forma eficiente, com categorização automática e
+            relatórios detalhados. Veja para onde seu dinheiro vai, sem esforço.</p>
+        <a href="" class="btn btn-secondary">Comece a controlar suas finanças</a>
+        <!-- Imagem a direita do conteudo--->
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow">Investimentos</span>
+        <h2>Faça seu dinheiro trabalhar por você.</h2>
+        <p class="substitle">Acompanhe seus investimentos (Ações, Fundos e Renda Fixa) e receba recomendações
+            personalizadas baseadas no seu perfil de risco.</p>
+        <a href="" class="btn btn-secondary">Ver meus investimentos</a>
+        <!-- Imagem a direita do conteudo--->
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container-content-split">
+        <span class="section-eyebrow"></span>
+        <h2></h2>
+        <p></p>
+        <div class="image-column">
+            <a href="" class="btn btn-secondary"></a>
+        </div>
+        <div class="image-column">
+            <img src="" alt="">
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/landingPage.js" asp-append-version="true"></script>
+}
