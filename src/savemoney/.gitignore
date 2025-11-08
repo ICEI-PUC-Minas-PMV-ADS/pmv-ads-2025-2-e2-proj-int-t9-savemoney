@@ -1,0 +1,32 @@
+﻿# Arquivos gerados pelo usuário
+*.user
+*.userosscache
+*.suo
+
+# Arquivos gerados pelo Visual Studio
+*.DotSettings.user
+*.sln.docstates
+
+# Pastas de Build
+[Bb]in/
+[Oo]bj/
+
+# Arquivos de Build
+[Rr]elease/
+[Dd]ebug/
+
+# Arquivos do Entity Framework
+*-Migration-*.zip
+*.mdf
+*.ldf
+
+# Arquivos de pacotes Nuget
+*.nupkg
+packages/
+
+# Arquivos do sistema operacional
+[Tt]humbs.db
+*.DS_Store
+
+# ARQUIVO DE PRODUÇÃO QUE NÃO DEVE IR PARA O GIT
+appsettings.Production.json

@@ -21,8 +21,9 @@ namespace savemoney.Models
         public decimal Limit { get; set; }
 
         // Propriedade calculada para o total gasto (dinâmica, via consulta SQL)
+        // Total gasto (calculado dinamicamente)
         [NotMapped]
-        public decimal CurrentSpent => CalculateCurrentSpent();
+        public decimal CurrentSpent { get; set; } // Será preenchido via query
 
         // Propriedades de navegação
         [ForeignKey("BudgetId")]
@@ -33,13 +34,5 @@ namespace savemoney.Models
 
 
         public virtual ICollection<Receita>? Receitas { get; set; }
-
-
-        private decimal CalculateCurrentSpent()
-        {
-            // Placeholder: Somar despesas associadas quando Expense for implementada
-            // Exemplo: return DbContext.Expenses.Where(e => e.BudgetCategoryId == Id).Sum(e => e.Amount);
-            return 0;
-        }
     }
 }
