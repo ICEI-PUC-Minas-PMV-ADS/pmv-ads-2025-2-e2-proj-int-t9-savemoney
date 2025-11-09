@@ -72,7 +72,7 @@ namespace savemoney.Controllers
 
                 await HttpContext.SignInAsync(principal, props);
 
-                return Redirect("/");
+                return RedirectToAction("Index", "Dashboard");
             }
             else
             {
@@ -86,7 +86,7 @@ namespace savemoney.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction("Login", "Usuarios");
+            return Redirect("/");
         }
 
         // GET: Usuarios/Details/5
@@ -165,7 +165,7 @@ namespace savemoney.Controllers
                 };
 
                 await HttpContext.SignInAsync(principal, props);
-                return Redirect("/");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View(usuario);
         }

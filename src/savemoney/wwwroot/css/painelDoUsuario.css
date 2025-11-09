@@ -1,0 +1,301 @@
+/* ======================================== */
+/* [NOVO] EFEITO GLASSMORPHISM PARA O HEADER */
+/* ======================================== */
+
+/* Aplica o efeito de vidro no seu web component */
+catedral-header {
+  /* 1. O Fundo de Vidro (Branco, com transparência) */
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  /* 2. O Blur */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  /* 3. A Borda Sutil (para o tema claro) */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  /* 4. Garante que ele fique fixo no topo */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* ======================================== */
+/* [SEU CSS EXISTENTE - 'site.css'] */
+/* ======================================== */
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  /* Garante que o body não comece "embaixo" do header sticky */
+  padding-top: 60px;
+  /* Ajuste este valor se a altura do seu catedral-header for diferente */
+}
+
+.body-hidden {
+  visibility: hidden;
+}
+
+.container {
+  margin-top: 2rem;
+}
+
+.header-navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-navigation a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.header-navigation a:hover {
+  background: #fff;
+  color: #125ea2;
+}
+
+/* [ESTILOS DO PAINEL / DASHBOARD] */
+.features-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.feature-box {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px 20px;
+  width: 320px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: grab;
+  /* Para o futuro drag-and-drop */
+}
+
+.feature-box:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  transform: translateY(-5px);
+  /* Efeito de "levantar" */
+}
+
+.feature-icon {
+  font-size: 40px;
+  color: #1976d2;
+  margin-bottom: 16px;
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.feature-desc {
+  font-size: 1rem;
+  color: #444;
+  text-align: center;
+}
+
+.mission-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.mission-desc {
+  font-size: 1rem;
+  color: #444;
+}
+
+.mission-box {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 40px auto;
+  background: #f5faff;
+  border-left: 6px solid #1976d2;
+  border-radius: 10px;
+  padding: 32px 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.mission-icon {
+  font-size: 48px;
+  color: #1976d2;
+  margin-right: 18px;
+}
+
+.mission-content {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .features-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-box {
+    width: 90%;
+  }
+
+  .mission-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* [ESTILOS DO LOGIN] */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  background: url('/assets/map-world.jpg') center center/cover no-repeat;
+}
+
+.login-card {
+  background: #fff;
+  padding: 36px 32px 28px 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  width: 100%;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.login-card h2 {
+  font-weight: 700;
+}
+
+.btn-link {
+  color: #1976d2;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* [ESTILOS DAS NOTÍCIAS] */
+.news-section-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.news-card {
+  transition: box-shadow 0.2s;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.news-card:hover {
+  box-shadow: 0 4px 16px rgba(106,13,173,0.15);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.news-card .card-img-top {
+  object-fit: cover;
+  height: 220px;
+  width: 100%;
+}
+
+.news-card .card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #6a0dad;
+}
+
+.news-card .card-text {
+  font-size: 1rem;
+  color: #333;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
+}
+
+
+
+@media (max-width: 991.98px) {
+  .news-card .card-img-top {
+    height: 180px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .news-section-container {
+    padding: 1rem 0.25rem;
+  }
+
+  .news-card .card-img-top {
+    height: 140px;
+  }
+
+  .news-card .card-title {
+    font-size: 1rem;
+  }
+
+  .news-card .card-text {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .news-card .card-img-top {
+    height: 110px;
+  }
+
+  .news-section-container {
+    padding: 0.5rem 0;
+  }
+}

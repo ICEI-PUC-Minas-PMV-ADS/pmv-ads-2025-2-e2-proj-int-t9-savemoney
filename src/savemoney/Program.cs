@@ -12,12 +12,16 @@ namespace savemoney
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(@"h:\root\home\maiconvts-001\www\site1\DataProtection-Keys"));
-            builder.Services.AddControllersWithViews();
+            if (!builder.Environment.IsDevelopment())
+            {
+                // Só usa o caminho da hospedagem se NÃO ESTIVER em desenvolvimento
+                builder.Services.AddDataProtection()
+                    .PersistKeysToFileSystem(new DirectoryInfo(@"h:\root\home\maiconvts-001\www\site1\DataProtection-Keys"));
+            }
 
+            builder.Services.AddControllersWithViews();
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();  // <-- pacote do NuGet para compilar e visualizar as alterações em tempo real.
-            builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); 
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
             builder.Services.AddDbContext<Models.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -46,12 +50,12 @@ namespace savemoney
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            // if (!app.Environment.IsDevelopment())
+            // {
+            //     app.UseExceptionHandler("/Home/Error");
+            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //     app.UseHsts();
+            // }
 
             // app.UseHttpsRedirection(); // desabilitado para rodar no servidor local (hospedagem gratuita)
             app.UseStaticFiles();
@@ -63,7 +67,7 @@ namespace savemoney
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=LandingPage}/{action=Index}/{id?}");
 
             app.Run();
         }

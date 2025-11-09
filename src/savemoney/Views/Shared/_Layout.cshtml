@@ -48,8 +48,8 @@
         <nav class="header-navigation">
             <ul>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                        <span class="material-icons">home</span>Home
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">
+                        <span class="material-icons">home</span>Painel
                     </a>
                 </li>
 
@@ -155,7 +155,8 @@
     </catedral-header>
 
     <!-- Esta é a área principal onde o conteúdo de cada página (View) será renderizado. É a parte "mágica" do layout. -->
-    <main role="main" class="pb-5 pt-5"> <!-- "pb-5 pt-5" removido para resolver problemas de layouts (box-model) estava ocupando espaço indesejado.-->
+    <main role="main" class="pb-5 pt-5">
+        <!-- "pb-5 pt-5" removido para resolver problemas de layouts (box-model) estava ocupando espaço indesejado.-->
         @RenderBody()
     </main>
 

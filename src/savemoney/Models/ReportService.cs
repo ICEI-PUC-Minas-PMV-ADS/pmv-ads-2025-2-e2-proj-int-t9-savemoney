@@ -50,7 +50,7 @@ namespace SaveMonney.Services
             return Task.FromResult(ms.ToArray());
         }
 
-        public Task<byte[]> GeneratePdfAsync();
+        public Task<byte[]> GeneratePdfAsync()
         {
         // Exemplo simples com QuestPDF
         var doc = Document.Create(container =>
