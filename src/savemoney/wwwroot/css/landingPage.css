@@ -114,143 +114,10 @@ a:hover {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Módulo: Header Principal (Navbar) */
-#main-header {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1030;
-  background-color: rgba(16, 17, 26, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  transition: transform 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
-}
-
-#main-header.header-hidden {
-  transform: translateY(-100%);
-  margin-bottom: calc(-1 * var(--header-height));
-}
-
-.navbar-content {
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.logo {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.nav-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 2rem;
-}
-
-.nav-links > li > a {
-  font-weight: 500;
-  color: var(--text-secondary);
-  padding: 1.5rem 0;
-  display: block;
-}
-
-.nav-links a:hover {
-  color: var(--text-primary);
-}
-
-/* Módulo: Botões */
-.btn {
-  display: inline-block;
-  padding: 0.8rem 1.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  border: 1px solid transparent;
-}
-
-.btn-primary {
-  background-color: var(--accent-primary);
-  color: var(--btn-primary-text);
-}
-
-.btn-primary:hover {
-  background-color: var(--accent-primary-hover);
-  color: var(--btn-primary-text);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--text-primary);
-  border-color: var(--border-color);
-}
-
-.btn-secondary:hover {
-  background-color: var(--bg-card);
-  border-color: #444;
-}
-
-/* Módulo: Dropdown Menu */
-.dropdown {
-  position: relative;
-  z-index: 99;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: var(--bg-card);
-  min-width: 200px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  padding: 0.5rem 0;
-}
-
-.dropdown:hover .dropdown-menu {
-  display: block;
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-menu a {
-  color: var(--text-secondary);
-  padding: 10px 15px;
-  font-size: 0.95rem;
-  font-weight: 400;
-}
-
-.dropdown-menu a:hover {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-.dropdown > a i {
-  font-size: 0.75rem;
-  margin-left: 0.5rem;
-}
+/* [REMOVIDO] 
+  Os módulos do Header, Botões, Dropdown e 
+  responsividade do header foram movidos para 'header.css' 
+*/
 
 /* Módulo: Seção Hero */
 .hero-section {
@@ -386,36 +253,9 @@ a:hover {
   font-size: 0.9rem;
 }
 
-/* Módulo: Botão "Pull Tab" do Header */
-.header-toggle-tab {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
-  background: #1a1d24;
-  color: #fff;
-  border: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  padding: 2px 10px;
-  line-height: 1;
-  font-size: 1.2rem;
-  cursor: pointer;
-  z-index: -1;
-  transition: background 0.2s ease;
-}
-
-.header-toggle-tab:hover {
-  background: #3a3f4b;
-}
-
-.header-toggle-tab .bi {
-  transition: transform 0.3s ease;
-}
-
-#main-header.header-hidden .header-toggle-tab .bi {
-  transform: rotate(180deg);
-}
+/* [REMOVIDO] 
+  O módulo 'Botão "Pull Tab" do Header' foi movido para 'header.css' 
+*/
 
 /* Módulo: Modal Glassmorphism */
 .modal.fade .modal-dialog {
@@ -553,13 +393,7 @@ a:hover {
   }
 }
 
-/* Módulo: Responsividade (Mobile) */
-@media (max-width: 1024px) {
-  .nav-links {
-    gap: 1.5rem;
-  }
-}
-
+/* Módulo: Responsividade (Mobile - Específico da Página) */
 @media (max-width: 768px) {
   h1 {
     font-size: 3rem;
@@ -571,16 +405,9 @@ a:hover {
     font-size: 3.5rem;
   }
 
-  .navbar-content {
-    padding: 0 1rem;
-  }
-
-  .main-nav {
-    display: none;
-  }
-  .header-toggle-tab {
-    display: none;
-  }
+  /* [REMOVIDO] 
+    A responsividade do header foi movida para 'header.css' 
+  */
 
   .content-split {
     flex-direction: column;

@@ -14,55 +14,11 @@
 @* --- FIM DOS ESTILOS --- *@
 
 
-<header id="main-header" class="navbar">
-    <div class="container navbar-content">
+@* [REMOVIDO] 
+   O bloco <header>...</header> foi removido daqui. 
+   Ele agora é carregado pelo _LayoutLanding.cshtml.
+*@
 
-        <a href="#" class="logo">Save Money</a>
-
-        <nav class="main-nav">
-            <ul class="nav-links">
-                <li><a href="#control">Controle</a></li>
-                <li><a href="#invest">Investir</a></li>
-
-                <li class="dropdown">
-                    <a href="#">Perfis <i class="bi bi-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#profiles">Pessoa Física (R6)</a></li>
-                        <li><a href="#profiles">Pessoa Jurídica (R7)</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#">Relatórios <i class="bi bi-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#reports">Diagnósticos (R4)</a></li>
-                        <li><a href="#reports">Análise de Tendências (R13)</a></li>
-                        <li><a href="#projection">Projeção Financeira (R14)</a></li>
-                        <li><a href="#projection">Exportar PDF/Excel (R5)</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="#goals">Metas</a></li>
-                <li><a href="#customize">Personalizar</a></li>
-            </ul>
-        </nav>
-
-        @* Botão inteligente (Login / Ir para o Painel) *@
-        @if (User.Identity.IsAuthenticated)
-        {
-            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary cta-button">Ir para o Painel</a>
-        }
-        else
-        {
-            <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary cta-button">Comece Grátis</a>
-        }
-    </div>
-
-    @* Botão "Pull Tab" (controlado pelo landingPage.js) *@
-    <button id="header-toggle-tab" class="header-toggle-tab" title="Esconder Menu">
-        <i class="bi bi-chevron-up"></i>
-    </button>
-</header>
 
 <main>
 
@@ -91,7 +47,6 @@
 
     <section id="control" class="section">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-left">
                 <span class="section-eyebrow">Controle Financeiro</span>
                 <h2>Assuma o comando das suas finanças.</h2>
@@ -108,24 +63,20 @@
                     <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Começar a controlar</a>
                 }
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-right">
-                @* [CORREÇÃO DE IMAGEM] Corrigido o caminho e adicionado asp-append-version *@
                 <img src="~/assets/smilling-with-laptop.jpg" asp-append-version="true"
-                    alt="Mulher sorrindo e planejando finanças no laptop">
+                     alt="Mulher sorrindo e planejando finanças no laptop">
             </div>
         </div>
     </section>
 
     <section id="invest" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-left">
-                @* [CORREÇÃO DE IMAGEM] Corrigido o nome do arquivo, caminho e adicionado asp-append-version *@
+                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/investimento-img.jpg" asp-append-version="true"
-                    alt="Gráfico de ações subindo em uma tela">
+                     alt="Gráfico de ações subindo em uma tela">
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-right">
                 <span class="section-eyebrow">Investimentos</span>
                 <h2>Faça seu dinheiro trabalhar por você.</h2>
@@ -147,7 +98,6 @@
 
     <section id="crypto" class="section">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-left">
                 <span class="section-eyebrow">Criptomoedas</span>
                 <h2>O futuro das finanças, hoje.</h2>
@@ -164,23 +114,21 @@
                     <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Gerenciar Cripto</a>
                 }
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-right">
-                @* [CORREÇÃO DE IMAGEM] Substituído por imagem dos assets e adicionado asp-append-version *@
+                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/graficos-img.jpg" asp-append-version="true"
-                    alt="Celular mostrando uma carteira de criptomoedas">
+                     alt="Celular mostrando uma carteira de criptomoedas">
             </div>
         </div>
     </section>
 
     <section id="profiles" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-left">
-                <img src="/assets/homem-escritorio-mapa-mundi.jpg"
-                    alt="Homem em mesa de escritório, balançando negócios e vida pessoal">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/homem-escritorio-mapa-mundi.jpg" asp-append-version="true"
+                     alt="Homem em mesa de escritório, balançando negócios e vida pessoal">
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-right">
                 <span class="section-eyebrow">Pessoa Física (R6) e Empresarial (R7)</span>
                 <h2>Do seu orçamento doméstico ao fluxo de caixa da sua empresa.</h2>
@@ -202,7 +150,6 @@
 
     <section id="converters" class="section">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-left">
                 <span class="section-eyebrow">Conversores Inteligentes</span>
                 <h2>Finanças sem fronteiras.</h2>
@@ -219,21 +166,20 @@
                     <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Usar conversores</a>
                 }
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-right">
-                <img src="/assets/mapa-moedas.jpg" alt="Mapa-múndi com símbolos de moedas">
+                 @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/mapa-moedas.jpg" asp-append-version="true" alt="Mapa-múndi com símbolos de moedas">
             </div>
         </div>
     </section>
 
     <section id="education" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-left">
-                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDExfHxwZW9wbGUlMjBsZWFybmluZyUyMGxhcHRvcHxlbnwwfDB8fHwxNzMwNDg5NjUxfDA&lib=rb-4.0.3&q=80&w=1080"
-                    alt="Pessoas em uma mesa estudando juntas">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/background-image-educacao.png" asp-append-version="true"
+                     alt="Pessoas em uma mesa estudando juntas">
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-right">
                 <span class="section-eyebrow">Educação Financeira</span>
                 <h2>Mais que uma ferramenta, um parceiro.</h2>
@@ -255,7 +201,6 @@
 
     <section id="reports" class="section">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-left">
                 <span class="section-eyebrow">Relatórios e Tendências</span>
                 <h2>Entenda o passado para dominar o presente.</h2>
@@ -273,21 +218,20 @@
                         relatório</a>
                 }
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-right">
-                <img src="/assets/relatorios-tendencia.jpg" alt="Dashboard de dados complexo e moderno">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/relatorios-tendencia.jpg" asp-append-version="true" alt="Dashboard de dados complexo e moderno">
             </div>
         </div>
     </section>
 
     <section id="projection" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-left">
-                <img src="https://images.unsplash.com/photo-1542744095-291d1f67b221?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDExfHxwZW9wbGUlMjBwcmVzZW50YXRpb24lMjBjaGFydHxlbnwwfDB8fHwxNzMwNDk0MTM0fDA&ixlib=rb-4.0.3&q=80&w=1080"
-                    alt="Pessoa apresentando gráficos de crescimento em reunião">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/women-smiling.jpg" asp-append-version="true"
+                     alt="Pessoa apresentando gráficos de crescimento em reunião">
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-right">
                 <span class="section-eyebrow">Projeção e Exportação (R14, R5)</span>
                 <h2>Planeje o futuro e compartilhe seu sucesso.</h2>
@@ -309,7 +253,6 @@
 
     <section id="goals" class="section">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-left">
                 <span class="section-eyebrow">Metas e Orçamentos (R9, R12)</span>
                 <h2>Dê um propósito ao seu dinheiro.</h2>
@@ -326,22 +269,20 @@
                     <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Criar minha primeira meta</a>
                 }
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-right">
-                <img src="/assets/tablet-use.jpg" 
-                alt="Pote de vidro com economias para viagem">
+                 @* [CORRIGIDO] Caminho da imagem e sintaxe *@
+                <img src="~/assets/tablet-use.jpg" asp-append-version="true"
+                     alt="Pote de vidro com economias para viagem">
             </div>
         </div>
     </section>
 
     <section id="customize" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-left">
                 <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDV8fHBlb3BsZSUyMGN1c3RvbWl6aW5nJTIwdWl8ZW58MHwwfHx8MTczMDQ5NDMwMnww&ixlib=rb-4.0.3&q=80&w=1080"
-                    alt="Pessoas organizando cartões em uma mesa (simulando drag-and-drop)">
+                     alt="Pessoas organizando cartões em uma mesa (simulando drag-and-drop)">
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-right">
                 <span class="section-eyebrow">Personalização Total (R8, R10)</span>
                 <h2>Seu dinheiro, do seu jeito.</h2>
@@ -363,7 +304,6 @@
 
     <section id="tools" class="section">
         <div class="container content-split">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="text-column animate-on-scroll fade-in-left">
                 <span class="section-eyebrow">Ferramentas e Alertas (R11, R15, R16)</span>
                 <h2>Tudo o que você precisa, ao seu alcance.</h2>
@@ -380,27 +320,24 @@
                     <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Conhecer ferramentas</a>
                 }
             </div>
-            @* [ANIMADO] Adicionadas classes de animação *@
             <div class="image-column animate-on-scroll fade-in-right">
-                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDN8fGZpbmFuY2lhbCUyMHRvb2xzJTIwY2FsY3VsYXRvcnxlbnwwfDB8fHwxNzMwNDk0MzU4fDA&ixlib=rb-4.0.3&q=80&w=1080"
-                    alt="Laptop mostrando gráficos e uma calculadora">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/goal-calculator.jpg" asp-append-version="true"
+                     alt="Laptop mostrando gráficos e uma calculadora">
             </div>
         </div>
     </section>
 
     <section id="login" class="section cta-section">
         <div class="container">
-            @* [ANIMADO] Adicionadas classes de animação *@
             <h2 class="animate-on-scroll fade-in-up">Pronto para assumir o controle?</h2>
-            @* [ANIMADO] Adicionadas classes e delay *@
             <p class="animate-on-scroll fade-in-up" style="animation-delay: 0.1s;">
                 Junte-se a milhares de usuários que estão transformando sua relação com o dinheiro. Crie sua conta
                 gratuita e comece a economizar hoje mesmo.
             </p>
-
-            @* [ANIMADO] Adicionadas classes e delay *@
+            
             <div class="animate-on-scroll fade-in-up" style="animation-delay: 0.2s;">
-                @if (User.Identity.IsAuthenticated)
+                 @if (User.Identity.IsAuthenticated)
                 {
                     <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Ir para meu Painel</a>
                 }
@@ -414,9 +351,6 @@
 
 </main>
 
-@* =============================================== *@
-@* [CORREÇÃO 1: CONTEÚDO DO MODAL RESTAURADO]      *@
-@* =============================================== *@
 <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-glass">
@@ -463,7 +397,6 @@
 
 <footer class="footer">
     <div class="container">
-        @* [ANIMADO] Adicionadas classes de animação ao container *@
         <div class="footer-content animate-on-scroll fade-in-up">
             <div class="footer-logo">
                 <a href="#" class="logo">Save Money</a>
@@ -503,6 +436,6 @@
     <script>
         window.isUserAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
     </script>
-
+    
     <script src="~/js/landingPage.js" asp-append-version="true"></script>
 }

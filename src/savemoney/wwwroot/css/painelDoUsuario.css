@@ -42,14 +42,10 @@ html {
 
 body {
   margin-bottom: 60px;
-  /* Garante que o body não comece "embaixo" do header sticky */
-  padding-top: 60px;
-  /* Ajuste este valor se a altura do seu catedral-header for diferente */
+
 }
 
-.body-hidden {
-  visibility: hidden;
-}
+
 
 .container {
   margin-top: 2rem;
