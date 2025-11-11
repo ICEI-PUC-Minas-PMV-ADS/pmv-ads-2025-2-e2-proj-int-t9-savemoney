@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\css\receitas\**" />
+    <Content Remove="wwwroot\css\receitas\**" />
+    <EmbeddedResource Remove="wwwroot\css\receitas\**" />
+    <None Remove="wwwroot\css\receitas\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="closedxml" Version="0.105.0" />
     <PackageReference Include="mailkit" Version="4.14.1" />
