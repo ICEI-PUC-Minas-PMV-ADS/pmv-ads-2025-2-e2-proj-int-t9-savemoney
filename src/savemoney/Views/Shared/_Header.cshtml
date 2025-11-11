@@ -1,0 +1,104 @@
+@using System.Security.Claims
+
+@{
+    // Verifica se estamos na Landing Page para mudar os links
+    bool isLandingPage = (ViewData["Title"] as string) == "Save Money - Gestão Financeira Premium";
+}
+
+<header id="main-header" class="navbar">
+    <div class="container navbar-content">
+
+        <a asp-controller="@(User.Identity.IsAuthenticated ? "Dashboard" : "LandingPage")" asp-action="Index" class="logo">Save Money</a>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+
+                @if (isLandingPage)
+                {
+                    @* ================================= *@
+                    @* Lógica de Navegação da LANDING PAGE *@
+                    @* ================================= *@
+                    <li><a href="#control">Controle</a></li>
+                    <li><a href="#invest">Investir</a></li>
+                    <li class="dropdown">
+                        <a href="#">Perfis <i class="bi bi-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#profiles">Pessoa Física</a></li>
+                            <li><a href="#profiles">Pessoa Jurídica</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Relatórios <i class="bi bi-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#reports">Diagnósticos</a></li>
+                            <li><a href="#reports">Análise de Tendências</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#goals">Metas</a></li>
+                    <li><a href="#customize">Personalizar</a></li>
+                }
+                else
+                {
+                    @* ================================= *@
+                    @* Lógica de Navegação do APP (PAINEL) *@
+                    @* ================================= *@
+                    <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
+                    <li><a asp-controller="EducacaoFinanceira" asp-action="Index">Educação</a></li>
+                    <li class="dropdown">
+                        <a href="#">Finanças <i class="bi bi-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="Receitas" asp-action="Index">Receitas</a></li>
+                            <li><a asp-controller="MetasFinanceiras" asp-action="Index">Metas</a></li>
+                            <li><a asp-controller="Budgets" asp-action="Index">Orçamento</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Ferramentas <i class="bi bi-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas">Calculadora de Metas</a></li>
+                            <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilíbrio</a></li>
+                            <li><a asp-controller="ConversorEnergias" asp-action="Index">Conversor de Energia</a></li>
+                        </ul>
+                    </li>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <li><a asp-controller="Usuarios" asp-action="Index">Usuários</a></li>
+                    }
+                }
+            </ul>
+        </nav>
+
+        @* Botão inteligente (Login / Painel / Perfil / Sair) *@
+        <div class="cta-buttons-container d-flex gap-2">
+            @if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                
+                <a asp-controller="Usuarios" asp-action="Details" asp-route-id="@userId" 
+                   class="btn btn-secondary cta-button-secondary" title="Meu Perfil"
+                   style="padding: 0.5rem 0.8rem;">
+                   <i class="bi bi-person-fill"></i>
+                </a>
+
+                @if (isLandingPage)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary cta-button">Ir para o Painel</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Logout" class="btn btn-primary cta-button" title="Sair">Sair</a>
+                }
+            }
+            else
+            {
+                <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary cta-button">Comece Grátis</a>
+            }
+        </div>
+
+    </div>
+
+    @* Botão "Pull Tab" (controlado pelo header.js) *@
+    <button id="header-toggle-tab" class="header-toggle-tab" title="Esconder Menu">
+        <i class="bi bi-chevron-up"></i>
+    </button>
+</header>

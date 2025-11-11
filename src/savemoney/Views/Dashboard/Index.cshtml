@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Painel do Usuário";
+}
+
+<!-- Seção para CSS específico desta página (opcional) -->
+@section css {
+    <link rel="stylesheet" href="~/css/painelDoUsuario.css" asp-append-version="true" />
+}
+
+<!-- Container principal do painel -->
+<div class="container-fluid mt-4">
+
+    <!-- Título da Página -->
+    <h1 class="h2 mb-4">@ViewData["Title"]</h1>
+
+    <!-- Caixa de Missão (Estilizada como um "Alerta" Bootstrap) -->
+    <div class="mission-box alert alert-primary d-flex align-items-center" role="alert">
+        <span class="material-icons mission-icon flex-shrink-0 me-3">rocket_launch</span>
+        <div class="mission-content">
+            <h4 class="alert-heading mission-title">Nossa Missão</h4>
+            <p class="mission-desc mb-0">
+                O Save Money é uma plataforma inovadora que visa simplificar a gestão financeira pessoal e empresarial,
+                oferecendo ferramentas intuitivas para controle de gastos, investimentos e planejamento financeiro.
+            </p>
+        </div>
+    </div>
+
+    <!-- Título da Seção de Widgets -->
+    <h2 class="h4 mb-3 mt-5">Seus Widgets</h2>
+    <p class="text-muted mb-4">
+        (Estes são seus widgets. No futuro, você poderá arrastar e reordenar.)
+    </p>
+
+    <!-- Container dos Widgets (Grid Responsivo) -->
+    <div class="features-container row g-4">
+
+        <!-- Widget: Controle Financeiro -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">savings</span>
+                <div class="feature-title">Controle Financeiro</div>
+                <div class="feature-desc">
+                    Gerencie suas receitas e despesas de forma eficiente, com categorização automática.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Investimentos -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">trending_up</span>
+                <div class="feature-title">Investimentos</div>
+                <div class="feature-desc">
+                    Acompanhe seus investimentos e receba recomendações baseadas em seu perfil de risco.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Conversor de Moedas -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">currency_exchange</span>
+                <div class="feature-title">Conversor de Moedas</div>
+                <div class="feature-desc">
+                    Converta valores entre diferentes moedas em tempo real, com taxas atualizadas.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Contato com a Equipe -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">group</span>
+                <div class="feature-title">Contato com a Equipe</div>
+                <div class="feature-desc">
+                    Entre em contato com nossa equipe de suporte para tirar dúvidas ou reportar problemas.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Conta Pessoal -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">account_balance</span>
+                <div class="feature-title">Conta Pessoal</div>
+                <div class="feature-desc">
+                    Ferramentas específicas para controle de orçamento e metas financeiras pessoais.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Conta Empresarial -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">business</span>
+                <div class="feature-title">Conta Empresarial</div>
+                <div class="feature-desc">
+                    Soluções completas para gestão financeira empresarial, incluindo fluxo de caixa.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Múltiplos Idiomas -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">translate</span>
+                <div class="feature-title">Múltiplos Idiomas</div>
+                <div class="feature-desc">
+                    Interface disponível em diversos idiomas para atender usuários de diferentes países.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Múltiplas Moedas -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">payments</span>
+                <div class="feature-title">Múltiplas Moedas</div>
+                <div class="feature-desc">
+                    Suporte a diversas moedas para facilitar transações internacionais.
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget: Criptomoedas -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="feature-box">
+                <span class="material-icons feature-icon">currency_bitcoin</span>
+                <div class="feature-title">Criptomoedas</div>
+                <div class="feature-desc">
+                    Acompanhe e gerencie seus investimentos em criptomoedas com atualizações em tempo real.
+                </div>
+            </div>
+        </div>
+
+        <!-- Mais widgets... -->
+
+    </div> <!-- fim .row -->
+
+</div> <!-- fim .container-fluid -->
+@section Scripts {
+    <script src="~/js/painelDoUsuario.js" asp-append-version="true"></script>
+}

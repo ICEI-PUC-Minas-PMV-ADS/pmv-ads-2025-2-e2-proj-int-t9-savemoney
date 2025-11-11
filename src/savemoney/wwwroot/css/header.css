@@ -1,0 +1,162 @@
+/* Módulo: Header Principal (Navbar) */
+#main-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  background-color: rgba(16, 17, 26, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
+}
+
+#main-header.header-hidden {
+  transform: translateY(-100%);
+  margin-bottom: calc(-1 * var(--header-height));
+}
+
+.navbar-content {
+  /* [CORREÇÃO] Garante que o conteúdo se alinhe com o container da página */
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.logo:hover {
+  color: var(--text-primary);
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links > li > a {
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 1.5rem 0;
+  display: block;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Módulo: Botão "Pull Tab" do Header */
+.header-toggle-tab {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  background: #1a1d24;
+  color: #fff;
+  border: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 2px 10px;
+  line-height: 1;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: -1;
+  transition: background 0.2s ease;
+}
+
+.header-toggle-tab:hover {
+  background: #3a3f4b;
+}
+
+.header-toggle-tab .bi {
+  transition: transform 0.3s ease;
+}
+
+#main-header.header-hidden .header-toggle-tab .bi {
+  transform: rotate(180deg);
+}
+
+/* Módulo: Dropdown Menu */
+.dropdown {
+  position: relative;
+  z-index: 99;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--bg-card);
+  min-width: 200px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  padding: 0.5rem 0;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu a {
+  color: var(--text-secondary);
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  font-weight: 400;
+  display: block; /* Garante que o link preencha o espaço */
+  text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.dropdown > a i {
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+/* Módulo: Responsividade do Header */
+@media (max-width: 1024px) {
+  .nav-links {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-content {
+    padding: 0 1rem;
+  }
+  .main-nav {
+    display: none;
+  }
+  .header-toggle-tab {
+    display: none;
+  }
+}

@@ -124,7 +124,12 @@ namespace savemoney.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Category");
 
@@ -410,13 +415,14 @@ namespace savemoney.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("savemoney.Models.Despesa", b =>
+            modelBuilder.Entity("savemoney.Models.Category", b =>
                 {
-                    b.HasOne("savemoney.Models.BudgetCategory", "BudgetCategory")
-                        .WithMany("Despesas")
-                        .HasForeignKey("BudgetCategoryId");
+                    b.HasOne("savemoney.Models.Usuario", "Usuario")
+                        .WithMany("Categories")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("BudgetCategory");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
@@ -459,6 +465,11 @@ namespace savemoney.Migrations
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
                 {
                     b.Navigation("Aportes");
+                });
+
+            modelBuilder.Entity("savemoney.Models.Usuario", b =>
+                {
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,8 +21,9 @@ namespace savemoney.Models
         public decimal Limit { get; set; }
 
         // Propriedade calculada para o total gasto (dinâmica, via consulta SQL)
+        // Total gasto (calculado dinamicamente)
         [NotMapped]
-        public decimal CurrentSpent => CalculateCurrentSpent();
+        public decimal CurrentSpent { get; set; } // Será preenchido via query
 
         // Propriedades de navegação
         [ForeignKey("BudgetId")]

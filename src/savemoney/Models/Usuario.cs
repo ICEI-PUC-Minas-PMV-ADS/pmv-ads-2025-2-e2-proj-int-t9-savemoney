@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace savemoney.Models
 {
@@ -28,6 +29,8 @@ namespace savemoney.Models
 
         [Required(ErrorMessage = "O tipo de usuário é obrigatório.")]
         public TipoUsuario TipoUsuario { get; set; }
+
+        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
     }
 
     public enum Perfil
