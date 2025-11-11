@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using savemoney.Models;
 
@@ -11,9 +12,11 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110235657_DespesasMigration")]
+    partial class DespesasMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,12 +127,7 @@ namespace savemoney.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Category");
 
@@ -415,14 +413,13 @@ namespace savemoney.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("savemoney.Models.Category", b =>
+            modelBuilder.Entity("savemoney.Models.Despesa", b =>
                 {
-                    b.HasOne("savemoney.Models.Usuario", "Usuario")
-                        .WithMany("Categories")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("savemoney.Models.BudgetCategory", "BudgetCategory")
+                        .WithMany("Despesas")
+                        .HasForeignKey("BudgetCategoryId");
 
-                    b.Navigation("Usuario");
+                    b.Navigation("BudgetCategory");
                 });
 
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
@@ -465,11 +462,6 @@ namespace savemoney.Migrations
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
                 {
                     b.Navigation("Aportes");
-                });
-
-            modelBuilder.Entity("savemoney.Models.Usuario", b =>
-                {
-                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }
