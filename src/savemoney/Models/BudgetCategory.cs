@@ -33,6 +33,7 @@ namespace savemoney.Models
 
 
         public virtual ICollection<Receita>? Receitas { get; set; }
+        public virtual ICollection<Despesa>? Despesas { get; set; }
 
 
         private decimal CalculateCurrentSpent()

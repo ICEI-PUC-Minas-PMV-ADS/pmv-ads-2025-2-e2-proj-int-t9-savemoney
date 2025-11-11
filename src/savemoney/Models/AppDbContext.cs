@@ -62,6 +62,7 @@ namespace savemoney.Models
                 new Category { Id = 5, Name = "Despesas Operacionais", IsPredefined = true }
             );
         }
+        public DbSet<savemoney.Models.Despesa> Despesa { get; set; } = default!;
 
     }
 }
