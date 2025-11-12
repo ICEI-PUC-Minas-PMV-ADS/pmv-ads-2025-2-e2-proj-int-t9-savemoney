@@ -48,49 +48,64 @@ namespace savemoney.Controllers
             var userId = GetCurrentUserId();
             if (userId == 0) return Unauthorized();
 
-            ViewBag.Categories = await GetAvailableCategoriesAsync(userId);
+            ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
             return View(new Budget { StartDate = DateTime.Today, EndDate = DateTime.Today.AddMonths(1) });
         }
 
         // POST: /Budgets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Budget budget, List<BudgetCategory> Categories)
+        public async Task<IActionResult> Create(Budget budget)
         {
             var userId = GetCurrentUserId();
             if (userId == 0) return Unauthorized();
 
+            // PREENCHE O USERID MANUALMENTE
             budget.UserId = userId;
+
+            // VERIFICA SE TEM PELO MENOS UMA CATEGORIA
+            if (budget.Categories == null || !budget.Categories.Any())
+            {
+                ModelState.AddModelError("", "Adicione pelo menos uma categoria ao orçamento.");
+            }
+
+            // VALIDAÇÃO DAS CATEGORIAS
+            if (budget.Categories == null || !budget.Categories.Any())
+            {
+                ModelState.AddModelError("", "Adicione pelo menos uma categoria ao orçamento.");
+            }
+            else
+            {
+                for (int i = 0; i < budget.Categories.Count; i++)
+                {
+                    var cat = budget.Categories.ElementAt(i);
+                    if (cat.CategoryId <= 0)
+                        ModelState.AddModelError($"Categories[{i}].CategoryId", "Selecione uma categoria válida.");
+                    if (cat.Limit <= 0)
+                        ModelState.AddModelError($"Categories[{i}].Limit", "O limite deve ser maior que zero.");
+                }
+            }
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = await GetAvailableCategoriesAsync(userId);
+                ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
                 return View(budget);
             }
 
             try
             {
                 _context.Budgets.Add(budget);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // salva o budget e gera o Id
 
-                if (Categories?.Any() == true)
-                {
-                    foreach (var cat in Categories)
-                    {
-                        if (cat.CategoryId <= 0 || cat.Limit <= 0)
-                            throw new InvalidOperationException("Categoria ou limite inválido.");
-                        cat.BudgetId = budget.Id;
-                    }
-                    _context.BudgetCategories.AddRange(Categories);
-                    await _context.SaveChangesAsync();
-                }
+                // agora as BudgetCategories já têm BudgetId preenchido automaticamente pelo EF
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao salvar: " + (ex.InnerException?.Message ?? ex.Message));
-                ViewBag.Categories = await GetAvailableCategoriesAsync(userId);
+                ModelState.AddModelError("", "Erro ao salvar: " + ex.Message);
+                ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
                 return View(budget);
             }
         }
@@ -108,7 +123,7 @@ namespace savemoney.Controllers
 
             if (budget == null) return NotFound();
 
-            ViewBag.Categories = await GetAvailableCategoriesAsync(userId);
+            ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
             return View(budget);
         }
 
@@ -124,7 +139,7 @@ namespace savemoney.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = await GetAvailableCategoriesAsync(userId);
+                ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
                 return View(budget);
             }
 
@@ -177,7 +192,7 @@ namespace savemoney.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Erro ao atualizar: " + (ex.InnerException?.Message ?? ex.Message));
-                ViewBag.Categories = await GetAvailableCategoriesAsync(userId);
+                ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
                 return View(budget);
             }
         }

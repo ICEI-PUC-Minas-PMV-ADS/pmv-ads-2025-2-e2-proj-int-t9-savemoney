@@ -6,11 +6,11 @@ using System.Security.Claims;
 
 namespace savemoney.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoriesController : Controller
     {
         private readonly AppDbContext _context;
 
-        public CategoryController(AppDbContext context)
+        public CategoriesController(AppDbContext context)
         {
             _context = context;
         }
