@@ -9,6 +9,15 @@ namespace savemoney.Models
     public enum TipoTendencia
     {
         [Display(Name = "Crescente")]
-        Crescente = 1;
+        Crescente = 1,
+
+        [Display(Name = "Decrescente")]
+        Decrescente = 2,
+
+        [Display(Name = "Estável")]
+        Estavel = 3,
+
+        [Display(Name = "Indefinida")]
+        Indefinida = 4, // Quando não há dados suficientes para determinar a tendência
     }
 }
