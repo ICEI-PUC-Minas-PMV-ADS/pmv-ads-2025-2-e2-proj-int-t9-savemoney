@@ -1,29 +1,28 @@
 message: Please cite this software using these metadata.
-title:
+title: Save Money
 authors:
+  - family-names: Gomes Alves
+    given-names: Samuel
   - family-names: 
-    given-names: 
+    given-names: Jeahn 
   - family-names: 
-    given-names: 
+    given-names: Lucas
   - family-names: 
-    given-names: 
+    given-names: Matheus Carlos
   - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
+    given-names: Maicon
   - family-names: 
     given-names: 
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
-  - name-suffix: Professor
-    affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Da Costa
+    given-names: José Wilson
+
 keywords:
-  - 
-  - 
+  - Gestão Financeira  
+  - Saúde Financeira
+  - Educação Financeira
 repository-code: 
 version: 1.0.0
-date-released: 2023-10-31
+
+date-released: 2025-12-07
