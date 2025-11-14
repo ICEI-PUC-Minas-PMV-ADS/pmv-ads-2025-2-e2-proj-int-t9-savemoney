@@ -31,6 +31,7 @@ namespace savemoney.Models
         public TipoUsuario TipoUsuario { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+        public virtual ICollection<Budget> Budgets { get; set; } = new List<Budget>();
     }
 
     public enum Perfil

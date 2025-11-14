@@ -48,6 +48,15 @@ namespace savemoney.Models
                       .OnDelete(DeleteBehavior.SetNull);
             });
 
+            //Budget → Usuario
+            modelBuilder.Entity<Budget>(entity =>
+            {
+                entity.HasOne(b => b.Usuario)
+                      .WithMany(u => u.Budgets)
+                      .HasForeignKey(b => b.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
             // Configuração para Budget e BudgetCategory: Exclusão em cascata
             modelBuilder.Entity<Budget>()
                 .HasMany(b => b.Categories)
@@ -62,6 +71,7 @@ namespace savemoney.Models
                 .HasForeignKey(bc => bc.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict); // Impede a exclusão de Category se estiver em uso
 
+
             // Seed Data: Categorias predefinidas
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Alimentação", IsPredefined = true },
@@ -71,6 +81,7 @@ namespace savemoney.Models
                 new Category { Id = 5, Name = "Despesas Operacionais", IsPredefined = true }
             );
         }
+        public DbSet<savemoney.Models.Despesa> Despesa { get; set; } = default!;
 
     }
 }

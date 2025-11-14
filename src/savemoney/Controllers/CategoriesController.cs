@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// Controllers/CategoryController.cs
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
+using System.Security.Claims;
 
 namespace savemoney.Controllers
 {
@@ -18,139 +15,123 @@ namespace savemoney.Controllers
             _context = context;
         }
 
-        // GET: Categories
+        private int GetCurrentUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return int.TryParse(claim?.Value, out var id) ? id : 0;
+        }
+
+        // GET: /Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
+
+            var userCategories = await _context.Categories
+                .Where(c => c.UsuarioId == userId)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            return View(userCategories);
         }
 
-        // GET: Categories/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        // GET: Categories/Create
+        // GET: /Category/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Category/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsPredefined")] Category category)
+        public async Task<IActionResult> Create([Bind("Name")] Category category)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(category);
-        }
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
 
-        // GET: Categories/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return View(category);
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
-        }
+            category.UsuarioId = userId;
+            category.IsPredefined = false; // Força
 
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsPredefined")] Category category)
-        {
-            if (id != category.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(category);
-        }
-
-        // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
-            {
-                _context.Categories.Remove(category);
-            }
-
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"Categoria '{category.Name}' criada com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        // GET: /Category/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
+
+            if (id == null) return NotFound();
+
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
+
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+        // POST: /Category/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
+
+            if (id != category.Id) return NotFound();
+
+            var existing = await _context.Categories
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
+
+            if (existing == null) return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
+            existing.Name = category.Name;
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Categoria atualizada com sucesso!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: /Category/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
+
+            var category = await _context.Categories
+                .Include(c => c.BudgetCategories)
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
+
+            if (category == null) return NotFound();
+
+            if (category.BudgetCategories.Any())
+            {
+                TempData["Error"] = "Não é possível excluir: a categoria está em uso em um orçamento.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Categoria excluída com sucesso!";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

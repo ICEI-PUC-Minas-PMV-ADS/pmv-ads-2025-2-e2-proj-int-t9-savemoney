@@ -40,12 +40,13 @@ namespace savemoney
             // Inicio do código para injetar uma nova instancia pronta (NoticiasService)
             // Registra o HttpClient para que possa ser injetado no nosso serviço
             builder.Services.AddHttpClient();
-            // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
+            // Registra o nosso serviço. AddScoped é a configuração mais comum.
             builder.Services.AddScoped<NoticiasService>();
             builder.Services.AddScoped<ArtigosService>();
             // Registrar serviço e opcional hosted job (ex.: gera ocorrências diariamente)
             builder.Services.AddScoped<RecurrenceService>();
-
+            // Serviço para cálculo de gastos e validação de limite
+            builder.Services.AddScoped<BudgetService>();
 
             var app = builder.Build();
 

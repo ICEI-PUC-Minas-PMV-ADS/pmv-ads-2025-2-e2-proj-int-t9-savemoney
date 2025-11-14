@@ -1,89 +1,212 @@
 ﻿@model IEnumerable<savemoney.Models.Receita>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Receitas";
 }
 
-<h1>Index</h1>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f6f8fb;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Valor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Data)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BudgetCategory)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsRecurring)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Frequency)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Interval)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RecurrenceEndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RecurrenceOccurrences)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Valor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Data)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BudgetCategory.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsRecurring)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Frequency)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Interval)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RecurrenceEndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RecurrenceOccurrences)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .page-container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .top-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #e4e9f1;
+        padding-bottom: 10px;
+    }
+
+        .top-bar h2 {
+            margin: 0;
+            font-size: 26px;
+            color: #2d3e50;
+        }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #565e64;
+        }
+
+    .btn-tab {
+        background: none;
+        border: none;
+        color: #007bff;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+        .btn-tab:hover, .btn-tab.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .card {
+        background-color: #fff;
+        border: 1px solid #e0e6ef;
+        border-left: 5px solid #007bff;
+        border-radius: 10px;
+        padding: 18px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-bottom: 18px;
+        transition: transform 0.2s ease;
+    }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: #222;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 6px 0;
+            font-size: 15px;
+        }
+
+        .card strong {
+            color: #000;
+        }
+
+    .actions {
+        margin-top: 12px;
+    }
+
+        .actions a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 12px;
+            font-weight: 500;
+        }
+
+            .actions a:hover {
+                text-decoration: underline;
+            }
+
+    .no-data {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        margin-top: 30px;
+    }
+
+    /* Ícones simples com emojis */
+    .icon {
+        font-size: 15px;
+    }
+
+    .card h3 span {
+        background-color: #000;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-left: 8px;
+        text-transform: uppercase;
+    }
+
+</style>
+
+<div class="page-container">
+    <div class="top-bar">
+        <h2>Receitas</h2>
+        <a asp-action="Create" class="btn-tab btn"><span class="icon">➕</span> Cadastrar</a>
+        <button class="btn-tab"><span class="icon">🔍</span> Filtros</button>
+        <button class="btn-tab"><span class="icon">📜</span> Histórico</button>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="no-data">Nenhuma receita cadastrada.</p>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="card">
+                <h3>@item.Titulo</h3>
+                <p><strong>Valor:</strong> R$ @item.Valor.ToString("N2")</p>
+                <p><strong>Data:</strong> @item.Data.ToString("dd/MM/yyyy")</p>
+                @if (!string.IsNullOrEmpty(item.Descricao))
+                {
+                    <p><strong>Descrição:</strong> @item.Descricao</p>
+                }
+                <div class="card">
+                    <h3>
+                        @item.Titulo
+                        @if (item.IsRecurring)
+                        {
+                            <span style="
+                                            background-color: #000;
+                                            color: white;
+                                            font-size: 12px;
+                                            padding: 2px 8px;
+                                            border-radius: 10px;
+                                            margin-left: 8px;
+                                            font-weight: 600;">
+                                Recorrente
+                            </span>
+                        }
+                    </h3>
+
+                    <p><strong>Valor:</strong> R$ @item.Valor.ToString("N2")</p>
+                    <p><strong>Data:</strong> @item.Data.ToString("dd/MM/yyyy")</p>
+
+                    @if (item.IsRecurring)
+                    {
+                        <p><strong>Recorrência:</strong> @item.Frequency</p>
+                        <p><strong>Repetições:</strong> @item.RecurrenceOccurrences vezes</p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(item.Descricao))
+                    {
+                        <p><strong>Descrição:</strong> @item.Descricao</p>
+                    }
+                </div>
+                <div class="actions">
+                    <a asp-action="Edit" class="btn-tab btn" asp-route-id="@item.Id">Editar</a>
+                    <a asp-action="Delete" class="btn-tab btn" asp-route-id="@item.Id">Excluir</a>
+                    <a asp-action="Details" class="btn-tab btn" asp-route-id="@item.Id">Histórico</a>
+                </div>
+            </div>
+        }
+    }
+</div>

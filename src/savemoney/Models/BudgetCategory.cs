@@ -34,5 +34,14 @@ namespace savemoney.Models
 
 
         public virtual ICollection<Receita>? Receitas { get; set; }
+        public virtual ICollection<Despesa>? Despesas { get; set; }
+
+
+        private decimal CalculateCurrentSpent()
+        {
+            // Placeholder: Somar despesas associadas quando Expense for implementada
+            // Exemplo: return DbContext.Expenses.Where(e => e.BudgetCategoryId == Id).Sum(e => e.Amount);
+            return 0;
+        }
     }
 }

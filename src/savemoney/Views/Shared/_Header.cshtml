@@ -1,10 +1,10 @@
-@using System.Security.Claims
+﻿@using System.Security.Claims
 
 @{
     // Verifica se estamos na Landing Page para mudar os links
     bool isLandingPage = (ViewData["Title"] as string) == "Save Money - Gestão Financeira Premium";
 }
-
+<link rel="stylesheet" href="~/css/receitas.css" asp-append-version="true" />
 <header id="main-header" class="navbar">
     <div class="container navbar-content">
 
@@ -50,6 +50,7 @@
                             <li><a asp-controller="Receitas" asp-action="Index">Receitas</a></li>
                             <li><a asp-controller="MetasFinanceiras" asp-action="Index">Metas</a></li>
                             <li><a asp-controller="Budgets" asp-action="Index">Orçamento</a></li>
+                            <li><a asp-controller="Categories" asp-action="Index">Categorias</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
