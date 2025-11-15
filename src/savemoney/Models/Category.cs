@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,9 +19,10 @@ namespace savemoney.Models
 
         public int? UsuarioId { get; set; }
 
-        // ADICIONE ESTA LINHA
+        [BindNever]
         public virtual Usuario? Usuario { get; set; }
 
+        [BindNever]
         public virtual ICollection<BudgetCategory> BudgetCategories { get; set; } = new List<BudgetCategory>();
     }
 }

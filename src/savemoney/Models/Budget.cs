@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,8 +34,10 @@ namespace savemoney.Models
 
         // Relacionamentos
         [ForeignKey("UserId")]
-        public virtual Usuario Usuario { get; set; } = null!;
+        [BindNever]
+        public virtual Usuario? Usuario { get; set; }
 
+        [BindNever]
         public virtual ICollection<BudgetCategory> Categories { get; set; } = new List<BudgetCategory>();
 
         // VALIDAÇÃO PERSONALIZADA
