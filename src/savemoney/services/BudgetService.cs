@@ -1,6 +1,7 @@
 ﻿// Services/BudgetService.cs
 using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
+using System.Numerics;
 
 namespace savemoney.Services
 {
@@ -13,33 +14,29 @@ namespace savemoney.Services
             _context = context;
         }
 
-        /// <summary>
-        /// Calcula o total gasto em uma BudgetCategory (baseado em Despesas ou Receitas, conforme o modelo atual)
-        /// </summary>
-        /// <param name="budgetCategoryId">ID da BudgetCategory</param>
-        /// <returns>Total gasto (decimal)</returns>
-        public async Task<decimal> GetCurrentSpentAsync(int budgetCategoryId)
+        //<summary>
+       // Calcula o total gasto em uma BudgetCategory (baseado em Despesas ou Receitas, conforme o modelo atual)
+       //</summary>
+       // <param name="budgetCategoryId">ID da BudgetCategory</param>
+       //  <returns>Total gasto (decimal)</returns>
+       public async Task<decimal> GetCurrentSpentAsync(int budgetCategoryId)
         {
             // FUTURO: Quando Despesa for implementada
-            // return await _context.Despesas
-            //     .Where(d => d.BudgetCategoryId == budgetCategoryId)
-            //     .SumAsync(d => d.Valor);
+            var total =  await _context.Despesas
+               .Where(d => d.BudgetCategoryId == budgetCategoryId)
+               .SumAsync(r => (decimal?)r.Valor) ?? 0m;
 
-            // POR ENQUANTO: Usa Receita como placeholder (conforme seu modelo atual)
-            var total = await _context.Receitas
-                .Where(r => r.BudgetCategoryId == budgetCategoryId)
-                .SumAsync(r => (decimal?)r.Valor) ?? 0m;
-
-            return total;
+            return total;        
+            
         }
 
-        /// <summary>
-        /// Verifica se uma nova despesa pode ser adicionada sem estourar o limite
-        /// </summary>
-        /// <param name="budgetCategoryId">ID da categoria do orçamento</param>
-        /// <param name="amount">Valor da despesa a ser adicionada</param>
-        /// <returns>true se puder adicionar</returns>
-        public async Task<bool> CanAddExpenseAsync(int budgetCategoryId, decimal amount)
+           // <summary>
+            // Verifica se uma nova despesa pode ser adicionada sem estourar o limite
+           // </summary>
+       //  <param name="budgetCategoryId">ID da categoria do orçamento</param>
+       // <param name="amount">Valor da despesa a ser adicionada</param>
+       // <returns>true se puder adicionar</returns>
+       public async Task<bool> CanAddExpenseAsync(int budgetCategoryId, decimal amount)
         {
             if (amount <= 0) return false;
 

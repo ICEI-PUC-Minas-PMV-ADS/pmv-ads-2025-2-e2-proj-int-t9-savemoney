@@ -1,0 +1,79 @@
+﻿@model savemoney.Models.Receita
+
+<div class="modal fade" id="receitaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post">
+                @if (Model.Id != 0)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+
+                <div class="modal-header">
+                    <h5 class="modal-title">@(Model.Id == 0 ? "Nova Receita" : "Editar Receita")</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="Titulo" class="form-label"></label>
+                        <input asp-for="Titulo" class="form-control" />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Valor" class="form-label"></label>
+                        <input asp-for="Valor" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Valor" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DataInicio" class="form-label"></label>
+                        <input asp-for="DataInicio" class="form-control" type="date" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DataFim" class="form-label"></label>
+                        <input asp-for="DataFim" class="form-control" type="date" />
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="IsRecurring" class="form-check-input" />
+                        <label asp-for="IsRecurring" class="form-check-label"></label>
+                    </div>
+
+                    <div class="row" id="recurrenceOptions" style="display:@(Model.IsRecurring ? "flex" : "none");">
+                        <div class="col">
+                            <label asp-for="Recurrence" class="form-label"></label>
+                            <select asp-for="Recurrence" class="form-select">
+                                <option value="">Selecione...</option>
+                                <option value="Daily">Diária</option>
+                                <option value="Weekly">Semanal</option>
+                                <option value="Monthly">Mensal</option>
+                                <option value="Yearly">Anual</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label asp-for="RecurrenceCount" class="form-label"></label>
+                            <input asp-for="RecurrenceCount" class="form-control" type="number" min="1" max="365" />
+                        </div>
+                    </div>
+
+                    <div class="form-check mt-3">
+                        <input asp-for="Recebido" class="form-check-input" />
+                        <label asp-for="Recebido" class="form-check-label"></label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

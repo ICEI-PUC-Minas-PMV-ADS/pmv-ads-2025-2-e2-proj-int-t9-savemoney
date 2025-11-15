@@ -1,0 +1,30 @@
+﻿@model savemoney.Models.Despesa
+
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h5>@Model.Titulo</h5>
+        <p><strong>Valor:</strong> @Model.Valor.ToString("C")</p>
+        <p><strong>Data:</strong> @Model.DataInicio.ToShortDateString()</p>
+
+        @if (Model.IsRecurring)
+        {
+            <span class="badge bg-info">Recorrente: @Model.Recurrence</span>
+        }
+
+        @if (Model.Recebido)
+        {
+            <span class="badge bg-success">Recebido</span>
+        }
+
+        <hr />
+
+        <div class="d-flex justify-content-between">
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="get">
+                <button class="btn btn-sm btn-primary">Editar</button>
+            </form>
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Excluir esta receita?');">
+                <button class="btn btn-sm btn-danger">Excluir</button>
+            </form>
+        </div>
+    </div>
+</div>

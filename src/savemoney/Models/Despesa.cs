@@ -1,43 +1,49 @@
-﻿using System;
+﻿using savemoney.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace savemoney.Models
 {
-    public class Despesa : IRecurring
+    public class Despesa
     {
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Nome da despesa é obrigatório.")]
-        public string Titulo { get; set; } = null!;
-        [Required(ErrorMessage = "Valor da despesa é obrigatório.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Informe um valor maior que Zero (0)")]
-        public double Valor { get; set; }
+
+        [Required(ErrorMessage = "O nome da despesa é obrigatório.")]
+        [StringLength(50)]
+        public string Titulo { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "O valor é obrigatório")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
+        public decimal Valor { get; set; }
+
+        public string CurrencyType { get; set; } = "BRL";
+
         [DataType(DataType.Date)]
-        [Display(Name = "Data")]
-        public DateTime Data { get; set; }
-        [Display(Name = "Categoria")]
+        public DateTime DataInicio { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime DataFim { get; set; }
+
+        // CHAVE ESTRANGEIRA
         public int? BudgetCategoryId { get; set; }
-        [Display(Name = "Categoria")]
-        public virtual BudgetCategory? BudgetCategory { get; set; }
-        [Display(Name = "Descrição")]
-        public string? Descricao { get; set; }
-        // Campos de recorrência
 
-        [Display(Name = "É Recorrênte?")]
-        public bool IsRecurring { get; set; } = false;
+        // NAVEGAÇÃO
+        [ForeignKey("BudgetCategoryId")]
+        public BudgetCategory? BudgetCategory { get; set; }
 
-        [Display(Name = "frequência")]
-        public RecurrenceFrequency Frequency { get; set; } = RecurrenceFrequency.None;
-        public int Interval { get; set; } = 1;
+        public bool Recebido { get; set; }
+        public bool IsRecurring { get; set; }
+        public RecurrenceType Recurrence { get; set; }
+        public int? RecurrenceCount { get; set; }
 
-        [Display(Name = "Tempo de Recorrência")]
-        public DateTime? RecurrenceEndDate { get; set; }
-
-        [Display(Name = "Ocorrências de Recorrência")]
-        public int? RecurrenceOccurrences { get; set; }
-        [NotMapped]
-        public int GeneratedOccurrences { get; set; }
+        public enum RecurrenceType
+        {
+            Daily,
+            Weekly,
+            Monthly,
+            Yearly
+        }
     }
 }

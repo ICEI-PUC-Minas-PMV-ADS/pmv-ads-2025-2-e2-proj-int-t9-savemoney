@@ -4,156 +4,22 @@
     ViewData["Title"] = "Despesas";
 }
 
-<div class="header-container">
-    <h1>Despesas</h1>
-    <a asp-action="Create" class="btn">
-        <span class="icon">➕</span> Cadastrar
-    </a>
+<h2>Despesas</h2>
+
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#despesaModal">
+    + Nova Despesa
+</button>
+
+<hr />
+
+<div class="row">
+    @foreach (var despesa in Model)
+    {
+        <div class="col-md-4">
+            @await Html.PartialAsync("_DespesaCard", despesa)
+        </div>
+    }
 </div>
 
-@if (!Model.Any())
-{
-    <p class="empty">Nenhuma despesa cadastrada.</p>
-}
-else
-{
-    <div class="card-container">
-        @foreach (var item in Model)
-        {
-            <div class="card">
-                <h3>
-                    @item.Titulo
-                    @if (item.IsRecurring)
-                    {
-                        <span class="recorrente-badge">Recorrente</span>
-                    }
-                </h3>
-
-                <p><strong>Valor:</strong> R$ @item.Valor.ToString("N2")</p>
-                <p><strong>Data:</strong> @item.Data.ToString("dd/MM/yyyy")</p>
-
-                @if (item.BudgetCategory != null)
-                {
-                    <p><strong>Categoria:</strong> @item.BudgetCategory</p>
-                }
-
-                @if (!string.IsNullOrEmpty(item.Descricao))
-                {
-                    <p><strong>Descrição:</strong> @item.Descricao</p>
-                }
-
-                @if (item.IsRecurring)
-                {
-                    <p><strong>Frequência:</strong> @item.Frequency</p>
-
-                    @if (item.Interval > 0)
-                    {
-                        <p><strong>Intervalo:</strong> a cada @item.Interval dias</p>
-                    }
-
-                    @if (item.RecurrenceEndDate != null)
-                    {
-                        <p><strong>Fim da recorrência:</strong> @item.RecurrenceEndDate?.ToString("dd/MM/yyyy")</p>
-                    }
-
-                    @if (item.RecurrenceOccurrences > 0)
-                    {
-                        <p><strong>Repetições:</strong> @item.RecurrenceOccurrences vezes</p>
-                    }
-                }
-
-                <div class="actions">
-                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
-                </div>
-            </div>
-        }
-    </div>
-}
-
-<style>
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
-        text-decoration: none !important;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-
-        .btn:hover {
-            background-color: #0056b3;
-            transform: scale(1.03);
-        }
-
-    .card-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 16px;
-    }
-
-    .card {
-        background-color: #f8f9fa;
-        border: 1px solid #ddd;
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: 0.2s;
-    }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .card h3 {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-    .recorrente-badge {
-        background-color: #000;
-        color: #fff;
-        font-size: 12px;
-        padding: 2px 8px;
-        border-radius: 10px;
-        text-transform: uppercase;
-    }
-
-    .actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 12px;
-    }
-
-        .actions a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-            .actions a:hover {
-                text-decoration: underline;
-            }
-
-    .empty {
-        font-style: italic;
-        color: #777;
-    }
-</style>
+<!-- Modal de criação/edição -->
+@await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Despesa())
