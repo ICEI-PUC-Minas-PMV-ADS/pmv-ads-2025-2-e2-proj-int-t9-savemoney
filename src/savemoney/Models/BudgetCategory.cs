@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,9 +28,11 @@ namespace savemoney.Models
 
         // Propriedades de navegação
         [ForeignKey("BudgetId")]
+        [BindNever]
         public virtual Budget Budget { get; set; } = null!;
 
         [ForeignKey("CategoryId")]
+        [BindNever]
         public virtual Category Category { get; set; } = null!;
 
 
