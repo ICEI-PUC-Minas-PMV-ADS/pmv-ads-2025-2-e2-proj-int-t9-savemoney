@@ -13,13 +13,13 @@
 <hr />
 
 <div class="row">
-    @foreach (var despesa in Model)
+    @foreach (var receita in Model)
     {
         <div class="col-md-4">
-            @await Html.PartialAsync("_ReceitaCard", despesa)
+            @await Html.PartialAsync("_ReceitaCard", receita)
         </div>
     }
 </div>
 
 <!-- Modal de criação/edição -->
-@await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Despesa())
+@await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Receita())

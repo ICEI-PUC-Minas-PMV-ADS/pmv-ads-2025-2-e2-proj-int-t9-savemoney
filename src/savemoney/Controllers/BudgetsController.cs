@@ -224,14 +224,13 @@ namespace savemoney.Controllers
             return int.TryParse(claim?.Value, out var id) ? id : 0;
         }
 
-        private async Task<List<object>> GetAvailableCategoriesAsync(int userId)
+       private async Task<List<dynamic>> GetAvailableCategoriesAsync(int userId)
         {
-            return await _context.Categories
-                .Where(c => c.IsPredefined || c.UsuarioId == userId)
-                .OrderBy(c => c.Name)
-                .Select(c => new { id = c.Id, name = c.Name })
-                .Cast<object>()
-                .ToListAsync();
+                return await _context.Categories
+                    .Where(c => c.IsPredefined || c.UsuarioId == userId)
+                    .OrderBy(c => c.Name)
+                    .Select(c => new { id = c.Id, name = c.Name })
+                    .ToListAsync<dynamic>();
         }
     }
 }

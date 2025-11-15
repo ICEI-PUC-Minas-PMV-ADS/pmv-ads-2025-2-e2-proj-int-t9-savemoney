@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿using savemoney.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace savemoney.Models
 {
+    [Table("Receita")]
     public class Receita
     {
         [Key]

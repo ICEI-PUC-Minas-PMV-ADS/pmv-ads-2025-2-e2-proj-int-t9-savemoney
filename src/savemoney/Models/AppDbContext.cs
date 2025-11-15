@@ -62,19 +62,19 @@ namespace savemoney.Models
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Category → BudgetCategory (Restrict)
-            modelBuilder.Entity<Category>()
+           modelBuilder.Entity<Category>()
                 .HasMany(c => c.BudgetCategories)
                 .WithOne(bc => bc.Category)
                 .HasForeignKey(bc => bc.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Dentro do OnModelCreating
-            modelBuilder.Entity<BudgetCategory>()
-                .HasMany(bc => bc.Despesas) 
+            /*modelBuilder.Entity<BudgetCategory>()
+                .HasMany(bc => bc.Despesas)
                 .WithOne(d => d.BudgetCategory) 
                 // ← Certifique-se que Despesa tem essa propriedade!
                 .HasForeignKey(d => d.BudgetCategoryId) 
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);*/
 
             // Categorias padrão
             modelBuilder.Entity<Category>().HasData(

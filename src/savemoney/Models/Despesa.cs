@@ -1,12 +1,14 @@
 ﻿using savemoney.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace savemoney.Models
 {
+    [Table("Despesa")]
     public class Despesa
     {
+       
         [Key]
         public int Id { get; set; }
 

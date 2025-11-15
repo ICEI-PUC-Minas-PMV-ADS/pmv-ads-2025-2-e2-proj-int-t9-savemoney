@@ -34,9 +34,9 @@ namespace savemoney.Models
         [ForeignKey("CategoryId")]
         [BindNever]
         public virtual Category Category { get; set; } = null!;
-       
-         public virtual ICollection<Despesa>? Despesas { get; set; }
-         public ICollection<Despesa> Despesa { get; set; } = new List<Despesa>();
+
+        public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
+
 
         private decimal CalculateCurrentSpent()
         {
