@@ -85,6 +85,8 @@ namespace savemoney.Models
                         Email = "admin@savemoney.com",
                         Senha = "123456", // Lembrete: Placeholder! Em produção, use hashing!
                         Documento = "000.000.000-00",
+                        Perfil = 0,
+                        TipoUsuario = 0,
                     DataCadastro = DateTime.Now
                     }
                 );
