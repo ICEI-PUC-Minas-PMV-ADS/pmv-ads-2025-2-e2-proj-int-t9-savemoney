@@ -77,6 +77,17 @@ namespace savemoney.Models
                 .OnDelete(DeleteBehavior.Cascade);*/
 
             // Categorias padrão
+            modelBuilder.Entity<Usuario>().HasData(
+                new Usuario
+                    {
+                        Id = 1, 
+                        Nome = "Admin Savemoney",
+                        Email = "admin@savemoney.com",
+                        Senha = "123456", // Lembrete: Placeholder! Em produção, use hashing!
+                        Documento = "000.000.000-00",
+                    DataCadastro = DateTime.Now
+                    }
+                );
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Alimentação", IsPredefined = true },
                 new Category { Id = 2, Name = "Lazer", IsPredefined = true },
