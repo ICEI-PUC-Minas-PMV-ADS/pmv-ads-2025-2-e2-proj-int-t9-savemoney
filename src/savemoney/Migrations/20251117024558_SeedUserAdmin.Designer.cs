@@ -12,8 +12,8 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251028035537_SincronizandoTabelasPosMerge")]
-    partial class SincronizandoTabelasPosMerge
+    [Migration("20251117024558_SeedUserAdmin")]
+    partial class SeedUserAdmin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,7 +127,12 @@ namespace savemoney.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Category");
 
@@ -206,6 +211,54 @@ namespace savemoney.Migrations
                     b.ToTable("ConversoresEnergia");
                 });
 
+            modelBuilder.Entity("savemoney.Models.Despesa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BudgetCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CurrencyType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Recebido")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Recurrence")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecurrenceCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BudgetCategoryId");
+
+                    b.ToTable("Despesa");
+                });
+
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
                 {
                     b.Property<int>("Id")
@@ -250,25 +303,39 @@ namespace savemoney.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Categoria")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Data")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Titulo")
+                    b.Property<string>("CurrencyType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Valor")
-                        .HasColumnType("float");
+                    b.Property<DateTime>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Recebido")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Recurrence")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecurrenceCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Receitas");
+                    b.ToTable("Receita");
                 });
 
             modelBuilder.Entity("savemoney.Models.Usuario", b =>
@@ -307,6 +374,19 @@ namespace savemoney.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DataCadastro = new DateTime(2025, 11, 16, 23, 45, 57, 651, DateTimeKind.Local).AddTicks(8857),
+                            Documento = "000.000.000-00",
+                            Email = "admin@savemoney.com",
+                            Nome = "Admin Savemoney",
+                            Perfil = 0,
+                            Senha = "123456",
+                            TipoUsuario = 0
+                        });
                 });
 
             modelBuilder.Entity("savemoney.Models.Aporte", b =>
@@ -323,7 +403,7 @@ namespace savemoney.Migrations
             modelBuilder.Entity("savemoney.Models.Budget", b =>
                 {
                     b.HasOne("savemoney.Models.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("Budgets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -350,6 +430,25 @@ namespace savemoney.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("savemoney.Models.Category", b =>
+                {
+                    b.HasOne("savemoney.Models.Usuario", "Usuario")
+                        .WithMany("Categories")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("savemoney.Models.Despesa", b =>
+                {
+                    b.HasOne("savemoney.Models.BudgetCategory", "BudgetCategory")
+                        .WithMany("Despesas")
+                        .HasForeignKey("BudgetCategoryId");
+
+                    b.Navigation("BudgetCategory");
+                });
+
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
                 {
                     b.HasOne("savemoney.Models.Usuario", "Usuario")
@@ -366,6 +465,11 @@ namespace savemoney.Migrations
                     b.Navigation("Categories");
                 });
 
+            modelBuilder.Entity("savemoney.Models.BudgetCategory", b =>
+                {
+                    b.Navigation("Despesas");
+                });
+
             modelBuilder.Entity("savemoney.Models.Category", b =>
                 {
                     b.Navigation("BudgetCategories");
@@ -374,6 +478,13 @@ namespace savemoney.Migrations
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
                 {
                     b.Navigation("Aportes");
+                });
+
+            modelBuilder.Entity("savemoney.Models.Usuario", b =>
+                {
+                    b.Navigation("Budgets");
+
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }
