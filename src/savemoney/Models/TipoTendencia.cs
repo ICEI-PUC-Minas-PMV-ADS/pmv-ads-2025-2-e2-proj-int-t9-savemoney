@@ -5,7 +5,7 @@ namespace savemoney.Models
     /// <summary>
     /// Enum que representa os tipos possíveis de tendência financeira
     /// Usado para classificar o comportamento do saldo ao longo do tempo
-    /// </summary> 
+    /// </summary>
     public enum TipoTendencia
     {
         [Display(Name = "Crescente")]
@@ -18,6 +18,6 @@ namespace savemoney.Models
         Estavel = 3,
 
         [Display(Name = "Indefinida")]
-        Indefinida = 4, // Quando não há dados suficientes para determinar a tendência
+        Indefinida = 4 // Quando não há dados suficientes
     }
 }

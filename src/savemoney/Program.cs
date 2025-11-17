@@ -47,6 +47,8 @@ namespace savemoney
             builder.Services.AddScoped<RecurrenceService>();
             // Serviço para cálculo de gastos e validação de limite
             builder.Services.AddScoped<BudgetService>();
+            builder.Services.AddScoped<savemoney.Services.Interfaces.ITendenciaFinanceiraService,
+                          savemoney.Services.TendenciaFinanceiraService>();
 
             var app = builder.Build();
 

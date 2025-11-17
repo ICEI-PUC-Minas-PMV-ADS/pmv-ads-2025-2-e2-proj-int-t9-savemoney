@@ -11,10 +11,10 @@ namespace savemoney.Models
         // DbSets existentes
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ConversorEnergia> ConversoresEnergia { get; set; }
-        public DbSet<Receita> Receitas { get; set; }
+        public DbSet<Receita> Receitas { get; set; } = default!;
 
         // Correto: apenas UM DbSet para Despesa
-        public DbSet<Despesa> Despesas { get; set; }
+        public DbSet<Despesa> Despesas { get; set; } = default!;
 
         // Novos DbSets para Metas Financeiras
         public DbSet<MetaFinanceira> MetasFinanceiras { get; set; }

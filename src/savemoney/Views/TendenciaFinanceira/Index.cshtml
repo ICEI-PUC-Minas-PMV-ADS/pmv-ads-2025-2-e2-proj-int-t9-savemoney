@@ -1,6 +1,142 @@
-﻿namespace savemoney.Views.TendenciaFinanceira
-{
-    public class Index
-    {
-    }
+﻿@{
+    ViewData["Title"] = "Análise de Tendências";
+    var usuario = User.Identity?.Name ?? "Usuário";
+}
+
+<!-- Painel Visual 8 - Header -->
+<div class="container-fluid bg-light border-bottom py-3 mb-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 d-flex align-items-center">
+                <!-- Avatar -->
+                <div class="me-3">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                         style="width: 50px; height: 50px;">
+                        <i class="bi bi-person-fill fs-4"></i>
+                    </div>
+                </div>
+                <!-- Saudação -->
+                <div>
+                    <h5 class="mb-0">Olá, @usuario</h5>
+                    <small class="text-muted">Painel Visual 8</small>
+                </div>
+            </div>
+            <div class="col-md-6 text-end">
+                <span class="badge bg-info text-dark me-2">INFO</span>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                    Personalizar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Título da Seção -->
+            <h3 class="mb-4">📊 Análise de Tendências Financeiras</h3>
+
+            <!-- Card de Instruções -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        Como funciona?
+                    </h5>
+                    <p class="card-text">
+                        Esta ferramenta analisa suas receitas e despesas ao longo do tempo, identificando padrões de crescimento,
+                        redução ou estabilidade em suas finanças. Selecione o período desejado e clique em "Gerar Análise".
+                    </p>
+                    <ul class="mb-0">
+                        <li>✅ <strong>Período mínimo recomendado:</strong> 3 meses para análise confiável</li>
+                        <li>✅ <strong>Período máximo:</strong> 12 meses</li>
+                        <li>✅ <strong>Dados analisados:</strong> Receitas, Despesas e Saldo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Formulário de Seleção -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="GerarAnalise" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row g-3 align-items-end">
+                            <!-- Seleção de Período -->
+                            <div class="col-md-6">
+                                <label for="meses" class="form-label">
+                                    <i class="bi bi-calendar3"></i>
+                                    Período de Análise
+                                </label>
+                                <select id="meses" name="meses" class="form-select" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="1">Último mês</option>
+                                    <option value="3" selected>Últimos 3 meses</option>
+                                    <option value="6">Últimos 6 meses</option>
+                                    <option value="9">Últimos 9 meses</option>
+                                    <option value="12">Últimos 12 meses</option>
+                                </select>
+                                <div class="form-text">
+                                    Quanto maior o período, mais precisa é a análise.
+                                </div>
+                            </div>
+
+                            <!-- Botão de Ação -->
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                    Gerar Análise
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Exibição de Erros -->
+                        @if (ViewData.ModelState.ErrorCount > 0)
+                        {
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+                            </div>
+                        }
+
+                        @if (TempData["Erro"] != null)
+                        {
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                @TempData["Erro"]
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+
+            <!-- Card de Dicas -->
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="card-title text-info">
+                        <i class="bi bi-lightbulb"></i> Dicas
+                    </h6>
+                    <ul class="mb-0 small">
+                        <li>📌 Registre suas receitas e despesas regularmente para análises mais precisas</li>
+                        <li>📌 A análise identifica automaticamente meses com gastos atípicos (outliers)</li>
+                        <li>📌 Use esta ferramenta mensalmente para acompanhar sua evolução financeira</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validação adicional no cliente
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const meses = document.getElementById('meses').value;
+            if (!meses || meses < 1 || meses > 12) {
+                e.preventDefault();
+                alert('Por favor, selecione um período válido.');
+            }
+        });
+    </script>
 }
