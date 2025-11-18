@@ -1,0 +1,438 @@
+﻿/* TendenciaFinanceira-Resultado.css */
+/* Estilos para a página de Resultado com Glassmorphism */
+
+:root {
+    --glass-bg: rgba(27, 29, 41, 0.7);
+    --glass-border: rgba(59, 130, 246, 0.2);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Header do Resultado */
+.resultado-title {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* Banner Principal com Glassmorphism */
+.summary-banner {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease;
+}
+
+    .summary-banner:hover {
+        transform: translateY(-2px);
+    }
+
+    .summary-banner h3 {
+        color: var(--text-primary);
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.summary-stat h5 {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.summary-stat p {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.summary-stat small {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Ícones de Tendência */
+.icon-success {
+    color: #10b981;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.icon-danger {
+    color: #ef4444;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.icon-warning {
+    color: #f59e0b;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+/* Cards de Métricas */
+.metric-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--glass-shadow);
+}
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+    }
+
+.metric-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.metric-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value-success {
+    color: #10b981;
+}
+
+.metric-value-danger {
+    color: #ef4444;
+}
+
+.metric-value-primary {
+    color: var(--accent-primary);
+}
+
+.metric-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+/* Glass Card Genérico */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease;
+}
+
+    .glass-card:hover {
+        transform: translateY(-2px);
+    }
+
+.card-border-success {
+    border-left: 4px solid #10b981;
+}
+
+.card-border-danger {
+    border-left: 4px solid #ef4444;
+}
+
+/* Títulos dos Cards */
+.grafico-title,
+.alertas-title,
+.tabela-title {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.card-title-success {
+    color: #10b981;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.card-title-danger {
+    color: #ef4444;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.card-mes-value {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Canvas do Gráfico */
+#graficoTendencia {
+    width: 100% !important;
+    height: 400px !important;
+    border-radius: 8px;
+}
+
+/* Alertas Customizados */
+.alert-custom {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: var(--accent-primary);
+}
+
+/* Tabela Glass */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+.table-glass {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .table-glass thead {
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+        .table-glass thead th {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+    .table-glass tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+        .table-glass tbody tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+    .table-glass tbody td {
+        color: var(--text-secondary);
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+.td-mes {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.td-receita {
+    color: #10b981;
+}
+
+.td-despesa {
+    color: #ef4444;
+}
+
+.td-saldo-positivo {
+    color: #10b981;
+}
+
+.td-saldo-negativo {
+    color: #ef4444;
+}
+
+.row-outlier {
+    background: rgba(245, 158, 11, 0.05);
+}
+
+    .row-outlier td {
+        border-left: 3px solid #f59e0b;
+    }
+
+/* Variações */
+.variacao-positiva {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.variacao-negativa {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.variacao-neutra {
+    color: var(--text-secondary);
+}
+
+/* Badges */
+.badge-custom {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Animações */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in-up 0.6s ease-out;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .resultado-title {
+        font-size: 1.5rem;
+    }
+
+    .summary-banner {
+        padding: 1.5rem;
+    }
+
+        .summary-banner h3 {
+            font-size: 1.25rem;
+        }
+
+    .summary-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .summary-stat p {
+        font-size: 1.25rem;
+    }
+
+    .metric-card {
+        padding: 1.25rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+    }
+
+    .glass-card {
+        padding: 1.5rem;
+    }
+
+    #graficoTendencia {
+        height: 300px !important;
+    }
+
+    .table-glass {
+        font-size: 0.875rem;
+    }
+
+        .table-glass thead th,
+        .table-glass tbody td {
+            padding: 0.75rem 0.5rem;
+        }
+
+    .card-mes-value {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-stat p {
+        font-size: 1.125rem;
+    }
+
+    .metric-icon {
+        font-size: 2rem;
+    }
+
+    .metric-value {
+        font-size: 1.25rem;
+    }
+}

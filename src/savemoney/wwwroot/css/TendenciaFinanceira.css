@@ -1,526 +1,263 @@
-﻿// TendenciaFinanceira.js - Sistema de Análise de Tendências Financeiras
-// Save Money - ASP.NET Core MVC (.NET 8)
-// Versão: Compatível com SELECT de meses
+﻿/* TendenciaFinanceira.css - Estilos compartilhados */
+/* Glassmorphism e estilos comuns para Index e Resultado */
 
-// ============================================
-// 1. INICIALIZAÇÃO E DETECÇÃO DE PÁGINA
-// ============================================
+:root {
+    --glass-bg: rgba(27, 29, 41, 0.7);
+    --glass-border: rgba(59, 130, 246, 0.2);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('📊 Tendência Financeira JS carregado');
-    
-    // Detectar qual página está ativa
-    const isIndexPage = document.getElementById('meses') !== null;
-    const isResultadoPage = document.getElementById('graficoTendencia') !== null;
-    
-    if (isIndexPage) {
-        console.log('✅ Página Index detectada');
-        inicializarFormulario();
+/* Container Principal */
+.tendencia-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Títulos */
+.tendencia-title {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.tendencia-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+/* Botão Principal */
+.btn-tendencia {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-hover));
+    border: none;
+    color: var(--btn-primary-text);
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .btn-tendencia:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
     }
-    
-    if (isResultadoPage) {
-        console.log('✅ Página Resultado detectada');
-        inicializarGrafico();
-        inicializarAnimacoes();
+
+    .btn-tendencia:active {
+        transform: translateY(0);
     }
-});
 
-// ============================================
-// 2. FORMULÁRIO - VALIDAÇÕES E INTERATIVIDADE
-// ============================================
+    .btn-tendencia:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
 
-function inicializarFormulario() {
-    const form = document.querySelector('form[action*="GerarAnalise"]');
-    const btnGerar = document.querySelector('.btn-tendencia');
-    const selectMeses = document.getElementById('meses');
-    if (!form || !selectMeses)
-
-{
-    console .error('❌ Formulário ou select de meses não encontrado');
-    return;
+/* Glass Card Base */
+.glass-card-base {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-// Adicionar feedback visual no select
-selectMeses.addEventListener('change', function() {
-        this.classList.remove('is-invalid');
-        
-        if (this.value) {
-            this.classList.add('is-valid');
-            mostrarInfoPeriodo(parseInt(this.value));
-        } else {
-            this.classList.remove('is-valid');
-            esconderInfoPeriodo();
+    .glass-card-base:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+    }
+
+/* Form Glass */
+.form-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--glass-shadow);
+}
+
+    .form-glass .form-label {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .form-glass .form-select,
+    .form-glass .form-control {
+        background: rgba(16, 17, 26, 0.6);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-glass .form-select:focus,
+        .form-glass .form-control:focus {
+            background: rgba(16, 17, 26, 0.8);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.15);
+            outline: none;
         }
-    });
 
-// Submissão do formulário
-form.addEventListener('submit', function(e) {
-        if (!validarFormulario()) {
-            e.preventDefault();
-            return false;
+        .form-glass .form-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
         }
-        
-        // Mostrar loading no botão
-        if (btnGerar) {
-            btnGerar.disabled = true;
-            btnGerar.innerHTML = '<i class="bi bi-hourglass-split me-2"></i> Analisando...';
+
+/* Validação */
+.is-valid {
+    border-color: #10b981 !important;
+}
+
+.is-invalid {
+    border-color: #ef4444 !important;
+}
+
+.form-select.is-valid:focus,
+.form-control.is-valid:focus {
+    box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.15);
+}
+
+.form-select.is-invalid:focus,
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 0.25rem rgba(239, 68, 68, 0.15);
+}
+
+/* Alertas Customizados */
+.alert-custom {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: fade-in-up 0.3s ease-out;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: var(--accent-primary);
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+/* Ícones nos Alertas */
+.alert-custom i {
+    margin-right: 0.5rem;
+    font-size: 1.125rem;
+}
+
+/* Info Cards */
+.info-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--glass-shadow);
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+    .info-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .info-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-card li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+        .info-card li:last-child {
+            margin-bottom: 0;
         }
-    });
 
-console.log('✅ Formulário inicializado com validações');
-}
-
-function validarFormulario() {
-    const selectMeses = document.getElementById('meses');
-    // Limpar validações anteriores selectMeses.classList.remove('is-invalid', 'is-valid');
-    // Validar se um período foi selecionado if (!selectMeses.value || selectMeses.value === '')
-
-{
-    selectMeses .classList.add('is-invalid');
-    mostrarErro('Por favor, selecione um período de análise');
-    selectMeses .focus();
-    return false;
-}
-
-const meses = parseInt(selectMeses.value);
-
-// Validar valor mínimo e máximo
-if (meses < 1 || meses > 12) {
-    selectMeses .classList.add('is-invalid');
-    mostrarErro('O período deve estar entre 1 e 12 meses');
-    return false;
-}
-
-selectMeses.classList.add('is-valid');
-console.log('✅ Formulário válido - Período:', meses, 'meses');
-return true;
-}
-
-function mostrarErro(mensagem) {
-    // Verificar se já existe um alerta de erro let alertErro = document.querySelector('.alert-erro-validacao');
-    if (!alertErro)
-
-{
-    // Criar novo alerta alertErro = document.createElement('div');
-    alertErro .className = 'alert-custom alert-danger mt-3 alert-erro-validacao';
-    alertErro .innerHTML = ` <i class="bi bi-exclamation-triangle me-2"></i> <span>$
-
-{
-    mensagem
-}
-
-</span >
-`;
-
-// Inserir após o formulário
-const form = document.querySelector('form[action*="GerarAnalise"]');
-const formParent = form.parentElement;
-formParent.appendChild(alertErro);
-}
-
-else {
-    // Atualizar mensagem existente alertErro.querySelector('span').textContent = mensagem;
-}
-
-// Adicionar animação shake
-alertErro.classList.add('animate-shake');
-setTimeout(() => {
-        alertErro.classList.remove('animate-shake');
-    }, 500);
-}
-
-function mostrarInfoPeriodo(meses) {
-    // Remover info anterior se existir esconderInfoPeriodo();
-    // Criar mensagem informativa const infoDiv = document.createElement('div');
-    infoDiv .className = 'alert-custom alert-info mt-3 alert-info-periodo';
-    infoDiv .style.animation = 'fade-in-up 0.3s ease-out';
-    let icone = '📊';
-    let texto = '';
-    if (meses === 1)
-
-{
-    icone = '🗓️';
-    texto = 'Análise de <strong>1 mês</strong> - Ideal para verificar mudanças recentes';
-}
-
-else if (meses <= 3) {
-    icone = '📅';
-    texto = `Análise de <strong>$
-
-{
-    meses
-}
-
-meses</strong > - Período recomendado para identificar tendências`;
-}
-
-else if (meses <= 6) {
-    icone = '📊';
-    texto = `Análise de <strong>$
-
-{
-    meses
-}
-
-meses</strong > - Ótimo para análises de médio prazo`;
-}
-
-else {
-    icone = '📈';
-    texto = `Análise de <strong>$
-
-{
-    meses
-}
-
-meses</strong > - Ideal para identificar padrões anuais`;
-}
-
-infoDiv.innerHTML = `
-<i class="bi bi-info-circle me-2" > </i >
-<span > $ {
-    icone
-}
-
-$ {
-    texto
-}
-
-</span >
-`;
-
-// Inserir após o formulário
-const form = document.querySelector('form[action*="GerarAnalise"]');
-const formParent = form.parentElement;
-formParent.appendChild(infoDiv);
-}
-
-function esconderInfoPeriodo() {
-    const infoExistente = document.querySelector('.alert-info-periodo');
-    if (infoExistente)
-
-{
-    infoExistente .remove();
-}
-
-const erroExistente = document.querySelector('.alert-erro-validacao');
-if (erroExistente) {
-    erroExistente .remove();
-}
-
-}
-
-// ============================================
-// 3. GRÁFICO CHART.JS - PÁGINA RESULTADO
-// ============================================
-
-let chartInstance = null;
-
-function inicializarGrafico() {
-    const canvas = document.getElementById('graficoTendencia');
-    if (!canvas)
-
-{
-    console .error('❌ Canvas do gráfico não encontrado');
-    return;
-}
-
-// Buscar dados do gráfico (passados via data attributes)
-const dadosJson = canvas.getAttribute('data-grafico');
-
-if (!dadosJson) {
-    console .error('❌ Dados do gráfico não encontrados');
-    return;
-}
-
-try {
-    const dados = JSON.parse(dadosJson);
-    console .log('📊 Dados do gráfico:', dados);
-    criarGrafico(canvas, dados);
-}
-
-catch (error) {
-    console .error('❌ Erro ao parsear dados do gráfico:', error);
-}
-
-}
-
-function criarGrafico(canvas, dados) {
-    const ctx = canvas.getContext('2d');
-    // Destruir gráfico anterior se existir if (chartInstance)
-
-{
-    chartInstance .destroy();
-}
-
-// Configuração do gráfico
-chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: dados.labels,
-            datasets: [
-                {
-                    label: 'Receitas',
-                    data: dados.receitas,
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 6,
-                    pointHoverRadius: 9,
-                    pointBackgroundColor: '#10b981',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointHoverBorderWidth: 3
-                },
-                {
-                    label: 'Despesas',
-                    data: dados.despesas,
-                    borderColor: '#ef4444',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 6,
-                    pointHoverRadius: 9,
-                    pointBackgroundColor: '#ef4444',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointHoverBorderWidth: 3
-                },
-                {
-                    label: 'Saldo',
-                    data: dados.saldos,
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 6,
-                    pointHoverRadius: 9,
-                    pointBackgroundColor: '#3b82f6',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointHoverBorderWidth: 3,
-                    borderDash: [5, 5]
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        color: '#f5f5ff',
-                        font: {
-                            family: 'Inter',
-                            size: 13,
-                            weight: '600'
-                        },
-                        padding: 20,
-                        usePointStyle: true,
-                        pointStyle: 'circle'
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(27, 29, 41, 0.95)',
-                    titleColor: '#f5f5ff',
-                    bodyColor: '#aaaaaa',
-                    borderColor: 'rgba(59, 130, 246, 0.3)',
-                    borderWidth: 1,
-                    padding: 15,
-                    displayColors: true,
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 13
-                    },
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            label += formatarMoeda(context.parsed.y);
-                            return label;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        color: '#aaaaaa',
-                        font: {
-                            family: 'Inter',
-                            size: 12
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        color: '#aaaaaa',
-                        font: {
-                            family: 'Inter',
-                            size: 12
-                        },
-                        callback: function(value) {
-                            return formatarMoedaCurta(value);
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutQuart'
-            }
+        .info-card li i {
+            color: var(--accent-primary);
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            flex-shrink: 0;
         }
-    });
 
-console.log('✅ Gráfico Chart.js criado com sucesso');
+/* Animações */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-// ============================================
-// 4. ANIMAÇÕES E INTERATIVIDADE
-// ============================================
+@keyframes fade-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
 
-function inicializarAnimacoes() {
-    // Animar cards ao carregar const cards = document.querySelectorAll('.metric-card, .glass-card');
-    cards .forEach((card, index) => {
-        setTimeout(() => {
-            card.classList.add('animate-fade-in');
-        }, index * 100);
-    });
-    // Animar números (counter animation) animarNumeros();
-    // Adicionar efeitos hover nos cards adicionarEfeitosHover();
-    // Animar badges de tendência animarBadges();
-    console .log('✅ Animações inicializadas');
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-function animarNumeros() {
-    const numeros = document.querySelectorAll('.metric-value, .summary-stat p');
-    numeros .forEach(elemento => {
-        const textoOriginal = elemento.textContent;
-        const valorNumerico = parseFloat(textoOriginal.replace(/[^0-9,-]/g, '').replace(',', '.'));
-        
-        if (isNaN(valorNumerico)) return;
-        
-        animarContador(elemento, 0, valorNumerico, 1200, textoOriginal);
-    });
+@keyframes fade-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-function animarContador(elemento, inicio, fim, duracao, formatoOriginal) {
-    const incremento = (fim - inicio) / (duracao / 16);
-    let atual = inicio;
-    const timer = setInterval(() => {
-        atual += incremento;
-        
-        if ((incremento > 0 && atual >= fim) || (incremento < 0 && atual <= fim)) {
-            atual = fim;
-            clearInterval(timer);
-        }
-        
-        // Manter formato original
-        if (formatoOriginal.includes('R$')) {
-            elemento.textContent = formatarMoeda(atual);
-        } else if (formatoOriginal.includes('%')) {
-            elemento.textContent = atual.toFixed(1) + '%';
-        } else {
-            elemento.textContent = Math.round(atual).toString();
-        }
-    }, 16);
-}
-
-function adicionarEfeitosHover() {
-    const cards = document.querySelectorAll('.metric-card, .glass-card');
-    cards .forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-}
-
-function animarBadges() {
-    const badges = document.querySelectorAll('.badge-custom');
-    badges .forEach((badge, index) => {
-        setTimeout(() => {
-            badge.style.animation = 'pulse 0.5s ease-out';
-        }, 500 + (index * 100));
-    });
-}
-
-// ============================================
-// 5. UTILITÁRIOS - FORMATAÇÃO
-// ============================================
-
-function formatarMoeda(valor) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(valor);
-}
-
-function formatarMoedaCurta(valor) {
-    if (Math.abs(valor) >= 1000000)
-
-{
-    return 'R$ ' + (valor / 1000000).toFixed(1) + 'M';
-}
-
-else if (Math.abs(valor) >= 1000) {
-    return 'R$ ' + (valor / 1000).toFixed(1) + 'K';
-}
-
-return 'R$ ' + valor.toFixed(0);
-}
-
-// ============================================
-// 6. ANIMAÇÕES CSS ADICIONAIS
-// ============================================
-
-// Adicionar estilos de animação dinamicamente se não existirem
-if (!document.getElementById('tendencia-animations')) {
-    const style = document.createElement('style');
-    style .id = 'tendencia-animations';
-    style .textContent = ` @keyframes pulse
-
-{
-    0%, 100%
-
-{
-    transform: scale(1);
-}
-
-50% {
-    transform: scale(1.05);
-}
-
-}
-
-@keyframes animate-shake {
+@keyframes shake {
     0%, 100% {
         transform: translateX(0);
     }
@@ -535,29 +272,77 @@ if (!document.getElementById('tendencia-animations')) {
 }
 
 .animate-shake {
-    animation: animate-shake 0.5s ease-in-out;
+    animation: shake 0.5s ease-in-out;
 }
 
-.is-valid {
-    border-color: #10b981 !important;
+.animate-fade-in {
+    animation: fade-in-up 0.6s ease-out;
 }
 
-.is-invalid {
-    border-color: #ef4444 !important;
+/* Acessibilidade - Respeitar preferências de movimento */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .glass-card-base:hover,
+    .info-card:hover,
+    .btn-tendencia:hover {
+        transform: none;
+    }
 }
 
-`;
-document.head.appendChild(style);
+/* Responsividade */
+@media (max-width: 768px) {
+    .tendencia-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .tendencia-title {
+        font-size: 2rem;
+    }
+
+    .tendencia-subtitle {
+        font-size: 1rem;
+    }
+
+    .form-glass,
+    .glass-card-base,
+    .info-card {
+        padding: 1.5rem;
+    }
+
+    .btn-tendencia {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9375rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .alert-custom {
+        padding: 0.875rem 1rem;
+        font-size: 0.9375rem;
+    }
 }
 
-// ============================================
-// 7. EXPORT PARA DEBUGGING
-// ============================================
+@media (max-width: 480px) {
+    .tendencia-title {
+        font-size: 1.75rem;
+    }
 
-window.TendenciaFinanceira = {
-    validarFormulario, inicializarGrafico, chartInstance: () => chartInstance
+    .tendencia-subtitle {
+        font-size: 0.9375rem;
+    }
+
+    .form-glass,
+    .glass-card-base,
+    .info-card {
+        padding: 1.25rem;
+    }
+
+    .btn-tendencia {
+        padding: 0.75rem 1.25rem;
+    }
 }
-
-;
-
-console.log('✅ Módulo TendenciaFinanceira carregado e pronto');

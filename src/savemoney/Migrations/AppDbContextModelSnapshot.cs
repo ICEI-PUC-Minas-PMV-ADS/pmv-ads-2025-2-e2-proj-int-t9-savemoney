@@ -376,7 +376,7 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2025, 11, 17, 1, 29, 49, 375, DateTimeKind.Local).AddTicks(3241),
+                            DataCadastro = new DateTime(2025, 11, 18, 13, 59, 23, 359, DateTimeKind.Local).AddTicks(7713),
                             Documento = "000.000.000-00",
                             Email = "admin@savemoney.com",
                             Nome = "Admin Savemoney",
