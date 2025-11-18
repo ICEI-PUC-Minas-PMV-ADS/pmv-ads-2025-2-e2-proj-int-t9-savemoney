@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using savemoney.Data;
 
 namespace savemoney.Models
 {
@@ -11,10 +12,10 @@ namespace savemoney.Models
         // DbSets existentes
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ConversorEnergia> ConversoresEnergia { get; set; }
-        public DbSet<Receita> Receitas { get; set; }
+        public DbSet<Receita> Receitas { get; set; } = default!;
 
         // Correto: apenas UM DbSet para Despesa
-        public DbSet<Despesa> Despesas { get; set; }
+        public DbSet<Despesa> Despesas { get; set; } = default!;
 
         // Novos DbSets para Metas Financeiras
         public DbSet<MetaFinanceira> MetasFinanceiras { get; set; }
@@ -77,6 +78,19 @@ namespace savemoney.Models
                 .OnDelete(DeleteBehavior.Cascade);*/
 
             // Categorias padrão
+            modelBuilder.Entity<Usuario>().HasData(
+                new Usuario
+                    {
+                        Id = 1, 
+                        Nome = "Admin Savemoney",
+                        Email = "admin@savemoney.com",
+                        Senha = "123456", // Lembrete: Placeholder! Em produção, use hashing!
+                        Documento = "000.000.000-00",
+                        Perfil = 0,
+                        TipoUsuario = 0,
+                    DataCadastro = DateTime.Now
+                    }
+                );
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Alimentação", IsPredefined = true },
                 new Category { Id = 2, Name = "Lazer", IsPredefined = true },
@@ -84,6 +98,7 @@ namespace savemoney.Models
                 new Category { Id = 4, Name = "Moradia", IsPredefined = true },
                 new Category { Id = 5, Name = "Despesas Operacionais", IsPredefined = true }
             );
+            //modelBuilder.SeedUserFinancialData();
         }
     }
 }

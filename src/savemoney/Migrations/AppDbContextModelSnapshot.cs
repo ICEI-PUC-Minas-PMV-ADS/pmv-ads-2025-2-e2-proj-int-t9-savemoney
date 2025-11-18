@@ -371,6 +371,19 @@ namespace savemoney.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DataCadastro = new DateTime(2025, 11, 17, 1, 29, 49, 375, DateTimeKind.Local).AddTicks(3241),
+                            Documento = "000.000.000-00",
+                            Email = "admin@savemoney.com",
+                            Nome = "Admin Savemoney",
+                            Perfil = 0,
+                            Senha = "123456",
+                            TipoUsuario = 0
+                        });
                 });
 
             modelBuilder.Entity("savemoney.Models.Aporte", b =>
