@@ -29,10 +29,10 @@ namespace savemoney.Models
         [Display(Name = "Data Fim")]
         public DateTime DataFim { get; set; }
 
-        [Display(Name = "Recebido?")]
+        [Display(Name = "Recebido")]
         public bool Recebido { get; set; }
 
-        [Display(Name = "Recorrente?")]
+        [Display(Name = "É Recorrente?")]
         public bool IsRecurring { get; set; }
 
         [Display(Name = "Tipo de Recorrência")]
@@ -45,7 +45,7 @@ namespace savemoney.Models
             Yearly
         }
 
-        [Display(Name = "Número de Repetições")]
+        [Display(Name = "Quantidade de Repetições")]
         [Range(1, 365, ErrorMessage = "Informe entre 1 e 365 repetições.")]
         public int? RecurrenceCount { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using savemoney.Models;
 
 namespace savemoney.Controllers
@@ -21,8 +22,9 @@ namespace savemoney.Controllers
 
         // Cria nova despesa (GET)
         public IActionResult Create()
-        {
-            return PartialView("_CreateOrEditModal", new Despesa());
+        {            
+                ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome");
+                return PartialView("_CreateOrEditModal", new Despesa());          
         }
 
         // Cria nova despesa (POST)
@@ -31,7 +33,10 @@ namespace savemoney.Controllers
         public async Task<IActionResult> Create(Despesa despesa)
         {
             if (!ModelState.IsValid)
+            {
+                ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome");
                 return PartialView("_CreateOrEditModal", despesa);
+            }
 
             _context.Despesas.Add(despesa);
             await _context.SaveChangesAsync();
@@ -45,6 +50,7 @@ namespace savemoney.Controllers
             if (despesa == null)
                 return NotFound();
 
+            ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome", despesa.BudgetCategoryId);
             return PartialView("_CreateOrEditModal", despesa);
         }
 
@@ -57,7 +63,10 @@ namespace savemoney.Controllers
                 return NotFound();
 
             if (!ModelState.IsValid)
+            {
+                ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome", despesa.BudgetCategoryId);
                 return PartialView("_CreateOrEditModal", despesa);
+            }
 
             _context.Despesas.Update(despesa);
             await _context.SaveChangesAsync();

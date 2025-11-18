@@ -3,7 +3,7 @@
 <div class="modal fade" id="despesaModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post">
+            <form asp-controller="Despesas" asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post">
                 @if (Model.Id != 0)
                 {
                     <input type="hidden" asp-for="Id" />
@@ -35,6 +35,14 @@
                     <div class="mb-3">
                         <label asp-for="DataFim" class="form-label"></label>
                         <input asp-for="DataFim" class="form-control" type="date" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BudgetCategoryId" class="form-label">Categoria</label>
+                        <select asp-for="BudgetCategoryId" class="form-select" asp-items="ViewBag.Categorias">
+                            <option value="">Selecione uma categoria</option>
+                        </select>
+                        <span asp-validation-for="BudgetCategoryId" class="text-danger"></span>
                     </div>
 
                     <div class="form-check mb-3">
@@ -77,3 +85,19 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const chk = document.querySelector("input[name='IsRecurring']");
+        const div = document.getElementById("recurrenceOptions");
+
+        chk.addEventListener("change", function () {
+            if (this.checked) {
+                div.style.display = "flex";
+            } else {
+                div.style.display = "none";
+            }
+        });
+    });
+</script>

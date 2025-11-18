@@ -77,3 +77,18 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const chk = document.querySelector("input[name='IsRecurring']");
+        const div = document.getElementById("recurrenceOptions");
+
+        chk.addEventListener("change", function () {
+            if (this.checked) {
+                div.style.display = "flex";
+            } else {
+                div.style.display = "none";
+            }
+        });
+    });
+</script>

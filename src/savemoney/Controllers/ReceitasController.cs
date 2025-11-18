@@ -42,6 +42,7 @@ namespace savemoney.Controllers
         public IActionResult Edit(int? id)
         {
             var receita = _context.Receitas.Find(id);
+
             if (receita == null)
                 return NotFound();
 

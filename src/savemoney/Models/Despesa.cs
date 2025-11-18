@@ -28,16 +28,19 @@ namespace savemoney.Models
         [DataType(DataType.Date)]
         public DateTime DataFim { get; set; }
 
-        // CHAVE ESTRANGEIRA
-        public int? BudgetCategoryId { get; set; }
+        [Required(ErrorMessage = "A categoria é obrigatória.")]
+        public int BudgetCategoryId { get; set; }
 
-        // NAVEGAÇÃO
         [ForeignKey("BudgetCategoryId")]
-        public BudgetCategory? BudgetCategory { get; set; }
+        public BudgetCategory BudgetCategory { get; set; }
 
         public bool Recebido { get; set; }
+
+        [Display(Name="É Recorrente?")]
         public bool IsRecurring { get; set; }
         public RecurrenceType Recurrence { get; set; }
+
+        [Display(Name="Quantidade de Recorrencias")]
         public int? RecurrenceCount { get; set; }
 
         public enum RecurrenceType

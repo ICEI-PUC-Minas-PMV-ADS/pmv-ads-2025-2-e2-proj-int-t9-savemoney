@@ -6,9 +6,11 @@
 
 <h2>Receitas</h2>
 
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#despesaModal">
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#receitaModal">
     + Nova Receita
 </button>
+
+<div id="modalContainer"></div>
 
 <hr />
 
@@ -22,4 +24,21 @@
 </div>
 
 <!-- Modal de criação/edição -->
-@await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Receita())
+<div id="modalCreateContainer">
+    @await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Receita())
+</div>
+
+<div id="modalEditContainer"></div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function openReceitaModal(id) {
+            $.get('/Receita/Edit/' + id, function (html) {
+                $('#modalContainer').html(html);   // carrega o modal do EDIT
+                $('#receitaModal').modal('show');  // abre
+            });
+        }
+    </script>
+}
