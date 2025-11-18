@@ -60,16 +60,9 @@ namespace savemoney.Controllers
             var userId = GetCurrentUserId();
             if (userId == 0) return Unauthorized();
 
-            // PREENCHE O USERID MANUALMENTE
             budget.UserId = userId;
 
-            // VERIFICA SE TEM PELO MENOS UMA CATEGORIA
-            if (budget.Categories == null || !budget.Categories.Any())
-            {
-                ModelState.AddModelError("", "Adicione pelo menos uma categoria ao orçamento.");
-            }
-
-            // VALIDAÇÃO DAS CATEGORIAS
+            // VALIDAÇÃO LIMPA E SEM REPETIÇÃO
             if (budget.Categories == null || !budget.Categories.Any())
             {
                 ModelState.AddModelError("", "Adicione pelo menos uma categoria ao orçamento.");
@@ -79,8 +72,10 @@ namespace savemoney.Controllers
                 for (int i = 0; i < budget.Categories.Count; i++)
                 {
                     var cat = budget.Categories.ElementAt(i);
+
                     if (cat.CategoryId <= 0)
                         ModelState.AddModelError($"Categories[{i}].CategoryId", "Selecione uma categoria válida.");
+
                     if (cat.Limit <= 0)
                         ModelState.AddModelError($"Categories[{i}].Limit", "O limite deve ser maior que zero.");
                 }
@@ -95,16 +90,13 @@ namespace savemoney.Controllers
             try
             {
                 _context.Budgets.Add(budget);
-                await _context.SaveChangesAsync(); // salva o budget e gera o Id
-
-                // agora as BudgetCategories já têm BudgetId preenchido automaticamente pelo EF
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // ← SALVA TUDO DE UMA VEZ (Budget + BudgetCategories)
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao salvar: " + ex.Message);
+                ModelState.AddModelError("", "Erro ao salvar o orçamento: " + ex.Message);
                 ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
                 return View(budget);
             }

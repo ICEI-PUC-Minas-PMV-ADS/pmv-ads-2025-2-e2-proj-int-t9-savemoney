@@ -1,42 +1,42 @@
 ﻿// Services/BudgetService.cs
 using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
-using System.Numerics;
 
 namespace savemoney.Services
 {
     public class BudgetService
     {
         private readonly AppDbContext _context;
-
         public BudgetService(AppDbContext context)
         {
             _context = context;
         }
 
-        //<summary>
-       // Calcula o total gasto em uma BudgetCategory (baseado em Despesas ou Receitas, conforme o modelo atual)
-       //</summary>
-       // <param name="budgetCategoryId">ID da BudgetCategory</param>
-       //  <returns>Total gasto (decimal)</returns>
-       public async Task<decimal> GetCurrentSpentAsync(int budgetCategoryId)
+        /// <summary>
+        /// Calcula o total gasto em uma BudgetCategory (baseado em Despesas)
+        /// </summary>
+        /// <param name="budgetCategoryId">ID da BudgetCategory</param>
+        /// <returns>Total gasto (decimal)</returns>
+        public async Task<decimal> GetCurrentSpentAsync(int budgetCategoryId)
         {
-            // FUTURO: Quando Despesa for implementada
-            var total =  await _context.Despesas
-               .Where(d => d.BudgetCategoryId == budgetCategoryId)
-               .SumAsync(r => (decimal?)r.Valor) ?? 0m;
+            // TABELA 'Despesa' AINDA NÃO EXISTE NO BANCO
+            // Retorna 0 temporariamente para não quebrar o sistema
+            return 0m;
 
-            return total;        
-            
+            // DESCOMENTE AS LINHAS ABAIXO QUANDO RODAR A MIGRAÇÃO DE Despesa
+            /*
+            var total = await _context.Despesas
+                .Where(d => d.BudgetCategoryId == budgetCategoryId)
+                .SumAsync(d => (decimal?)d.Valor) ?? 0m;
+
+            return total;
+            */
         }
 
-           // <summary>
-            // Verifica se uma nova despesa pode ser adicionada sem estourar o limite
-           // </summary>
-       //  <param name="budgetCategoryId">ID da categoria do orçamento</param>
-       // <param name="amount">Valor da despesa a ser adicionada</param>
-       // <returns>true se puder adicionar</returns>
-       public async Task<bool> CanAddExpenseAsync(int budgetCategoryId, decimal amount)
+        /// <summary>
+        /// Verifica se uma nova despesa pode ser adicionada sem estourar o limite
+        /// </summary>
+        public async Task<bool> CanAddExpenseAsync(int budgetCategoryId, decimal amount)
         {
             if (amount <= 0) return false;
 
@@ -61,7 +61,6 @@ namespace savemoney.Services
 
             var spent = await GetCurrentSpentAsync(budgetCategoryId);
             var percentage = (spent / budgetCategory.Limit) * 100m;
-
             return Math.Min(percentage, 200m); // Limita a 200% para evitar barras infinitas
         }
 
