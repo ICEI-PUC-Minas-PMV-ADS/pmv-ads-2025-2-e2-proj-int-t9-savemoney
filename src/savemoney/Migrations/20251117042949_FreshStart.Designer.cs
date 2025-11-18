@@ -12,8 +12,8 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251117024558_SeedUserAdmin")]
-    partial class SeedUserAdmin
+    [Migration("20251117042949_FreshStart")]
+    partial class FreshStart
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -379,7 +379,7 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2025, 11, 16, 23, 45, 57, 651, DateTimeKind.Local).AddTicks(8857),
+                            DataCadastro = new DateTime(2025, 11, 17, 1, 29, 49, 375, DateTimeKind.Local).AddTicks(3241),
                             Documento = "000.000.000-00",
                             Email = "admin@savemoney.com",
                             Nome = "Admin Savemoney",

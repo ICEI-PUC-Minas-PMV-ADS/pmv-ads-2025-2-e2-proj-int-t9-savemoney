@@ -1,0 +1,57 @@
+﻿/* TendenciaFinanceira-Index.css */
+/* Estilos específicos para Index.cshtml */
+
+.info-card-title {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.info-card-text {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.check-item-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.tips-card {
+    border-left: 4px solid var(--accent-primary);
+}
+
+.tips-card-title {
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.tips-item-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.tips-item-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .tips-card {
+        border-left-width: 3px;
+    }
+
+    .tips-item-text {
+        font-size: 0.85rem;
+    }
+
+    .check-item-text {
+        font-size: 0.9rem;
+    }
+}

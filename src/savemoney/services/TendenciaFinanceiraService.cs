@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
 using savemoney.Services.Helpers;
 using savemoney.Services.Interfaces;
 
 namespace savemoney.Services
 {
-    /// <summary>
-    /// Implementação CORRIGIDA do serviço de análise de tendências financeiras
-    /// Adaptado para os novos models com DataInicio/DataFim e Valor decimal
-    /// </summary>
     public class TendenciaFinanceiraService : ITendenciaFinanceiraService
     {
         private readonly AppDbContext _context;
@@ -26,241 +18,206 @@ namespace savemoney.Services
 
         public async Task<RelatorioTendenciaViewModel> AnalisarTendenciasPorPeriodoAsync(int usuarioId, int meses)
         {
-            // Validação de entrada
-            if (meses < 1 || meses > 12)
-                throw new ArgumentException("O período deve estar entre 1 e 12 meses.");
+            var fim = DateTime.Now;
+            var inicio = fim.AddMonths(-meses);
 
-            // Define o período de análise
-            var dataFim = DateTime.Today;
-            var dataInicio = dataFim.AddMonths(-meses);
+            Console.WriteLine($"DEBUG: Buscando de {inicio:yyyy-MM-dd} até {fim:yyyy-MM-dd}");
 
-            // Busca dados do banco de dados
-            var receitas = await BuscarReceitasPorPeriodoAsync(usuarioId, dataInicio, dataFim);
-            var despesas = await BuscarDespesasPorPeriodoAsync(usuarioId, dataInicio, dataFim);
-
-            // Processa dados mensais
-            var dadosMensais = ProcessarDadosMensais(receitas, despesas, dataInicio, dataFim);
-
-            // Verifica se há dados suficientes
-            if (dadosMensais.Count < 2)
-            {
-                return CriarRelatorioSemDados(meses, dataInicio, dataFim);
-            }
-
-            // Calcula métricas e tendências
-            var relatorio = ConstruirRelatorio(dadosMensais, meses, dataInicio, dataFim);
-
-            return relatorio;
-        }
-
-        /// <summary>
-        /// Busca receitas do usuário no período especificado
-        /// CORREÇÃO: Usa DataInicio como referência e Valor decimal
-        /// </summary>
-        private async Task<List<Receita>> BuscarReceitasPorPeriodoAsync(int usuarioId, DateTime inicio, DateTime fim)
-        {
-            // TODO: Adicionar filtro por UsuarioId quando a coluna for criada
-            // Por enquanto, busca todas as receitas do período
-
-            return await _context.Receitas
-                .AsNoTracking()
+            var receitas = await _context.Receitas
                 .Where(r => r.DataInicio >= inicio && r.DataInicio <= fim)
                 .OrderBy(r => r.DataInicio)
                 .ToListAsync();
-        }
 
-        /// <summary>
-        /// Busca despesas do usuário no período especificado
-        /// CORREÇÃO: Usa DataInicio como referência
-        /// </summary>
-        private async Task<List<Despesa>> BuscarDespesasPorPeriodoAsync(int usuarioId, DateTime inicio, DateTime fim)
-        {
-            // TODO: Adicionar filtro por UsuarioId quando a coluna for criada
-
-            // CORREÇÃO: AppDbContext tem DbSet<Despesa> chamado "Despesa" (singular)
-            return await _context.Set<Despesa>()
-                .AsNoTracking()
+            var despesas = await _context.Despesas
                 .Where(d => d.DataInicio >= inicio && d.DataInicio <= fim)
                 .OrderBy(d => d.DataInicio)
                 .ToListAsync();
-        }
 
-        /// <summary>
-        /// Agrupa receitas e despesas por mês e calcula totais
-        /// CORREÇÃO: Usa DataInicio e converte decimal para double
-        /// </summary>
-        private List<DadosMensalViewModel> ProcessarDadosMensais(
-            List<Receita> receitas,
-            List<Despesa> despesas,
-            DateTime inicio,
-            DateTime fim)
-        {
-            var dadosMensais = new List<DadosMensalViewModel>();
+            Console.WriteLine($"DEBUG: Encontradas {receitas.Count} receitas e {despesas.Count} despesas");
 
-            // Itera por cada mês do período
-            var dataAtual = new DateTime(inicio.Year, inicio.Month, 1);
-            var dataFimMes = new DateTime(fim.Year, fim.Month, 1);
+            var dadosSuficientes = receitas.Any() || despesas.Any();
 
-            while (dataAtual <= dataFimMes)
+            if (!dadosSuficientes)
             {
-                var mesAtual = dataAtual.Month;
-                var anoAtual = dataAtual.Year;
-
-                // Filtra receitas do mês e converte decimal para double
-                var receitasMes = receitas
-                    .Where(r => r.DataInicio.Year == anoAtual && r.DataInicio.Month == mesAtual)
-                    .Sum(r => (double)r.Valor); // Conversão decimal -> double
-
-                // Filtra despesas do mês
-                var despesasMes = despesas
-                    .Where(d => d.DataInicio.Year == anoAtual && d.DataInicio.Month == mesAtual)
-                    .Sum(d => (double)d.Valor); // Conversão decimal -> double
-
-                dadosMensais.Add(new DadosMensalViewModel
+                return new RelatorioTendenciaViewModel
                 {
-                    Data = dataAtual,
-                    MesAno = dataAtual.ToString("MMM/yyyy"), // Ex: "Jan/2024"
-                    TotalReceitas = receitasMes,
-                    TotalDespesas = despesasMes
-                });
-
-                dataAtual = dataAtual.AddMonths(1);
+                    PeriodoMeses = meses,
+                    DataInicio = inicio,
+                    DataFim = fim,
+                    DadosSuficientes = false,
+                    MensagemTendencia = "Não há dados suficientes para gerar análise de tendências."
+                };
             }
 
-            // Calcula variações percentuais
-            for (int i = 1; i < dadosMensais.Count; i++)
+            var dadosMensais = CalcularDadosMensais(receitas, despesas, inicio, fim);
+
+            var variacaoTotal = 0.0;
+            if (dadosMensais.Count >= 2)
             {
-                var saldoAnterior = dadosMensais[i - 1].Saldo;
-                var saldoAtual = dadosMensais[i].Saldo;
-
-                dadosMensais[i].VariacaoPercentual =
-                    _calculadora.CalcularVariacaoPercentual(saldoAnterior, saldoAtual);
+                var primeiroMes = dadosMensais.First().Saldo;
+                var ultimoMes = dadosMensais.Last().Saldo;
+                if (primeiroMes != 0)
+                {
+                    variacaoTotal = ((ultimoMes - primeiroMes) / Math.Abs(primeiroMes)) * 100;
+                }
             }
 
-            // Identifica outliers
-            var saldos = dadosMensais.Select(d => d.Saldo).ToList();
-            var indicesOutliers = _calculadora.IdentificarOutliers(saldos);
-
-            foreach (var indice in indicesOutliers)
-            {
-                dadosMensais[indice].IsOutlier = true;
-            }
-
-            return dadosMensais;
-        }
-
-        /// <summary>
-        /// Constrói o relatório completo com todas as métricas e análises
-        /// </summary>
-        private RelatorioTendenciaViewModel ConstruirRelatorio(
-            List<DadosMensalViewModel> dadosMensais,
-            int meses,
-            DateTime inicio,
-            DateTime fim)
-        {
-            var primeiroMes = dadosMensais.First();
-            var ultimoMes = dadosMensais.Last();
-
-            // Calcula variação total do período
-            var variacaoTotal = _calculadora.CalcularVariacaoPercentual(
-                primeiroMes.Saldo,
-                ultimoMes.Saldo
-            );
-
-            // Identifica tipo de tendência
             var tendencia = _calculadora.IdentificarTendencia(variacaoTotal);
+            var alertas = GerarAlertas(dadosMensais);
 
-            // Calcula médias
-            var mediaReceitas = dadosMensais.Average(d => d.TotalReceitas);
-            var mediaDespesas = dadosMensais.Average(d => d.TotalDespesas);
-            var mediaSaldo = dadosMensais.Average(d => d.Saldo);
+            var totalReceitas = receitas.Sum(r => (double)r.Valor);
+            var totalDespesas = despesas.Sum(d => (double)d.Valor);
+            var saldoAtual = totalReceitas - totalDespesas;
 
-            // Identifica melhor e pior mês
-            var melhorMes = dadosMensais.OrderByDescending(d => d.Saldo).First();
-            var piorMes = dadosMensais.OrderBy(d => d.Saldo).First();
+            var mediaReceitas = dadosMensais.Any() ? dadosMensais.Average(d => d.TotalReceitas) : 0;
+            var mediaDespesas = dadosMensais.Any() ? dadosMensais.Average(d => d.TotalDespesas) : 0;
+            var mediaSaldo = dadosMensais.Any() ? dadosMensais.Average(d => d.Saldo) : 0;
 
-            // Gera alertas
-            var alertas = GerarAlertas(dadosMensais, mediaSaldo);
+            var melhorMes = dadosMensais.OrderByDescending(d => d.Saldo).FirstOrDefault();
+            var piorMes = dadosMensais.OrderBy(d => d.Saldo).FirstOrDefault();
 
-            var relatorio = new RelatorioTendenciaViewModel
+            var mensagemTendencia = GerarMensagemTendencia(tendencia, variacaoTotal);
+
+            return new RelatorioTendenciaViewModel
             {
                 PeriodoMeses = meses,
                 DataInicio = inicio,
                 DataFim = fim,
                 TendenciaIdentificada = tendencia,
                 DadosMensais = dadosMensais,
-                SaldoAtual = ultimoMes.Saldo,
+                SaldoAtual = saldoAtual,
                 MediaReceitas = mediaReceitas,
                 MediaDespesas = mediaDespesas,
                 MediaSaldo = mediaSaldo,
                 VariacaoPercentualTotal = variacaoTotal,
-                MensagemTendencia = _calculadora.GerarMensagemTendencia(tendencia, variacaoTotal),
+                MensagemTendencia = mensagemTendencia,
                 Alertas = alertas,
-                DadosSuficientes = true,
-                MelhorMes = melhorMes.MesAno,
-                PiorMes = piorMes.MesAno
+                DadosSuficientes = dadosSuficientes,
+                MelhorMes = melhorMes?.MesAno,
+                PiorMes = piorMes?.MesAno
             };
-
-            return relatorio;
         }
 
-        /// <summary>
-        /// Gera lista de alertas baseados em análise dos dados
-        /// </summary>
-        private List<string> GerarAlertas(List<DadosMensalViewModel> dados, double mediaSaldo)
+        private List<DadosMensalViewModel> CalcularDadosMensais(
+            List<Receita> receitas,
+            List<Despesa> despesas,
+            DateTime inicio,
+            DateTime fim)
+        {
+            var dadosMensais = new List<DadosMensalViewModel>();
+            var mesAtual = new DateTime(inicio.Year, inicio.Month, 1);
+            var mesFim = new DateTime(fim.Year, fim.Month, 1);
+
+            while (mesAtual <= mesFim)
+            {
+                var proximoMes = mesAtual.AddMonths(1);
+
+                var receitasDoMes = receitas
+                    .Where(r => r.DataInicio >= mesAtual && r.DataInicio < proximoMes)
+                    .Sum(r => (double)r.Valor);
+
+                var despesasDoMes = despesas
+                    .Where(d => d.DataInicio >= mesAtual && d.DataInicio < proximoMes)
+                    .Sum(d => (double)d.Valor);
+
+                dadosMensais.Add(new DadosMensalViewModel
+                {
+                    MesAno = mesAtual.ToString("MMM/yyyy"),
+                    Data = mesAtual,
+                    TotalReceitas = receitasDoMes,
+                    TotalDespesas = despesasDoMes,
+                    VariacaoPercentual = null,
+                    IsOutlier = false
+                });
+
+                mesAtual = proximoMes;
+            }
+
+            for (int i = 1; i < dadosMensais.Count; i++)
+            {
+                var mesAnterior = dadosMensais[i - 1].Saldo;
+                var mesAtualSaldo = dadosMensais[i].Saldo;
+
+                if (mesAnterior != 0)
+                {
+                    dadosMensais[i].VariacaoPercentual =
+                        ((mesAtualSaldo - mesAnterior) / Math.Abs(mesAnterior)) * 100;
+                }
+            }
+
+            DetectarOutliers(dadosMensais);
+
+            return dadosMensais;
+        }
+
+        private void DetectarOutliers(List<DadosMensalViewModel> dadosMensais)
+        {
+            if (dadosMensais.Count < 3) return;
+
+            var despesas = dadosMensais.Select(d => d.TotalDespesas).OrderBy(d => d).ToList();
+            var q1Index = despesas.Count / 4;
+            var q3Index = (despesas.Count * 3) / 4;
+            var q1 = despesas[q1Index];
+            var q3 = despesas[q3Index];
+            var iqr = q3 - q1;
+            var limiteInferior = q1 - (1.5 * iqr);
+            var limiteSuperior = q3 + (1.5 * iqr);
+
+            foreach (var mes in dadosMensais)
+            {
+                if (mes.TotalDespesas < limiteInferior || mes.TotalDespesas > limiteSuperior)
+                {
+                    mes.IsOutlier = true;
+                }
+            }
+        }
+
+        private List<string> GerarAlertas(List<DadosMensalViewModel> dadosMensais)
         {
             var alertas = new List<string>();
 
-            // Alerta de outliers
-            var outliers = dados.Where(d => d.IsOutlier).ToList();
-            foreach (var outlier in outliers)
-            {
-                if (outlier.Saldo > mediaSaldo)
-                    alertas.Add($"⚠️ {outlier.MesAno}: Saldo excepcionalmente alto (R$ {outlier.Saldo:N2})");
-                else
-                    alertas.Add($"🔴 {outlier.MesAno}: Saldo excepcionalmente baixo (R$ {outlier.Saldo:N2})");
-            }
-
-            // Alerta de variações bruscas
-            var variacoesBruscas = dados
-                .Where(d => d.VariacaoPercentual.HasValue && Math.Abs(d.VariacaoPercentual.Value) > 30)
+            var mediaDespesas = dadosMensais.Average(d => d.TotalDespesas);
+            var despesasAcimaDaMedia = dadosMensais
+                .Where(d => d.TotalDespesas > mediaDespesas * 1.2)
                 .ToList();
 
-            foreach (var mes in variacoesBruscas)
+            if (despesasAcimaDaMedia.Any())
             {
-                alertas.Add($"📊 {mes.MesAno}: Variação brusca de {mes.VariacaoPercentual:F1}%");
+                var meses = string.Join(", ", despesasAcimaDaMedia.Select(d => d.MesAno));
+                alertas.Add($"Gastos 20% acima da média em: {meses}");
             }
 
-            // Alerta de saldo negativo
-            var mesesNegativos = dados.Where(d => d.Saldo < 0).ToList();
-            if (mesesNegativos.Any())
+            var saldosNegativos = dadosMensais.Where(d => d.Saldo < 0).ToList();
+            if (saldosNegativos.Any())
             {
-                alertas.Add($"💰 {mesesNegativos.Count} mês(es) com saldo negativo identificado(s)");
+                var meses = string.Join(", ", saldosNegativos.Select(d => d.MesAno));
+                alertas.Add($"Saldo negativo em: {meses}");
+            }
+
+            var ultimoMes = dadosMensais.LastOrDefault();
+            if (ultimoMes?.VariacaoPercentual.HasValue == true && ultimoMes.VariacaoPercentual < -10)
+            {
+                alertas.Add($"Queda de {Math.Abs(ultimoMes.VariacaoPercentual.Value):F1}% no último mês");
+            }
+
+            var outliers = dadosMensais.Where(d => d.IsOutlier).ToList();
+            if (outliers.Any())
+            {
+                var meses = string.Join(", ", outliers.Select(d => d.MesAno));
+                alertas.Add($"Gastos atípicos detectados em: {meses}");
             }
 
             return alertas;
         }
 
-        /// <summary>
-        /// Cria um relatório indicando falta de dados
-        /// </summary>
-        private RelatorioTendenciaViewModel CriarRelatorioSemDados(int meses, DateTime inicio, DateTime fim)
+        private string GerarMensagemTendencia(TipoTendencia tendencia, double variacao)
         {
-            return new RelatorioTendenciaViewModel
+            return tendencia switch
             {
-                PeriodoMeses = meses,
-                DataInicio = inicio,
-                DataFim = fim,
-                TendenciaIdentificada = TipoTendencia.Indefinida,
-                DadosMensais = new List<DadosMensalViewModel>(),
-                SaldoAtual = 0,
-                MediaReceitas = 0,
-                MediaDespesas = 0,
-                MediaSaldo = 0,
-                VariacaoPercentualTotal = 0,
-                MensagemTendencia = "Não há dados suficientes para análise. Registre receitas e despesas para começar.",
-                Alertas = new List<string> { "⚠️ Adicione pelo menos 2 meses de dados para análise confiável." },
-                DadosSuficientes = false
+                TipoTendencia.Crescente => $"Suas finanças apresentam uma tendência crescente de {variacao:F1}%",
+                TipoTendencia.Decrescente => $"Suas finanças apresentam uma tendência decrescente de {Math.Abs(variacao):F1}%",
+                TipoTendencia.Estavel => "Suas finanças apresentam uma tendência estável",
+                _ => "Não foi possível identificar uma tendência clara"
             };
         }
     }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace savemoney.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialProjectSetup : Migration
+    public partial class FreshStart : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -228,6 +228,11 @@ namespace savemoney.Migrations
                     { 4, true, "Moradia", null },
                     { 5, true, "Despesas Operacionais", null }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Usuario",
+                columns: new[] { "Id", "DataCadastro", "Documento", "Email", "Nome", "Perfil", "Senha", "TipoUsuario" },
+                values: new object[] { 1, new DateTime(2025, 11, 17, 1, 29, 49, 375, DateTimeKind.Local).AddTicks(3241), "000.000.000-00", "admin@savemoney.com", "Admin Savemoney", 0, "123456", 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Aportes_MetaFinanceiraId",

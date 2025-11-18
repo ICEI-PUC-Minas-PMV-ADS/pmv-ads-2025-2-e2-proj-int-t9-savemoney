@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using savemoney.Data;
 
 namespace savemoney.Models
 {
@@ -97,6 +98,7 @@ namespace savemoney.Models
                 new Category { Id = 4, Name = "Moradia", IsPredefined = true },
                 new Category { Id = 5, Name = "Despesas Operacionais", IsPredefined = true }
             );
+            //modelBuilder.SeedUserFinancialData();
         }
     }
 }
