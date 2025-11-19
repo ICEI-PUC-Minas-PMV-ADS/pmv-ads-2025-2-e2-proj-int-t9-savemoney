@@ -38,7 +38,7 @@ namespace savemoney.Models
         public virtual Usuario? Usuario { get; set; }
 
         [BindNever]
-        public virtual ICollection<BudgetCategory> Categories { get; set; } = new List<BudgetCategory>();
+        public virtual List<BudgetCategory> Categories { get; set; } = new List<BudgetCategory>();
 
         // VALIDAÇÃO PERSONALIZADA
         public static ValidationResult? ValidateDates(DateTime startDate, ValidationContext context)

@@ -8,16 +8,21 @@ namespace savemoney.Models
     [Table("BudgetCategory")]
     public class BudgetCategory
     {
+        public BudgetCategory()
+        {
+            // construtor vazio obrigatório para o binder
+        }
+
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O orçamento é obrigatório.")]
+
         public int BudgetId { get; set; }
 
-        [Required(ErrorMessage = "A categoria é obrigatória.")]
+
         public int CategoryId { get; set; }
 
-        [Required(ErrorMessage = "O limite de gastos é obrigatório.")]
+
         [Range(0.01, double.MaxValue, ErrorMessage = "O limite deve ser maior que zero.")]
         public decimal Limit { get; set; }
 
@@ -35,7 +40,7 @@ namespace savemoney.Models
         [BindNever]
         public virtual Category Category { get; set; } = null!;
 
-        public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
+        //public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
 
 
         private decimal CalculateCurrentSpent()

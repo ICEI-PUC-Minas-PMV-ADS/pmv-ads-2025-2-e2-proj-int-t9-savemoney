@@ -83,22 +83,39 @@ namespace savemoney.Controllers
 
             if (!ModelState.IsValid)
             {
+                // RECARREGA AS CATEGORIAS DISPONÍVEIS (essencial!)
                 ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
-                return View(budget);
+
+                // NÃO RETORNA O budget COM CATEGORIES QUEBRADAS
+                // Cria um novo Budget só com os campos preenchidos pelo usuário
+                return View(new Budget
+                {
+                    Name = budget.Name,
+                    Description = budget.Description,
+                    StartDate = budget.StartDate,
+                    EndDate = budget.EndDate,
+                    Status = budget.Status
+                });
             }
 
             try
             {
                 _context.Budgets.Add(budget);
-                await _context.SaveChangesAsync(); // ← SALVA TUDO DE UMA VEZ (Budget + BudgetCategories)
-
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Erro ao salvar o orçamento: " + ex.Message);
                 ViewBag.AvailableCategories = await GetAvailableCategoriesAsync(userId);
-                return View(budget);
+                return View(new Budget
+                {
+                    Name = budget.Name,
+                    Description = budget.Description,
+                    StartDate = budget.StartDate,
+                    EndDate = budget.EndDate,
+                    Status = budget.Status
+                });
             }
         }
 
