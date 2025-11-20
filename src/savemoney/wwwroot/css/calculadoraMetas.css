@@ -1,4 +1,6 @@
-/* --- PASSO 1: Paleta "Azul Noite" (Padrão do Site) --- */
+/* --- PASSO 1: Paleta "Azul Noite" (Padrão do Site) 
+    CSS da Calculadora de metas financeiras */
+
 :root {
   --bg-primary: #10111a;
   --bg-secondary: #0d0e16;
