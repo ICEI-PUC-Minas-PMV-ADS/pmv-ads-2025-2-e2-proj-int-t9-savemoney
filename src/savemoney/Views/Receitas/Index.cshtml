@@ -59,7 +59,7 @@
 
             var id = $('#delete-id').val();
 
-            $.post('/Receitas/Delete/' + id, function () {    // <--- CORRIGIDO
+            $.post('/Receitas/Delete/' + id, function () { 
                 location.reload();
             }).fail(function () {
                 alert("Erro ao excluir.");

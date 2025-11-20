@@ -11,20 +11,22 @@
             <span class="badge bg-info">Recorrente: @Model.Recurrence</span>
         }
 
-        @if (Model.Recebido)
+        @if (Model.Pago)
         {
-            <span class="badge bg-success">Recebido</span>
+            <span class="badge bg-success">Pago</span>
         }
 
         <hr />
 
         <div class="d-flex justify-content-between">
-            <form asp-action="Edit" asp-route-id="@Model.Id" method="get">
-                <button class="btn btn-sm btn-primary">Editar</button>
-            </form>
-            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Excluir esta receita?');">
-                <button class="btn btn-sm btn-danger">Excluir</button>
-            </form>
+            <button class="btn btn-primary" onclick="openReceitaModal(@Model.Id)">
+                Editar
+            </button>
+            <button class="btn btn-sm btn-danger"
+                    type="button"
+                    onclick="openDeleteModal(@Model.Id, '@Model.Titulo')">
+                Excluir
+            </button>
         </div>
     </div>
 </div>

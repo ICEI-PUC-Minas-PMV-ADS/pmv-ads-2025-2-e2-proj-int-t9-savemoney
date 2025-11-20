@@ -26,7 +26,7 @@ namespace savemoney.Models
         [ForeignKey("BudgetCategoryId")]
         public BudgetCategory? BudgetCategory { get; set; }
 
-        public bool Recebido { get; set; }
+        public bool Pago { get; set; }
         [Display(Name = "É Recorrente?")]
         public bool IsRecurring { get; set; }
         public RecurrenceType Recurrence { get; set; }
