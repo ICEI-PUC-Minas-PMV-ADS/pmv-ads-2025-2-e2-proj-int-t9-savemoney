@@ -1,4 +1,5 @@
 ﻿@model savemoney.Models.Receita
+@using System.ComponentModel.DataAnnotations
 
 <div class="card mb-3 shadow-sm">
     <div class="card-body">
@@ -8,7 +9,7 @@
 
         @if (Model.IsRecurring)
         {
-            <span class="badge bg-info">Recorrente: @Model.Recurrence</span>
+            <span class="badge bg-info">Recorrente</span>
         }
 
         @if (Model.Recebido)
