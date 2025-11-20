@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
 
 namespace savemoney.Controllers
@@ -13,28 +14,51 @@ namespace savemoney.Controllers
             _context = context;
         }
 
-        // Lista todas as Despesas
+        private void CarregarCategorias()
+{
+    ViewBag.Categorias = new SelectList(
+        _context.BudgetCategories
+            .Include(b => b.Category)   // <---- OBRIGATÓRIO
+            .ToList(),
+        "Id",                          // value
+        "Category.Name"                // texto exibido
+    );
+}
+
         public IActionResult Index()
         {
             var despesas = _context.Despesas.ToList();
             return View(despesas);
         }
 
-        // Cria nova despesa (GET)
+        // ----------- CREATE (GET) -----------
         public IActionResult Create()
-        {            
-                ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome");
-                return PartialView("_CreateOrEditModal", new Despesa());          
+        {
+            ViewBag.Categorias = new SelectList(
+                _context.BudgetCategories
+                    .Include(b => b.Category),
+                "Id",
+                "Category.Nome"
+            );
+
+            return PartialView("_CreateOrEditModal", new Despesa());
         }
 
-        // Cria nova despesa (POST)
+        // ----------- CREATE (POST) -----------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Despesa despesa)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome");
+                ViewBag.Categorias = new SelectList(
+                    _context.BudgetCategories
+                        .Include(b => b.Category),
+                    "Id",
+                    "Category.Nome",
+                    despesa.BudgetCategoryId
+                );
+
                 return PartialView("_CreateOrEditModal", despesa);
             }
 
@@ -43,18 +67,25 @@ namespace savemoney.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Editar despesa (GET)
+        // ----------- EDIT (GET) -----------
         public IActionResult Edit(int? id)
         {
             var despesa = _context.Despesas.Find(id);
             if (despesa == null)
                 return NotFound();
 
-            ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome", despesa.BudgetCategoryId);
+            ViewBag.Categorias = new SelectList(
+                _context.BudgetCategories
+                    .Include(b => b.Category),
+                "Id",
+                "Category.Nome",
+                despesa.BudgetCategoryId
+            );
+
             return PartialView("_CreateOrEditModal", despesa);
         }
 
-        // Editar despesa (POST)
+        // ----------- EDIT (POST) -----------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, Despesa despesa)
@@ -64,7 +95,14 @@ namespace savemoney.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Categorias = new SelectList(_context.BudgetCategories, "Id", "Nome", despesa.BudgetCategoryId);
+                ViewBag.Categorias = new SelectList(
+                    _context.BudgetCategories
+                        .Include(b => b.Category),
+                    "Id",
+                    "Category.Nome",
+                    despesa.BudgetCategoryId
+                );
+
                 return PartialView("_CreateOrEditModal", despesa);
             }
 
@@ -73,9 +111,9 @@ namespace savemoney.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Deletar despesa
+        // ----------- DELETE -----------
         [HttpPost]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             var despesa = _context.Despesas.Find(id);
             if (despesa == null)
@@ -83,7 +121,8 @@ namespace savemoney.Controllers
 
             _context.Despesas.Remove(despesa);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return Ok();
         }
     }
 }

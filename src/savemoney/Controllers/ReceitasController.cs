@@ -46,7 +46,7 @@ namespace savemoney.Controllers
             if (receita == null)
                 return NotFound();
 
-            return PartialView("_CreateOrEditModal", receita);
+            return PartialView("_EditModal", receita);
         }
 
         // Editar receita (POST)
@@ -58,7 +58,7 @@ namespace savemoney.Controllers
                 return NotFound();
 
             if (!ModelState.IsValid)
-                return PartialView("_CreateOrEditModal", receita);
+                return PartialView("_EditModal", receita);
 
             _context.Receitas.Update(receita);
             await _context.SaveChangesAsync();
@@ -67,15 +67,15 @@ namespace savemoney.Controllers
 
         // Deletar receita
         [HttpPost]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             var receita = _context.Receitas.Find(id);
-            if (receita == null)
-                return NotFound();
+            if (receita == null) return NotFound();
 
             _context.Receitas.Remove(receita);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+          await  _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

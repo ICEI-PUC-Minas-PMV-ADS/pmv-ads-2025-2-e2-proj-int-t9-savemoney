@@ -18,6 +18,11 @@
 
   <ItemGroup>
     <Compile Remove="Models\Receitas.cs" />
+    <Compile Remove="Views\Receitas\_DeleteModal.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Receitas\_CreateOrEditModal - Cópia.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

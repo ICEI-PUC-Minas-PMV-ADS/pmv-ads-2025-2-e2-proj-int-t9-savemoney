@@ -26,6 +26,7 @@
 <!-- Modal de criação/edição -->
 <div id="modalCreateContainer">
     @await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Receita())
+    @await Html.PartialAsync("_DeleteModal")
 </div>
 
 <div id="modalEditContainer"></div>
@@ -34,11 +35,36 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        function openReceitaModal(id) {
-            $.get('/Receita/Edit/' + id, function (html) {
-                $('#modalContainer').html(html);   // carrega o modal do EDIT
-                $('#receitaModal').modal('show');  // abre
+
+        // ABRIR MODAL DE EDIÇÃO
+              function openReceitaModal(id) {
+            $.get('/Receitas/Edit/' + id, function (html) {
+                $('#modalEditContainer').html(html); // carrega modal de edição
+                $('#editReceitaModal').modal('show'); // abre modal
             });
         }
+
+        // ABRIR MODAL DE EXCLUSÃO
+        function openDeleteModal(id, name) {
+            $('#delete-id').val(id);
+            $('#delete-name').text(name);
+
+            var modalEl = document.getElementById('deleteModal');
+            var modal = new bootstrap.Modal(modalEl);
+            modal.show();
+        }
+
+        // CONFIRMAR EXCLUSÃO
+        $('#confirm-delete-btn').on('click', function () {
+
+            var id = $('#delete-id').val();
+
+            $.post('/Receitas/Delete/' + id, function () {    // <--- CORRIGIDO
+                location.reload();
+            }).fail(function () {
+                alert("Erro ao excluir.");
+            });
+        });
+
     </script>
 }

@@ -1,30 +1,27 @@
 ﻿@model savemoney.Models.Receita
 
-<div class="modal fade" id="receitaModal" tabindex="-1" aria-labelledby="receitaModalLabel" aria-hidden="true">
+<div class="modal fade" id="editReceitaModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post">
-                @if (Model.Id != 0)
-                {
-                    <input type="hidden" asp-for="Id" />
-                }
 
-                <div class="modal-header">
-                    <h5 class="modal-title">@(Model.Id == 0 ? "Nova Receita" : "Editar Receita")</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Receita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
+            <form id="form-edit-receita">
                 <div class="modal-body">
+
+                    <input type="hidden" asp-for="Id" />
+                
                     <div class="mb-3">
-                        <label asp-for="Titulo" class="form-label"></label>
-                        <input asp-for="Titulo" class="form-control" />
-                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                        <label class="form-label">Titulo</label>
+                        <input asp-for="Titulo" class="form-control" type="number" step="0.01" />
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Valor" class="form-label"></label>
+                        <label class="form-label">Valor</label>
                         <input asp-for="Valor" class="form-control" type="number" step="0.01" />
-                        <span asp-validation-for="Valor" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
@@ -66,20 +63,35 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Salvar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
+
             </form>
+
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    // Quando o formulário for enviado
+    $('#form-edit-receita').on('submit', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '/Receitas/Edit/' + $('#Id').val(),
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert("Erro ao salvar edição.");
+            }
+        });
+    });
+
+       document.addEventListener("DOMContentLoaded", function () {
         const chk = document.querySelector("input[name='IsRecurring']");
         const div = document.getElementById("recurrenceOptions");
 

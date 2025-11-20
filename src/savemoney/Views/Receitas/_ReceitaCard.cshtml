@@ -19,14 +19,14 @@
         <hr />
 
         <div class="d-flex justify-content-between">
-            <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-                <button class="btn btn-sm btn-primary" onclick="openReceitaModal(@Model.Id)">
-                    Editar
-                </button>
-            </form>
-            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Excluir esta receita?');">
-                <button class="btn btn-sm btn-danger">Excluir</button>
-            </form>
+            <button class="btn btn-primary" onclick="openReceitaModal(@Model.Id)">
+                Editar
+            </button>
+            <button class="btn btn-sm btn-danger"
+                    type="button"
+                    onclick="openDeleteModal(@Model.Id, '@Model.Titulo')">
+                Excluir
+            </button>
         </div>
     </div>
 </div>

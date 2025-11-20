@@ -37,11 +37,11 @@
                         <input asp-for="DataFim" class="form-control" type="date" />
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="BudgetCategoryId" class="form-label">Categoria</label>
-                        <select asp-for="BudgetCategoryId" class="form-select" asp-items="ViewBag.Categorias">
-                            <option value="">Selecione uma categoria</option>
-                        </select>
+                    <div class="form-group">
+                        <label for="BudgetCategoryId">Categoria</label>
+                        <select asp-for="BudgetCategoryId"
+                                asp-items="ViewBag.Categorias"
+                                class="form-control"></select>
                         <span asp-validation-for="BudgetCategoryId" class="text-danger"></span>
                     </div>
 
