@@ -13,18 +13,15 @@ namespace savemoney.Models
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ConversorEnergia> ConversoresEnergia { get; set; }
         public DbSet<Receita> Receitas { get; set; } = default!;
-
-        // Correto: apenas UM DbSet para Despesa
         public DbSet<Despesa> Despesas { get; set; } = default!;
-
-        // Novos DbSets para Metas Financeiras
         public DbSet<MetaFinanceira> MetasFinanceiras { get; set; }
         public DbSet<Aporte> Aportes { get; set; }
-
-        // Gestão de Orçamento
         public DbSet<Category> Categories { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<BudgetCategory> BudgetCategories { get; set; }
+
+        // NOVO: DbSet para Widgets
+        public DbSet<Widget> Widgets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,34 +60,40 @@ namespace savemoney.Models
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Category → BudgetCategory (Restrict)
-           modelBuilder.Entity<Category>()
+            modelBuilder.Entity<Category>()
                 .HasMany(c => c.BudgetCategories)
                 .WithOne(bc => bc.Category)
                 .HasForeignKey(bc => bc.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Dentro do OnModelCreating
-            /*modelBuilder.Entity<BudgetCategory>()
-                .HasMany(bc => bc.Despesas)
-                .WithOne(d => d.BudgetCategory) 
-                // ← Certifique-se que Despesa tem essa propriedade!
-                .HasForeignKey(d => d.BudgetCategoryId) 
-                .OnDelete(DeleteBehavior.Cascade);*/
+            // NOVO: Widget → Usuario (Cascade - se deletar usuário, deleta widgets)
+            modelBuilder.Entity<Widget>()
+                .HasOne(w => w.Usuario)
+                .WithMany(u => u.Widgets)
+                .HasForeignKey(w => w.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Categorias padrão
+            // Índice para melhorar performance nas queries de widgets por usuário
+            modelBuilder.Entity<Widget>()
+                .HasIndex(w => w.UsuarioId);
+
+            // Dados seed existentes
             modelBuilder.Entity<Usuario>().HasData(
                 new Usuario
-                    {
-                        Id = 1, 
-                        Nome = "Admin Savemoney",
-                        Email = "admin@savemoney.com",
-                        Senha = "123456", // Lembrete: Placeholder! Em produção, use hashing!
-                        Documento = "000.000.000-00",
-                        Perfil = 0,
-                        TipoUsuario = 0,
-                    DataCadastro = DateTime.Now
-                    }
-                );
+                {
+                    Id = 1,
+                    Nome = "Admin Savemoney",
+                    Email = "admin@savemoney.com",
+                    Senha = "123456",
+                    Documento = "000.000.000-00",
+                    Perfil = 0,
+                    TipoUsuario = 0,
+                    DataCadastro = DateTime.Now,
+                    // Avatar padrão com iniciais (temporário até adicionar imagem local)
+                    FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true"
+                }
+            );
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Alimentação", IsPredefined = true },
                 new Category { Id = 2, Name = "Lazer", IsPredefined = true },
@@ -98,7 +101,6 @@ namespace savemoney.Models
                 new Category { Id = 4, Name = "Moradia", IsPredefined = true },
                 new Category { Id = 5, Name = "Despesas Operacionais", IsPredefined = true }
             );
-            //modelBuilder.SeedUserFinancialData();
         }
     }
 }
