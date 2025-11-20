@@ -1,143 +1,186 @@
 ﻿@{
-    ViewData["Title"] = "Painel do Usuário";
+    ViewData["Title"] = "Dashboard";
+    var usuario = ViewBag.Usuario as savemoney.Models.Usuario;
+    var widgets = ViewBag.Widgets as List<savemoney.Models.Widget>;
 }
 
-<!-- Seção para CSS específico desta página (opcional) -->
-@section css {
-    <link rel="stylesheet" href="~/css/painelDoUsuario.css" asp-append-version="true" />
-}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - SaveMoney</title>
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- PAINEL DO USUÁRIO -->
+        <aside class="user-panel">
+            <div class="user-profile">
+                <div class="user-avatar" id="avatarContainer">
+                    <img src="@usuario.FotoPerfil" alt="Foto de @usuario.Nome" id="avatarImage">
+                    <div class="avatar-overlay">
+                        <span>📷</span>
+                    </div>
+                </div>
+                <h2 class="user-greeting">Seja bem-vindo(a),<br><strong>@usuario.Nome</strong>!</h2>
+            </div>
 
-<!-- Container principal do painel -->
-<div class="container-fluid mt-4">
+            <nav class="user-menu">
+                <a href="@Url.Action("Details", "Usuarios", new { id = usuario.Id })" class="menu-item">
+                    <span class="icon">👤</span>
+                    Informações da Conta
+                </a>
+                <a href="@Url.Action("Edit", "Usuarios", new { id = usuario.Id })" class="menu-item">
+                    <span class="icon">✏️</span>
+                    Editar Perfil
+                </a>
+                <a href="@Url.Action("Logout", "Usuarios")" class="menu-item logout">
+                    <span class="icon">🚪</span>
+                    Sair
+                </a>
+            </nav>
 
-    <!-- Título da Página -->
-    <h1 class="h2 mb-4">@ViewData["Title"]</h1>
+            <div class="panel-info">
+                <p><strong>Membro desde:</strong><br>@usuario.DataCadastro.ToString("dd/MM/yyyy")</p>
+                <p><strong>Email:</strong><br>@usuario.Email</p>
+            </div>
+        </aside>
 
-    <!-- Caixa de Missão (Estilizada como um "Alerta" Bootstrap) -->
-    <div class="mission-box alert alert-primary d-flex align-items-center" role="alert">
-        <span class="material-icons mission-icon flex-shrink-0 me-3">rocket_launch</span>
-        <div class="mission-content">
-            <h4 class="alert-heading mission-title">Nossa Missão</h4>
-            <p class="mission-desc mb-0">
-                O Save Money é uma plataforma inovadora que visa simplificar a gestão financeira pessoal e empresarial,
-                oferecendo ferramentas intuitivas para controle de gastos, investimentos e planejamento financeiro.
-            </p>
+        <!-- ÁREA DE WIDGETS -->
+        <main class="widgets-area">
+            <div class="widgets-header">
+                <h1>WIDGETS</h1>
+                <button class="btn-add-widget" onclick="abrirModalWidget()">
+                    + Adicionar Widget
+                </button>
+            </div>
+
+            <div class="widgets-grid" id="widgetsGrid">
+                @if (widgets != null && widgets.Any())
+                {
+                    foreach (var widget in widgets)
+                    {
+                        <div class="widget-card" 
+                             data-id="@widget.Id"
+                             data-cols="@widget.Colunas" 
+                             data-rows="@widget.Largura"
+                             style="grid-column: span @widget.Colunas; grid-row: span @widget.Largura; background-color: @widget.CorFundo;">
+                            
+                            <div class="widget-header">
+                                <h3>@widget.Titulo</h3>
+                                <div class="widget-actions">
+                                    <button class="btn-edit" onclick="editarWidget(@widget.Id)" title="Editar">✏️</button>
+                                    <button class="btn-delete" onclick="confirmarDeletar(@widget.Id)" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(widget.Descricao))
+                            {
+                                <p class="widget-description">@widget.Descricao</p>
+                            }
+
+                            @if (!string.IsNullOrEmpty(widget.Link))
+                            {
+                                <a href="@widget.Link" class="widget-link">Acessar →</a>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>Nenhum widget ainda</h3>
+                        <p>Adicione seu primeiro widget para personalizar seu dashboard!</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL PARA ADICIONAR/EDITAR WIDGET -->
+    <div id="modalWidget" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close" onclick="fecharModalWidget()">&times;</span>
+            <h2 id="modalTitle">Adicionar Widget</h2>
+            
+            <form id="formWidget" method="post" asp-action="SalvarWidget">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="widgetId" name="Id" value="0">
+                
+                <div class="form-group">
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" name="Titulo" class="form-control" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" name="Descricao" class="form-control" rows="3" maxlength="500"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="link">Link/Rota:</label>
+                    <input type="text" id="link" name="Link" class="form-control" placeholder="/Receitas/Index">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="colunas">Largura:</label>
+                        <select id="colunas" name="Colunas" class="form-control" required>
+                            <option value="1">1 coluna</option>
+                            <option value="2">2 colunas</option>
+                            <option value="3">3 colunas</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="largura">Altura:</label>
+                        <select id="largura" name="Largura" class="form-control" required>
+                            <option value="1">1 linha</option>
+                            <option value="2">2 linhas</option>
+                            <option value="3">3 linhas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="corFundo">Cor de Fundo:</label>
+                    <input type="color" id="corFundo" name="CorFundo" class="form-control-color" value="#1b1d29">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalWidget()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Título da Seção de Widgets -->
-    <h2 class="h4 mb-3 mt-5">Seus Widgets</h2>
-    <p class="text-muted mb-4">
-        (Estes são seus widgets. No futuro, você poderá arrastar e reordenar.)
-    </p>
-
-    <!-- Container dos Widgets (Grid Responsivo) -->
-    <div class="features-container row g-4">
-
-        <!-- Widget: Controle Financeiro -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">savings</span>
-                <div class="feature-title">Controle Financeiro</div>
-                <div class="feature-desc">
-                    Gerencie suas receitas e despesas de forma eficiente, com categorização automática.
+    <!-- MODAL PARA CONFIRMAR DELEÇÃO -->
+    <div id="modalConfirmar" class="modal">
+        <div class="modal-content glass-card modal-small">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir este widget?</p>
+            
+            <form id="formDeletar" method="post" asp-action="DeletarWidget">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="deletarId" name="id">
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalConfirmar()">Cancelar</button>
+                    <button type="submit" class="btn-danger">Excluir</button>
                 </div>
-            </div>
+            </form>
         </div>
+    </div>
+</body>
+</html>
 
-        <!-- Widget: Investimentos -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">trending_up</span>
-                <div class="feature-title">Investimentos</div>
-                <div class="feature-desc">
-                    Acompanhe seus investimentos e receba recomendações baseadas em seu perfil de risco.
-                </div>
-            </div>
-        </div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Dashboard.css">
+}
 
-        <!-- Widget: Conversor de Moedas -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">currency_exchange</span>
-                <div class="feature-title">Conversor de Moedas</div>
-                <div class="feature-desc">
-                    Converta valores entre diferentes moedas em tempo real, com taxas atualizadas.
-                </div>
-            </div>
-        </div>
-
-        <!-- Widget: Contato com a Equipe -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">group</span>
-                <div class="feature-title">Contato com a Equipe</div>
-                <div class="feature-desc">
-                    Entre em contato com nossa equipe de suporte para tirar dúvidas ou reportar problemas.
-                </div>
-            </div>
-        </div>
-
-        <!-- Widget: Conta Pessoal -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">account_balance</span>
-                <div class="feature-title">Conta Pessoal</div>
-                <div class="feature-desc">
-                    Ferramentas específicas para controle de orçamento e metas financeiras pessoais.
-                </div>
-            </div>
-        </div>
-
-        <!-- Widget: Conta Empresarial -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">business</span>
-                <div class="feature-title">Conta Empresarial</div>
-                <div class="feature-desc">
-                    Soluções completas para gestão financeira empresarial, incluindo fluxo de caixa.
-                </div>
-            </div>
-        </div>
-
-        <!-- Widget: Múltiplos Idiomas -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">translate</span>
-                <div class="feature-title">Múltiplos Idiomas</div>
-                <div class="feature-desc">
-                    Interface disponível em diversos idiomas para atender usuários de diferentes países.
-                </div>
-            </div>
-        </div>
-
-        <!-- Widget: Múltiplas Moedas -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">payments</span>
-                <div class="feature-title">Múltiplas Moedas</div>
-                <div class="feature-desc">
-                    Suporte a diversas moedas para facilitar transações internacionais.
-                </div>
-            </div>
-        </div>
-
-        <!-- Widget: Criptomoedas -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="feature-box">
-                <span class="material-icons feature-icon">currency_bitcoin</span>
-                <div class="feature-title">Criptomoedas</div>
-                <div class="feature-desc">
-                    Acompanhe e gerencie seus investimentos em criptomoedas com atualizações em tempo real.
-                </div>
-            </div>
-        </div>
-
-        <!-- Mais widgets... -->
-
-    </div> <!-- fim .row -->
-
-</div> <!-- fim .container-fluid -->
 @section Scripts {
-    <script src="~/js/painelDoUsuario.js" asp-append-version="true"></script>
+    <script src="~/js/Dashboard.js"></script>
 }
