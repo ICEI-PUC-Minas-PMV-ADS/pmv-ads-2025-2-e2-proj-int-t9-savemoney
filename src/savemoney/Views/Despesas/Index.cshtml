@@ -23,7 +23,7 @@
 
 <!-- Modal de criação/edição -->
 <div id="modalCreateContainer">
-    @await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Receita())
+    @await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Despesa())
     @await Html.PartialAsync("_DeleteModal")
 </div>
 
@@ -31,15 +31,14 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
 
     <script>
 
         // ABRIR MODAL DE EDIÇÃO
-              function openReceitaModal(id) {
-            $.get('/Receitas/Edit/' + id, function (html) {
+              function openDespesaModal(id) {
+            $.get('/Despesas/Edit/' + id, function (html) {
                 $('#modalEditContainer').html(html); // carrega modal de edição
-                $('#editReceitaModal').modal('show'); // abre modal
+                $('#editDespesaModal').modal('show'); // abre modal
             });
         }
 
@@ -58,7 +57,7 @@
 
             var id = $('#delete-id').val();
 
-            $.post('/Receitas/Delete/' + id, function () {    
+            $.post('/Despesa/Delete/' + id, function () {
                 location.reload();
             }).fail(function () {
                 alert("Erro ao excluir.");
@@ -66,3 +65,4 @@
         });
 
     </script>
+}

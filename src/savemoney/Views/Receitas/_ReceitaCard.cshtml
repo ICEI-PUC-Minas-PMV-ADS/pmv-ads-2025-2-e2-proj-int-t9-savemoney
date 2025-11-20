@@ -22,10 +22,9 @@
             <button class="btn btn-primary" onclick="openReceitaModal(@Model.Id)">
                 Editar
             </button>
-            <button class="btn btn-sm btn-danger"
-                    type="button"
-                    onclick="openDeleteModal(@Model.Id, '@Model.Titulo')">
-                Excluir
+            <button class="btn btn-danger btn-sm"
+                    onclick="openDeleteModal('@Model.Id', '@Model.Titulo')">
+                <i class="bi bi-trash"></i> Excluir
             </button>
         </div>
     </div>

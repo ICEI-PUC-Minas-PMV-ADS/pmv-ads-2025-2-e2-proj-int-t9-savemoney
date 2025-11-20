@@ -8,17 +8,30 @@ namespace savemoney.Models
     public class Despesa
     {
 
+        public Despesa()
+        {
+            DataInicio = DateTime.Today;
+            DataFim = DateTime.Today;
+        }
+
         [Key]
         public int Id { get; set; }
+
         [Required(ErrorMessage = "O nome da despesa é obrigatório.")]
         [StringLength(50)]
         public string Titulo { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "O valor é obrigatório")]
+        [Column(TypeName = "decimal(18,3)")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
+        [RegularExpression(@"^\d+(\,\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")]
         public decimal Valor { get; set; }
+
         public string CurrencyType { get; set; } = "BRL";
+
         [DataType(DataType.Date)]
         public DateTime DataInicio { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime DataFim { get; set; }
 
@@ -34,9 +47,17 @@ namespace savemoney.Models
         public int? RecurrenceCount { get; set; }
         public enum RecurrenceType
         {
+
+            [Display(Name = "Diária")]
             Daily,
+
+            [Display(Name = "Semanal")]
             Weekly,
+
+            [Display(Name = "Mensal")]
             Monthly,
+
+            [Display(Name = "Anual")]
             Yearly
         }
     }

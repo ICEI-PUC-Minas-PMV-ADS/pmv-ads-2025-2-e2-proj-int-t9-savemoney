@@ -7,6 +7,12 @@ namespace savemoney.Models
     [Table("Receita")]
     public class Receita
     {
+        public Receita()
+        {
+            DataInicio = DateTime.Today;
+            DataFim = DateTime.Today;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -15,7 +21,9 @@ namespace savemoney.Models
         public string Titulo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O valor é obrigatório")]
+        [Column(TypeName = "decimal(18,3)")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
+        [RegularExpression(@"^\d+(\,\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")]
         public decimal Valor { get; set; }
 
         [Display(Name = "Tipo de Moeda")]
@@ -39,10 +47,18 @@ namespace savemoney.Models
         public RecurrenceType Recurrence { get; set; }
         public enum RecurrenceType
         {
+            [Display(Name = "Diária")]
             Daily,
+
+            [Display(Name = "Semanal")]
             Weekly,
+
+            [Display(Name = "Mensal")]
             Monthly,
+
+            [Display(Name = "Anual")]
             Yearly
+
         }
 
         [Display(Name = "Quantidade de Repetições")]

@@ -34,21 +34,32 @@
                         <div class="col-md-4">
                             <label asp-for="Valor" class="form-label"></label>
                             <div class="input-group">
-                                <span class="input-group-text">R$</span>
+                                <span id="currencySymbol" class="input-group-text">R$</span>
                                 <input asp-for="Valor" class="form-control" type="number" step="0.01" min="0.01" />
                             </div>
                             <span asp-validation-for="Valor" class="text-danger"></span>
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <label asp-for="CurrencyType" class="form-label"></label>
+                        <select asp-for="CurrencyType" id="currencyType" class="form-select">
+                            <option value="BRL">Real(BRL)</option>
+                            <option value="USD">Dolar(USD)</option>
+                            <option value="EUR">Euro(EUR)</option>
+                            <option value="GBP">Libra (GBP)</option>
+                            <option value="JPY">Iene (JPY)</option>
+                        </select>
+                    </div>
+
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
                             <label asp-for="DataInicio" class="form-label"></label>
-                            <input asp-for="DataInicio" class="form-control" type="date" />
+                            <input type="date" asp-for="DataInicio" class="form-control" type="date" />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="DataFim" class="form-label"></label>
-                            <input asp-for="DataFim" class="form-control" type="date" />
+                            <input type="date" asp-for="DataFim" class="form-control" type="date" />
                         </div>
                     </div>
 
@@ -84,12 +95,8 @@
                     <div class="row g-3" id="recurrenceOptions" style="display: @(Model.IsRecurring ? "flex" : "none");">
                         <div class="col-md-6">
                             <label asp-for="Recurrence" class="form-label">Frequência</label>
-                            <select asp-for="Recurrence" class="form-select">
+                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Recurrence>()" class="form-select">
                                 <option value="">Selecione...</option>
-                                <option value="Daily">Diária</option>
-                                <option value="Weekly">Semanal</option>
-                                <option value="Monthly">Mensal</option>
-                                <option value="Yearly">Anual</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -126,18 +133,17 @@
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", function () {
-
-            const chk = document.getElementById("isRecurringSwitch");
-
+           document.addEventListener("DOMContentLoaded", function () {
+            const chk = document.querySelector("input[name='IsRecurring']");
             const div = document.getElementById("recurrenceOptions");
 
             chk.addEventListener("change", function () {
-
-                div.style.display = this.checked ? "flex" : "none";
-
+                if (this.checked) {
+                    div.style.display = "flex";
+                } else {
+                    div.style.display = "none";
+                }
             });
-
         });
     </script>
 

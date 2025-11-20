@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Compile Remove="Models\Receitas.cs" />
+    <Compile Remove="Models\RecurrenceType.cs" />
     <Compile Remove="Views\Receitas\_DeleteModal.cs" />
   </ItemGroup>
 
