@@ -1,4 +1,5 @@
 ﻿@model savemoney.Models.Receita
+@using savemoney.Models
 
 <div class="modal fade" id="editReceitaModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -66,8 +67,8 @@
 
                     <div class="row g-3" id="recurrenceOptions_edit" style="display:@(Model.IsRecurring ? "flex" : "none");">
                         <div class="col-md-6">
-                            <label asp-for="Recurrence" class="form-label">Frequência</label>
-                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Recurrence>()" class="form-select">
+                            <label asp-for="RecurrenceType" class="form-label">Frequência</label>
+                            <select asp-for="RecurrenceType" asp-items="Html.GetEnumSelectList<Receita.RecurrenceType>()" class="form-select">
                                 <option value="">Selecione...</option>
                             </select>
                         </div>

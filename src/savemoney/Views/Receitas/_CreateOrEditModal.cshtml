@@ -1,4 +1,5 @@
 ﻿@model savemoney.Models.Receita
+@using savemoney.Models
 
 <div class="modal fade" id="receitaModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -8,16 +9,13 @@
                   method="post">
 
                 @if (Model.Id != 0)
-
                 {
                     <input type="hidden" asp-for="Id" />
-
                 }
 
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
                         <i class="bi bi-cash-coin"></i>
-
                         @(Model.Id == 0 ? "Nova Receita" : "Editar Receita")
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -55,26 +53,26 @@
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
                             <label asp-for="DataInicio" class="form-label"></label>
-                            <input type="date" asp-for="DataInicio" class="form-control" type="date" />
+                            <input type="date" asp-for="DataInicio" class="form-control" />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="DataFim" class="form-label"></label>
-                            <input type="date" asp-for="DataFim" class="form-control" type="date" />
+                            <input type="date" asp-for="DataFim" class="form-control" />
                         </div>
-                    </div>     
+                    </div>
+                    
                     <!-- RECORRÊNCIA -->
                     <div class="form-check form-switch mb-3">
                         <input asp-for="IsRecurring" class="form-check-input" type="checkbox" role="switch" id="isRecurringSwitch" />
                         <label class="form-check-label fw-bold" asp-for="IsRecurring">
-
                             Esta receita é recorrente?
                         </label>
                     </div>
 
                     <div class="row g-3" id="recurrenceOptions" style="display: @(Model.IsRecurring ? "flex" : "none");">
                         <div class="col-md-6">
-                            <label asp-for="Recurrence" class="form-label">Frequência</label>
-                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Recurrence>()" class="form-select">
+                            <label asp-for="RecurrenceType" class="form-label">Frequência</label>
+                            <select asp-for="RecurrenceType" asp-items="Html.GetEnumSelectList<Receita.RecurrenceType>()" class="form-select">
                                 <option value="">Selecione...</option>
                             </select>
                         </div>
@@ -83,6 +81,7 @@
                             <input asp-for="RecurrenceCount" class="form-control" type="number" min="1" max="365" placeholder="Ex: 12 parcelas" />
                         </div>
                     </div>
+                    
                     <div class="form-check mt-3">
                         <input asp-for="Recebido" class="form-check-input" />
                         <label asp-for="Recebido" class="form-check-label"></label>
@@ -102,7 +101,7 @@
     </div>
 </div>
 
-                    @section Scripts {
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
 
