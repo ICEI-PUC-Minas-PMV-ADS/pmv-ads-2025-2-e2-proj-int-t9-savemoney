@@ -1,4 +1,5 @@
-﻿@model savemoney.Models.Receita
+﻿@model savemoney.Models.Despesa
+@using savemoney.Models
 
 <div class="modal fade" id="editReceitaModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -41,8 +42,8 @@
 
                     <div class="row" id="recurrenceOptions" style="display:@(Model.IsRecurring ? "flex" : "none");">
                         <div class="col">
-                            <label asp-for="Recurrence" class="form-label"></label>
-                            <select asp-for="Recurrence" class="form-select">
+                            <label asp-for="RecurrenceType" class="form-label"></label>
+                            <select asp-for="RecurrenceType" class="form-select">
                                 <option value="">Selecione...</option>
                                 <option value="Daily">Diária</option>
                                 <option value="Weekly">Semanal</option>
@@ -57,8 +58,8 @@
                     </div>
 
                     <div class="form-check mt-3">
-                        <input asp-for="Recebido" class="form-check-input" />
-                        <label asp-for="Recebido" class="form-check-label"></label>
+                        <input asp-for="Pago" class="form-check-input" />
+                        <label asp-for="Pago" class="form-check-label"></label>
                     </div>
                 </div>
 

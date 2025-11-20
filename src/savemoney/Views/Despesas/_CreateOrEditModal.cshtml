@@ -1,4 +1,5 @@
 ﻿@model savemoney.Models.Despesa
+@using savemoney.Models
 
 <div class="modal fade" id="despesaModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -8,16 +9,13 @@
                   method="post">
 
                 @if (Model.Id != 0)
-
                 {
                     <input type="hidden" asp-for="Id" />
-
                 }
 
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
                         <i class="bi bi-cash-coin"></i>
-
                         @(Model.Id == 0 ? "Nova Despesa" : "Editar Despesa")
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -55,18 +53,17 @@
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
                             <label asp-for="DataInicio" class="form-label"></label>
-                            <input type="date" asp-for="DataInicio" class="form-control" type="date" />
+                            <input type="date" asp-for="DataInicio" class="form-control" />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="DataFim" class="form-label"></label>
-                            <input type="date" asp-for="DataFim" class="form-control" type="date" />
+                            <input type="date" asp-for="DataFim" class="form-control" />
                         </div>
                     </div>
 
                     <!-- CATEGORIA COM ORÇAMENTO ATIVO + STATUS VISUAL -->
                     <div class="mt-3">
                         <label class="form-label fw-bold text-primary">
-
                             Categoria no Orçamento Atual
                         </label>
                         <select asp-for="BudgetCategoryId"
@@ -75,7 +72,6 @@
                         </select>
                         <div class="form-text text-muted mt-1">
                             <i class="bi bi-info-circle"></i>
-
                             Despesas sem categoria não afetam os limites do seu orçamento.
                         </div>
                         <span asp-validation-for="BudgetCategoryId" class="text-danger"></span>
@@ -87,15 +83,14 @@
                     <div class="form-check form-switch mb-3">
                         <input asp-for="IsRecurring" class="form-check-input" type="checkbox" role="switch" id="isRecurringSwitch" />
                         <label class="form-check-label fw-bold" asp-for="IsRecurring">
-
                             Esta despesa é recorrente?
                         </label>
                     </div>
 
                     <div class="row g-3" id="recurrenceOptions" style="display: @(Model.IsRecurring ? "flex" : "none");">
                         <div class="col-md-6">
-                            <label asp-for="Recurrence" class="form-label">Frequência</label>
-                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Recurrence>()" class="form-select">
+                            <label asp-for="RecurrenceType" class="form-label">Frequência</label>
+                            <select asp-for="RecurrenceType" asp-items="Html.GetEnumSelectList<Despesa.RecurrenceType>()" class="form-select">
                                 <option value="">Selecione...</option>
                             </select>
                         </div>
@@ -109,7 +104,6 @@
                     <div class="form-check mt-4">
                         <input asp-for="Pago" class="form-check-input" type="checkbox" id="recebidoCheck" />
                         <label class="form-check-label text-success fw-bold" asp-for="Pago">
-
                             Já foi pago 
                         </label>
                     </div>
@@ -132,8 +126,7 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-
-           document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
             const chk = document.querySelector("input[name='IsRecurring']");
             const div = document.getElementById("recurrenceOptions");
 
@@ -146,5 +139,4 @@
             });
         });
     </script>
-
 }
