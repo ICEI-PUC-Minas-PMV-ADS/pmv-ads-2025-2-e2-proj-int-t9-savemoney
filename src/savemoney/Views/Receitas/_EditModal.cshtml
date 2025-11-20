@@ -67,7 +67,7 @@
 
                     <div class="row g-3" id="recurrenceOptions_edit" style="display:@(Model.IsRecurring ? "flex" : "none");">
                         <div class="col-md-6">
-                            <label asp-for="RecurrenceType" class="form-label">Frequência</label>
+                            <label class="form-label">Frequência</label>
                             <select asp-for="RecurrenceType" asp-items="Html.GetEnumSelectList<Receita.RecurrenceType>()" class="form-select">
                                 <option value="">Selecione...</option>
                             </select>
