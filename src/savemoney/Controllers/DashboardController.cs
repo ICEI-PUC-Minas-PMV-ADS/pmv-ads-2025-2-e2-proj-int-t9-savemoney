@@ -44,7 +44,7 @@ namespace savemoney.Controllers
         // POST: Dashboard/SalvarWidget
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SalvarWidget([Bind("Id,Titulo,Descricao,Link,Colunas,Largura,CorFundo")] Widget widget)
+        public async Task<IActionResult> SalvarWidget([Bind("Id,Titulo,Descricao,ImagemUrl,Link,Colunas,Largura,CorFundo")] Widget widget)
         {
             var usuarioId = ObterUsuarioIdLogado();
 
@@ -94,6 +94,7 @@ namespace savemoney.Controllers
 
                 widgetExistente.Titulo = widget.Titulo;
                 widgetExistente.Descricao = widget.Descricao;
+                widgetExistente.ImagemUrl = widget.ImagemUrl;
                 widgetExistente.Link = widget.Link;
                 widgetExistente.Colunas = widget.Colunas;
                 widgetExistente.Largura = widget.Largura;
