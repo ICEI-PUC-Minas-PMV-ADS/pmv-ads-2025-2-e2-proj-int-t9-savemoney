@@ -21,8 +21,9 @@ namespace savemoney.Services
             var fim = DateTime.Now;
             var inicio = fim.AddMonths(-meses);
 
-            Console.WriteLine($"DEBUG: Buscando de {inicio:yyyy-MM-dd} até {fim:yyyy-MM-dd}");
+            Console.WriteLine($"🔍 Buscando dados de {inicio:dd/MM/yyyy} até {fim:dd/MM/yyyy} ({meses} meses)");
 
+            // Buscar receitas e despesas do período (sem UsuarioId)
             var receitas = await _context.Receitas
                 .Where(r => r.DataInicio >= inicio && r.DataInicio <= fim)
                 .OrderBy(r => r.DataInicio)
@@ -33,58 +34,117 @@ namespace savemoney.Services
                 .OrderBy(d => d.DataInicio)
                 .ToListAsync();
 
-            Console.WriteLine($"DEBUG: Encontradas {receitas.Count} receitas e {despesas.Count} despesas");
+            Console.WriteLine($"📊 Encontradas {receitas.Count} receitas e {despesas.Count} despesas");
 
+            // Verificar se há dados suficientes
             var dadosSuficientes = receitas.Any() || despesas.Any();
 
             if (!dadosSuficientes)
             {
                 return new RelatorioTendenciaViewModel
                 {
-                    PeriodoMeses = meses,
+                    PeriodoMeses = 0,
                     DataInicio = inicio,
                     DataFim = fim,
                     DadosSuficientes = false,
-                    MensagemTendencia = "Não há dados suficientes para gerar análise de tendências."
+                    MensagemTendencia = "Não há dados suficientes para gerar análise de tendências.",
+                    Alertas = new List<string>
+                    {
+                        "Comece registrando suas receitas e despesas para obter insights financeiros."
+                    },
+                    DadosMensais = new List<DadosMensalViewModel>()
                 };
             }
 
-            var dadosMensais = CalcularDadosMensais(receitas, despesas, inicio, fim);
+            // Calcular todos os meses do período
+            var todosDadosMensais = CalcularDadosMensais(receitas, despesas, inicio, fim);
 
-            var variacaoTotal = 0.0;
-            if (dadosMensais.Count >= 2)
+            // Filtrar apenas meses com movimentação real
+            var dadosMensaisReais = todosDadosMensais
+                .Where(d => d.TotalReceitas > 0 || d.TotalDespesas > 0)
+                .ToList();
+
+            Console.WriteLine($"📅 Meses com dados reais: {dadosMensaisReais.Count}");
+
+            // Se não há meses com dados reais
+            if (dadosMensaisReais.Count == 0)
             {
-                var primeiroMes = dadosMensais.First().Saldo;
-                var ultimoMes = dadosMensais.Last().Saldo;
-                if (primeiroMes != 0)
+                return new RelatorioTendenciaViewModel
                 {
-                    variacaoTotal = ((ultimoMes - primeiroMes) / Math.Abs(primeiroMes)) * 100;
+                    PeriodoMeses = 0,
+                    DataInicio = inicio,
+                    DataFim = fim,
+                    DadosSuficientes = false,
+                    MensagemTendencia = "Não há dados suficientes para gerar análise de tendências.",
+                    Alertas = new List<string>
+                    {
+                        "Comece registrando suas receitas e despesas para obter insights financeiros."
+                    },
+                    DadosMensais = new List<DadosMensalViewModel>()
+                };
+            }
+
+            // Recalcular variações apenas entre meses consecutivos com dados
+            RecalcularVariacoes(dadosMensaisReais);
+
+            // Período real analisado
+            var dataInicioReal = dadosMensaisReais.First().Data;
+            var dataFimReal = dadosMensaisReais.Last().Data;
+            var periodoReal = dadosMensaisReais.Count;
+
+            Console.WriteLine($"✅ Período real: {dataInicioReal:MMM/yyyy} - {dataFimReal:MMM/yyyy} ({periodoReal} meses)");
+
+            // Calcular variação total apenas se houver 2+ meses
+            var variacaoTotal = 0.0;
+            if (periodoReal >= 2)
+            {
+                var primeiroSaldo = dadosMensaisReais.First().Saldo;
+                var ultimoSaldo = dadosMensaisReais.Last().Saldo;
+
+                if (primeiroSaldo != 0)
+                {
+                    variacaoTotal = ((ultimoSaldo - primeiroSaldo) / Math.Abs(primeiroSaldo)) * 100;
                 }
             }
 
+            // Identificar tendência
             var tendencia = _calculadora.IdentificarTendencia(variacaoTotal);
-            var alertas = GerarAlertas(dadosMensais);
 
+            // Gerar alertas inteligentes (só se tiver 3+ meses)
+            var alertas = GerarAlertasInteligentes(dadosMensaisReais, periodoReal);
+
+            // Calcular totais
             var totalReceitas = receitas.Sum(r => (double)r.Valor);
             var totalDespesas = despesas.Sum(d => (double)d.Valor);
             var saldoAtual = totalReceitas - totalDespesas;
 
-            var mediaReceitas = dadosMensais.Any() ? dadosMensais.Average(d => d.TotalReceitas) : 0;
-            var mediaDespesas = dadosMensais.Any() ? dadosMensais.Average(d => d.TotalDespesas) : 0;
-            var mediaSaldo = dadosMensais.Any() ? dadosMensais.Average(d => d.Saldo) : 0;
+            // Calcular médias
+            var mediaReceitas = dadosMensaisReais.Average(d => d.TotalReceitas);
+            var mediaDespesas = dadosMensaisReais.Average(d => d.TotalDespesas);
+            var mediaSaldo = dadosMensaisReais.Average(d => d.Saldo);
 
-            var melhorMes = dadosMensais.OrderByDescending(d => d.Saldo).FirstOrDefault();
-            var piorMes = dadosMensais.OrderBy(d => d.Saldo).FirstOrDefault();
+            // Melhor e pior mês (apenas se tiver dados suficientes)
+            var melhorMes = periodoReal >= 2 ? dadosMensaisReais.OrderByDescending(d => d.Saldo).First() : null;
+            var piorMes = periodoReal >= 2 ? dadosMensaisReais.OrderBy(d => d.Saldo).First() : null;
 
-            var mensagemTendencia = GerarMensagemTendencia(tendencia, variacaoTotal);
+            // Detectar outliers (só se tiver 4+ meses)
+            if (periodoReal >= 4)
+            {
+                DetectarOutliers(dadosMensaisReais);
+            }
+
+            // Gerar mensagem de tendência
+            var mensagemTendencia = GerarMensagemTendencia(tendencia, variacaoTotal, periodoReal);
+
+            Console.WriteLine($"✅ Análise concluída: {tendencia} ({variacaoTotal:F1}%)");
 
             return new RelatorioTendenciaViewModel
             {
-                PeriodoMeses = meses,
-                DataInicio = inicio,
-                DataFim = fim,
+                PeriodoMeses = periodoReal,
+                DataInicio = dataInicioReal,
+                DataFim = dataFimReal,
                 TendenciaIdentificada = tendencia,
-                DadosMensais = dadosMensais,
+                DadosMensais = dadosMensaisReais,
                 SaldoAtual = saldoAtual,
                 MediaReceitas = mediaReceitas,
                 MediaDespesas = mediaDespesas,
@@ -92,9 +152,9 @@ namespace savemoney.Services
                 VariacaoPercentualTotal = variacaoTotal,
                 MensagemTendencia = mensagemTendencia,
                 Alertas = alertas,
-                DadosSuficientes = dadosSuficientes,
-                MelhorMes = melhorMes?.MesAno,
-                PiorMes = piorMes?.MesAno
+                DadosSuficientes = true,
+                MelhorMes = melhorMes?.MesAno ?? "-",
+                PiorMes = piorMes?.MesAno ?? "-"
             };
         }
 
@@ -133,33 +193,53 @@ namespace savemoney.Services
                 mesAtual = proximoMes;
             }
 
+            return dadosMensais;
+        }
+
+        private void RecalcularVariacoes(List<DadosMensalViewModel> dadosMensais)
+        {
+            if (dadosMensais.Count < 2) return;
+
+            // Primeiro mês nunca tem variação
+            dadosMensais[0].VariacaoPercentual = null;
+
+            // Calcular variação entre meses consecutivos
             for (int i = 1; i < dadosMensais.Count; i++)
             {
                 var mesAnterior = dadosMensais[i - 1].Saldo;
-                var mesAtualSaldo = dadosMensais[i].Saldo;
+                var mesAtual = dadosMensais[i].Saldo;
 
                 if (mesAnterior != 0)
                 {
                     dadosMensais[i].VariacaoPercentual =
-                        ((mesAtualSaldo - mesAnterior) / Math.Abs(mesAnterior)) * 100;
+                        ((mesAtual - mesAnterior) / Math.Abs(mesAnterior)) * 100;
+                }
+                else if (mesAtual != 0)
+                {
+                    // Se mês anterior era zero, qualquer valor é variação infinita
+                    dadosMensais[i].VariacaoPercentual = mesAtual > 0 ? 100 : -100;
+                }
+                else
+                {
+                    dadosMensais[i].VariacaoPercentual = 0;
                 }
             }
-
-            DetectarOutliers(dadosMensais);
-
-            return dadosMensais;
         }
 
         private void DetectarOutliers(List<DadosMensalViewModel> dadosMensais)
         {
-            if (dadosMensais.Count < 3) return;
+            if (dadosMensais.Count < 4) return;
 
+            // Usar IQR (Interquartile Range) para detectar outliers
             var despesas = dadosMensais.Select(d => d.TotalDespesas).OrderBy(d => d).ToList();
+
             var q1Index = despesas.Count / 4;
             var q3Index = (despesas.Count * 3) / 4;
             var q1 = despesas[q1Index];
             var q3 = despesas[q3Index];
             var iqr = q3 - q1;
+
+            // Outliers são valores fora de [Q1 - 1.5*IQR, Q3 + 1.5*IQR]
             var limiteInferior = q1 - (1.5 * iqr);
             var limiteSuperior = q3 + (1.5 * iqr);
 
@@ -170,53 +250,98 @@ namespace savemoney.Services
                     mes.IsOutlier = true;
                 }
             }
+
+            Console.WriteLine($"🔍 Outliers detectados: {dadosMensais.Count(d => d.IsOutlier)}");
         }
 
-        private List<string> GerarAlertas(List<DadosMensalViewModel> dadosMensais)
+        private List<string> GerarAlertasInteligentes(List<DadosMensalViewModel> dadosMensais, int mesesComDados)
         {
             var alertas = new List<string>();
 
-            var mediaDespesas = dadosMensais.Average(d => d.TotalDespesas);
-            var despesasAcimaDaMedia = dadosMensais
-                .Where(d => d.TotalDespesas > mediaDespesas * 1.2)
-                .ToList();
-
-            if (despesasAcimaDaMedia.Any())
+            // Se não há dados suficientes para análise
+            if (mesesComDados < 2)
             {
-                var meses = string.Join(", ", despesasAcimaDaMedia.Select(d => d.MesAno));
-                alertas.Add($"Gastos 20% acima da média em: {meses}");
+                alertas.Add("📊 Continue registrando suas movimentações para obter análises mais precisas.");
+                return alertas;
             }
 
-            var saldosNegativos = dadosMensais.Where(d => d.Saldo < 0).ToList();
-            if (saldosNegativos.Any())
+            if (mesesComDados == 2)
             {
-                var meses = string.Join(", ", saldosNegativos.Select(d => d.MesAno));
-                alertas.Add($"Saldo negativo em: {meses}");
+                alertas.Add("📊 Com apenas 2 meses de dados, as análises são limitadas. Continue registrando para insights mais precisos.");
             }
 
-            var ultimoMes = dadosMensais.LastOrDefault();
-            if (ultimoMes?.VariacaoPercentual.HasValue == true && ultimoMes.VariacaoPercentual < -10)
+            // ALERTAS SÓ COM 3+ MESES
+            if (mesesComDados >= 3)
             {
-                alertas.Add($"Queda de {Math.Abs(ultimoMes.VariacaoPercentual.Value):F1}% no último mês");
+                // Alerta: Gastos acima da média
+                var mediaDespesas = dadosMensais.Average(d => d.TotalDespesas);
+                var despesasAcimaDaMedia = dadosMensais
+                    .Where(d => d.TotalDespesas > mediaDespesas * 1.2)
+                    .ToList();
+
+                if (despesasAcimaDaMedia.Any())
+                {
+                    var meses = string.Join(", ", despesasAcimaDaMedia.Select(d => d.MesAno));
+                    alertas.Add($"⚠️ Gastos 20% acima da média em: {meses}");
+                }
+
+                // Alerta: Saldos negativos
+                var saldosNegativos = dadosMensais.Where(d => d.Saldo < 0).ToList();
+                if (saldosNegativos.Any())
+                {
+                    var meses = string.Join(", ", saldosNegativos.Select(d => d.MesAno));
+                    alertas.Add($"🔴 Saldo negativo em: {meses}");
+                }
+
+                // Alerta: Queda no último mês
+                var ultimoMes = dadosMensais.Last();
+                if (ultimoMes.VariacaoPercentual.HasValue && ultimoMes.VariacaoPercentual < -15)
+                {
+                    alertas.Add($"📉 Queda de {Math.Abs(ultimoMes.VariacaoPercentual.Value):F1}% no último mês");
+                }
             }
 
-            var outliers = dadosMensais.Where(d => d.IsOutlier).ToList();
-            if (outliers.Any())
+            // ALERTAS SÓ COM 4+ MESES
+            if (mesesComDados >= 4)
             {
-                var meses = string.Join(", ", outliers.Select(d => d.MesAno));
-                alertas.Add($"Gastos atípicos detectados em: {meses}");
+                // Alerta: Outliers
+                var outliers = dadosMensais.Where(d => d.IsOutlier).ToList();
+                if (outliers.Any())
+                {
+                    var meses = string.Join(", ", outliers.Select(d => d.MesAno));
+                    alertas.Add($"⚡ Gastos atípicos detectados em: {meses}");
+                }
+            }
+
+            // Se não há alertas, dar feedback positivo
+            if (alertas.Count == 0)
+            {
+                alertas.Add("✅ Suas finanças estão em equilíbrio. Continue assim!");
             }
 
             return alertas;
         }
 
-        private string GerarMensagemTendencia(TipoTendencia tendencia, double variacao)
+        private string GerarMensagemTendencia(TipoTendencia tendencia, double variacao, int mesesComDados)
         {
+            // Se tem menos de 2 meses, não há tendência
+            if (mesesComDados < 2)
+            {
+                return "Continue registrando suas movimentações para identificar tendências financeiras.";
+            }
+
+            // Se tem 2 meses, avisar que é preliminar
+            if (mesesComDados == 2)
+            {
+                return $"Com base nos 2 meses analisados, suas finanças apresentam uma variação de {(variacao >= 0 ? "+" : "")}{variacao:F1}%. Continue registrando para análises mais precisas.";
+            }
+
+            // Com 3+ meses, análise normal
             return tendencia switch
             {
-                TipoTendencia.Crescente => $"Suas finanças apresentam uma tendência crescente de {variacao:F1}%",
-                TipoTendencia.Decrescente => $"Suas finanças apresentam uma tendência decrescente de {Math.Abs(variacao):F1}%",
-                TipoTendencia.Estavel => "Suas finanças apresentam uma tendência estável",
+                TipoTendencia.Crescente => $"✅ Suas finanças apresentam uma tendência crescente de {variacao:F1}%",
+                TipoTendencia.Decrescente => $"⚠️ Suas finanças apresentam uma tendência decrescente de {Math.Abs(variacao):F1}%",
+                TipoTendencia.Estavel => "📊 Suas finanças apresentam uma tendência estável",
                 _ => "Não foi possível identificar uma tendência clara"
             };
         }
