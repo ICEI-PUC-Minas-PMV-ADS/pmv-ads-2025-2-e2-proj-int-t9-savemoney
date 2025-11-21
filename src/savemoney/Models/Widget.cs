@@ -18,6 +18,10 @@ namespace savemoney.Models
         [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres.")]
         public string? Descricao { get; set; }
 
+        [StringLength(2000, ErrorMessage = "A URL da imagem deve ter no máximo 2000 caracteres.")]
+        [Url(ErrorMessage = "Por favor, insira uma URL válida.")]
+        public string? ImagemUrl { get; set; }
+
         [StringLength(200, ErrorMessage = "O link deve ter no máximo 200 caracteres.")]
         public string? Link { get; set; }
 
@@ -28,6 +32,7 @@ namespace savemoney.Models
         public int Largura { get; set; } = 1;
 
         public int PosicaoX { get; set; } = 0;
+
         public int PosicaoY { get; set; } = 0;
 
         [RegularExpression(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
