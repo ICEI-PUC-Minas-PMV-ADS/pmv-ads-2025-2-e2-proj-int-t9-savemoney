@@ -16,10 +16,17 @@ function limparFormulario() {
     document.getElementById('widgetId').value = '0';
     document.getElementById('titulo').value = '';
     document.getElementById('descricao').value = '';
+    document.getElementById('imagemUrl').value = '';
     document.getElementById('link').value = '';
     document.getElementById('colunas').value = '1';
     document.getElementById('largura').value = '1';
     document.getElementById('corFundo').value = '#1b1d29';
+
+    // Limpar preview
+    const preview = document.getElementById('imagemPreview');
+    if (preview) {
+        preview.style.display = 'none';
+    }
 }
 
 // Modal de Confirmação
@@ -46,6 +53,42 @@ window.onclick = function (event) {
     }
 }
 
+// ============ PREVIEW DE IMAGEM ============
+
+function previewImagem() {
+    const imagemUrlInput = document.getElementById('imagemUrl');
+    const imagemPreview = document.getElementById('imagemPreview');
+    const imagemPreviewImg = document.getElementById('imagemPreviewImg');
+    const corFundoInput = document.getElementById('corFundo');
+
+    const url = imagemUrlInput.value.trim();
+
+    if (url) {
+        // Mostrar preview
+        imagemPreviewImg.src = url;
+        imagemPreview.style.display = 'block';
+
+        // Desabilitar cor de fundo (opcional - imagem tem prioridade)
+        corFundoInput.style.opacity = '0.5';
+        corFundoInput.title = 'Cor de fundo não será usada quando houver imagem';
+
+        // Validar se a imagem carrega
+        imagemPreviewImg.onerror = function () {
+            mostrarNotificacao('URL de imagem inválida ou inacessível', 'error');
+            imagemPreview.style.display = 'none';
+        };
+
+        imagemPreviewImg.onload = function () {
+            mostrarNotificacao('Imagem carregada com sucesso!', 'success');
+        };
+    } else {
+        // Esconder preview
+        imagemPreview.style.display = 'none';
+        corFundoInput.style.opacity = '1';
+        corFundoInput.title = '';
+    }
+}
+
 // ============ EDITAR WIDGET ============
 
 async function editarWidget(id) {
@@ -62,10 +105,16 @@ async function editarWidget(id) {
         document.getElementById('widgetId').value = widget.id;
         document.getElementById('titulo').value = widget.titulo;
         document.getElementById('descricao').value = widget.descricao || '';
+        document.getElementById('imagemUrl').value = widget.imagemUrl || '';
         document.getElementById('link').value = widget.link || '';
         document.getElementById('colunas').value = widget.colunas;
         document.getElementById('largura').value = widget.largura;
         document.getElementById('corFundo').value = widget.corFundo;
+
+        // Preview da imagem se houver
+        if (widget.imagemUrl) {
+            previewImagem();
+        }
 
         // Abrir modal
         document.getElementById('modalTitle').textContent = 'Editar Widget';
@@ -145,7 +194,7 @@ async function uploadFotoPerfil(file) {
             // Atualizar a imagem
             document.getElementById('avatarImage').src = result.caminhoFoto;
 
-            // Mostrar mensagem de sucesso (opcional)
+            // Mostrar mensagem de sucesso
             mostrarNotificacao('Foto atualizada com sucesso!', 'success');
         } else {
             throw new Error(result.message || 'Erro ao salvar foto');
@@ -165,14 +214,16 @@ function mostrarNotificacao(mensagem, tipo = 'success') {
     notificacao.className = `notificacao notificacao-${tipo}`;
     notificacao.textContent = mensagem;
 
-    // Estilos inline (ou adicionar no CSS)
+    // Estilos inline
     notificacao.style.position = 'fixed';
-    notificacao.style.top = '20px';
-    notificacao.style.right = '20px';
+    notificacao.style.top = '1.25rem';
+    notificacao.style.right = '1.25rem';
     notificacao.style.padding = '1rem 1.5rem';
-    notificacao.style.borderRadius = '8px';
+    notificacao.style.borderRadius = '0.5rem';
     notificacao.style.zIndex = '9999';
     notificacao.style.animation = 'slideInRight 0.3s ease';
+    notificacao.style.fontWeight = '600';
+    notificacao.style.fontSize = '0.9375rem';
 
     if (tipo === 'success') {
         notificacao.style.background = 'rgba(16, 185, 129, 0.2)';
@@ -200,7 +251,7 @@ const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
         from {
-            transform: translateX(400px);
+            transform: translateX(25rem);
             opacity: 0;
         }
         to {
@@ -215,7 +266,7 @@ style.textContent = `
             opacity: 1;
         }
         to {
-            transform: translateX(400px);
+            transform: translateX(25rem);
             opacity: 0;
         }
     }
@@ -252,19 +303,17 @@ if (formWidget) {
             return;
         }
 
-        // Se chegou aqui, submit normal (servidor processa)
-    });
-}
-
-// ============ PREVIEW DE COR ============
-
-const corFundoInput = document.getElementById('corFundo');
-if (corFundoInput) {
-    corFundoInput.addEventListener('input', (e) => {
-        // Opcional: mostrar preview da cor escolhida
-        const previewText = document.querySelector('.color-preview-text');
-        if (previewText) {
-            previewText.textContent = e.target.value;
+        // Validar URL da imagem se preenchida
+        const imagemUrl = document.getElementById('imagemUrl').value.trim();
+        if (imagemUrl) {
+            try {
+                new URL(imagemUrl);
+            } catch (error) {
+                e.preventDefault();
+                alert('Por favor, insira uma URL de imagem válida!');
+                document.getElementById('imagemUrl').focus();
+                return;
+            }
         }
     });
 }
@@ -275,3 +324,6 @@ console.log('Dashboard.js carregado com sucesso! 🚀');
 console.log('Atalhos disponíveis:');
 console.log('- ESC: Fechar modais');
 console.log('- Ctrl+N: Novo widget');
+console.log('');
+console.log('💡 Dica: Use imagens do Unsplash para widgets bonitos!');
+console.log('   https://unsplash.com');
