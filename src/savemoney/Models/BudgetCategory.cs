@@ -33,12 +33,10 @@ namespace savemoney.Models
 
         // Propriedades de navegação
         [ForeignKey("BudgetId")]
-        [BindNever]
-        public virtual Budget Budget { get; set; } = null!;
+        public virtual Budget? Budget { get; set; }
 
         [ForeignKey("CategoryId")]
-        [BindNever]
-        public virtual Category Category { get; set; } = null!;
+        public virtual Category? Category { get; set; }
 
         //public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
 

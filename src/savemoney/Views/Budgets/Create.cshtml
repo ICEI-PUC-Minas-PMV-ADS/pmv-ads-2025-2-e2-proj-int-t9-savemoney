@@ -55,29 +55,60 @@
                         <hr class="my-4" />
                         <h5 class="mb-3">Categorias do Orçamento</h5>
 
-                        <table class="table table-bordered align-middle" id="categoriesTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 50%">Categoria</th>
-                                    <th style="width: 35%">Limite (R$)</th>
-                                    <th style="width: 15%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Linhas adicionadas via JS -->
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle" id="categoriesTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 50%">Categoria</th>
+                                        <th style="width: 35%">Limite (R$)</th>
+                                        <th style="width: 15%" class="text-center">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @* RENDERIZA CATEGORIAS QUE VOLTARAM DO POST (com erro) *@
+                                    @if (Model.Categories != null && Model.Categories.Any())
+                                    {
+                                        for (int i = 0; i < Model.Categories.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <select asp-for="Categories[i].CategoryId"
+                                                            class="form-select form-select-sm"
+                                                            asp-items="ViewBag.AvailableCategories">
+                                                        <option value="">Selecione uma categoria...</option>
+                                                    </select>
+                                                    <span asp-validation-for="Categories[i].CategoryId" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="Categories[i].Limit"
+                                                           type="number" step="0.01" min="0.01"
+                                                           class="form-control form-select-sm" placeholder="0,00" />
+                                                    <span asp-validation-for="Categories[i].Limit" class="text-danger"></span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                            onclick="this.closest('tr').remove()">
+                                                        Remover
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <button type="button" class="btn btn-outline-success btn-sm mb-3" onclick="addCategoryRow()">
-                            + Adicionar Categoria
-                        </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm mb-3 ms-2"
-                                onclick="window.location.href='@Url.Action("Index", "Categories")'">
-                            + Nova Categoria
-                        </button>
+                        <div class="mb-4">
+                            <button type="button" class="btn btn-outline-success btn-sm" id="addCategoryBtn">
+                                + Adicionar Categoria
+                            </button>
+                            <a asp-controller="Categories" asp-action="Create" class="btn btn-outline-primary btn-sm ms-2">
+                                + Nova Categoria
+                            </a>
+                        </div>
 
                         <!-- BOTÕES -->
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 justify-content-end">
                             <button type="submit" class="btn btn-primary">
                                 Criar Orçamento
                             </button>
@@ -93,30 +124,45 @@
 </div>
 
 @section Scripts {
-    <script>
-        let rowIndex = 0;
-        const categories = @Html.Raw(Json.Serialize(ViewBag.AvailableCategories ?? new object[0]))
+    <partial name="_ValidationScriptsPartial" />
 
-        function addCategoryRow() {
-            const table = document.querySelector('#categoriesTable tbody');
-            const row = table.insertRow();
+    <script>
+        let rowIndex = @(Model.Categories?.Count ?? 0)
+
+        document.getElementById('addCategoryBtn').addEventListener('click', function () {
+            const tbody = document.querySelector('#categoriesTable tbody');
+            const row = tbody.insertRow();
+
             row.innerHTML = `
                 <td>
                     <select name="Categories[${rowIndex}].CategoryId" class="form-select form-select-sm" required>
                         <option value="">Selecione uma categoria...</option>
-                        ${categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                        @foreach (var item in ViewBag.AvailableCategories)
+                        {
+                                <option value="@item.Value">@item.Text</option>
+                        }
                     </select>
                 </td>
                 <td>
-                    <input name="Categories[${rowIndex}].Limit" type="number" step="0.01" min="0.01" class="form-control form-select-sm" placeholder="0,00" required />
+                    <input name="Categories[${rowIndex}].Limit"
+                           type="number" step="0.01" min="0.01"
+                           class="form-control form-select-sm" placeholder="0,00" required />
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">Remover</button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                        Remover
+                    </button>
                 </td>
             `;
-            rowIndex++;
-        }
 
-        document.addEventListener('DOMContentLoaded', addCategoryRow);
+            rowIndex++;
+        });
+
+        // Adiciona uma linha vazia apenas se a tabela estiver vazia (primeira visita)
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.querySelector('#categoriesTable tbody tr') === null) {
+                document.getElementById('addCategoryBtn').click();
+            }
+        });
     </script>
 }
