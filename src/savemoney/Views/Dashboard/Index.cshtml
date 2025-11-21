@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="dashboard-container">
-        
+
         <!-- PAINEL DO USUÁRIO -->
         <aside class="user-panel">
             <div class="user-profile">
@@ -61,29 +61,41 @@
                 {
                     foreach (var widget in widgets)
                     {
-                        <div class="widget-card" 
+                        var imagemUrl = !string.IsNullOrEmpty(widget.ImagemUrl) ? widget.ImagemUrl : "";
+                        var corFundo = !string.IsNullOrEmpty(imagemUrl) ? "transparent" : widget.CorFundo;
+
+                        <div class="widget-card"
                              data-id="@widget.Id"
-                             data-cols="@widget.Colunas" 
+                             data-cols="@widget.Colunas"
                              data-rows="@widget.Largura"
-                             style="grid-column: span @widget.Colunas; grid-row: span @widget.Largura; background-color: @widget.CorFundo;">
-                            
-                            <div class="widget-header">
-                                <h3>@widget.Titulo</h3>
-                                <div class="widget-actions">
-                                    <button class="btn-edit" onclick="editarWidget(@widget.Id)" title="Editar">✏️</button>
-                                    <button class="btn-delete" onclick="confirmarDeletar(@widget.Id)" title="Excluir">🗑️</button>
+                             data-image-url="@imagemUrl"
+                             style="background-color: @corFundo; grid-column: span @widget.Colunas; grid-row: span @widget.Largura;">
+
+                            @if (!string.IsNullOrEmpty(imagemUrl))
+                            {
+                                <img src="@imagemUrl" alt="@widget.Titulo" class="widget-image" />
+                                <div class="widget-overlay"></div>
+                            }
+
+                            <div class="widget-content">
+                                <div class="widget-header">
+                                    <h3>@widget.Titulo</h3>
+                                    <div class="widget-actions">
+                                        <button class="btn-edit" onclick="editarWidget(@widget.Id)" title="Editar">✏️</button>
+                                        <button class="btn-delete" onclick="confirmarDeletar(@widget.Id)" title="Excluir">🗑️</button>
+                                    </div>
                                 </div>
+
+                                @if (!string.IsNullOrEmpty(widget.Descricao))
+                                {
+                                    <p class="widget-description">@widget.Descricao</p>
+                                }
+
+                                @if (!string.IsNullOrEmpty(widget.Link))
+                                {
+                                    <a href="@widget.Link" class="widget-link">Acessar</a>
+                                }
                             </div>
-
-                            @if (!string.IsNullOrEmpty(widget.Descricao))
-                            {
-                                <p class="widget-description">@widget.Descricao</p>
-                            }
-
-                            @if (!string.IsNullOrEmpty(widget.Link))
-                            {
-                                <a href="@widget.Link" class="widget-link">Acessar →</a>
-                            }
                         </div>
                     }
                 }
@@ -104,11 +116,11 @@
         <div class="modal-content glass-card">
             <span class="close" onclick="fecharModalWidget()">&times;</span>
             <h2 id="modalTitle">Adicionar Widget</h2>
-            
+
             <form id="formWidget" method="post" asp-action="SalvarWidget">
                 @Html.AntiForgeryToken()
                 <input type="hidden" id="widgetId" name="Id" value="0">
-                
+
                 <div class="form-group">
                     <label for="titulo">Título:</label>
                     <input type="text" id="titulo" name="Titulo" class="form-control" required maxlength="100">
@@ -120,32 +132,48 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="imagemUrl">URL da Imagem (opcional):</label>
+                    <input type="url"
+                           id="imagemUrl"
+                           name="ImagemUrl"
+                           class="form-control"
+                           placeholder="https://images.unsplash.com/photo-..."
+                           onchange="previewImagem()">
+                    <small style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem; display: block;">
+                        💡 Dica: Procure por imagens gratuitas pelo Google para usar a Url dela.
+                    </small>
+                    <div id="imagemPreview" style="margin-top: 0.75rem; display: none;">
+                        <img id="imagemPreviewImg" src="" alt="Preview" style="width: 100%; max-height: 10rem; object-fit: cover; border-radius: 0.5rem;">
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="link">Link/Rota:</label>
                     <input type="text" id="link" name="Link" class="form-control" placeholder="/Receitas/Index">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="colunas">Largura:</label>
+                        <label for="colunas">Largura (Colunas):</label>
                         <select id="colunas" name="Colunas" class="form-control" required>
-                            <option value="1">1 coluna</option>
-                            <option value="2">2 colunas</option>
-                            <option value="3">3 colunas</option>
+                            <option value="1">1 coluna (Pequeno)</option>
+                            <option value="2">2 colunas (Médio)</option>
+                            <option value="3">3 colunas (Grande)</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="largura">Altura:</label>
+                        <label for="largura">Altura (Linhas):</label>
                         <select id="largura" name="Largura" class="form-control" required>
-                            <option value="1">1 linha</option>
-                            <option value="2">2 linhas</option>
-                            <option value="3">3 linhas</option>
+                            <option value="1">1 linha (Baixo)</option>
+                            <option value="2">2 linhas (Médio)</option>
+                            <option value="3">3 linhas (Alto)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="corFundo">Cor de Fundo:</label>
+                    <label for="corFundo">Cor de Fundo (se não tiver imagem):</label>
                     <input type="color" id="corFundo" name="CorFundo" class="form-control-color" value="#1b1d29">
                 </div>
 
@@ -162,11 +190,11 @@
         <div class="modal-content glass-card modal-small">
             <h3>Confirmar Exclusão</h3>
             <p>Tem certeza que deseja excluir este widget?</p>
-            
+
             <form id="formDeletar" method="post" asp-action="DeletarWidget">
                 @Html.AntiForgeryToken()
                 <input type="hidden" id="deletarId" name="id">
-                
+
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" onclick="fecharModalConfirmar()">Cancelar</button>
                     <button type="submit" class="btn-danger">Excluir</button>
