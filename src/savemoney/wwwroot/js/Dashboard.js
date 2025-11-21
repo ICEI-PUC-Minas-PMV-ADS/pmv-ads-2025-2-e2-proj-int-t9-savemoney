@@ -43,6 +43,8 @@ function fecharModalConfirmar() {
 window.onclick = function (event) {
     const modalWidget = document.getElementById('modalWidget');
     const modalConfirmar = document.getElementById('modalConfirmar');
+    const modalTemas = document.getElementById('modalTemas');
+    const modalCriarTema = document.getElementById('modalCriarTema');
 
     if (event.target === modalWidget) {
         fecharModalWidget();
@@ -50,6 +52,14 @@ window.onclick = function (event) {
 
     if (event.target === modalConfirmar) {
         fecharModalConfirmar();
+    }
+
+    if (event.target === modalTemas) {
+        fecharModalTemas();
+    }
+
+    if (event.target === modalCriarTema) {
+        fecharModalCriarTema();
     }
 }
 
@@ -63,23 +73,41 @@ function previewImagem() {
 
     const url = imagemUrlInput.value.trim();
 
+    // Remover mensagem de erro anterior
+    const erroAnterior = imagemUrlInput.parentElement.querySelector('.erro-imagem');
+    if (erroAnterior) {
+        erroAnterior.remove();
+    }
+
     if (url) {
         // Mostrar preview
         imagemPreviewImg.src = url;
         imagemPreview.style.display = 'block';
 
-        // Desabilitar cor de fundo (opcional - imagem tem prioridade)
+        // Desabilitar cor de fundo
         corFundoInput.style.opacity = '0.5';
         corFundoInput.title = 'Cor de fundo não será usada quando houver imagem';
 
         // Validar se a imagem carrega
         imagemPreviewImg.onerror = function () {
-            mostrarNotificacao('URL de imagem inválida ou inacessível', 'error');
+            // Criar mensagem de erro inline
+            const erroMsg = document.createElement('div');
+            erroMsg.className = 'erro-imagem';
+            erroMsg.textContent = '❌ URL de imagem inválida ou inacessível';
+            erroMsg.style.color = '#ef4444';
+            erroMsg.style.fontSize = '0.875rem';
+            erroMsg.style.marginTop = '0.5rem';
+            erroMsg.style.padding = '0.5rem';
+            erroMsg.style.background = 'rgba(239, 68, 68, 0.1)';
+            erroMsg.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            erroMsg.style.borderRadius = '0.5rem';
+
+            imagemUrlInput.parentElement.appendChild(erroMsg);
             imagemPreview.style.display = 'none';
         };
 
         imagemPreviewImg.onload = function () {
-            mostrarNotificacao('Imagem carregada com sucesso!', 'success');
+            // Sucesso - não precisa fazer nada
         };
     } else {
         // Esconder preview
@@ -280,6 +308,8 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         fecharModalWidget();
         fecharModalConfirmar();
+        fecharModalTemas();
+        fecharModalCriarTema();
     }
 
     // Ctrl + N abre modal de novo widget
@@ -318,12 +348,354 @@ if (formWidget) {
     });
 }
 
-// ============ CONSOLE LOG ============
+// ============ SISTEMA DE TEMAS ============
 
+// Modal de Temas
+function abrirModalTemas() {
+    document.getElementById('modalTemas').style.display = 'block';
+    carregarTemasCustomizados();
+    marcarTemaAtivo();
+}
+
+function fecharModalTemas() {
+    document.getElementById('modalTemas').style.display = 'none';
+}
+
+// Modal Criar/Editar Tema
+function abrirModalCriarTema() {
+    document.getElementById('modalCriarTema').style.display = 'block';
+    document.getElementById('tituloModalTema').textContent = 'Criar Tema Customizado';
+    limparFormularioTema();
+}
+
+function fecharModalCriarTema() {
+    document.getElementById('modalCriarTema').style.display = 'none';
+}
+
+function limparFormularioTema() {
+    document.getElementById('temaId').value = '0';
+    document.getElementById('nomeTema').value = '';
+    document.getElementById('bgPrimary').value = '#10111a';
+    document.getElementById('bgSecondary').value = '#0d0e16';
+    document.getElementById('bgCard').value = '#1b1d29';
+    document.getElementById('borderColor').value = '#2a2c3c';
+    document.getElementById('textPrimary').value = '#f5f5ff';
+    document.getElementById('textSecondary').value = '#aaaaaa';
+    document.getElementById('accentPrimary').value = '#3b82f6';
+    document.getElementById('accentPrimaryHover').value = '#2563eb';
+    document.getElementById('btnPrimaryText').value = '#ffffff';
+}
+
+// Aplicar Tema Pré-definido
+async function aplicarTemaPadrao(nomeTema) {
+    try {
+        // Desativar temas customizados
+        const response = await fetch('/Theme/AplicarTemaPadrao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(nomeTema)
+        });
+
+        if (response.ok) {
+            // Carregar CSS do tema
+            carregarCssTema(nomeTema);
+            marcarTemaAtivo();
+            mostrarNotificacao('Tema aplicado com sucesso!', 'success');
+        }
+    } catch (error) {
+        console.error('Erro ao aplicar tema:', error);
+        mostrarNotificacao('Erro ao aplicar tema', 'error');
+    }
+}
+
+// Carregar CSS do Tema
+function carregarCssTema(nomeTema) {
+    // Remover CSS de tema anterior
+    const temaAnterior = document.getElementById('tema-css');
+    if (temaAnterior) {
+        temaAnterior.remove();
+    }
+
+    // Adicionar novo CSS
+    const link = document.createElement('link');
+    link.id = 'tema-css';
+    link.rel = 'stylesheet';
+    link.href = `/css/themes/theme-${nomeTema}.css`;
+    document.head.appendChild(link);
+
+    // Salvar no localStorage
+    localStorage.setItem('tema-atual', nomeTema);
+}
+
+// Carregar Temas Customizados
+async function carregarTemasCustomizados() {
+    try {
+        const response = await fetch('/Theme/ListarTemas');
+        const temas = await response.json();
+
+        const container = document.getElementById('temasCustomizados');
+        container.innerHTML = '';
+
+        if (temas.length === 0) {
+            container.innerHTML = '<p style="color: #aaaaaa; text-align: center; grid-column: 1 / -1;">Nenhum tema customizado ainda</p>';
+            return;
+        }
+
+        temas.forEach(tema => {
+            const temaCard = document.createElement('div');
+            temaCard.className = `tema-card${tema.isAtivo ? ' active' : ''}`;
+            temaCard.onclick = () => ativarTemaCustomizado(tema.id);
+
+            temaCard.innerHTML = `
+                <div class="tema-preview" style="background: linear-gradient(135deg, ${tema.accentPrimary}, ${tema.accentPrimary}40);"></div>
+                <span class="tema-nome">${tema.nomeTema}</span>
+                <div class="tema-actions" onclick="event.stopPropagation();">
+                    <button onclick="editarTemaCustomizado(${tema.id})">✏️</button>
+                    <button onclick="confirmarDeletarTema(${tema.id})" class="btn-delete-tema">🗑️</button>
+                </div>
+            `;
+
+            container.appendChild(temaCard);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar temas:', error);
+    }
+}
+
+// Ativar Tema Customizado
+async function ativarTemaCustomizado(temaId) {
+    try {
+        const response = await fetch('/Theme/AtivarTema', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(temaId)
+        });
+
+        if (response.ok) {
+            // Carregar cores do tema
+            const temaResponse = await fetch('/Theme/ObterTemaAtivo');
+            const tema = await temaResponse.json();
+            aplicarCoresCustomizadas(tema);
+            marcarTemaAtivo();
+            mostrarNotificacao('Tema aplicado com sucesso!', 'success');
+        }
+    } catch (error) {
+        console.error('Erro ao ativar tema:', error);
+        mostrarNotificacao('Erro ao ativar tema', 'error');
+    }
+}
+
+// Aplicar Cores Customizadas
+function aplicarCoresCustomizadas(tema) {
+    const root = document.documentElement;
+    root.style.setProperty('--bg-primary', tema.bgPrimary);
+    root.style.setProperty('--bg-secondary', tema.bgSecondary);
+    root.style.setProperty('--bg-card', tema.bgCard);
+    root.style.setProperty('--border-color', tema.borderColor);
+    root.style.setProperty('--text-primary', tema.textPrimary);
+    root.style.setProperty('--text-secondary', tema.textSecondary);
+    root.style.setProperty('--accent-primary', tema.accentPrimary);
+    root.style.setProperty('--accent-primary-hover', tema.accentPrimaryHover);
+    root.style.setProperty('--btn-primary-text', tema.btnPrimaryText);
+
+    // Remover CSS de tema pré-definido
+    const temaAnterior = document.getElementById('tema-css');
+    if (temaAnterior) {
+        temaAnterior.remove();
+    }
+
+    localStorage.removeItem('tema-atual');
+}
+
+// Salvar Tema Customizado
+async function salvarTema(event) {
+    event.preventDefault();
+
+    const tema = {
+        Id: parseInt(document.getElementById('temaId').value),
+        NomeTema: document.getElementById('nomeTema').value,
+        BgPrimary: document.getElementById('bgPrimary').value,
+        BgSecondary: document.getElementById('bgSecondary').value,
+        BgCard: document.getElementById('bgCard').value,
+        BorderColor: document.getElementById('borderColor').value,
+        TextPrimary: document.getElementById('textPrimary').value,
+        TextSecondary: document.getElementById('textSecondary').value,
+        AccentPrimary: document.getElementById('accentPrimary').value,
+        AccentPrimaryHover: document.getElementById('accentPrimaryHover').value,
+        BtnPrimaryText: document.getElementById('btnPrimaryText').value
+    };
+
+    try {
+        const response = await fetch('/Theme/SalvarTema', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify(tema)
+        });
+
+        if (response.ok) {
+            fecharModalCriarTema();
+            carregarTemasCustomizados();
+            mostrarNotificacao('Tema salvo com sucesso!', 'success');
+        }
+    } catch (error) {
+        console.error('Erro ao salvar tema:', error);
+        mostrarNotificacao('Erro ao salvar tema', 'error');
+    }
+}
+
+// Editar Tema Customizado
+async function editarTemaCustomizado(temaId) {
+    try {
+        const response = await fetch('/Theme/ListarTemas');
+        const temas = await response.json();
+
+        const tema = temas.find(t => t.id === temaId);
+
+        if (!tema) {
+            mostrarNotificacao('Tema não encontrado', 'error');
+            return;
+        }
+
+        // Preencher formulário
+        document.getElementById('temaId').value = tema.id;
+        document.getElementById('nomeTema').value = tema.nomeTema;
+
+        // Abrir modal
+        document.getElementById('tituloModalTema').textContent = 'Editar Tema';
+        document.getElementById('modalCriarTema').style.display = 'block';
+
+    } catch (error) {
+        console.error('Erro ao editar tema:', error);
+        mostrarNotificacao('Erro ao carregar tema', 'error');
+    }
+}
+
+// Confirmar Deletar Tema
+function confirmarDeletarTema(temaId) {
+    if (confirm('Tem certeza que deseja excluir este tema?')) {
+        deletarTema(temaId);
+    }
+}
+
+// Deletar Tema
+async function deletarTema(temaId) {
+    try {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        const response = await fetch('/Theme/DeletarTema', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${temaId}&__RequestVerificationToken=${token}`
+        });
+
+        if (response.ok) {
+            carregarTemasCustomizados();
+            // Resetar para tema padrão
+            aplicarTemaPadrao('default');
+            mostrarNotificacao('Tema excluído com sucesso!', 'success');
+        }
+    } catch (error) {
+        console.error('Erro ao deletar tema:', error);
+        mostrarNotificacao('Erro ao excluir tema', 'error');
+    }
+}
+
+// Resetar Tema de Emergência
+async function resetarTemaEmergencia() {
+    try {
+        // Limpar todas as variáveis CSS customizadas
+        const root = document.documentElement;
+        root.style.removeProperty('--bg-primary');
+        root.style.removeProperty('--bg-secondary');
+        root.style.removeProperty('--bg-card');
+        root.style.removeProperty('--border-color');
+        root.style.removeProperty('--text-primary');
+        root.style.removeProperty('--text-secondary');
+        root.style.removeProperty('--accent-primary');
+        root.style.removeProperty('--accent-primary-hover');
+        root.style.removeProperty('--btn-primary-text');
+
+        // Remover CSS de tema pré-definido
+        const temaAnterior = document.getElementById('tema-css');
+        if (temaAnterior) {
+            temaAnterior.remove();
+        }
+
+        // Limpar localStorage
+        localStorage.removeItem('tema-atual');
+
+        // Desativar todos os temas customizados no backend
+        await fetch('/Theme/AplicarTemaPadrao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify('default')
+        });
+
+        mostrarNotificacao('Tema resetado para o padrão!', 'success');
+
+        // Recarregar página após 1 segundo
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+
+    } catch (error) {
+        console.error('Erro ao resetar tema:', error);
+        // Forçar reload mesmo com erro
+        window.location.reload();
+    }
+}
+
+// Marcar Tema Ativo
+function marcarTemaAtivo() {
+    // Remover active de todos
+    document.querySelectorAll('.tema-card').forEach(card => {
+        card.classList.remove('active');
+    });
+
+    // Marcar tema pré-definido ativo
+    const temaAtual = localStorage.getItem('tema-atual') || 'default';
+    const temaCard = document.querySelector(`.tema-card[data-theme="${temaAtual}"]`);
+    if (temaCard) {
+        temaCard.classList.add('active');
+    }
+}
+
+// Carregar Tema ao Iniciar
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Verificar se tem tema customizado ativo
+        const response = await fetch('/Theme/ObterTemaAtivo');
+        const tema = await response.json();
+
+        if (tema.id) {
+            // Tem tema customizado ativo
+            aplicarCoresCustomizadas(tema);
+        } else {
+            // Carregar tema pré-definido do localStorage
+            const temaSalvo = localStorage.getItem('tema-atual');
+            if (temaSalvo && temaSalvo !== 'default') {
+                carregarCssTema(temaSalvo);
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao carregar tema inicial:', error);
+    }
+});
+
+// ============ CONSOLE LOG ============
+console.log('Sistema de Temas carregado! 🎨');
 console.log('Dashboard.js carregado com sucesso! 🚀');
 console.log('Atalhos disponíveis:');
 console.log('- ESC: Fechar modais');
 console.log('- Ctrl+N: Novo widget');
-console.log('');
-console.log('💡 Dica: Use imagens do Unsplash para widgets bonitos!');
-console.log('   https://unsplash.com');

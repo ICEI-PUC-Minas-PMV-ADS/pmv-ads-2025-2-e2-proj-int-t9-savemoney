@@ -35,6 +35,14 @@
                     <span class="icon">✏️</span>
                     Editar Perfil
                 </a>
+                <a href="#" onclick="abrirModalTemas(); return false;" class="menu-item">
+                    <span class="icon">🎨</span>
+                    Personalizar Tema
+                </a>
+                <button onclick="resetarTemaEmergencia()" class="menu-item" id="btnResetTema" style="width: 100%; text-align: left; background: #ef4444 !important; color: #ffffff !important; border: 2px solid #dc2626 !important;">
+                    <span class="icon">🔄</span>
+                    Resetar Tema
+                </button>
                 <a href="@Url.Action("Logout", "Usuarios")" class="menu-item logout">
                     <span class="icon">🚪</span>
                     Sair
@@ -198,6 +206,120 @@
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" onclick="fecharModalConfirmar()">Cancelar</button>
                     <button type="submit" class="btn-danger">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE TEMAS -->
+    <div id="modalTemas" class="modal">
+        <div class="modal-content glass-card" style="max-width: 50rem;">
+            <span class="close" onclick="fecharModalTemas()">&times;</span>
+            <h2>🎨 Personalizar Tema</h2>
+
+            <!-- TEMAS PRÉ-DEFINIDOS -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Temas Pré-definidos</h3>
+                <div class="temas-grid">
+                    <div class="tema-card" data-theme="default" onclick="aplicarTemaPadrao('default')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #10111a, #3b82f6);"></div>
+                        <span class="tema-nome">Default (Azul)</span>
+                    </div>
+                    <div class="tema-card" data-theme="purple" onclick="aplicarTemaPadrao('purple')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f1f, #8b5cf6);"></div>
+                        <span class="tema-nome">Purple Night</span>
+                    </div>
+                    <div class="tema-card" data-theme="green" onclick="aplicarTemaPadrao('green')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #0a1410, #10b981);"></div>
+                        <span class="tema-nome">Green Money</span>
+                    </div>
+                    <div class="tema-card" data-theme="orange" onclick="aplicarTemaPadrao('orange')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a1410, #f59e0b);"></div>
+                        <span class="tema-nome">Orange Sunset</span>
+                    </div>
+                    <div class="tema-card" data-theme="red" onclick="aplicarTemaPadrao('red')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f0f, #ef4444);"></div>
+                        <span class="tema-nome">Red Passion</span>
+                    </div>
+                    <div class="tema-card" data-theme="cyan" onclick="aplicarTemaPadrao('cyan')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #0f1a1a, #06b6d4);"></div>
+                        <span class="tema-nome">Cyan Wave</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEMAS CUSTOMIZADOS -->
+            <div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Seus Temas</h3>
+                <div id="temasCustomizados" class="temas-grid">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+                <button class="btn-primary" onclick="abrirModalCriarTema()" style="margin-top: 1rem; width: 100%;">
+                    + Criar Tema Customizado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR/EDITAR TEMA -->
+    <div id="modalCriarTema" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close" onclick="fecharModalCriarTema()">&times;</span>
+            <h2 id="tituloModalTema">Criar Tema Customizado</h2>
+
+            <form id="formTema" onsubmit="salvarTema(event)">
+                <input type="hidden" id="temaId" value="0">
+
+                <div class="form-group">
+                    <label for="nomeTema">Nome do Tema:</label>
+                    <input type="text" id="nomeTema" class="form-control" required maxlength="50" placeholder="Meu Tema Personalizado">
+                </div>
+
+                <div class="form-group">
+                    <label>Cores do Tema:</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div>
+                            <label style="font-size: 0.875rem;">Fundo Principal</label>
+                            <input type="color" id="bgPrimary" class="form-control-color" value="#10111a">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Fundo Secundário</label>
+                            <input type="color" id="bgSecondary" class="form-control-color" value="#0d0e16">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Fundo Card</label>
+                            <input type="color" id="bgCard" class="form-control-color" value="#1b1d29">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Cor da Borda</label>
+                            <input type="color" id="borderColor" class="form-control-color" value="#2a2c3c">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Texto Principal</label>
+                            <input type="color" id="textPrimary" class="form-control-color" value="#f5f5ff">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Texto Secundário</label>
+                            <input type="color" id="textSecondary" class="form-control-color" value="#aaaaaa">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Cor de Destaque</label>
+                            <input type="color" id="accentPrimary" class="form-control-color" value="#3b82f6">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Destaque (Hover)</label>
+                            <input type="color" id="accentPrimaryHover" class="form-control-color" value="#2563eb">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Texto do Botão</label>
+                            <input type="color" id="btnPrimaryText" class="form-control-color" value="#ffffff">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalCriarTema()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Tema</button>
                 </div>
             </form>
         </div>
