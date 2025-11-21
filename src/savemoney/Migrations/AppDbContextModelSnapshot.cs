@@ -335,6 +335,80 @@ namespace savemoney.Migrations
                     b.ToTable("Receita");
                 });
 
+            modelBuilder.Entity("savemoney.Models.UserTheme", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccentPrimary")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("AccentPrimaryHover")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("BgCard")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("BgPrimary")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("BgSecondary")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("BorderColor")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("BtnPrimaryText")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAtivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NomeTema")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TextPrimary")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("TextSecondary")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("UserTheme");
+                });
+
             modelBuilder.Entity("savemoney.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -381,7 +455,7 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2025, 11, 21, 0, 54, 22, 851, DateTimeKind.Local).AddTicks(486),
+                            DataCadastro = new DateTime(2025, 11, 21, 1, 27, 51, 286, DateTimeKind.Local).AddTicks(4882),
                             Documento = "000.000.000-00",
                             Email = "admin@savemoney.com",
                             FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true",
@@ -508,6 +582,17 @@ namespace savemoney.Migrations
                 });
 
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>
+                {
+                    b.HasOne("savemoney.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("savemoney.Models.UserTheme", b =>
                 {
                     b.HasOne("savemoney.Models.Usuario", "Usuario")
                         .WithMany()

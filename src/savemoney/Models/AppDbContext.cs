@@ -22,6 +22,7 @@ namespace savemoney.Models
 
         // NOVO: DbSet para Widgets
         public DbSet<Widget> Widgets { get; set; }
+        public DbSet<UserTheme> UserThemes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
