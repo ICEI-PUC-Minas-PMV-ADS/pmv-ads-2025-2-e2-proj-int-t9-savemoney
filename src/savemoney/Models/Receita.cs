@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace savemoney.Models
 {
     [Table("Receita")]
@@ -45,24 +46,27 @@ namespace savemoney.Models
 
         [Display(Name = "Tipo de Recorrência")]
         public RecurrenceType Recurrence { get; set; }
-        public enum RecurrenceType
-        {
-            [Display(Name = "Diária")]
-            Daily,
-
-            [Display(Name = "Semanal")]
-            Weekly,
-
-            [Display(Name = "Mensal")]
-            Monthly,
-
-            [Display(Name = "Anual")]
-            Yearly
-
-        }
 
         [Display(Name = "Quantidade de Repetições")]
         [Range(1, 365, ErrorMessage = "Informe entre 1 e 365 repetições.")]
         public int? RecurrenceCount { get; set; }
+
+        // FK para Usuario
+        public int UsuarioId { get; set; }
+
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; } = null!;
+
+        public enum RecurrenceType
+        {
+            [Display(Name = "Diária")]
+            Daily,
+            [Display(Name = "Semanal")]
+            Weekly,
+            [Display(Name = "Mensal")]
+            Monthly,
+            [Display(Name = "Anual")]
+            Yearly
+        }
     }
 }

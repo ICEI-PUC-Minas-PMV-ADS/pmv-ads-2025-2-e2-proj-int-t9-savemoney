@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace savemoney.Models
 {
     [Table("Despesa")]
     public class Despesa
     {
-
         public Despesa()
         {
             DataInicio = DateTime.Today;
@@ -36,27 +36,34 @@ namespace savemoney.Models
         public DateTime DataFim { get; set; }
 
         public int? BudgetCategoryId { get; set; }
+
         [ForeignKey("BudgetCategoryId")]
         public BudgetCategory? BudgetCategory { get; set; }
 
         public bool Pago { get; set; }
+
         [Display(Name = "É Recorrente?")]
         public bool IsRecurring { get; set; }
+
         public RecurrenceType Recurrence { get; set; }
+
         [Display(Name = "Quantidade de Recorrencias")]
         public int? RecurrenceCount { get; set; }
+
+        // FK para Usuario
+        public int UsuarioId { get; set; }
+
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; } = null!;
+
         public enum RecurrenceType
         {
-
             [Display(Name = "Diária")]
             Daily,
-
             [Display(Name = "Semanal")]
             Weekly,
-
             [Display(Name = "Mensal")]
             Monthly,
-
             [Display(Name = "Anual")]
             Yearly
         }

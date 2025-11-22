@@ -40,6 +40,8 @@ namespace savemoney.Models
 
         // NOVO: Relacionamento com Widgets
         public virtual ICollection<Widget> Widgets { get; set; } = new List<Widget>();
+        public virtual ICollection<Receita> Receitas { get; set; } = new List<Receita>();
+        public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
     }
 
     public enum Perfil
