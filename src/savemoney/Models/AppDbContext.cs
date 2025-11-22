@@ -73,6 +73,19 @@ namespace savemoney.Models
                 .WithMany(u => u.Widgets)
                 .HasForeignKey(w => w.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
+            // Usuario → Receitas (Cascade)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Receitas)
+                .WithOne(r => r.Usuario)
+                .HasForeignKey(r => r.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Usuario → Despesas (Cascade)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Despesas)
+                .WithOne(d => d.Usuario)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Índice para melhorar performance nas queries de widgets por usuário
             modelBuilder.Entity<Widget>()
