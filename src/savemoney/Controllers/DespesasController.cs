@@ -45,8 +45,8 @@ public class DespesasController : Controller
 
         if (!ModelState.IsValid)
         {
-            CarregarBudgetCategoriesDropdown(despesa.BudgetCategoryId);
-            return PartialView("_CreateOrEditModal", despesa);
+            TempData["Erro"] = "Dados inválidos. Verifique os campos.";
+            return RedirectToAction(nameof(Index));
         }
 
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -95,14 +95,15 @@ public class DespesasController : Controller
 
         var userId = int.Parse(userIdClaim);
         var despesaExistente = await _context.Despesas
+            .AsNoTracking()
             .FirstOrDefaultAsync(d => d.Id == id && d.UsuarioId == userId);
 
         if (despesaExistente == null) return NotFound();
 
         if (!ModelState.IsValid)
         {
-            CarregarBudgetCategoriesDropdown(despesa.BudgetCategoryId);
-            return PartialView("_EditModal", despesa);
+            TempData["Erro"] = "Dados inválidos. Verifique os campos.";
+            return RedirectToAction(nameof(Index));
         }
 
         despesa.UsuarioId = userId;

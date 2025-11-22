@@ -42,7 +42,10 @@ namespace savemoney.Controllers
             ModelState.Remove("Usuario");
 
             if (!ModelState.IsValid)
-                return PartialView("_CreateOrEditModal", receita);
+            {
+                TempData["Erro"] = "Dados inválidos. Verifique os campos.";
+                return RedirectToAction(nameof(Index));
+            }
 
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userIdClaim))
@@ -91,13 +94,17 @@ namespace savemoney.Controllers
 
             var userId = int.Parse(userIdClaim);
             var receitaExistente = await _context.Receitas
+                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && r.UsuarioId == userId);
 
             if (receitaExistente == null)
                 return NotFound();
 
             if (!ModelState.IsValid)
-                return PartialView("_EditModal", receita);
+            {
+                TempData["Erro"] = "Dados inválidos. Verifique os campos.";
+                return RedirectToAction(nameof(Index));
+            }
 
             receita.UsuarioId = userId;
             _context.Receitas.Update(receita);

@@ -24,7 +24,7 @@ namespace savemoney.Models
         [Required(ErrorMessage = "O valor é obrigatório")]
         [Column(TypeName = "decimal(18,3)")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
-        [RegularExpression(@"^\d+(\,\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")]
+        //[RegularExpression(@"^\d+(\.\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")] Estava dando erro com casas valores decimais Ass.: Maicon
         public decimal Valor { get; set; }
 
         [Display(Name = "Tipo de Moeda")]
