@@ -387,9 +387,22 @@ function limparFormularioTema() {
 }
 
 // Aplicar Tema Pré-definido
+// Aplicar Tema Pré-definido
 async function aplicarTemaPadrao(nomeTema) {
     try {
-        // Desativar temas customizados
+        // LIMPAR cores customizadas primeiro
+        const root = document.documentElement;
+        root.style.removeProperty('--bg-primary');
+        root.style.removeProperty('--bg-secondary');
+        root.style.removeProperty('--bg-card');
+        root.style.removeProperty('--border-color');
+        root.style.removeProperty('--text-primary');
+        root.style.removeProperty('--text-secondary');
+        root.style.removeProperty('--accent-primary');
+        root.style.removeProperty('--accent-primary-hover');
+        root.style.removeProperty('--btn-primary-text');
+
+        // Desativar temas customizados no backend
         const response = await fetch('/Theme/AplicarTemaPadrao', {
             method: 'POST',
             headers: {
@@ -401,7 +414,7 @@ async function aplicarTemaPadrao(nomeTema) {
         if (response.ok) {
             // Carregar CSS do tema
             carregarCssTema(nomeTema);
-            marcarTemaAtivo();
+            await marcarTemaAtivo();
             mostrarNotificacao('Tema aplicado com sucesso!', 'success');
         }
     } catch (error) {
@@ -540,9 +553,16 @@ async function salvarTema(event) {
         });
 
         if (response.ok) {
+            const result = await response.json();
             fecharModalCriarTema();
+
+            // Ativar o tema automaticamente após salvar
+            if (result.temaId) {
+                await ativarTemaCustomizado(result.temaId);
+            }
+
             carregarTemasCustomizados();
-            mostrarNotificacao('Tema salvo com sucesso!', 'success');
+            mostrarNotificacao('Tema salvo e aplicado com sucesso!', 'success');
         }
     } catch (error) {
         console.error('Erro ao salvar tema:', error);
@@ -657,17 +677,33 @@ async function resetarTemaEmergencia() {
 }
 
 // Marcar Tema Ativo
-function marcarTemaAtivo() {
-    // Remover active de todos
-    document.querySelectorAll('.tema-card').forEach(card => {
-        card.classList.remove('active');
-    });
+async function marcarTemaAtivo() {
+    try {
+        // Remover active de todos
+        document.querySelectorAll('.tema-card').forEach(card => {
+            card.classList.remove('active');
+        });
 
-    // Marcar tema pré-definido ativo
-    const temaAtual = localStorage.getItem('tema-atual') || 'default';
-    const temaCard = document.querySelector(`.tema-card[data-theme="${temaAtual}"]`);
-    if (temaCard) {
-        temaCard.classList.add('active');
+        // Verificar se tem tema customizado ativo
+        const response = await fetch('/Theme/ObterTemaAtivo');
+        const tema = await response.json();
+
+        if (tema.id) {
+            // Tema customizado está ativo
+            const temaCard = document.querySelector(`.tema-card[data-tema-id="${tema.id}"]`);
+            if (temaCard) {
+                temaCard.classList.add('active');
+            }
+        } else {
+            // Tema pré-definido está ativo
+            const temaAtual = localStorage.getItem('tema-atual') || 'default';
+            const temaCard = document.querySelector(`.tema-card[data-theme="${temaAtual}"]`);
+            if (temaCard) {
+                temaCard.classList.add('active');
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao marcar tema ativo:', error);
     }
 }
 

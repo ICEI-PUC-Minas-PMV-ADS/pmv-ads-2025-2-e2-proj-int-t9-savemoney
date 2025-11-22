@@ -215,6 +215,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     gap: 1.25rem;
     grid-auto-rows: minmax(14rem, auto);
+    grid-auto-flow: dense;
 }
 
 .widget-card {
@@ -233,6 +234,33 @@ body {
     min-height: 14rem;
     max-height: 20rem;
 }
+    /* Controle de tamanho dos cards */
+    .widget-card[data-cols="1"] {
+        grid-column: span 1;
+    }
+
+    .widget-card[data-cols="2"] {
+        grid-column: span 2;
+    }
+
+    .widget-card[data-cols="3"] {
+        grid-column: span 3;
+    }
+
+    .widget-card[data-rows="1"] {
+        grid-row: span 1;
+        min-height: 14rem;
+    }
+
+    .widget-card[data-rows="2"] {
+        grid-row: span 2;
+        min-height: 29.25rem;
+    }
+
+    .widget-card[data-rows="3"] {
+        grid-row: span 3;
+        min-height: 44.5rem;
+    }
 
     /* Card com imagem de fundo */
     .widget-card[data-image-url]:not([data-image-url=""]) {
