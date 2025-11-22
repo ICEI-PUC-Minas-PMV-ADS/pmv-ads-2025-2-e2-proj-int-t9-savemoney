@@ -188,6 +188,30 @@ namespace savemoney.Controllers
             }
         }
 
+        // GET: /Budgets/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
+
+            var budget = await _context.Budgets
+                .Include(b => b.Categories)
+                    .ThenInclude(bc => bc.Category)
+                .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+
+            if (budget == null) return NotFound();
+
+            // Preenche CurrentSpent
+            foreach (var bc in budget.Categories)
+            {
+                bc.CurrentSpent = await _budgetService.GetCurrentSpentAsync(bc.Id);
+            }
+
+            return View(budget);
+        }
+
         // GET: /Budgets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -222,6 +246,34 @@ namespace savemoney.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // GET: /Budgets/ExportPdf/5
+        public IActionResult ExportPdf(int id)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == 0) return Unauthorized();
+
+            var budget = _context.Budgets
+                .Include(b => b.Categories)
+                    .ThenInclude(bc => bc.Category)
+                .FirstOrDefault(b => b.Id == id && b.UserId == userId);
+
+            if (budget == null) return NotFound();
+
+            // Preenche CurrentSpent
+            foreach (var bc in budget.Categories)
+            {
+                bc.CurrentSpent = _budgetService.GetCurrentSpentAsync(bc.Id).GetAwaiter().GetResult();
+            }
+
+            var pdfGenerator = new BudgetPdfGenerator();
+            var pdfBytes = pdfGenerator.GeneratePdf(budget);
+
+            var fileName = $"Orçamento - {budget.Name} - {budget.StartDate:dd-MM-yyyy}.pdf";
+
+            return File(pdfBytes, "application/pdf", fileName);
         }
 
         // AUXILIARES

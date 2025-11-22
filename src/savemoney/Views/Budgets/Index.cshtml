@@ -31,11 +31,19 @@
                 var percentage = totalLimit > 0 ? (totalSpent / totalLimit) * 100 : 0;
 
                 <div class="col">
-                    <div class="card h-100 shadow-lg border-0 hover-shadow">
+                    <!-- CARD CLICÁVEL (exceto os botões) -->
+                    <div class="card h-100 shadow-lg border-0 hover-shadow position-relative">
+                        <!-- LINK INVISÍVEL QUE COBRE TODO O CARD -->
+                        <a asp-action="Details" asp-route-id="@budget.Id" class="stretched-link"></a>
+
                         <div class="card-header bg-gradient text-white @(budget.Status == BudgetStatus.Concluido ? "bg-success" : budget.Status == BudgetStatus.Arquivado ? "bg-secondary" : "bg-primary")">
                             <h5 class="mb-0">@budget.Name</h5>
-                            <small>@budget.StartDate:dd/MM/yyyy até @budget.EndDate:dd/MM/yyyy</small>
+                            <small class="opacity-75">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                @budget.StartDate.ToString("dd/MM/yyyy") até @budget.EndDate.ToString("dd/MM/yyyy")
+                            </small>
                         </div>
+
                         <div class="card-body">
                             @if (!string.IsNullOrEmpty(budget.Description))
                             {
@@ -52,11 +60,8 @@
                                 <div class="progress" style="height: 25px;">
                                     <div class="progress-bar @(percentage > 100 ? "bg-danger" : percentage > 80 ? "bg-warning" : "bg-success")"
                                          role="progressbar"
-                                         style="width: @Math.Min(percentage, 100)%"
-                                         aria-valuenow="@percentage"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100">
-                                        <span class="fw-bold">
+                                         style="width: @Math.Min(percentage, 100)%">
+                                        <span class="fw-bold text-dark">
                                             R$ @totalSpent.ToString("F2") / R$ @totalLimit.ToString("F2")
                                         </span>
                                     </div>
@@ -90,7 +95,12 @@
                                 </div>
                             }
                         </div>
+
+                        <!-- BOTÕES VISÍVEIS NO RODAPÉ (não são cobertos pelo link) -->
                         <div class="card-footer bg-light text-center">
+                            <a asp-action="ExportPdf" asp-route-id="@budget.Id" class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+                            </a>
                             <a asp-action="Edit" asp-route-id="@budget.Id" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil"></i> Editar
                             </a>
@@ -114,5 +124,20 @@
 
     .bg-gradient {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    /* O link cobre tudo, mas os botões ficam por cima */
+    .stretched-link::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        content: "";
+    }
+
+    .card-footer {
+        position: relative;
+        z-index: 2;
     }
 </style>

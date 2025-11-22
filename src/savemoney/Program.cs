@@ -52,6 +52,9 @@ namespace savemoney
 
             var app = builder.Build();
 
+            // LICENÇA COMMUNITY DO QUESTPDF (gratuita e eterna)
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
             // Configure the HTTP request pipeline.
             // if (!app.Environment.IsDevelopment())
             // {
