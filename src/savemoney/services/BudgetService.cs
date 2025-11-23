@@ -1,5 +1,4 @@
-﻿// Services/BudgetService.cs
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
 
 namespace savemoney.Services
@@ -7,30 +6,25 @@ namespace savemoney.Services
     public class BudgetService
     {
         private readonly AppDbContext _context;
+
         public BudgetService(AppDbContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Calcula o total gasto em uma BudgetCategory (baseado em Despesas)
+        /// Calcula o total gasto em uma BudgetCategory (baseado em Despesas REAIS)
         /// </summary>
         /// <param name="budgetCategoryId">ID da BudgetCategory</param>
         /// <returns>Total gasto (decimal)</returns>
         public async Task<decimal> GetCurrentSpentAsync(int budgetCategoryId)
         {
-            // TABELA 'Despesa' AINDA NÃO EXISTE NO BANCO
-            // Retorna 0 temporariamente para não quebrar o sistema
-            return 0m;
-
-            // DESCOMENTE AS LINHAS ABAIXO QUANDO RODAR A MIGRAÇÃO DE Despesa
-            /*
+            // Agora que a tabela Despesas existe, fazemos a soma real
             var total = await _context.Despesas
                 .Where(d => d.BudgetCategoryId == budgetCategoryId)
                 .SumAsync(d => (decimal?)d.Valor) ?? 0m;
 
             return total;
-            */
         }
 
         /// <summary>
@@ -61,7 +55,8 @@ namespace savemoney.Services
 
             var spent = await GetCurrentSpentAsync(budgetCategoryId);
             var percentage = (spent / budgetCategory.Limit) * 100m;
-            return Math.Min(percentage, 200m); // Limita a 200% para evitar barras infinitas
+
+            return percentage; // Removi o Math.Min para permitir ver estouros (>100%)
         }
 
         /// <summary>
