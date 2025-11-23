@@ -1,162 +1,241 @@
-/* Módulo: Header Principal (Navbar) */
+/* =========================================
+   HEADER SYSTEM (Scoped & Isolated)
+   ========================================= */
+
+/* Variáveis Locais do Header (Não dependem do root global) */
 #main-header {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1030;
-  background-color: rgba(16, 17, 26, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  transition: transform 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
+    --hd-bg: #10111a; /* Fundo Escuro Sólido */
+    --hd-border: #2a2c3c; /* Borda sutil */
+    --hd-text-main: #f5f5ff; /* Texto Branco */
+    --hd-text-dim: #aaaaaa; /* Texto Cinza */
+    --hd-accent: #3b82f6; /* Azul destaque */
+    --hd-accent-hover: #2563eb;
+    --hd-height: 70px;
+    /* Layout Base */
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--hd-height);
+    z-index: 9999; /* Z-Index extremo para ficar acima de tudo */
+    /* Estilo Visual */
+    background-color: var(--hd-bg); /* Cor Sólida primeiro */
+    background-color: rgba(16, 17, 26, 0.95); /* Quase sólido, leve blur */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--hd-border);
+    /* Flexbox Container Principal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Transição do Pull Tab */
+    transition: transform 0.3s ease, margin-bottom 0.3s ease;
 }
 
-#main-header.header-hidden {
-  transform: translateY(-100%);
-  margin-bottom: calc(-1 * var(--header-height));
-}
+    /* Estado Escondido */
+    #main-header.header-hidden {
+        transform: translateY(-100%);
+        margin-bottom: calc(-1 * var(--hd-height));
+    }
 
-.navbar-content {
-  /* [CORREÇÃO] Garante que o conteúdo se alinhe com o container da página */
-  width: 100%;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    /* Container Interno (Substitui .container do Bootstrap para evitar padding errado) */
+    #main-header .header-container {
+        width: 100%;
+        max-width: 1400px; /* Largura máxima controlada */
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Garante logo na esq, menu no centro/dir */
+    }
 
-.logo {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.logo:hover {
-  color: var(--text-primary);
-}
+    /* Logo */
+    #main-header .header-logo {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--hd-text-main);
+        text-decoration: none;
+        white-space: nowrap;
+    }
 
-.nav-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 2rem;
-}
+    /* Navegação */
+    #main-header .header-nav {
+        display: flex;
+        align-items: center;
+    }
 
-.nav-links > li > a {
-  font-weight: 500;
-  color: var(--text-secondary);
-  padding: 1.5rem 0;
-  display: block;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
+    #main-header .header-nav-links {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
 
-.nav-links a:hover {
-  color: var(--text-primary);
-}
+        /* Links do Menu */
+        #main-header .header-nav-links > li > a {
+            color: var(--hd-text-dim);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
 
-/* Módulo: Botão "Pull Tab" do Header */
-.header-toggle-tab {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
-  background: #1a1d24;
-  color: #fff;
-  border: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  padding: 2px 10px;
-  line-height: 1;
-  font-size: 1.2rem;
-  cursor: pointer;
-  z-index: -1;
-  transition: background 0.2s ease;
-}
+            #main-header .header-nav-links > li > a:hover {
+                color: var(--hd-text-main);
+            }
 
-.header-toggle-tab:hover {
-  background: #3a3f4b;
-}
+            #main-header .header-nav-links > li > a i {
+                font-size: 0.75rem;
+                margin-top: 2px;
+            }
 
-.header-toggle-tab .bi {
-  transition: transform 0.3s ease;
-}
+    /* --- DROPDOWNS (Correção de Transparência) --- */
+    #main-header .header-dropdown {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
 
-#main-header.header-hidden .header-toggle-tab .bi {
-  transform: rotate(180deg);
-}
+    #main-header .header-dropdown-menu {
+        position: absolute;
+        top: 100%; /* Logo abaixo do header */
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        /* Visual do Dropdown */
+        background-color: #1b1d29; /* Fundo Sólido Escuro (Card Color) */
+        border: 1px solid var(--hd-border);
+        border-radius: 8px;
+        padding: 0.5rem;
+        min-width: 200px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra forte para destacar */
+        /* Comportamento */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s ease;
+        list-style: none;
+        z-index: 10000;
+    }
 
-/* Módulo: Dropdown Menu */
-.dropdown {
-  position: relative;
-  z-index: 99;
-}
+        /* Seta do Dropdown (Triângulo) */
+        #main-header .header-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid var(--hd-border);
+        }
 
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: var(--bg-card);
-  min-width: 200px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  padding: 0.5rem 0;
-}
+    #main-header .header-dropdown:hover .header-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(15px); /* Pequeno slide down */
+    }
 
-.dropdown:hover .dropdown-menu {
-  display: block;
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
+    #main-header .header-dropdown-menu li a {
+        display: block;
+        padding: 0.6rem 1rem;
+        color: var(--hd-text-dim);
+        text-decoration: none;
+        border-radius: 6px;
+        white-space: nowrap;
+        transition: background 0.2s, color 0.2s;
+    }
 
-.dropdown-menu a {
-  color: var(--text-secondary);
-  padding: 10px 15px;
-  font-size: 0.95rem;
-  font-weight: 400;
-  display: block; /* Garante que o link preencha o espaço */
-  text-decoration: none;
-}
+        #main-header .header-dropdown-menu li a:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--hd-text-main);
+        }
 
-.dropdown-menu a:hover {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-}
+    /* --- BOTÕES DE AÇÃO (Direita) --- */
+    #main-header .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
 
-.dropdown > a i {
-  font-size: 0.75rem;
-  margin-left: 0.5rem;
-}
+    #main-header .header-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
 
-/* Módulo: Responsividade do Header */
-@media (max-width: 1024px) {
-  .nav-links {
-    gap: 1.5rem;
-  }
-}
+    /* Botão Primário (Sair/Entrar) */
+    #main-header .header-btn-primary {
+        background-color: var(--hd-accent);
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border: none;
+    }
 
-@media (max-width: 768px) {
-  .navbar-content {
-    padding: 0 1rem;
-  }
-  .main-nav {
-    display: none;
-  }
-  .header-toggle-tab {
-    display: none;
-  }
+        #main-header .header-btn-primary:hover {
+            background-color: var(--hd-accent-hover);
+            transform: translateY(-1px);
+        }
+
+    /* Botão Ícone (Perfil) */
+    #main-header .header-btn-icon {
+        background-color: rgba(255,255,255,0.05);
+        color: var(--hd-text-dim);
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--hd-border);
+    }
+
+        #main-header .header-btn-icon:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: var(--hd-text-main);
+        }
+
+    /* --- PULL TAB (Aba de puxar) --- */
+    #main-header .header-toggle-tab {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 100%);
+        background-color: #1b1d29;
+        color: var(--hd-text-dim);
+        border: 1px solid var(--hd-border);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        padding: 2px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: background 0.2s, color 0.2s;
+        z-index: -1; /* Fica atrás visualmente, mas clicável */
+    }
+
+        #main-header .header-toggle-tab:hover {
+            background-color: var(--hd-accent);
+            color: white;
+        }
+
+    #main-header.header-hidden .header-toggle-tab i {
+        transform: rotate(180deg);
+    }
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 992px) {
+    #main-header .header-nav {
+        display: none;
+    }
+    /* Esconde menu no mobile por enquanto */
+    #main-header .header-toggle-tab {
+        display: none;
+    }
+    /* Esconde aba no mobile */
 }
