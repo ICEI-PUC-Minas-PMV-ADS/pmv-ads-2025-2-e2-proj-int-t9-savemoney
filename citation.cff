@@ -9,8 +9,8 @@ authors:
     given-names: Lucas
   - family-names: 
     given-names: Matheus Carlos
-  - family-names: 
-    given-names: Maicon
+  - family-names: Theodoro Da Silva
+    given-names: Maicon Vitor
   - family-names: 
     given-names: 
   - name-suffix: Professor
@@ -26,3 +26,4 @@ repository-code:
 version: 1.0.0
 
 date-released: 2025-12-07
+
