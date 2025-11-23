@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using savemoney.Services; // importa o services da api para implementar as dependencias
+using savemoney.Services;
+using System.Globalization; // <--- ADICIONADO
+using Microsoft.AspNetCore.Localization; // <--- ADICIONADO
 
 namespace savemoney
 {
@@ -20,8 +22,9 @@ namespace savemoney
             }
 
             builder.Services.AddControllersWithViews();
-            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();  // <-- pacote do NuGet para compilar e visualizar as alterações em tempo real.
+            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
             builder.Services.AddDbContext<Models.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -37,33 +40,39 @@ namespace savemoney
                     options.AccessDeniedPath = "/Usuarios/AccessDenied/";
                     options.LoginPath = "/Usuarios/Login/";
                 });
-            // Inicio do código para injetar uma nova instancia pronta (NoticiasService)
-            // Registra o HttpClient para que possa ser injetado no nosso serviço
+
+            // Injeção de Dependências
             builder.Services.AddHttpClient();
-            // Registra o nosso serviço. AddScoped é a configuração mais comum.
             builder.Services.AddScoped<NoticiasService>();
             builder.Services.AddScoped<ArtigosService>();
-            // Registrar serviço e opcional hosted job (ex.: gera ocorrências diariamente)
             builder.Services.AddScoped<RecurrenceService>();
-            // Serviço para cálculo de gastos e validação de limite
             builder.Services.AddScoped<BudgetService>();
             builder.Services.AddScoped<savemoney.Services.Interfaces.ITendenciaFinanceiraService,
                           savemoney.Services.TendenciaFinanceiraService>();
 
             var app = builder.Build();
 
-            // LICENÇA COMMUNITY DO QUESTPDF (gratuita e eterna)
+            // ==============================================================================
+            // 1. CONFIGURAÇÃO DE CULTURA (PT-BR) - Para aceitar vírgula em decimais
+            // ==============================================================================
+            var defaultDateCulture = "pt-BR";
+            var ci = new CultureInfo(defaultDateCulture);
+            ci.NumberFormat.NumberDecimalSeparator = ",";
+            ci.NumberFormat.CurrencyDecimalSeparator = ",";
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(ci),
+                SupportedCultures = new List<CultureInfo> { ci },
+                SupportedUICultures = new List<CultureInfo> { ci }
+            });
+            // ==============================================================================
+
+            // LICENÇA COMMUNITY DO QUESTPDF
             QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
-            // Configure the HTTP request pipeline.
-            // if (!app.Environment.IsDevelopment())
-            // {
-            //     app.UseExceptionHandler("/Home/Error");
-            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //     app.UseHsts();
-            // }
+            // app.UseHttpsRedirection(); // Mantido comentado conforme solicitado
 
-            // app.UseHttpsRedirection(); // desabilitado para rodar no servidor local (hospedagem gratuita)
             app.UseStaticFiles();
 
             app.UseRouting();
