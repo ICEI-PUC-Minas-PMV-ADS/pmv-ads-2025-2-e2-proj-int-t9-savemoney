@@ -66,7 +66,7 @@ namespace SaveMoney.Controllers
             var model = new ProjecaoViewModel
             {
                 SaldoAtual = saldoAtual,
-                FluxoMensal = fluxoCaixaMensal, // <--- ADICIONADO: Envia o fluxo para a tela
+                FluxoMensal = fluxoCaixaMensal,
                 Meses = new List<string>(),
                 Saldos = new List<decimal>()
             };
