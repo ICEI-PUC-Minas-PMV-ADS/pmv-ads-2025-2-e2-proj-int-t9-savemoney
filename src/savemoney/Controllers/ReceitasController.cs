@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
 using System.Security.Claims;
 
 namespace savemoney.Controllers
 {
+    [Authorize]
     public class ReceitasController : Controller
     {
         private readonly AppDbContext _context;
@@ -14,118 +16,110 @@ namespace savemoney.Controllers
             _context = context;
         }
 
-        // Lista todas as receitas
-        public IActionResult Index()
+        // GET: Receitas
+        public async Task<IActionResult> Index()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            var receita = _context.Receitas
+            var receitas = await _context.Receitas
                 .Where(r => r.UsuarioId == userId)
-                .ToList();
-
-            return View(receita);
+                .OrderByDescending(r => r.DataInicio)
+                .ToListAsync();
+            return View(receitas);
         }
 
-        // Cria nova receita (GET)
+        // GET: Receitas/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return PartialView("_CreateOrEditModal", new Receita());
         }
 
-        // Cria nova receita (POST)
+        // POST: Receitas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Receita receita)
+        public async Task<IActionResult> Create([Bind("Titulo,Valor,CurrencyType,DataInicio,DataFim,IsRecurring,Recurrence,RecurrenceCount,Recebido")] Receita receita)
         {
-            // Remover validação de UsuarioId pois será preenchido manualmente
+            // Removemos a validação do UsuarioId pois vamos setar manualmente
             ModelState.Remove("UsuarioId");
             ModelState.Remove("Usuario");
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                TempData["Erro"] = "Dados inválidos. Verifique os campos.";
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                receita.UsuarioId = userId;
+
+                _context.Add(receita);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userIdClaim))
-            {
-                return BadRequest("Usuário não autenticado");
-            }
-
-            receita.UsuarioId = int.Parse(userIdClaim);
-            _context.Receitas.Add(receita);
-            await _context.SaveChangesAsync();
-
+            // Se falhar, idealmente deveríamos retornar o erro para o modal, 
+            // mas para simplificar o AJAX, redirecionamos (ou retornamos PartialView com erros)
             return RedirectToAction(nameof(Index));
         }
 
-        // Editar receita (GET)
-        public IActionResult Edit(int? id)
+        // GET: Receitas/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null) return NotFound();
+
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var receita = await _context.Receitas
+                .FirstOrDefaultAsync(m => m.Id == id && m.UsuarioId == userId);
 
-            var receita = _context.Receitas
-                .FirstOrDefault(r => r.Id == id && r.UsuarioId == userId);
+            if (receita == null) return NotFound();
 
-            if (receita == null)
-                return NotFound();
-
-            return PartialView("_EditModal", receita);
+            return PartialView("_CreateOrEditModal", receita);
         }
 
-        // Editar receita (POST)
+        // POST: Receitas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, Receita receita)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Valor,CurrencyType,DataInicio,DataFim,IsRecurring,Recurrence,RecurrenceCount,Recebido")] Receita receita)
         {
-            if (id != receita.Id)
-                return NotFound();
+            if (id != receita.Id) return NotFound();
 
-            // Remover validação de UsuarioId pois será preenchido manualmente
             ModelState.Remove("UsuarioId");
             ModelState.Remove("Usuario");
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userIdClaim))
+            if (ModelState.IsValid)
             {
-                return BadRequest("Usuário não autenticado");
-            }
+                try
+                {
+                    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var userId = int.Parse(userIdClaim);
-            var receitaExistente = await _context.Receitas
-                .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == id && r.UsuarioId == userId);
+                    // Verifica se existe e pertence ao usuário (AsNoTracking é crucial aqui)
+                    var exists = await _context.Receitas.AsNoTracking()
+                        .AnyAsync(e => e.Id == id && e.UsuarioId == userId);
 
-            if (receitaExistente == null)
-                return NotFound();
+                    if (!exists) return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                TempData["Erro"] = "Dados inválidos. Verifique os campos.";
+                    receita.UsuarioId = userId;
+                    _context.Update(receita);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw; // Em produção tratamos melhor
+                }
                 return RedirectToAction(nameof(Index));
             }
-
-            receita.UsuarioId = userId;
-            _context.Receitas.Update(receita);
-            await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
 
-        // Deletar receita
+        // POST: Receitas/Delete/5
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
             var receita = await _context.Receitas
-                .FirstOrDefaultAsync(r => r.Id == id && r.UsuarioId == userId);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UsuarioId == userId);
 
-            if (receita == null) return NotFound();
-
-            _context.Receitas.Remove(receita);
-            await _context.SaveChangesAsync();
+            if (receita != null)
+            {
+                _context.Receitas.Remove(receita);
+                await _context.SaveChangesAsync();
+            }
 
             return Ok();
         }
