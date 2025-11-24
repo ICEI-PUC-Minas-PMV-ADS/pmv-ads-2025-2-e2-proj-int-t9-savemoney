@@ -1,7 +1,43 @@
-﻿
-@{
-    ViewData["Title"] = "AccessDenied";
+﻿@{
+    ViewData["Title"] = "Acesso negado!";
 }
 
-<h1>Acesso negado!</h1>
+<style>
+    .access-denied-container {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: var(--text-primary);
+    }
 
+    .denied-icon {
+        font-size: 80px;
+        color: var(--danger);
+        margin-bottom: 20px;
+    }
+
+    .denied-message {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .denied-submessage {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="access-denied-container">
+    <span class="material-icons denied-icon">lock</span>
+    <h1 class="denied-message">Acesso Negado!</h1>
+    <p class="denied-submessage">Você não tem permissão para acessar esta página.</p>
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary btn-lg">
+        <span class="material-icons align-middle me-1" style="font-size: 20px;">dashboard</span>
+        Ir para o Dashboard
+    </a>
+</div>

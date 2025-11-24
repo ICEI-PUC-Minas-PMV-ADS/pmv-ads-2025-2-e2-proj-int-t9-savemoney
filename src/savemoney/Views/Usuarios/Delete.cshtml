@@ -4,10 +4,54 @@
     ViewData["Title"] = "Excluir";
 }
 
-<div class="container d-flex flex-column align-items-center justify-content-center">
-    <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%; border-radius: 16px;">
+<style>
+    /* Estilos comuns para Details e Delete */
+    :root {
+        --bg-primary: #10111a;
+        --glass-bg: rgba(27, 29, 41, 0.7);
+        --glass-border: rgba(59, 130, 246, 0.2);
+        --text-primary: #f5f5ff;
+        --accent-primary: #3b82f6;
+        --danger: #ef4444;
+    }
+
+    .delete-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: var(--bg-primary);
+    }
+
+    .glass-card-details {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        color: var(--text-primary);
+    }
+
+        .glass-card-details h1, .glass-card-details h5, .glass-card-details dt, .glass-card-details dd {
+            color: var(--text-primary);
+        }
+
+            .glass-card-details dt .material-icons {
+                color: var(--accent-primary);
+            }
+
+    .btn-link {
+        color: var(--accent-primary);
+    }
+</style>
+
+<div class="delete-container">
+    <div class="glass-card-details" style="max-width: 500px; width: 100%;">
         <div class="text-center mb-4">
-            <span class="material-icons md-48 text-danger" style="font-size: 48px;">delete_forever</span>
+            <span class="material-icons" style="font-size: 48px; color: var(--danger);">delete_forever</span>
             <h1 class="h3 mb-2 text-danger">Excluir Usuário</h1>
             <h5 class="mb-0">Tem certeza de que deseja excluir este usuário?</h5>
         </div>

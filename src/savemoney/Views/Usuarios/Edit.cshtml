@@ -4,15 +4,78 @@
     ViewData["Title"] = "Editar";
 }
 
-<div class="container d-flex flex-column align-items-center justify-content-center">
-    <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%; border-radius: 16px;">
+<style>
+    /* Reutiliza o estilo do Create para manter o padrão visual */
+    :root {
+        --bg-primary: #10111a;
+        --bg-card: #1b1d29;
+        --accent-primary: #3b82f6;
+        --glass-bg: rgba(27, 29, 41, 0.7);
+        --glass-border: rgba(59, 130, 246, 0.2);
+        --text-primary: #f5f5ff;
+    }
+
+    .form-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: var(--bg-primary);
+    }
+
+    .glass-card-form {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        color: var(--text-primary);
+    }
+
+        .glass-card-form h1, .glass-card-form .form-label, .form-control-plaintext {
+            color: var(--text-primary);
+        }
+
+    .form-control, .form-select {
+        background-color: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+    }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--bg-card);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.3);
+            color: var(--text-primary);
+        }
+
+    .form-label .material-icons {
+        color: var(--accent-primary);
+    }
+
+    .btn-link {
+        color: var(--accent-primary);
+    }
+
+    .form-control:disabled {
+        background-color: var(--bg-secondary); /* Levemente mais escuro para indicar desabilitado */
+        opacity: 0.7;
+    }
+</style>
+
+<div class="form-container">
+    <div class="glass-card-form" style="max-width: 500px; width: 100%;">
         <div class="text-center mb-4">
-            <span class="material-icons md-48" style="font-size: 48px;">edit</span>
+            <span class="material-icons" style="font-size: 48px; color: var(--accent-primary);">edit</span>
             <h1 class="h3 mb-0">Editar Usuário</h1>
         </div>
-        <form asp-action="Edit">
+        <form asp-action="Edit" id="edit-user-form">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
             <input type="hidden" asp-for="Id" />
+
             <div class="mb-3">
                 <label asp-for="Nome" class="form-label">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">badge</span>
@@ -21,6 +84,7 @@
                 <input asp-for="Nome" class="form-control" />
                 <span asp-validation-for="Nome" class="text-danger small"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Email" class="form-label">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">email</span>
@@ -29,6 +93,7 @@
                 <input asp-for="Email" class="form-control" disabled />
                 <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Documento" class="form-label">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">assignment_ind</span>
@@ -37,14 +102,16 @@
                 <input asp-for="Documento" class="form-control" />
                 <span asp-validation-for="Documento" class="text-danger small"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Senha" class="form-label">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">lock</span>
-                    Senha
+                    Nova Senha (deixe vazio para não alterar)
                 </label>
-                <input asp-for="Senha" class="form-control" />
+                <input asp-for="Senha" class="form-control" value="" type="password" />
                 <span asp-validation-for="Senha" class="text-danger small"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Perfil" class="form-label">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">supervisor_account</span>
@@ -53,6 +120,7 @@
                 <select asp-for="Perfil" class="form-select" asp-items="Html.GetEnumSelectList<Perfil>()"></select>
                 <span asp-validation-for="Perfil" class="text-danger small"></span>
             </div>
+
             @if (User.IsInRole("Administrador"))
             {
                 <div class="mb-3">
@@ -64,6 +132,7 @@
                     <span asp-validation-for="TipoUsuario" class="text-danger small"></span>
                 </div>
             }
+
             <div class="mb-3">
                 <label asp-for="DataCadastro" class="form-label">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">calendar_today</span>
@@ -71,18 +140,29 @@
                 </label>
                 <p class="form-control-plaintext">@Model.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
             </div>
+
             <div class="d-grid mb-2">
-                <button type="submit" class="btn btn-success btn-lg">
+                <button type="submit" class="btn btn-primary btn-lg">
                     <span class="material-icons align-middle me-1" style="font-size: 20px;">save</span>
                     Salvar
                 </button>
             </div>
+
             @if (User.IsInRole("Administrador"))
             {
                 <div class="text-center">
                     <a asp-action="Index" class="btn btn-link">
                         <span class="material-icons align-middle me-1" style="font-size: 20px;">arrow_back</span>
                         Voltar para a Lista
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="text-center">
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-link">
+                        <span class="material-icons align-middle me-1" style="font-size: 20px;">arrow_back</span>
+                        Cancelar Edição
                     </a>
                 </div>
             }
@@ -94,4 +174,56 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        // Validação de formulário Vanilla JS para o Edit
+        document.getElementById('edit-user-form').addEventListener('submit', function(event) {
+            const form = event.target;
+            let isValid = true;
+
+            // Função para limpar e exibir erro
+            const displayError = (input, message) => {
+                const errorSpan = input.nextElementSibling;
+                errorSpan.textContent = message;
+                input.classList.add('is-invalid');
+                isValid = false;
+            };
+
+            const clearErrors = (input) => {
+                const errorSpan = input.nextElementSibling;
+                errorSpan.textContent = '';
+                input.classList.remove('is-invalid');
+            };
+
+            // Campos e regras
+            const nomeInput = form.querySelector('#Nome');
+            const documentoInput = form.querySelector('#Documento');
+            const senhaInput = form.querySelector('#Senha'); // Nova senha
+
+            // --- Validações ---
+
+            // 1. Nome (Obrigatório, min 3 caracteres)
+            clearErrors(nomeInput);
+            if (nomeInput.value.trim().length < 3) {
+                displayError(nomeInput, 'O nome é obrigatório e deve ter no mínimo 3 caracteres.');
+            }
+
+            // 2. Documento (Obrigatório, min 11 caracteres)
+            clearErrors(documentoInput);
+            if (documentoInput.value.trim().length < 11) {
+                displayError(documentoInput, 'O documento é obrigatório e deve ter no mínimo 11 caracteres (CPF/CNPJ).');
+            }
+
+            // 3. Nova Senha (Opcional, mas se preenchida, min 6 caracteres)
+            clearErrors(senhaInput);
+            if (senhaInput.value.length > 0 && senhaInput.value.length < 6) {
+                displayError(senhaInput, 'A nova senha deve ter no mínimo 6 caracteres.');
+            }
+
+            // Se for inválido, previne o envio do formulário
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
 }
