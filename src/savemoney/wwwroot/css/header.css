@@ -303,10 +303,12 @@ body.no-scroll {
             font-weight: 500;
             border-radius: 8px;
             transition: background 0.2s, color 0.2s;
+            background-color: transparent; /* GARANTIA: Fundo transparente no estado normal */
         }
 
             .mobile-nav-links li a:hover {
-                background-color: rgba(59, 130, 246, 0.1);
+                /* AJUSTE APLICADO: Aumento do contraste no hover (0.2) */
+                background-color: rgba(59, 130, 246, 0.2);
                 color: var(--accent-primary);
             }
 
@@ -317,7 +319,8 @@ body.no-scroll {
     align-items: center;
     width: 100%;
     padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+    /* CORREÇÃO CRÍTICA AQUI: Aumentado de 0.05 para 0.15 para melhor visibilidade */
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     color: var(--text-primary);
     font-weight: 500;
@@ -325,6 +328,11 @@ body.no-scroll {
     cursor: pointer;
     transition: background 0.2s;
 }
+
+    /* Ajuste do hover para o dropdown toggle */
+    .mobile-dropdown-toggle:hover {
+        background: rgba(255, 255, 255, 0.2); /* Fundo um pouco mais claro no hover (0.2) */
+    }
 
 .mobile-dropdown-menu {
     list-style: none;
