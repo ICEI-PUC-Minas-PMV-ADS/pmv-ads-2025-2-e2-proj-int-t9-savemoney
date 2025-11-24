@@ -1,0 +1,45 @@
+﻿@model savemoney.Models.Receita
+
+<article class="revenue-card glass-panel h-100">
+    <div class="card-top">
+        <div class="card-header-row">
+            <div class="title-group">
+                <h5 class="card-title text-truncate" title="@Model.Titulo">@Model.Titulo</h5>
+                <span class="card-date">@Model.DataInicio.ToString("dd MMM, yyyy")</span>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-icon" onclick="carregarModalEditar(@Model.Id)" title="Editar">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button class="btn-icon danger" onclick="confirmarExclusao(@Model.Id)" title="Excluir">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-amount-row">
+            <span class="currency">@Model.CurrencyType</span>
+            <span class="amount">@Model.Valor.ToString("N2")</span>
+        </div>
+    </div>
+
+    <div class="card-divider"></div>
+
+    <div class="card-bottom">
+        <div class="tags-container">
+            @if (Model.IsRecurring)
+            {
+                <div class="meta-tag info">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span>@Model.Recurrence</span>
+                </div>
+            }
+        </div>
+
+        <div class="status-pill @(Model.Recebido ? "status-received" : "status-pending")">
+            <span class="dot"></span>
+            @(Model.Recebido ? "Recebido" : "Pendente")
+        </div>
+    </div>
+</article>

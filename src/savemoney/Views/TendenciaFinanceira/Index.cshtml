@@ -1,0 +1,159 @@
+﻿@{
+    ViewData["Title"] = "Análise de Tendências Financeiras";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tendencia-financeira-index.css" />
+}
+
+<!-- Background Fixo (Padrão SaveMoney) -->
+<div class="background-fixed-image"></div>
+
+<!-- Hero Section -->
+<section class="tendencia-hero">
+    <div class="tendencia-hero-content">
+        <h1>Análise de Tendências</h1>
+        <p class="subtitle">
+            Descubra padrões nas suas finanças e tome decisões mais inteligentes
+            com análises detalhadas de receitas, despesas e evolução do saldo.
+        </p>
+    </div>
+</section>
+
+<!-- Container Principal -->
+<div class="container py-5">
+
+    <!-- Card de Instruções (Glassmorphism) -->
+    <div class="glass-card mb-4">
+        <div class="d-flex align-items-start">
+            <i class="bi bi-info-circle text-primary fs-1 me-3"></i>
+            <div>
+                <h5 class="mb-3 info-card-title">Como funciona?</h5>
+                <p class="info-card-text">
+                    Esta ferramenta analisa suas receitas e despesas ao longo do tempo, identificando
+                    padrões de <strong>crescimento</strong>, <strong>redução</strong> ou <strong>estabilidade</strong>
+                    em suas finanças.
+                </p>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="check-item-text">Mínimo: 3 meses</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="check-item-text">Máximo: 12 meses</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="check-item-text">Análise em tempo real</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulário de Seleção -->
+    <div class="glass-card">
+        <form asp-action="GerarAnalise" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="row g-4 align-items-end">
+                <!-- Seleção de Período -->
+                <div class="col-md-7">
+                    <label for="meses" class="form-label">
+                        <i class="bi bi-calendar3"></i> Período de Análise
+                    </label>
+                    <select id="meses" name="meses" class="form-select" required>
+                        <option value="">Selecione o período...</option>
+                        <option value="1">🗓️ Último mês</option>
+                        <option value="3" selected>📅 Últimos 3 meses (Recomendado)</option>
+                        <option value="6">📊 Últimos 6 meses</option>
+                        <option value="9">📈 Últimos 9 meses</option>
+                        <option value="12">📉 Últimos 12 meses</option>
+                    </select>
+                    <div class="form-text">
+                        Quanto maior o período, mais precisa é a análise.
+                    </div>
+                </div>
+
+                <!-- Botão de Ação -->
+                <div class="col-md-5">
+                    <button type="submit" class="btn-tendencia w-100">
+                        <i class="bi bi-graph-up-arrow me-2"></i>
+                        Gerar Análise
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mensagens de Erro -->
+            @if (ViewData.ModelState.ErrorCount > 0)
+            {
+                <div class="alert-custom alert-danger mt-4">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+                </div>
+            }
+
+            @if (TempData["Erro"] != null)
+            {
+                <div class="alert-custom alert-danger mt-4">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    @TempData["Erro"]
+                </div>
+            }
+        </form>
+    </div>
+
+    <!-- Card de Dicas -->
+    <div class="glass-card mt-4 tips-card">
+        <h6 class="tips-card-title">
+            <i class="bi bi-lightbulb-fill me-2"></i>Dicas para melhores resultados
+        </h6>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-1-circle-fill text-primary me-2 mt-1"></i>
+                    <div>
+                        <strong class="tips-item-title">Registre regularmente</strong>
+                        <p class="tips-item-text">
+                            Adicione receitas e despesas assim que ocorrerem
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-2-circle-fill text-primary me-2 mt-1"></i>
+                    <div>
+                        <strong class="tips-item-title">Categorize corretamente</strong>
+                        <p class="tips-item-text">
+                            Use categorias consistentes para melhor análise
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-3-circle-fill text-primary me-2 mt-1"></i>
+                    <div>
+                        <strong class="tips-item-title">Analise mensalmente</strong>
+                        <p class="tips-item-text">
+                            Acompanhe sua evolução todos os meses
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/TendenciaFinanceira-Index.js"></script>
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using savemoney.Data;
 
 namespace savemoney.Models
 {
@@ -11,45 +12,102 @@ namespace savemoney.Models
         // DbSets existentes
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ConversorEnergia> ConversoresEnergia { get; set; }
-
-        // Novos DbSets para o R9 - Metas Financeiras
+        public DbSet<Receita> Receitas { get; set; } = default!;
+        public DbSet<Despesa> Despesas { get; set; } = default!;
         public DbSet<MetaFinanceira> MetasFinanceiras { get; set; }
         public DbSet<Aporte> Aportes { get; set; }
-
-        // Novos DbSets para o R12 - Gestão de Orçamento
         public DbSet<Category> Categories { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<BudgetCategory> BudgetCategories { get; set; }
 
-        // Método para configurar os relacionamentos e comportamentos do banco de dados
+        // NOVO: DbSet para Widgets
+        public DbSet<Widget> Widgets { get; set; }
+        public DbSet<UserTheme> UserThemes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuração crucial (Exclusão em Cascata): 
-            // Quando uma MetaFinanceira for deletada, todos os Aportes relacionados a ela 
-            // devem ser automaticamente deletados pelo banco de dados.
+            // MetaFinanceira → Aportes (Cascade)
             modelBuilder.Entity<MetaFinanceira>()
-                .HasMany(m => m.Aportes)          // Uma Meta tem muitos Aportes
-                .WithOne(a => a.MetaFinanceira)   // Um Aporte pertence a uma Meta
-                .HasForeignKey(a => a.MetaFinanceiraId) // A chave estrangeira é MetaFinanceiraId
-                .OnDelete(DeleteBehavior.Cascade); // Habilita a exclusão em cascata
+                .HasMany(m => m.Aportes)
+                .WithOne(a => a.MetaFinanceira)
+                .HasForeignKey(a => a.MetaFinanceiraId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Configuração para Budget e BudgetCategory: Exclusão em cascata
+            // Category → Usuario
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasOne(c => c.Usuario)
+                      .WithMany(u => u.Categories)
+                      .HasForeignKey(c => c.UsuarioId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Budget → Usuario
+            modelBuilder.Entity<Budget>(entity =>
+            {
+                entity.HasOne(b => b.Usuario)
+                      .WithMany(u => u.Budgets)
+                      .HasForeignKey(b => b.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Budget → BudgetCategory (Cascade)
             modelBuilder.Entity<Budget>()
                 .HasMany(b => b.Categories)
                 .WithOne(bc => bc.Budget)
                 .HasForeignKey(bc => bc.BudgetId)
-                .OnDelete(DeleteBehavior.Cascade); // Quando um Budget é deletado, suas BudgetCategories são deletadas
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Configuração para Category e BudgetCategory: Restringir exclusão
+            // Category → BudgetCategory (Restrict)
             modelBuilder.Entity<Category>()
                 .HasMany(c => c.BudgetCategories)
                 .WithOne(bc => bc.Category)
                 .HasForeignKey(bc => bc.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict); // Impede a exclusão de Category se estiver em uso
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Seed Data: Categorias predefinidas
+            // NOVO: Widget → Usuario (Cascade - se deletar usuário, deleta widgets)
+            modelBuilder.Entity<Widget>()
+                .HasOne(w => w.Usuario)
+                .WithMany(u => u.Widgets)
+                .HasForeignKey(w => w.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+            // Usuario → Receitas (Cascade)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Receitas)
+                .WithOne(r => r.Usuario)
+                .HasForeignKey(r => r.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Usuario → Despesas (Cascade)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Despesas)
+                .WithOne(d => d.Usuario)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Índice para melhorar performance nas queries de widgets por usuário
+            modelBuilder.Entity<Widget>()
+                .HasIndex(w => w.UsuarioId);
+
+            // Dados seed existentes
+            modelBuilder.Entity<Usuario>().HasData(
+                new Usuario
+                {
+                    Id = 1,
+                    Nome = "Admin Savemoney",
+                    Email = "admin@savemoney.com",
+                    Senha = "123456",
+                    Documento = "000.000.000-00",
+                    Perfil = 0,
+                    TipoUsuario = 0,
+                    DataCadastro = DateTime.Now,
+                    // Avatar padrão com iniciais (temporário até adicionar imagem local)
+                    FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true"
+                }
+            );
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Alimentação", IsPredefined = true },
                 new Category { Id = 2, Name = "Lazer", IsPredefined = true },
@@ -58,6 +116,5 @@ namespace savemoney.Models
                 new Category { Id = 5, Name = "Despesas Operacionais", IsPredefined = true }
             );
         }
-
     }
 }

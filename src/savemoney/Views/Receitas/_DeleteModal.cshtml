@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-trash-fill"></i> Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="fs-5">
+                    Tem certeza que deseja excluir a receita:
+                    <strong id="delete-name" class="text-danger"></strong>?
+                </p>
+
+                <input type="hidden" id="delete-id" />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+                    <i class="bi bi-trash"></i> Excluir
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

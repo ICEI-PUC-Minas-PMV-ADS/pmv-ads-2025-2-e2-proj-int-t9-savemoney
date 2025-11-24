@@ -1,0 +1,441 @@
+﻿@{
+    Layout = "_LayoutLanding";
+}
+@{
+    ViewData["Title"] = "Save Money - Gestão Financeira Premium";
+}
+
+@* --- ESTILOS DA PÁGINA --- *@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="~/css/landingPage.css" asp-append-version="true">
+@* --- FIM DOS ESTILOS --- *@
+
+
+@* [REMOVIDO] 
+   O bloco <header>...</header> foi removido daqui. 
+   Ele agora é carregado pelo _LayoutLanding.cshtml.
+*@
+
+
+<main>
+
+    @* A seção Hero já é animada pelo CSS no page load, não precisa de classes JS *@
+    <section class="hero-section" id="hero">
+        <div class="hero-content container">
+            <span class="section-eyebrow" style="color: var(--text-secondary);">Nossa Missão</span>
+            <h1>Simplifique sua gestão financeira.</h1>
+            <p class="subtitle">
+                A plataforma premium que oferece ferramentas intuitivas para controle de gastos, investimentos e
+                planejamento, tudo em um só lugar.
+            </p>
+            <div class="hero-buttons">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Ir para o Painel</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary">Comece Agora (É Grátis)</a>
+                }
+                <a href="#control" class="btn btn-secondary">Ver Funcionalidades</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="control" class="section">
+        <div class="container content-split">
+            <div class="text-column animate-on-scroll fade-in-left">
+                <span class="section-eyebrow">Controle Financeiro</span>
+                <h2>Assuma o comando das suas finanças.</h2>
+                <p>
+                    Gerencie suas receitas e despesas de forma eficiente, com categorização automática e relatórios
+                    detalhados. Veja para onde seu dinheiro vai, sem esforço.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Começar a controlar</a>
+                }
+            </div>
+            <div class="image-column animate-on-scroll fade-in-right">
+                <img src="~/assets/smilling-with-laptop.jpg" asp-append-version="true"
+                     alt="Mulher sorrindo e planejando finanças no laptop">
+            </div>
+        </div>
+    </section>
+
+    <section id="invest" class="section section-darker content-split content-split-reverse-mobile">
+        <div class="container content-split">
+            <div class="image-column animate-on-scroll fade-in-left">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/investimento-img.jpg" asp-append-version="true"
+                     alt="Gráfico de ações subindo em uma tela">
+            </div>
+            <div class="text-column animate-on-scroll fade-in-right">
+                <span class="section-eyebrow">Investimentos</span>
+                <h2>Faça seu dinheiro trabalhar por você.</h2>
+                <p>
+                    Acompanhe seus investimentos (Ações, Fundos e Renda Fixa) e receba recomendações personalizadas
+                    baseadas no seu perfil de risco.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Ver meus investimentos</a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="crypto" class="section">
+        <div class="container content-split">
+            <div class="text-column animate-on-scroll fade-in-left">
+                <span class="section-eyebrow">Criptomoedas</span>
+                <h2>O futuro das finanças, hoje.</h2>
+                <p>
+                    Acompanhe e gerencie seus investimentos em criptomoedas com atualizações de portfólio e preços em
+                    tempo real, 24/7.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Gerenciar Cripto</a>
+                }
+            </div>
+            <div class="image-column animate-on-scroll fade-in-right">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/graficos-img.jpg" asp-append-version="true"
+                     alt="Celular mostrando uma carteira de criptomoedas">
+            </div>
+        </div>
+    </section>
+
+    <section id="profiles" class="section section-darker content-split content-split-reverse-mobile">
+        <div class="container content-split">
+            <div class="image-column animate-on-scroll fade-in-left">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/homem-escritorio-mapa-mundi.jpg" asp-append-version="true"
+                     alt="Homem em mesa de escritório, balançando negócios e vida pessoal">
+            </div>
+            <div class="text-column animate-on-scroll fade-in-right">
+                <span class="section-eyebrow">Pessoa Física (R6) e Empresarial (R7)</span>
+                <h2>Do seu orçamento doméstico ao fluxo de caixa da sua empresa.</h2>
+                <p>
+                    Oferecemos ferramentas específicas para **Pessoas Físicas**, como metas e orçamentos, e soluções
+                    completas para **Pessoas Jurídicas**, incluindo DRE simplificado.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Ver soluções empresariais</a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="converters" class="section">
+        <div class="container content-split">
+            <div class="text-column animate-on-scroll fade-in-left">
+                <span class="section-eyebrow">Conversores Inteligentes</span>
+                <h2>Finanças sem fronteiras.</h2>
+                <p>
+                    Converta valores entre diferentes moedas em tempo real. Além disso, transforme seu consumo de
+                    energia (kWh) em valores monetários, considerando as bandeiras tarifárias.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Usar conversores</a>
+                }
+            </div>
+            <div class="image-column animate-on-scroll fade-in-right">
+                 @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/mapa-moedas.jpg" asp-append-version="true" alt="Mapa-múndi com símbolos de moedas">
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="section section-darker content-split content-split-reverse-mobile">
+        <div class="container content-split">
+            <div class="image-column animate-on-scroll fade-in-left">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/background-image-educacao.png" asp-append-version="true"
+                     alt="Pessoas em uma mesa estudando juntas">
+            </div>
+            <div class="text-column animate-on-scroll fade-in-right">
+                <span class="section-eyebrow">Educação Financeira</span>
+                <h2>Mais que uma ferramenta, um parceiro.</h2>
+                <p>
+                    Disponibilizamos conteúdos educativos (artigos, dicas e newsletters) via e-mail para você tomar
+                    decisões cada vez mais inteligentes.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Quero aprender mais</a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="reports" class="section">
+        <div class="container content-split">
+            <div class="text-column animate-on-scroll fade-in-left">
+                <span class="section-eyebrow">Relatórios e Tendências</span>
+                <h2>Entenda o passado para dominar o presente.</h2>
+                <p>
+                    Gere relatórios detalhados e análises de tendências que transformam dados brutos em insights
+                    poderosos.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Gerar meu primeiro
+                        relatório</a>
+                }
+            </div>
+            <div class="image-column animate-on-scroll fade-in-right">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/relatorios-tendencia.jpg" asp-append-version="true" alt="Dashboard de dados complexo e moderno">
+            </div>
+        </div>
+    </section>
+
+    <section id="projection" class="section section-darker content-split content-split-reverse-mobile">
+        <div class="container content-split">
+            <div class="image-column animate-on-scroll fade-in-left">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/women-smiling.jpg" asp-append-version="true"
+                     alt="Pessoa apresentando gráficos de crescimento em reunião">
+            </div>
+            <div class="text-column animate-on-scroll fade-in-right">
+                <span class="section-eyebrow">Projeção e Exportação (R14, R5)</span>
+                <h2>Planeje o futuro e compartilhe seu sucesso.</h2>
+                <p>
+                    Consulte projeções financeiras baseadas em seus hábitos e exporte qualquer relatório para PDF ou
+                    Excel com um clique.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Ver minha projeção</a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="goals" class="section">
+        <div class="container content-split">
+            <div class="text-column animate-on-scroll fade-in-left">
+                <span class="section-eyebrow">Metas e Orçamentos (R9, R12)</span>
+                <h2>Dê um propósito ao seu dinheiro.</h2>
+                <p>
+                    Crie metas financeiras, da viagem dos sonhos à reserva de emergência. Defina orçamentos por
+                    categoria para nunca mais ficar no vermelho.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Criar minha primeira meta</a>
+                }
+            </div>
+            <div class="image-column animate-on-scroll fade-in-right">
+                 @* [CORRIGIDO] Caminho da imagem e sintaxe *@
+                <img src="~/assets/tablet-use.jpg" asp-append-version="true"
+                     alt="Pote de vidro com economias para viagem">
+            </div>
+        </div>
+    </section>
+
+    <section id="customize" class="section section-darker content-split content-split-reverse-mobile">
+        <div class="container content-split">
+            <div class="image-column animate-on-scroll fade-in-left">
+                <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDV8fHBlb3BsZSUyMGN1c3RvbWl6aW5nJTIwdWl8ZW58MHwwfHx8MTczMDQ5NDMwMnww&ixlib=rb-4.0.3&q=80&w=1080"
+                     alt="Pessoas organizando cartões em uma mesa (simulando drag-and-drop)">
+            </div>
+            <div class="text-column animate-on-scroll fade-in-right">
+                <span class="section-eyebrow">Personalização Total (R8, R10)</span>
+                <h2>Seu dinheiro, do seu jeito.</h2>
+                <p>
+                    Cansado de dashboards engessados? Customize seu painel com widgets configuráveis usando *drag and
+                    drop* e personalize o tema com os esquemas de cores que mais combinam com você.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Personalizar meu dashboard</a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="tools" class="section">
+        <div class="container content-split">
+            <div class="text-column animate-on-scroll fade-in-left">
+                <span class="section-eyebrow">Ferramentas e Alertas (R11, R15, R16)</span>
+                <h2>Tudo o que você precisa, ao seu alcance.</h2>
+                <p>
+                    Receba notificações e alertas, visualize seu histórico completo e use ferramentas interativas para
+                    um planejamento financeiro ainda mais profundo.
+                </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Ir para o Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Conhecer ferramentas</a>
+                }
+            </div>
+            <div class="image-column animate-on-scroll fade-in-right">
+                @* [CORRIGIDO] Caminho da imagem *@
+                <img src="~/assets/goal-calculator.jpg" asp-append-version="true"
+                     alt="Laptop mostrando gráficos e uma calculadora">
+            </div>
+        </div>
+    </section>
+
+    <section id="login" class="section cta-section">
+        <div class="container">
+            <h2 class="animate-on-scroll fade-in-up">Pronto para assumir o controle?</h2>
+            <p class="animate-on-scroll fade-in-up" style="animation-delay: 0.1s;">
+                Junte-se a milhares de usuários que estão transformando sua relação com o dinheiro. Crie sua conta
+                gratuita e comece a economizar hoje mesmo.
+            </p>
+            
+            <div class="animate-on-scroll fade-in-up" style="animation-delay: 0.2s;">
+                 @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Ir para meu Painel</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary">Criar minha conta Grátis</a>
+                }
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-glass">
+            <div class="modal-header">
+                <h5 class="modal-title" id="welcomeModalLabel">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span>Bem-vindo de volta!</span>
+                    }
+                    else
+                    {
+                        <span>Bem-vindo ao Save Money!</span>
+                    }
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <p>Você já está logado! Deseja ir direto para o seu painel de usuário?</p>
+                }
+                else
+                {
+                    <p>Faça login para ter acesso a milhares de ferramentas e informações, acesse já o seu painel do
+                        usuário.</p>
+                }
+            </div>
+            <div class="modal-footer">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ver a Landing Page</button>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Ir para o Painel</a>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Explorar a página</button>
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary">Fazer Login</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content animate-on-scroll fade-in-up">
+            <div class="footer-logo">
+                <a href="#" class="logo">Save Money</a>
+                <p style="margin-top: 1rem; max-width: 300px;">Simplificando a gestão financeira pessoal e empresarial
+                    com design e tecnologia.</p>
+            </div>
+
+            <div class="footer-links">
+                <div>
+                    <h4>Produto</h4>
+                    <ul>
+                        <li><a href="#control">Controle</a></li>
+                        <li><a href="#invest">Investimentos</a></li>
+                        <li><a href="#profiles">Perfis</a></li>
+                        <li><a href="#reports">Relatórios</a></li>
+                        <li><a href="#goals">Metas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Empresa</h4>
+                    <ul>
+                        <li><a href="#">Sobre Nós</a></li>
+                        <li><a href="#">Carreiras</a></li>
+                        <li><a href="#">Contato</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-copyright">
+            &copy; 2025 Save Money. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+
+@section Scripts {
+    <script>
+        window.isUserAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+    </script>
+    
+    <script src="~/js/landingPage.js" asp-append-version="true"></script>
+}

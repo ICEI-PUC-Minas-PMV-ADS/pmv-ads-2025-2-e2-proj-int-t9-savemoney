@@ -1,6 +1,9 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using savemoney.Services; // importa o services da api para implementar as dependencias
+using savemoney.Services;
+using System.Globalization; // <--- ADICIONADO
+using Microsoft.AspNetCore.Localization; // <--- ADICIONADO
 
 namespace savemoney
 {
@@ -11,8 +14,17 @@ namespace savemoney
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();  // <-- pacote do NuGet para compilar e visualizar as alterações em tempo real.
-            builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); 
+            if (!builder.Environment.IsDevelopment())
+            {
+                // Só usa o caminho da hospedagem se NÃO ESTIVER em desenvolvimento
+                builder.Services.AddDataProtection()
+                    .PersistKeysToFileSystem(new DirectoryInfo(@"h:\root\home\maiconvts-001\www\site1\DataProtection-Keys"));
+            }
+
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
             builder.Services.AddDbContext<Models.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -28,24 +40,39 @@ namespace savemoney
                     options.AccessDeniedPath = "/Usuarios/AccessDenied/";
                     options.LoginPath = "/Usuarios/Login/";
                 });
-            // Inicio do código para injetar uma nova instancia pronta (NoticiasService)
-            // Registra o HttpClient para que possa ser injetado no nosso serviço
+
+            // Injeção de Dependências
             builder.Services.AddHttpClient();
-            // Registra o nosso serviço. AddScoped é a configuraçlão mais comum.
             builder.Services.AddScoped<NoticiasService>();
             builder.Services.AddScoped<ArtigosService>();
+            builder.Services.AddScoped<RecurrenceService>();
+            builder.Services.AddScoped<BudgetService>();
+            builder.Services.AddScoped<savemoney.Services.Interfaces.ITendenciaFinanceiraService,
+                          savemoney.Services.TendenciaFinanceiraService>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            // ==============================================================================
+            // 1. CONFIGURAÇÃO DE CULTURA (PT-BR) - Para aceitar vírgula em decimais
+            // ==============================================================================
+            var defaultDateCulture = "pt-BR";
+            var ci = new CultureInfo(defaultDateCulture);
+            ci.NumberFormat.NumberDecimalSeparator = ",";
+            ci.NumberFormat.CurrencyDecimalSeparator = ",";
 
-            app.UseHttpsRedirection();
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(ci),
+                SupportedCultures = new List<CultureInfo> { ci },
+                SupportedUICultures = new List<CultureInfo> { ci }
+            });
+            // ==============================================================================
+
+            // LICENÇA COMMUNITY DO QUESTPDF
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+            // app.UseHttpsRedirection(); // Mantido comentado conforme solicitado
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -55,7 +82,7 @@ namespace savemoney
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=LandingPage}/{action=Index}/{id?}");
 
             app.Run();
         }

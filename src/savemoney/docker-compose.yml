@@ -1,0 +1,23 @@
+﻿services:
+  # Aplicação .NET conectando direto no SmarterASP
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: savemoney-app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Data Source=SQL1003.site4now.net;Initial Catalog=db_ac05ba_savemoney;User Id=db_ac05ba_savemoney_admin;Password=savemoney09876;TrustServerCertificate=True;MultipleActiveResultSets=true
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persiste os uploads FORA do container (para não perder as fotos)
+      - ./wwwroot/uploads:/app/wwwroot/uploads
+    networks:
+      - savemoney-network
+
+# Network
+networks:
+  savemoney-network:
+    driver: bridge

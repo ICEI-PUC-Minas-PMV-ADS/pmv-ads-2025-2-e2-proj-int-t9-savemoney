@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,29 +8,38 @@ namespace savemoney.Models
     [Table("BudgetCategory")]
     public class BudgetCategory
     {
+        public BudgetCategory()
+        {
+            // construtor vazio obrigatório para o binder
+        }
+
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O orçamento é obrigatório.")]
+
         public int BudgetId { get; set; }
 
-        [Required(ErrorMessage = "A categoria é obrigatória.")]
+
         public int CategoryId { get; set; }
 
-        [Required(ErrorMessage = "O limite de gastos é obrigatório.")]
+
         [Range(0.01, double.MaxValue, ErrorMessage = "O limite deve ser maior que zero.")]
         public decimal Limit { get; set; }
 
         // Propriedade calculada para o total gasto (dinâmica, via consulta SQL)
+        // Total gasto (calculado dinamicamente)
         [NotMapped]
-        public decimal CurrentSpent => CalculateCurrentSpent();
+        public decimal CurrentSpent { get; set; } // Será preenchido via query
 
         // Propriedades de navegação
         [ForeignKey("BudgetId")]
-        public virtual Budget Budget { get; set; } = null!;
+        public virtual Budget? Budget { get; set; }
 
         [ForeignKey("CategoryId")]
-        public virtual Category Category { get; set; } = null!;
+        public virtual Category? Category { get; set; }
+
+        //public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
+
 
         private decimal CalculateCurrentSpent()
         {

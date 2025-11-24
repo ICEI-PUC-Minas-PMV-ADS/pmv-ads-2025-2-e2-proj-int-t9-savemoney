@@ -1,0 +1,107 @@
+﻿@model savemoney.Models.Receita
+@using savemoney.Models
+
+<div class="modal fade" id="receitaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-panel premium-modal">
+
+            <form action="/Receitas/@(Model.Id == 0 ? "Create" : "Edit")/@(Model.Id == 0 ? "" : Model.Id)" method="post">
+                @Html.AntiForgeryToken()
+                @if (Model.Id != 0)
+                {
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                }
+
+                <div class="modal-header-clean">
+                    <div>
+                        <h5 class="modal-title">@(Model.Id == 0 ? "Nova Receita" : "Editar Receita")</h5>
+                        <p class="modal-subtitle">Preencha os detalhes da entrada financeira.</p>
+                    </div>
+                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body-clean">
+
+                    <div class="form-group-highlight mb-4">
+                        <div class="currency-selector">
+                            <select asp-for="CurrencyType" id="currencyType" class="premium-select-minimal">
+                                <option value="BRL">BRL</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                            </select>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="amount-input-wrapper">
+                            <span id="currencySymbol" class="currency-symbol">R$</span>
+                            <input asp-for="Valor" class="premium-input-large" type="text" placeholder="0,00" autocomplete="off" />
+                        </div>
+                        <span asp-validation-for="Valor" class="validation-msg"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Titulo" class="premium-label">Descrição</label>
+                        <input asp-for="Titulo" class="premium-input" placeholder="Ex: Salário Mensal, Venda de Produto..." />
+                        <span asp-validation-for="Titulo" class="validation-msg"></span>
+                    </div>
+
+                    <div class="grid-2-col mb-3">
+                        <div class="form-group">
+                            <label asp-for="DataInicio" class="premium-label">Recebimento</label>
+                            <input type="date" asp-for="DataInicio" class="premium-input" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DataFim" class="premium-label">Competência</label>
+                            <input type="date" asp-for="DataFim" class="premium-input" />
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="toggle-row mb-3">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Recorrência</span>
+                            <span class="toggle-desc">Esta receita se repete?</span>
+                        </div>
+                        <label class="premium-switch">
+                            <input asp-for="IsRecurring" type="checkbox" id="isRecurringSwitch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="recurrence-panel" id="recurrenceOptions" style="display: @(Model.IsRecurring ? "grid" : "none");">
+                        <div class="form-group">
+                            <label class="premium-label">Frequência</label>
+                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Receita.RecurrenceType>()" class="premium-select"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RecurrenceCount" class="premium-label">Repetições</label>
+                            <input asp-for="RecurrenceCount" class="premium-input" placeholder="∞" />
+                        </div>
+                    </div>
+
+                    <div class="toggle-row mt-2">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Status</span>
+                            <span class="toggle-desc">O valor já caiu na conta?</span>
+                        </div>
+                        <label class="premium-switch">
+                            <input asp-for="Recebido" type="checkbox">
+                            <span class="slider round success"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer-clean">
+                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-premium-primary">Salvar Receita</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<partial name="_ValidationScriptsPartial" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,11 +13,16 @@ namespace savemoney.Models
 
         [Required(ErrorMessage = "O nome da categoria é obrigatório.")]
         [StringLength(100, ErrorMessage = "O nome da categoria deve ter no máximo 100 caracteres.")]
-        public string Name { get; set; } = string.Empty;
+        public required string Name { get; set; }
 
-        public bool IsPredefined { get; set; } // True para categorias padrão, False para personalizadas
+        public bool IsPredefined { get; set; }
 
-        // Relacionamento: Uma categoria pode estar em várias BudgetCategories
+        public int? UsuarioId { get; set; }
+
+        [BindNever]
+        public virtual Usuario? Usuario { get; set; }
+
+        [BindNever]
         public virtual ICollection<BudgetCategory> BudgetCategories { get; set; } = new List<BudgetCategory>();
     }
 }

@@ -11,17 +11,18 @@ namespace savemoney.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly string _apiKey; 
 
         public NoticiasService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _configuration = configuration;
+            _apiKey = _configuration["GNews:ApiKey"];
         }
 
-        public async Task<string> BuscarNoticiasAsync(string termoDeBusca)
+        public async Task<string> BuscarNoticiasAsync(string query, int page)
         {
-            var apiKey = _configuration["GNews:ApiKey"];
-            if (string.IsNullOrWhiteSpace(apiKey))
+            if (string.IsNullOrWhiteSpace(_apiKey))
             {
                 var erro = new
                 {
@@ -33,16 +34,15 @@ namespace savemoney.Services
                 return JsonSerializer.Serialize(erro);
             }
 
-            // Adiciona o filtro de notícias financeiras (business)
-            var termoCodificado = WebUtility.UrlEncode(termoDeBusca);
-            // var url = $"https://gnews.io/api/v4/top-headlines?lang=pt&topic=business&token={apiKey}";
-            var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&token={apiKey}";
+            var termoDeBuscaFinal = string.IsNullOrWhiteSpace(query) ? "finanças" : query;
+            var termoCodificado = WebUtility.UrlEncode(termoDeBuscaFinal);
+            
+            var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&page={page}&max=10&token={_apiKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "SaveMoneyApp/1.0");
 
             var response = await _httpClient.SendAsync(request);
-            // response.EnsureSuccessStatusCode();
 
             if (!response.IsSuccessStatusCode)
             {
@@ -58,7 +58,6 @@ namespace savemoney.Services
 
             var responseJsonString = await response.Content.ReadAsStringAsync();
 
-            // Padroniza o retorno
             try
             {
                 using var doc = JsonDocument.Parse(responseJsonString);
@@ -71,18 +70,12 @@ namespace savemoney.Services
                     {
                         articles.Add(new
                         {
-                            // Passamos null como padrão para GetPropertyOrDefault, 
-                            // e usamos '??' para garantir um valor final se o resultado for nulo.
                             title = article.GetPropertyOrDefault("title", null) ?? "Sem título",
                             description = article.GetPropertyOrDefault("description", null) ?? "Sem descrição",
                             url = article.GetPropertyOrDefault("url", null) ?? "#",
-
-                            // Estes campos podem permanecer nulos, então a implementação anterior já estava correta:
                             urlToImage = article.GetPropertyOrDefault("image", null),
                             publishedAt = article.GetPropertyOrDefault("publishedAt", null),
-
-                            // A lógica da fonte já trata corretamente o potencial nulo de GetString()
-                            source = article.TryGetProperty("source", out var source) && source.TryGetProperty("name", out var name) ? name.GetString() : null
+                            source = article.TryGetProperty("source", out var sourceEl) && sourceEl.TryGetProperty("name", out var nameEl) ? nameEl.GetString() : null
                         });
                     }
                 }
@@ -98,7 +91,7 @@ namespace savemoney.Services
             }
             catch
             {
-                // Retorno padrão em caso de erro de parsing
+               
                 var erro = new
                 {
                     status = "error",
@@ -108,6 +101,89 @@ namespace savemoney.Services
                 return JsonSerializer.Serialize(erro);
             }
         }
+
+        public async Task<List<string>> BuscarSugestoesAsync(string query)
+        {
+            var sugestoes = new List<string>();
+            
+            
+            if (string.IsNullOrWhiteSpace(_apiKey) || string.IsNullOrWhiteSpace(query))
+            {
+                return sugestoes; 
+            }
+
+            var termoCodificado = WebUtility.UrlEncode(query);
+            
+            
+            var url = $"https://gnews.io/api/v4/search?q={termoCodificado}&lang=pt&max=5&token={_apiKey}";
+
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("User-Agent", "SaveMoneyApp/1.0");
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                
+                Console.WriteLine($"Erro na API de sugestões: {response.StatusCode}");
+                return sugestoes; 
+            }
+
+            var responseJsonString = await response.Content.ReadAsStringAsync();
+
+            try
+            {
+
+                using var doc = JsonDocument.Parse(responseJsonString);
+                var root = doc.RootElement;
+
+                if (root.TryGetProperty("articles", out var articlesElement) && articlesElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var article in articlesElement.EnumerateArray())
+                    {
+
+                        sugestoes.Add(article.GetPropertyOrDefault("title", null) ?? "Sem título");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao parsear sugestões: {ex.Message}");
+
+            }
+
+            return sugestoes;
+        }
+    }
+
+    public static class JsonElementExtensions
+    {
+        public static T GetPropertyOrDefault<T>(this JsonElement element, string propertyName, T defaultValue = default)
+        {
+            try
+            {
+                if (element.TryGetProperty(propertyName, out var property))
+                {
+                    if (typeof(T) == typeof(string) && property.ValueKind == JsonValueKind.String)
+                    {
+                        return (T)(object)property.GetString();
+                    }
+                    if (typeof(T) == typeof(int) && property.ValueKind == JsonValueKind.Number)
+                    {
+                        return (T)(object)property.GetInt32();
+                    }
+                    if (property.ValueKind == JsonValueKind.Null)
+                    {
+                        return defaultValue;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao ler propriedade JSON '{propertyName}': {ex.Message}");
+            }
+            return defaultValue;
+        }
     }
 }
-

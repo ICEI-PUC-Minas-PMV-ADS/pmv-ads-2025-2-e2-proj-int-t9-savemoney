@@ -1,0 +1,336 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    var usuario = ViewBag.Usuario as savemoney.Models.Usuario;
+    var widgets = ViewBag.Widgets as List<savemoney.Models.Widget>;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - SaveMoney</title>
+</head>
+<body>
+    <div class="dashboard-container">
+
+        <!-- PAINEL DO USUÁRIO -->
+        <aside class="user-panel">
+            <div class="user-profile">
+                <div class="user-avatar" id="avatarContainer">
+                    <img src="@usuario.FotoPerfil" alt="Foto de @usuario.Nome" id="avatarImage">
+                    <div class="avatar-overlay">
+                        <span>📷</span>
+                    </div>
+                </div>
+                <h2 class="user-greeting">Seja bem-vindo(a),<br><strong>@usuario.Nome</strong>!</h2>
+            </div>
+
+            <nav class="user-menu">
+                <a href="@Url.Action("Details", "Usuarios", new { id = usuario.Id })" class="menu-item">
+                    <span class="icon">👤</span>
+                    Informações da Conta
+                </a>
+                <a href="@Url.Action("Edit", "Usuarios", new { id = usuario.Id })" class="menu-item">
+                    <span class="icon">✏️</span>
+                    Editar Perfil
+                </a>
+                <a href="#" onclick="abrirModalTemas(); return false;" class="menu-item">
+                    <span class="icon">🎨</span>
+                    Personalizar Tema
+                </a>
+                <button onclick="resetarTemaEmergencia()" class="menu-item" id="btnResetTema" style="width: 100%; text-align: left; background: #ef4444 !important; color: #ffffff !important; border: 2px solid #dc2626 !important;">
+                    <span class="icon">🔄</span>
+                    Resetar Tema
+                </button>
+                <a href="@Url.Action("Logout", "Usuarios")" class="menu-item logout">
+                    <span class="icon">🚪</span>
+                    Sair
+                </a>
+            </nav>
+
+            <div class="panel-info">
+                <p><strong>Membro desde:</strong><br>@usuario.DataCadastro.ToString("dd/MM/yyyy")</p>
+                <p><strong>Email:</strong><br>@usuario.Email</p>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE WIDGETS -->
+        <main class="widgets-area">
+            <div class="widgets-header">
+                <h1>WIDGETS</h1>
+                <button class="btn-add-widget" onclick="abrirModalWidget()">
+                    + Adicionar Widget
+                </button>
+            </div>
+
+            <div class="widgets-grid" id="widgetsGrid">
+                @if (widgets != null && widgets.Any())
+                {
+                    foreach (var widget in widgets)
+                    {
+                        var imagemUrl = !string.IsNullOrEmpty(widget.ImagemUrl) ? widget.ImagemUrl : "";
+                        var corFundo = !string.IsNullOrEmpty(imagemUrl) ? "transparent" : widget.CorFundo;
+
+                        <div class="widget-card"
+                             data-id="@widget.Id"
+                             data-cols="@widget.Colunas"
+                             data-rows="@widget.Largura"
+                             data-image-url="@imagemUrl"
+                             style="background-color: @corFundo; grid-column: span @widget.Colunas; grid-row: span @widget.Largura;">
+
+                            @if (!string.IsNullOrEmpty(imagemUrl))
+                            {
+                                <img src="@imagemUrl" alt="@widget.Titulo" class="widget-image" />
+                                <div class="widget-overlay"></div>
+                            }
+
+                            <div class="widget-content">
+                                <div class="widget-header">
+                                    <h3>@widget.Titulo</h3>
+                                    <div class="widget-actions">
+                                        <button class="btn-edit" onclick="editarWidget(@widget.Id)" title="Editar">✏️</button>
+                                        <button class="btn-delete" onclick="confirmarDeletar(@widget.Id)" title="Excluir">🗑️</button>
+                                    </div>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(widget.Descricao))
+                                {
+                                    <p class="widget-description">@widget.Descricao</p>
+                                }
+
+                                @if (!string.IsNullOrEmpty(widget.Link))
+                                {
+                                    <a href="@widget.Link" class="widget-link">Acessar</a>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>Nenhum widget ainda</h3>
+                        <p>Adicione seu primeiro widget para personalizar seu dashboard!</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL PARA ADICIONAR/EDITAR WIDGET -->
+    <div id="modalWidget" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close" onclick="fecharModalWidget()">&times;</span>
+            <h2 id="modalTitle">Adicionar Widget</h2>
+
+            <form id="formWidget" method="post" asp-action="SalvarWidget">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="widgetId" name="Id" value="0">
+
+                <div class="form-group">
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" name="Titulo" class="form-control" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" name="Descricao" class="form-control" rows="3" maxlength="500"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagemUrl">URL da Imagem (opcional):</label>
+                    <input type="url"
+                           id="imagemUrl"
+                           name="ImagemUrl"
+                           class="form-control"
+                           placeholder="https://images.unsplash.com/photo-..."
+                           onchange="previewImagem()">
+                    <small style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem; display: block;">
+                        💡 Dica: Procure por imagens gratuitas pelo Google para usar a Url dela.
+                    </small>
+                    <div id="imagemPreview" style="margin-top: 0.75rem; display: none;">
+                        <img id="imagemPreviewImg" src="" alt="Preview" style="width: 100%; max-height: 10rem; object-fit: cover; border-radius: 0.5rem;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="link">Link/Rota:</label>
+                    <input type="text" id="link" name="Link" class="form-control" placeholder="/Receitas/Index">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="colunas">Largura (Colunas):</label>
+                        <select id="colunas" name="Colunas" class="form-control" required>
+                            <option value="1">1 coluna (Pequeno)</option>
+                            <option value="2">2 colunas (Médio)</option>
+                            <option value="3">3 colunas (Grande)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="largura">Altura (Linhas):</label>
+                        <select id="largura" name="Largura" class="form-control" required>
+                            <option value="1">1 linha (Baixo)</option>
+                            <option value="2">2 linhas (Médio)</option>
+                            <option value="3">3 linhas (Alto)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="corFundo">Cor de Fundo (se não tiver imagem):</label>
+                    <input type="color" id="corFundo" name="CorFundo" class="form-control-color" value="#1b1d29">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalWidget()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PARA CONFIRMAR DELEÇÃO -->
+    <div id="modalConfirmar" class="modal">
+        <div class="modal-content glass-card modal-small">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir este widget?</p>
+
+            <form id="formDeletar" method="post" asp-action="DeletarWidget">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="deletarId" name="id">
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalConfirmar()">Cancelar</button>
+                    <button type="submit" class="btn-danger">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE TEMAS -->
+    <div id="modalTemas" class="modal">
+        <div class="modal-content glass-card" style="max-width: 50rem;">
+            <span class="close" onclick="fecharModalTemas()">&times;</span>
+            <h2>🎨 Personalizar Tema</h2>
+
+            <!-- TEMAS PRÉ-DEFINIDOS -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Temas Pré-definidos</h3>
+                <div class="temas-grid">
+                    <div class="tema-card" data-theme="default" onclick="aplicarTemaPadrao('default')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #10111a, #3b82f6);"></div>
+                        <span class="tema-nome">Default (Azul)</span>
+                    </div>
+                    <div class="tema-card" data-theme="purple" onclick="aplicarTemaPadrao('purple')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f1f, #8b5cf6);"></div>
+                        <span class="tema-nome">Purple Night</span>
+                    </div>
+                    <div class="tema-card" data-theme="green" onclick="aplicarTemaPadrao('green')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #0a1410, #10b981);"></div>
+                        <span class="tema-nome">Green Money</span>
+                    </div>
+                    <div class="tema-card" data-theme="orange" onclick="aplicarTemaPadrao('orange')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a1410, #f59e0b);"></div>
+                        <span class="tema-nome">Orange Sunset</span>
+                    </div>
+                    <div class="tema-card" data-theme="red" onclick="aplicarTemaPadrao('red')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f0f, #ef4444);"></div>
+                        <span class="tema-nome">Red Passion</span>
+                    </div>
+                    <div class="tema-card" data-theme="cyan" onclick="aplicarTemaPadrao('cyan')">
+                        <div class="tema-preview" style="background: linear-gradient(135deg, #0f1a1a, #06b6d4);"></div>
+                        <span class="tema-nome">Cyan Wave</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEMAS CUSTOMIZADOS -->
+            <div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Seus Temas</h3>
+                <div id="temasCustomizados" class="temas-grid">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+                <button class="btn-primary" onclick="abrirModalCriarTema()" style="margin-top: 1rem; width: 100%;">
+                    + Criar Tema Customizado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR/EDITAR TEMA -->
+    <div id="modalCriarTema" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close" onclick="fecharModalCriarTema()">&times;</span>
+            <h2 id="tituloModalTema">Criar Tema Customizado</h2>
+
+            <form id="formTema" onsubmit="salvarTema(event)">
+                <input type="hidden" id="temaId" value="0">
+
+                <div class="form-group">
+                    <label for="nomeTema">Nome do Tema:</label>
+                    <input type="text" id="nomeTema" class="form-control" required maxlength="50" placeholder="Meu Tema Personalizado">
+                </div>
+
+                <div class="form-group">
+                    <label>Cores do Tema:</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div>
+                            <label style="font-size: 0.875rem;">Fundo Principal</label>
+                            <input type="color" id="bgPrimary" class="form-control-color" value="#10111a">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Fundo Secundário</label>
+                            <input type="color" id="bgSecondary" class="form-control-color" value="#0d0e16">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Fundo Card</label>
+                            <input type="color" id="bgCard" class="form-control-color" value="#1b1d29">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Cor da Borda</label>
+                            <input type="color" id="borderColor" class="form-control-color" value="#2a2c3c">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Texto Principal</label>
+                            <input type="color" id="textPrimary" class="form-control-color" value="#f5f5ff">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Texto Secundário</label>
+                            <input type="color" id="textSecondary" class="form-control-color" value="#aaaaaa">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Cor de Destaque</label>
+                            <input type="color" id="accentPrimary" class="form-control-color" value="#3b82f6">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Destaque (Hover)</label>
+                            <input type="color" id="accentPrimaryHover" class="form-control-color" value="#2563eb">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.875rem;">Texto do Botão</label>
+                            <input type="color" id="btnPrimaryText" class="form-control-color" value="#ffffff">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalCriarTema()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Tema</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Dashboard.css">
+}
+
+@section Scripts {
+    <script src="~/js/Dashboard.js"></script>
+}

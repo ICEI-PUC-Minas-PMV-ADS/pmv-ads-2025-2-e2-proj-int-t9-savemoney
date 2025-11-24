@@ -4,11 +4,69 @@
     ViewData["Title"] = "Usuários";
 }
 
-<div class="container d-flex flex-column align-items-center justify-content-center">
-    <div class="card shadow-sm p-4 w-100" style="max-width: 1100px;">
+<style>
+    :root {
+        --bg-primary: #10111a;
+        --bg-card: #1b1d29;
+        --border-color: #2a2c3c;
+        --text-primary: #f5f5ff;
+        --accent-primary: #3b82f6;
+        --glass-bg: rgba(27, 29, 41, 0.7);
+        --glass-border: rgba(59, 130, 246, 0.2);
+    }
+
+    .index-container {
+        padding: 40px 20px;
+        background-color: var(--bg-primary);
+        min-height: 100vh;
+    }
+
+    .glass-card-table {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        color: var(--text-primary);
+    }
+
+        .glass-card-table h1 {
+            color: var(--text-primary);
+        }
+
+    .table {
+        --bs-table-bg: transparent;
+        --bs-table-color: var(--text-primary);
+        --bs-table-border-color: var(--border-color);
+    }
+
+    .table-hover > tbody > tr:hover {
+        --bs-table-bg: var(--bg-card); /* Destaca a linha ao passar o mouse */
+        color: var(--text-primary);
+    }
+
+    .table-light {
+        --bs-table-bg: var(--bg-card);
+        --bs-table-color: var(--text-primary);
+        border-bottom: 2px solid var(--accent-primary); /* Borda de destaque no header */
+    }
+
+        .table-light th {
+            border-color: var(--border-color);
+        }
+
+    .btn-success {
+        background-color: var(--success);
+        border-color: var(--success);
+    }
+</style>
+
+<div class="index-container">
+    <div class="glass-card-table w-100" style="max-width: 1100px; margin: 0 auto;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
-                <span class="material-icons me-2" style="font-size: 40px;">group</span>
+                <span class="material-icons me-2" style="font-size: 40px; color: var(--accent-primary);">group</span>
                 <h1 class="h3 mb-0">Usuários</h1>
             </div>
             <a asp-action="Create" class="btn btn-success btn-lg">
@@ -22,10 +80,10 @@
                     <tr>
                         <th><span class="material-icons align-middle me-1" style="font-size: 18px;">badge</span> @Html.DisplayNameFor(model => model.Nome)</th>
                         <th><span class="material-icons align-middle me-1" style="font-size: 18px;">email</span> Email</th>
-                        <th><span class="material-icons align-middle me-1" style="font-size: 18px;">assignment_ind</span> @Html.DisplayNameFor(model => model.Documento)</th>
-                        <th><span class="material-icons align-middle me-1" style="font-size: 18px;">calendar_today</span> @Html.DisplayNameFor(model => model.DataCadastro)</th>
+                        <th class="d-none d-lg-table-cell"><span class="material-icons align-middle me-1" style="font-size: 18px;">assignment_ind</span> @Html.DisplayNameFor(model => model.Documento)</th>
+                        <th class="d-none d-md-table-cell"><span class="material-icons align-middle me-1" style="font-size: 18px;">calendar_today</span> @Html.DisplayNameFor(model => model.DataCadastro)</th>
                         <th><span class="material-icons align-middle me-1" style="font-size: 18px;">supervisor_account</span> @Html.DisplayNameFor(model => model.Perfil)</th>
-                        <th><span class="material-icons align-middle me-1" style="font-size: 18px;">account_tree</span> @Html.DisplayNameFor(model => model.TipoUsuario)</th>
+                        <th class="d-none d-sm-table-cell"><span class="material-icons align-middle me-1" style="font-size: 18px;">account_tree</span> @Html.DisplayNameFor(model => model.TipoUsuario)</th>
                         <th class="text-center"><span class="material-icons align-middle" style="font-size: 18px;">settings</span> Ações</th>
                     </tr>
                 </thead>
@@ -35,20 +93,22 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.Nome)</td>
                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Documento)</td>
-                            <td>@Html.DisplayFor(modelItem => item.DataCadastro)</td>
+                            <td class="d-none d-lg-table-cell">@Html.DisplayFor(modelItem => item.Documento)</td>
+                            <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.DataCadastro)</td>
                             <td>@Html.DisplayFor(modelItem => item.Perfil)</td>
-                            <td>@Html.DisplayFor(modelItem => item.TipoUsuario)</td>
+                            <td class="d-none d-sm-table-cell">@Html.DisplayFor(modelItem => item.TipoUsuario)</td>
                             <td class="text-center">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1" title="Editar">
-                                    <span class="material-icons align-middle" style="font-size: 18px;">edit</span>
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary me-1 text-white" title="Visualizar">
-                                    <span class="material-icons align-middle" style="font-size: 18px;">visibility</span>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Excluir">
-                                    <span class="material-icons align-middle" style="font-size: 18px;">delete</span>
-                                </a>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary" title="Editar">
+                                        <span class="material-icons align-middle" style="font-size: 18px;">edit</span>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary text-white" title="Visualizar">
+                                        <span class="material-icons align-middle" style="font-size: 18px;">visibility</span>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Excluir">
+                                        <span class="material-icons align-middle" style="font-size: 18px;">delete</span>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }

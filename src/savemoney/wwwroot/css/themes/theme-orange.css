@@ -1,0 +1,17 @@
+﻿:root {
+    --bg-primary: #1a1410;
+    --bg-secondary: #14100c;
+    --bg-card: #2a1f18;
+    --border-color: #4a3828;
+    --text-primary: #fff5f0;
+    --text-secondary: #c9b8a9;
+    --accent-primary: #f59e0b;
+    --accent-primary-hover: #d97706;
+    --btn-primary-text: #ffffff;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #fbbf24;
+    --glass-bg: rgba(42, 31, 24, 0.7);
+    --glass-border: rgba(245, 158, 11, 0.2);
+    --glass-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,192 @@
+﻿@model SaveMoney.Models.ViewModels.ProjecaoViewModel
+
+@{
+    ViewData["Title"] = "Projeção Financeira";
+    int mesesSelecionados = ViewBag.MesesSelecionados ?? 6;
+}
+
+<link rel="stylesheet" href="~/css/Projecao.css" />
+
+<div class="container-fluid p-4 fade-in">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="text-white fw-bold display-6 mb-0">
+                <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Futuro Financeiro
+            </h2>
+            <p class="text-secondary mb-0">Análise de tendências baseada no seu comportamento recorrente.</p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-info d-flex align-items-center" onclick="toggleInfoSection()">
+                <i class="bi bi-book me-2"></i> <span id="btnInfoText">Entenda o Cálculo</span>
+            </button>
+
+            <form method="get" class="d-flex align-items-center bg-dark p-1 rounded-3 border border-secondary border-opacity-25">
+                <select name="meses" class="form-select form-select-sm bg-transparent text-white border-0 form-select-dark"
+                        onchange="this.form.submit()" style="cursor: pointer; min-width: 140px;">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(i == mesesSelecionados)">Projetar @i Meses</option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+            <div class="glass-card kpi-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="text-secondary text-uppercase fs-7 fw-bold ls-1">Saldo Hoje</span>
+                        <h3 class="text-white mt-1 mb-0 fw-bold">@Model.SaldoAtual.ToString("C")</h3>
+                        <small class="text-secondary d-block mt-2">Disponível em conta</small>
+                    </div>
+                    <div class="icon-box bg-primary bg-opacity-10">
+                        <i class="bi bi-wallet2 text-primary fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card kpi-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="text-secondary text-uppercase fs-7 fw-bold ls-1">Fluxo Mensal Recorrente</span>
+                        <h3 class="@(Model.FluxoMensal >= 0 ? "text-success" : "text-danger") mt-1 mb-0 fw-bold">
+                            @((Model.FluxoMensal > 0 ? "+" : "") + Model.FluxoMensal.ToString("C"))
+                        </h3>
+                        <small class="text-secondary d-block mt-2">
+                            Quanto sobra (ou falta) todo mês.
+                        </small>
+                    </div>
+                    <div class="icon-box @(Model.FluxoMensal >= 0 ? "bg-success" : "bg-danger") bg-opacity-10">
+                        <i class="bi @(Model.FluxoMensal >= 0 ? "bi-piggy-bank" : "bi-graph-down-arrow") @(Model.FluxoMensal >= 0 ? "text-success" : "text-danger") fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card kpi-card p-4 h-100 position-relative overflow-hidden">
+                <div class="glow-bg"></div>
+                <div class="d-flex justify-content-between align-items-start position-relative z-1">
+                    <div>
+                        <span class="text-secondary text-uppercase fs-7 fw-bold ls-1">Estimativa em @mesesSelecionados Meses</span>
+                        <h3 class="@(Model.SaldoProjetado6Meses >= 0 ? "text-success" : "text-danger") mt-1 mb-0 fw-bold">
+                            @Model.SaldoProjetado6Meses.ToString("C")
+                        </h3>
+                        <small class="text-secondary d-block mt-2">Previsão matemática</small>
+                    </div>
+                    <div class="icon-box bg-info bg-opacity-10">
+                        <i class="bi bi-stars text-info fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert glass-card d-flex align-items-center mb-4 border-start border-4 border-info" role="alert" style="background: rgba(13, 202, 240, 0.05);">
+        <i class="bi bi-info-circle-fill text-info me-3 fs-4"></i>
+        <div>
+            <h6 class="text-white mb-0">Por que o gráfico é uma linha reta?</h6>
+            <small class="text-secondary">
+                Esta projeção assume que suas receitas e despesas recorrentes (o Fluxo Mensal acima) se repetirão exatamente iguais no futuro. Gastos variáveis imprevisíveis não entram nesta conta.
+            </small>
+        </div>
+    </div>
+
+    <div class="glass-card p-4 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="text-white mb-0">Linha do Tempo Patrimonial</h5>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="meuGraficoCanvas"></canvas>
+        </div>
+    </div>
+
+    <section id="infoSection" class="info-pe-section" style="display: none;">
+
+        <div class="info-header">
+            <h2>O que é Projeção Financeira?</h2>
+            <p>
+                A projeção financeira é uma estimativa de como estarão suas finanças no futuro.
+                Ela utiliza seu <strong>saldo atual</strong> e seus hábitos de consumo (receitas e despesas <strong>recorrentes</strong>)
+                para prever se você terá dinheiro sobrando ou faltando nos próximos meses.
+            </p>
+        </div>
+
+        <div class="passo-a-passo">
+            <h3>Como o cálculo é feito?</h3>
+            <p>O sistema ignora gastos pontuais (como um jantar caro) e foca no que se repete. Imagine o seguinte cenário:</p>
+
+            <div class="passos-grid">
+                <div class="passo-card glass-effect">
+                    <strong>1. Saldo Inicial</strong>
+                    <p>Você começa com o dinheiro que tem hoje na conta. Ex: <strong>R$ 1.000</strong>.</p>
+                </div>
+                <div class="passo-card glass-effect">
+                    <strong>2. O que entra todo mês</strong>
+                    <p>Seu salário e rendas fixas. Ex: <strong>+ R$ 3.000</strong>.</p>
+                </div>
+                <div class="passo-card glass-effect">
+                    <strong>3. O que sai todo mês</strong>
+                    <p>Aluguel, internet, contas fixas. Ex: <strong>- R$ 2.000</strong>.</p>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <p><strong>A Lógica:</strong> Todo mês sobra R$ 1.000 (3.000 - 2.000).</p>
+                <p><strong>Em 6 meses:</strong> R$ 1.000 (hoje) + (6 x R$ 1.000 de sobra) = <strong>R$ 7.000</strong>.</p>
+                <p><strong>Conclusão:</strong> Você consegue visualizar seu crescimento patrimonial.</p>
+            </div>
+        </div>
+
+        <div class="container-accordion">
+            <h2>Dúvidas Comuns (FAQ)</h2>
+            <div class="accordion-custom">
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-1">
+                        Por que minha projeção deu errada?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div id="faq-content-1" class="accordion-content">
+                        <p>Verifique se você marcou suas Receitas e Despesas fixas (como salário e aluguel) com a opção <strong>"É Recorrente?"</strong> e se a data de início delas engloba o período atual.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-2">
+                        Gastos únicos afetam a projeção?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div id="faq-content-2" class="accordion-content">
+                        <p>Não. A projeção ignora gastos únicos (não recorrentes) para focar na tendência de longo prazo do seu fluxo de caixa.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-3">
+                        O que acontece se a projeção for negativa?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div id="faq-content-3" class="accordion-content">
+                        <p>Significa que suas despesas fixas são maiores que suas receitas fixas. Seu saldo vai diminuir mês a mês até ficar vermelho. É um alerta para cortar gastos fixos!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@section Scripts {
+    <script>
+        window.saveMoneyDados = {
+            labels: @Html.Raw(Json.Serialize(Model.Meses)),
+            values: @Html.Raw(Json.Serialize(Model.Saldos))
+        };
+    </script>
+    <script src="~/js/Projecao.js"></script>
+}
