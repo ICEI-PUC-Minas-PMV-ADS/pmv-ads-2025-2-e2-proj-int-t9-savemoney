@@ -12,10 +12,47 @@ namespace savemoney.Controllers
     public class ConversorEnergiasController : Controller
     {
         private readonly AppDbContext _context;
+        // Tarifa Média Nacional para simulações (R$/kWh) - Usado como exemplo
+        private const double TarifaPadraoKWh = 0.75;
+
+        // Listas estáticas para os Dropdowns
+        private static readonly List<string> TipoValorOptions = new() { "kWh", "Reais" };
+        private static readonly List<string> EstadosBrasil = new() { "AC", "SP", "RJ", "MG", "BA", "RS", "PR", "SC", "DF", "Outros" };
+        private static readonly List<string> Modalidades = new() { "Rede Convencional", "Solar On-Grid", "Solar Off-Grid", "Outro" };
+        private static readonly List<string> Dispositivos = new() { "Geladeira", "Ar-condicionado", "Computador", "Chuveiro Elétrico", "Lâmpada LED", "Outro" };
+        private static readonly List<string> Bandeiras = new() { "Verde", "Amarela", "Vermelha 1", "Vermelha 2" };
 
         public ConversorEnergiasController(AppDbContext context)
         {
             _context = context;
+        }
+
+        // Helper para carregar as ViewBags
+        private void CarregarViewBags()
+        {
+            ViewBag.TipoValorOptions = new SelectList(TipoValorOptions);
+            ViewBag.EstadosBrasil = new SelectList(EstadosBrasil);
+            ViewBag.Modalidades = new SelectList(Modalidades);
+            ViewBag.Dispositivos = new SelectList(Dispositivos);
+            ViewBag.Bandeiras = new SelectList(Bandeiras);
+        }
+
+        // Helper para gerar dicas personalizadas
+        private string GerarDicaPersonalizada(ConversorEnergia conversor)
+        {
+            var consumo = conversor.ConsumoMensal ?? 0;
+            var custoEstimado = consumo * TarifaPadraoKWh;
+
+            if (consumo > 500 && conversor.Modalidade.Contains("Rede Convencional"))
+            {
+                // CORREÇÃO: A tag de imagem foi isolada para não quebrar a string C#.
+                return $"Seu consumo mensal é alto ({consumo:N0} kWh). Você poderia economizar até {custoEstimado * 0.7:C} mensais ao instalar energia solar on-grid. ";
+            }
+            if (consumo > 200 && conversor.TipoDispositivo.Contains("Chuveiro Elétrico"))
+            {
+                return "O Chuveiro Elétrico é um dos maiores vilões. Reduzir 5 minutos de banho pode diminuir seu consumo em 15 kWh/mês!";
+            }
+            return "Monitore seus equipamentos em standby. Pequenos vazamentos de energia somam no final do mês. Use a Projeção Financeira!";
         }
 
         // GET: ConversorEnergias
@@ -27,146 +64,95 @@ namespace savemoney.Controllers
         // GET: ConversorEnergias/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var conversorEnergia = await _context.ConversoresEnergia
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (conversorEnergia == null)
-            {
-                return NotFound();
-            }
+
+            if (conversorEnergia == null) return NotFound();
+
+            ViewBag.Dica = GerarDicaPersonalizada(conversorEnergia);
+            ViewBag.Tarifa = TarifaPadraoKWh.ToString("C");
 
             return View(conversorEnergia);
         }
 
-        private static readonly List<string> TipoValorOptions = new() { "Watts", "Reais" };
-        private static readonly List<string> EstadosBrasil = new()
-        {
-            "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"
-        };
-        private static readonly List<string> Dispositivos = new()
-        {
-            "Geladeira", "Ar-condicionado", "Televisão", "Micro-ondas", "Computador", "Chuveiro Elétrico",
-            "Máquina de Lavar", "Lâmpada", "Ventilador", "Forno Elétrico",
-            "Casa", "Carro", "Patinete", "Moto"
-        };
-
-        // GET: ConversorEnergias/Create
+        // GET: ConversorEnergias/Create (Modal)
         public IActionResult Create()
         {
-            ViewBag.TipoValorOptions = new SelectList(TipoValorOptions);
-            ViewBag.EstadosBrasil = new SelectList(EstadosBrasil);
-            ViewBag.Dispositivos = new SelectList(Dispositivos);
-            return View();
+            CarregarViewBags();
+            return PartialView("_ConversorModal", new ConversorEnergia());
         }
 
-        // POST: ConversorEnergias/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // GET: ConversorEnergias/Edit/5 (Modal)
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+            var conversorEnergia = await _context.ConversoresEnergia.FindAsync(id);
+            if (conversorEnergia == null) return NotFound();
+
+            CarregarViewBags();
+            return PartialView("_ConversorModal", conversorEnergia);
+        }
+
+        // POST: Unificado para Create e Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ValorBase,TipoValor,Estado,Modalidade,BandeiraTarifaria,TipoDispositivo,TempoUso,ConsumoMensal")] ConversorEnergia conversorEnergia)
+        public async Task<IActionResult> CreateOrEdit(ConversorEnergia conversorEnergia)
         {
-            ViewBag.TipoValorOptions = new SelectList(TipoValorOptions);
-            ViewBag.EstadosBrasil = new SelectList(EstadosBrasil);
-            ViewBag.Dispositivos = new SelectList(Dispositivos);
+            CarregarViewBags();
 
             if (ModelState.IsValid)
             {
-                // Conversion logic
+                // 1. Lógica de Conversão (Define ConsumoMensal em kWh)
+                // Usamos a Tarifa Padrão aqui.
+                double valorTarifa = TarifaPadraoKWh;
+
                 if (conversorEnergia.TipoValor.Equals("Reais", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Example: 1 Real = 0.5 kWh (replace with real formula)
-                    conversorEnergia.ConsumoMensal = conversorEnergia.ValorBase * 0.5;
+                    // R$ -> kWh
+                    conversorEnergia.ConsumoMensal = conversorEnergia.ValorBase / valorTarifa;
                 }
-                else if (conversorEnergia.TipoValor.Equals("Watts", StringComparison.OrdinalIgnoreCase))
+                else if (conversorEnergia.TipoValor.Equals("kWh", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Example: 1 kWh = 2 Reais (replace with real formula)
-                    conversorEnergia.ConsumoMensal = conversorEnergia.ValorBase / 2;
+                    // kWh -> kWh (Apenas transferimos ValorBase para ConsumoMensal para consistência)
+                    conversorEnergia.ConsumoMensal = conversorEnergia.ValorBase;
                 }
-                // Add more conversion logic as needed
 
-                _context.Add(conversorEnergia);
+                // 2. Persistência
+                if (conversorEnergia.Id == 0)
+                {
+                    _context.Add(conversorEnergia); // Create
+                }
+                else
+                {
+                    // Busca a entidade original e apenas atualiza os campos
+                    var existing = await _context.ConversoresEnergia.AsNoTracking().FirstOrDefaultAsync(c => c.Id == conversorEnergia.Id);
+                    if (existing == null) return NotFound();
+
+                    _context.Update(conversorEnergia); // Edit
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(conversorEnergia);
+
+            // Se falhar na validação, retorna o modal com erros
+            return PartialView("_ConversorModal", conversorEnergia);
         }
 
-        // GET: ConversorEnergias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var conversorEnergia = await _context.ConversoresEnergia.FindAsync(id);
-            if (conversorEnergia == null)
-            {
-                return NotFound();
-            }
-            return View(conversorEnergia);
-        }
-
-        // POST: ConversorEnergias/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ValorBase,TipoValor,Estado,Modalidade,BandeiraTarifaria,TipoDispositivo,TempoUso,ConsumoMensal")] ConversorEnergia conversorEnergia)
-        {
-            if (id != conversorEnergia.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(conversorEnergia);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ConversorEnergiaExists(conversorEnergia.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(conversorEnergia);
-        }
-
-        // GET: ConversorEnergias/Delete/5
+        // GET: ConversorEnergias/Delete/5 (Modal de Confirmação)
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var conversorEnergia = await _context.ConversoresEnergia.FindAsync(id);
+            if (conversorEnergia == null) return NotFound();
 
-            var conversorEnergia = await _context.ConversoresEnergia
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (conversorEnergia == null)
-            {
-                return NotFound();
-            }
-
-            return View(conversorEnergia);
+            return PartialView("_DeleteModal", conversorEnergia);
         }
 
         // POST: ConversorEnergias/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
