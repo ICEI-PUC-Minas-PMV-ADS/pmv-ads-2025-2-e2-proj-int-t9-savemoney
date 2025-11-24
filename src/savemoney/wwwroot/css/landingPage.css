@@ -393,38 +393,122 @@ a:hover {
 }
 
 /* Módulo: Responsividade (Mobile - Específico da Página) */
+
+/* 1. Telas grandes de celular e tablets (Max 768px - Breakpoint original) */
 @media (max-width: 768px) {
-  h1 {
-    font-size: 3rem;
-  }
-  h2 {
-    font-size: 2.25rem;
-  }
-  .hero-content h1 {
-    font-size: 3.5rem;
-  }
+    h1 {
+        font-size: 3rem; /* Original: 4rem */
+    }
 
-  /* [REMOVIDO] 
-    A responsividade do header foi movida para 'header.css' 
-  */
+    h2 {
+        font-size: 2.25rem; /* Original: 3rem */
+    }
 
-  .content-split {
-    flex-direction: column;
-    gap: 2rem;
-  }
-  .content-split-reverse-mobile {
-    flex-direction: column-reverse;
-  }
-  .content-split .image-column {
-    order: -1;
-  }
-  .content-split-reverse-mobile .image-column {
-    order: initial;
-  }
+    .hero-content h1 {
+        font-size: 3.5rem; /* Original: 4.5rem */
+    }
 
-  .footer-content,
-  .footer-links {
-    flex-direction: column;
-    gap: 2rem;
-  }
+    .hero-content .subtitle {
+        font-size: 1.35rem; /* Leve redução */
+    }
+
+    .section {
+        padding: 4rem 0; /* Reduz o padding vertical */
+    }
+
+    .content-split {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .content-split-reverse-mobile {
+        flex-direction: column-reverse;
+    }
+
+    .content-split .image-column {
+        order: -1;
+    }
+
+    .content-split-reverse-mobile .image-column {
+        order: initial;
+    }
+
+    .footer-content,
+    .footer-links {
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+/* 2. Telas médias de celular (Max 576px - Ponto de Inflexão do Bootstrap 'sm') */
+@media (max-width: 576px) {
+    .container {
+        padding: 0 1rem; /* Aumenta o espaço nas laterais em telas muito pequenas */
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .hero-content h1 {
+        /* Foco principal: Ajustar a quebra do título "Simplifique sua gestão financeira." */
+        font-size: 2.75rem;
+    }
+
+    .hero-content .subtitle {
+        font-size: 1.25rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column; /* Botões em coluna */
+        gap: 0.75rem;
+    }
+
+        .hero-buttons .btn {
+            width: 100%; /* Botões ocupam a largura total */
+        }
+
+    p {
+        font-size: 1rem; /* Reduz o tamanho do parágrafo principal */
+    }
+}
+
+/* 3. Telas estreitas (Max 430px - Para modelos menores ou custom views) */
+@media (max-width: 430px) {
+    .hero-content h1 {
+        font-size: 2.25rem; /* Continua ajustando o título principal */
+    }
+
+    h1 {
+        font-size: 2.1rem;
+    }
+
+    .hero-content .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Reduz o padding da seção Hero, se necessário */
+    .hero-section {
+        padding: 0 0.5rem;
+    }
+}
+
+/* 4. iPhone SE e dispositivos muito estreitos (Max 380px - Onde a quebra era crítica) */
+@media (max-width: 380px) {
+    .hero-content h1 {
+        font-size: 2rem; /* Tamanho mínimo para títulos grandes */
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    .hero-content .subtitle {
+        font-size: 1rem;
+    }
 }

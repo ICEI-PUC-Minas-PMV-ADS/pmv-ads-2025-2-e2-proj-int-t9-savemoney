@@ -193,12 +193,24 @@
         width: 38px;
         height: 38px;
         border: 1px solid var(--hd-border);
+        padding: 0; /* Remove padding padrão para a foto */
     }
 
         #main-header .header-btn-icon:hover {
             background-color: rgba(255,255,255,0.1);
             color: var(--hd-text-main);
         }
+
+    /* Foto de Perfil (Dentro do ícone) */
+    #main-header .profile-photo-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 1px; /* Espaçamento interno simulado */
+    }
+
 
     /* --- PULL TAB (Aba de puxar) --- */
     #main-header .header-toggle-tab {
@@ -228,14 +240,154 @@
         transform: rotate(180deg);
     }
 
+    /* --- BOTÃO DE TOGGLE MOBILE (Hamburguer) --- */
+    #main-header .header-mobile-toggle {
+        display: none; /* Escondido por padrão (desktop) */
+        background: transparent;
+        border: none;
+        color: var(--hd-text-main);
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: color 0.2s ease;
+    }
+
+        #main-header .header-mobile-toggle:hover {
+            color: var(--hd-accent);
+        }
+
+/* --- DRAWER/MENU MOBILE (Offcanvas Lateral) --- */
+.mobile-nav-drawer {
+    /* Estilo Offcanvas/Drawer */
+    position: fixed;
+    top: var(--hd-height); /* Começa abaixo do header fixo */
+    right: 0;
+    height: calc(100vh - var(--hd-height)); /* Ocupa o resto da tela */
+    width: 300px; /* Largura do menu */
+    max-width: 90%;
+    background-color: var(--bg-secondary); /* Azul Noite mais escuro */
+    border-left: 1px solid var(--border-color);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+    padding: 1.5rem 1rem;
+    /* Animação */
+    transform: translateX(100%); /* Escondido fora da tela */
+    transition: transform 0.3s ease-out;
+    z-index: 9998;
+    overflow-y: auto;
+}
+
+    .mobile-nav-drawer.is-open {
+        transform: translateX(0); /* Aberto na tela */
+    }
+
+/* Trava o scroll do body quando o menu está aberto */
+body.no-scroll {
+    overflow: hidden;
+}
+
+.mobile-nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .mobile-nav-links li {
+        margin-bottom: 0.25rem;
+    }
+
+        .mobile-nav-links li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+            .mobile-nav-links li a:hover {
+                background-color: rgba(59, 130, 246, 0.1);
+                color: var(--accent-primary);
+            }
+
+/* Estilos para Dropdowns no Mobile */
+.mobile-dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+    border: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mobile-dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+    max-height: 0; /* Fechado por padrão */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.mobile-dropdown.is-open .mobile-dropdown-menu {
+    max-height: 500px; /* Valor grande o suficiente para expandir */
+}
+
+.mobile-dropdown.is-open .mobile-dropdown-toggle i {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 992px) {
+    /* 1. Esconder Navegação Desktop */
     #main-header .header-nav {
         display: none;
     }
-    /* Esconde menu no mobile por enquanto */
+
+    /* 2. Mostrar Botão Toggle Mobile */
+    #main-header .header-mobile-toggle {
+        display: block;
+        order: 1; /* Garante que o toggle fique antes das actions */
+    }
+
+    /* 3. Mudar Ordem das Actions (para ficar à direita do toggle, mantendo-os compactos) */
+    #main-header .header-actions {
+        order: 2;
+        gap: 0.5rem; /* Reduzir o espaçamento entre os botões de ação */
+    }
+
+    /* 4. Esconder a Aba Pull Tab (Não faz sentido no mobile com o drawer) */
     #main-header .header-toggle-tab {
         display: none;
     }
-    /* Esconde aba no mobile */
+
+    /* 5. Ajustar o padding do container */
+    #main-header .header-container {
+        justify-content: space-between;
+        padding: 0 1rem; /* Reduzir padding horizontal em mobile */
+    }
+
+    /* 6. Reduzir tamanho dos botões principais em mobile para economizar espaço */
+    #main-header .header-btn-primary {
+        padding: 0.5rem 0.8rem;
+    }
+
+    #main-header .header-btn-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    #main-header .profile-photo-icon {
+        width: 34px;
+        height: 34px;
+    }
 }
