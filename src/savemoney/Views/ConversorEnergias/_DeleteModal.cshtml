@@ -1,0 +1,31 @@
+﻿@model savemoney.Models.ConversorEnergia
+
+@{
+    ViewData["Title"] = "Excluir Conversão";
+}
+
+<div class="modal-header border-0 pb-0">
+    <h5 class="modal-title text-white fw-bold">Confirmar Exclusão</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body text-center p-4">
+    <div class="modal-icon-warning mb-3" style="font-size: 3rem; color: var(--danger);">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+    </div>
+
+    <h5 class="text-white mb-2">Excluir este Cálculo?</h5>
+    <p class="text-secondary small mb-4">
+        O registro de **@Model.TipoDispositivo (@Model.ValorBase @Model.TipoValor)** será removido permanentemente. Esta ação não pode ser desfeita.
+    </p>
+
+    <form asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post" id="formDelete">
+        @Html.AntiForgeryToken()
+        <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger fw-bold">
+                Excluir Definitivamente
+            </button>
+        </div>
+    </form>
+</div>
