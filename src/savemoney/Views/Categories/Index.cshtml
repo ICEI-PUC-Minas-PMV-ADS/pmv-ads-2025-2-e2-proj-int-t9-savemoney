@@ -1,69 +1,95 @@
 ﻿@model IEnumerable<savemoney.Models.Category>
+
 @{
-    ViewData["Title"] = "Minhas Categorias";
+    ViewData["Title"] = "Categorias";
 }
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>@ViewData["Title"]</h3>
-        <a asp-action="Create" class="btn btn-success">
-            + Nova Categoria
-        </a>
-    </div>
+<link rel="stylesheet" href="~/css/categories.css" />
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="premium-container fade-in">
+
+    <header class="page-header d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="page-title text-white fw-bold">Categorias</h1>
+            <p class="page-subtitle text-muted">Gerencie as categorias das suas transações.</p>
         </div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+        <button class="btn-premium-purple" onclick="carregarModalCriar()">
+            <i class="bi bi-plus-lg me-2"></i> Nova Categoria
+        </button>
+    </header>
 
     @if (!Model.Any())
     {
-        <div class="text-center py-5">
-            <p class="text-muted">Você ainda não criou nenhuma categoria personalizada.</p>
-            <a asp-action="Create" class="btn btn-outline-success">Criar primeira categoria</a>
+        <div class="glass-panel text-center p-5">
+            <div class="mb-3">
+                <i class="bi bi-tags text-muted" style="font-size: 3rem;"></i>
+            </div>
+            <h4 class="text-white">Nenhuma categoria encontrada</h4>
+            <p class="text-muted">Crie categorias para organizar suas receitas e despesas.</p>
+            <button class="btn-premium-ghost mt-3" onclick="carregarModalCriar()">Criar Agora</button>
         </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nome</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var cat in Model)
-                    {
-                        <tr>
-                            <td>@cat.Name</td>
-                            <td class="text-end">
-                                <a asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-sm btn-outline-primary">
-                                    Editar
-                                </a>
-                                <form asp-action="Delete" asp-route-id="@cat.Id" method="post" class="d-inline"
-                                      onsubmit="return confirm('Tem certeza que deseja excluir a categoria @cat.Name?');">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        Excluir
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="glass-panel p-0 overflow-hidden">
+            <div class="list-group list-group-flush bg-transparent">
+                @foreach (var item in Model)
+                {
+                    <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-25 p-4 d-flex justify-content-between align-items-center hover-bg">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="icon-box">
+                                <i class="bi bi-tag-fill"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-0 fw-600">@item.Name</h5>
+                                @if (item.IsPredefined)
+                                {
+                                    <span class="badge bg-secondary text-white small mt-1">Padrão do Sistema</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn-icon" onclick="carregarModalEditar(@item.Id)" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            @if (!item.IsPredefined)
+                            {
+                                <button class="btn-icon danger" onclick="confirmarExclusao(@item.Id)" title="Excluir">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     }
 </div>
+
+<div id="modal-container"></div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content glass-panel border-0">
+            <div class="modal-body text-center p-4">
+                <div class="modal-icon-warning mb-3">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h5 class="text-white mb-2">Excluir Categoria?</h5>
+                <p class="text-secondary small mb-4">Essa ação não pode ser desfeita.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-premium-danger" onclick="executarExclusao()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/categories.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
