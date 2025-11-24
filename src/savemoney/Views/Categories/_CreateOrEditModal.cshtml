@@ -1,0 +1,36 @@
+﻿@model savemoney.Models.Category
+
+@{
+    bool isEdit = Model.Id > 0;
+    string title = isEdit ? "Editar Categoria" : "Nova Categoria";
+}
+
+<div class="modal-header border-0 pb-0">
+    <h5 class="modal-title text-white fw-bold">@title</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body pt-4">
+    <form asp-action="@(isEdit ? "Edit" : "Create")" id="formCategory">
+
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <div class="mb-4">
+            <label asp-for="Name" class="form-label text-muted small fw-bold text-uppercase">Nome da Categoria</label>
+            <input asp-for="Name" class="form-control form-control-premium" placeholder="Ex: Mercado, Lazer..." autocomplete="off" />
+            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-premium-purple">Salvar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $.validator.unobtrusive.parse("#formCategory");
+</script>
