@@ -30,8 +30,18 @@ namespace savemoney.Models
         [Required(ErrorMessage = "O tipo de usuário é obrigatório.")]
         public TipoUsuario TipoUsuario { get; set; }
 
+        // NOVO: Foto de perfil
+        [StringLength(500, ErrorMessage = "O caminho da foto deve ter no máximo 500 caracteres.")]
+        public string FotoPerfil { get; set; } = "https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=200&bold=true";
+
+        // Relacionamentos existentes
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
         public virtual ICollection<Budget> Budgets { get; set; } = new List<Budget>();
+
+        // NOVO: Relacionamento com Widgets
+        public virtual ICollection<Widget> Widgets { get; set; } = new List<Widget>();
+        public virtual ICollection<Receita> Receitas { get; set; } = new List<Receita>();
+        public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
     }
 
     public enum Perfil

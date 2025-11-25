@@ -1,31 +1,45 @@
 ﻿@model savemoney.Models.Receita
 
-<div class="card mb-3 shadow-sm">
-    <div class="card-body">
-        <h5>@Model.Titulo</h5>
-        <p><strong>Valor:</strong> @Model.Valor.ToString("C")</p>
-        <p><strong>Data:</strong> @Model.DataInicio.ToShortDateString()</p>
+<article class="revenue-card glass-panel h-100">
+    <div class="card-top">
+        <div class="card-header-row">
+            <div class="title-group">
+                <h5 class="card-title text-truncate" title="@Model.Titulo">@Model.Titulo</h5>
+                <span class="card-date">@Model.DataInicio.ToString("dd MMM, yyyy")</span>
+            </div>
 
-        @if (Model.IsRecurring)
-        {
-            <span class="badge bg-info">Recorrente: @Model.Recurrence</span>
-        }
+            <div class="card-actions">
+                <button class="btn-icon" onclick="carregarModalEditar(@Model.Id)" title="Editar">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button class="btn-icon danger" onclick="confirmarExclusao(@Model.Id)" title="Excluir">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </div>
+        </div>
 
-        @if (Model.Recebido)
-        {
-            <span class="badge bg-success">Recebido</span>
-        }
-
-        <hr />
-
-        <div class="d-flex justify-content-between">
-            <button class="btn btn-primary" onclick="openReceitaModal(@Model.Id)">
-                Editar
-            </button>
-            <button class="btn btn-danger btn-sm"
-                    onclick="openDeleteModal('@Model.Id', '@Model.Titulo')">
-                <i class="bi bi-trash"></i> Excluir
-            </button>
+        <div class="card-amount-row">
+            <span class="currency">@Model.CurrencyType</span>
+            <span class="amount">@Model.Valor.ToString("N2")</span>
         </div>
     </div>
-</div>
+
+    <div class="card-divider"></div>
+
+    <div class="card-bottom">
+        <div class="tags-container">
+            @if (Model.IsRecurring)
+            {
+                <div class="meta-tag info">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span>@Model.Recurrence</span>
+                </div>
+            }
+        </div>
+
+        <div class="status-pill @(Model.Recebido ? "status-received" : "status-pending")">
+            <span class="dot"></span>
+            @(Model.Recebido ? "Recebido" : "Pendente")
+        </div>
+    </div>
+</article>

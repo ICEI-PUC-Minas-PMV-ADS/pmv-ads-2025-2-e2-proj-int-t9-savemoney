@@ -2,18 +2,24 @@
 
 namespace savemoney.Models
 {
-    public enum Recurrence
+    public enum RecurrenceType
     {
         [Display(Name = "Diária")]
-        Daily,
-
+        Diario,
+        
         [Display(Name = "Semanal")]
-        Weekly,
-
+        Semanal,
+        
         [Display(Name = "Mensal")]
-        Monthly,
-
+        Mensal,
+        
         [Display(Name = "Anual")]
-        Yearly
+        Anual,
+        
+        // Manter compatibilidade com código antigo em inglês
+        Daily = Diario,
+        Weekly = Semanal,
+        Monthly = Mensal,
+        Yearly = Anual
     }
 }

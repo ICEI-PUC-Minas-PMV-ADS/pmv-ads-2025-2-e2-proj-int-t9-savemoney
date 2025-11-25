@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace savemoney.Controllers
 
             bool senhaOk = BCrypt.Net.BCrypt.Verify(usuario.Senha, dados.Senha);
 
-            if(senhaOk)
+            if (senhaOk)
             {
                 var claims = new List<Claim>
                 {
@@ -126,8 +127,6 @@ namespace savemoney.Controllers
         }
 
         // POST: Usuarios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -198,8 +197,6 @@ namespace savemoney.Controllers
         }
 
         // POST: Usuarios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -243,6 +240,95 @@ namespace savemoney.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);
+        }
+
+        // POST: Usuarios/UploadFotoPerfil
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UploadFotoPerfil(IFormFile foto)
+        {
+            try
+            {
+                // Obter ID do usuário logado
+                var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+                // Validar se arquivo foi enviado
+                if (foto == null || foto.Length == 0)
+                {
+                    return Json(new { success = false, message = "Nenhuma foto foi enviada." });
+                }
+
+                // Validar tamanho (2MB)
+                if (foto.Length > 2 * 1024 * 1024)
+                {
+                    return Json(new { success = false, message = "A foto deve ter no máximo 2MB." });
+                }
+
+                // Validar tipo de arquivo
+                var extensoesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var extensao = Path.GetExtension(foto.FileName).ToLowerInvariant();
+
+                if (!extensoesPermitidas.Contains(extensao))
+                {
+                    return Json(new { success = false, message = "Apenas imagens são permitidas (JPG, PNG, GIF, WEBP)." });
+                }
+
+                // Criar pasta se não existir
+                var pastaUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
+                if (!Directory.Exists(pastaUploads))
+                {
+                    Directory.CreateDirectory(pastaUploads);
+                }
+
+                // Gerar nome único para o arquivo
+                var nomeArquivo = $"{usuarioId}_{DateTime.Now:yyyyMMddHHmmss}{extensao}";
+                var caminhoCompleto = Path.Combine(pastaUploads, nomeArquivo);
+
+                // Deletar foto antiga se existir (para economizar espaço)
+                var usuario = await _context.Usuarios.FindAsync(usuarioId);
+                if (usuario != null && !string.IsNullOrEmpty(usuario.FotoPerfil) &&
+                    usuario.FotoPerfil.StartsWith("/uploads/"))
+                {
+                    var caminhoAntigo = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
+                        usuario.FotoPerfil.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+                    if (System.IO.File.Exists(caminhoAntigo))
+                    {
+                        System.IO.File.Delete(caminhoAntigo);
+                    }
+                }
+
+                // Salvar arquivo
+                using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
+                {
+                    await foto.CopyToAsync(stream);
+                }
+
+                // Atualizar caminho no banco
+                var caminhoRelativo = $"/uploads/avatars/{nomeArquivo}";
+
+                if (usuario != null)
+                {
+                    usuario.FotoPerfil = caminhoRelativo;
+                    _context.Update(usuario);
+                    await _context.SaveChangesAsync();
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    caminhoFoto = caminhoRelativo,
+                    message = "Foto atualizada com sucesso!"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"Erro ao fazer upload: {ex.Message}"
+                });
+            }
         }
 
         // AccessDenied

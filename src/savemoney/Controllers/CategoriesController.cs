@@ -1,4 +1,4 @@
-﻿// Controllers/CategoryController.cs
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
@@ -6,6 +6,7 @@ using System.Security.Claims;
 
 namespace savemoney.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly AppDbContext _context;
@@ -21,100 +22,99 @@ namespace savemoney.Controllers
             return int.TryParse(claim?.Value, out var id) ? id : 0;
         }
 
-        // GET: /Category
+        // GET: /Categories
         public async Task<IActionResult> Index()
         {
             var userId = GetCurrentUserId();
-            if (userId == 0) return Unauthorized();
-
-            var userCategories = await _context.Categories
+            var categories = await _context.Categories
                 .Where(c => c.UsuarioId == userId)
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
-            return View(userCategories);
+            return View(categories);
         }
 
-        // GET: /Category/Create
+        // GET: /Categories/Create
         public IActionResult Create()
         {
-            return View();
+            // Retorna a PartialView para o AJAX
+            return PartialView("_CreateOrEditModal", new Category { Name = "" });
         }
 
-        // POST: /Category/Create
+        // POST: /Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Category category)
+        public async Task<IActionResult> Create(Category category)
         {
             var userId = GetCurrentUserId();
-            if (userId == 0) return Unauthorized();
+            ModelState.Remove("Usuario"); // Ignora validação de navegação
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(category);
+                category.UsuarioId = userId;
+                category.IsPredefined = false;
+
+                _context.Categories.Add(category);
+                await _context.SaveChangesAsync();
+
+                // Redireciona para recarregar a lista (Simples e eficaz)
+                return RedirectToAction(nameof(Index));
             }
 
-            category.UsuarioId = userId;
-            category.IsPredefined = false; // Força
-
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = $"Categoria '{category.Name}' criada com sucesso!";
-            return RedirectToAction(nameof(Index));
+            // Se falhar, devolve o modal com erros
+            return PartialView("_CreateOrEditModal", category);
         }
 
-        // GET: /Category/Edit/5
+        // GET: /Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            var userId = GetCurrentUserId();
-            if (userId == 0) return Unauthorized();
-
             if (id == null) return NotFound();
+            var userId = GetCurrentUserId();
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
 
             if (category == null) return NotFound();
 
-            return View(category);
+            return PartialView("_CreateOrEditModal", category);
         }
 
-        // POST: /Category/Edit/5
+        // POST: /Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Edit(int id, Category category)
         {
-            var userId = GetCurrentUserId();
-            if (userId == 0) return Unauthorized();
-
             if (id != category.Id) return NotFound();
+            var userId = GetCurrentUserId();
 
-            var existing = await _context.Categories
-                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
+            ModelState.Remove("Usuario");
 
-            if (existing == null) return NotFound();
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(category);
+                try
+                {
+                    var existing = await _context.Categories
+                        .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
+
+                    if (existing == null) return NotFound();
+
+                    existing.Name = category.Name;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
             }
-
-            existing.Name = category.Name;
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Categoria atualizada com sucesso!";
-            return RedirectToAction(nameof(Index));
+            return PartialView("_CreateOrEditModal", category);
         }
 
-        // POST: /Category/Delete/5
+        // POST: /Categories/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = GetCurrentUserId();
-            if (userId == 0) return Unauthorized();
-
             var category = await _context.Categories
                 .Include(c => c.BudgetCategories)
                 .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
@@ -123,15 +123,12 @@ namespace savemoney.Controllers
 
             if (category.BudgetCategories.Any())
             {
-                TempData["Error"] = "Não é possível excluir: a categoria está em uso em um orçamento.";
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Categoria em uso.");
             }
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Categoria excluída com sucesso!";
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace savemoney.Models
 {
     [Table("Receita")]
@@ -23,7 +24,7 @@ namespace savemoney.Models
         [Required(ErrorMessage = "O valor é obrigatório")]
         [Column(TypeName = "decimal(18,3)")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
-        [RegularExpression(@"^\d+(\,\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")]
+        //[RegularExpression(@"^\d+(\.\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")] Estava dando erro com casas valores decimais Ass.: Maicon
         public decimal Valor { get; set; }
 
         [Display(Name = "Tipo de Moeda")]
@@ -45,24 +46,27 @@ namespace savemoney.Models
 
         [Display(Name = "Tipo de Recorrência")]
         public RecurrenceType Recurrence { get; set; }
-        public enum RecurrenceType
-        {
-            [Display(Name = "Diária")]
-            Daily,
-
-            [Display(Name = "Semanal")]
-            Weekly,
-
-            [Display(Name = "Mensal")]
-            Monthly,
-
-            [Display(Name = "Anual")]
-            Yearly
-
-        }
 
         [Display(Name = "Quantidade de Repetições")]
         [Range(1, 365, ErrorMessage = "Informe entre 1 e 365 repetições.")]
         public int? RecurrenceCount { get; set; }
+
+        // FK para Usuario
+        public int UsuarioId { get; set; }
+
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; } = null!;
+
+        public enum RecurrenceType
+        {
+            [Display(Name = "Diária")]
+            Daily,
+            [Display(Name = "Semanal")]
+            Weekly,
+            [Display(Name = "Mensal")]
+            Monthly,
+            [Display(Name = "Anual")]
+            Yearly
+        }
     }
 }

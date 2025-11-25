@@ -1,65 +1,131 @@
 ﻿@model IEnumerable<savemoney.Models.Budget>
+@using System.Globalization
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Meus Orçamentos";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="~/css/budgets.css" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Documento)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<div class="premium-container fade-in">
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Orçamentos</h1>
+            <p class="page-subtitle">Defina limites e planeje suas metas financeiras.</p>
+        </div>
+        <button class="btn-premium-purple" onclick="carregarModalCriar()">
+            <i class="bi bi-plus-lg"></i>
+            <span>Novo Orçamento</span>
+        </button>
+    </header>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-pie-chart"></i>
+            </div>
+            <h3>Nenhum orçamento definido</h3>
+            <p>Crie um orçamento mensal ou para um objetivo específico (ex: Viagem).</p>
+            <button class="btn-premium-ghost" onclick="carregarModalCriar()">Criar Orçamento</button>
+        </div>
+    }
+    else
+    {
+        <div class="cards-grid">
+            @foreach (var item in Model)
+            {
+                // Cálculos de Progresso
+                var totalLimit = item.Categories.Sum(c => c.Limit);
+                var totalSpent = item.Categories.Sum(c => c.CurrentSpent);
+                var percentage = totalLimit > 0 ? (totalSpent / totalLimit) * 100 : 0;
+
+                // CORREÇÃO: Formatação Invariante para o CSS (usa ponto decimal)
+                var widthCss = Math.Min(percentage, 100).ToString("F0", CultureInfo.InvariantCulture);
+
+                // Cores dinâmicas
+                var statusClass = percentage >= 100 ? "danger" : percentage >= 80 ? "warning" : "success";
+
+                <article class="budget-card glass-panel">
+                    <div class="card-top">
+                        <div class="d-flex justify-content-between align-items-start w-100">
+                            <div>
+                                <h3 class="card-title text-truncate">@item.Name</h3>
+                                <span class="card-date">
+                                    <i class="bi bi-calendar4-week me-1"></i>
+                                    @item.StartDate.ToString("dd/MM") até @item.EndDate.ToString("dd/MM/yyyy")
+                                </span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="@Url.Action("ExportPdf", "Budgets", new { id = item.Id })" class="btn-icon" title="Baixar Relatório PDF" target="_blank">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </a>
+                                <button class="btn-icon" onclick="carregarModalEditar(@item.Id)" title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button class="btn-icon danger" onclick="confirmarExclusao(@item.Id)" title="Excluir">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body mt-4">
+                        <div class="d-flex justify-content-between align-items-end mb-2">
+                            <span class="text-secondary small text-uppercase fw-bold">Consumo</span>
+                            <span class="fw-bold text-@statusClass">
+                                @percentage.ToString("F0")%
+                            </span>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-bar bg-@statusClass" style="width: @widthCss%"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-2">
+                            <div>
+                                <span class="text-secondary small d-block">Gasto</span>
+                                <span class="text-white fw-bold">@totalSpent.ToString("C")</span>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-secondary small d-block">Limite</span>
+                                <span class="text-white fw-bold">@totalLimit.ToString("C")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer mt-4 pt-3 border-top border-secondary border-opacity-10">
+                        <button class="btn btn-outline-primary btn-sm w-100" onclick="carregarModalDetalhes(@item.Id)">
+                            Ver Detalhes <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>
+
+<div id="modal-container"></div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content glass-panel border-0">
+            <div class="modal-body text-center p-4">
+                <div class="modal-icon-warning mb-3" style="font-size: 2rem; color: var(--pm-warning);">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h5 class="text-white mb-2">Excluir Orçamento?</h5>
+                <p class="text-secondary small mb-4">Isso apagará todas as categorias e metas definidas.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-premium-danger" onclick="executarExclusao()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/budgets.js" asp-append-version="true"></script>
 }
-    </tbody>
-</table>

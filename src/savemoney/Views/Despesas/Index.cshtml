@@ -1,68 +1,136 @@
 ﻿@model IEnumerable<savemoney.Models.Despesa>
 
 @{
-    ViewData["Title"] = "Despesas";
+    ViewData["Title"] = "Minhas Despesas";
+
+    // Cálculos rápidos para o Header
+    var totalPago = Model.Where(d => d.Pago).Sum(d => d.Valor);
+    var totalPendente = Model.Where(d => !d.Pago).Sum(d => d.Valor);
 }
 
-<h2>Despesas</h2>
+<link rel="stylesheet" href="~/css/despesas.css" />
 
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#despesaModal">
-    + Nova Despesa
-</button>
+<div class="premium-container fade-in">
 
-<hr />
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Despesas</h1>
+            <p class="page-subtitle">Controle seus gastos e mantenha o orçamento em dia.</p>
+        </div>
+        <button class="btn-premium-danger" onclick="carregarModalCriar()">
+            <i class="bi bi-plus-lg"></i>
+            <span>Nova Despesa</span>
+        </button>
+    </header>
 
-<div class="row">
-    @foreach (var despesa in Model)
+    <section class="stats-row">
+        <div class="stat-card glass-panel">
+            <div class="stat-icon paid">
+                <i class="bi bi-check-lg"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Pago Total</span>
+                <span class="stat-value" style="color: var(--pm-success)">@totalPago.ToString("C")</span>
+            </div>
+        </div>
+        <div class="stat-card glass-panel">
+            <div class="stat-icon pending">
+                <i class="bi bi-exclamation-lg"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">A Pagar</span>
+                <span class="stat-value" style="color: var(--pm-danger)">@totalPendente.ToString("C")</span>
+            </div>
+        </div>
+    </section>
+
+    @if (!Model.Any())
     {
-        <div class="col-md-4">
-            @await Html.PartialAsync("_DespesaCard", despesa)
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-cart-x"></i>
+            </div>
+            <h3>Nenhuma despesa registrada</h3>
+            <p>Parabéns! Ou você ainda não lançou nada.</p>
+            <button class="btn-premium-ghost" onclick="carregarModalCriar()">Registrar gasto</button>
+        </div>
+    }
+    else
+    {
+        <div class="cards-grid">
+            @foreach (var item in Model)
+            {
+                <article class="expense-card glass-panel">
+                    <div class="card-top">
+                        <div class="card-header-row">
+                            <div class="title-group">
+                                <h3 class="card-title text-truncate" title="@item.Titulo">@item.Titulo</h3>
+                                <span class="card-date">@item.DataInicio.ToString("dd MMM, yyyy")</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn-icon" onclick="carregarModalEditar(@item.Id)" title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button class="btn-icon danger" onclick="confirmarExclusao(@item.Id)" title="Excluir">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-amount-row">
+                            <span class="currency">@item.CurrencyType</span>
+                            <span class="amount">@item.Valor.ToString("N2")</span>
+                        </div>
+                    </div>
+
+                    <div class="card-divider"></div>
+
+                    <div class="card-bottom">
+                        <div class="tags-container">
+                            @if (item.IsRecurring)
+                            {
+                                <div class="meta-tag">
+                                    <i class="bi bi-arrow-repeat"></i> @item.Recurrence
+                                </div>
+                            }
+                            @if (item.BudgetCategory != null)
+                            {
+                                <div class="meta-tag">
+                                    <i class="bi bi-tag-fill"></i> @item.BudgetCategory.Category.Name
+                                </div>
+                            }
+                        </div>
+
+                        <div class="status-pill @(item.Pago ? "status-paid" : "status-unpaid")">
+                            <span class="dot"></span>
+                            @(item.Pago ? "Pago" : "A Pagar")
+                        </div>
+                    </div>
+                </article>
+            }
         </div>
     }
 </div>
 
-<!-- Modal de criação/edição -->
-<div id="modalCreateContainer">
-    @await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Despesa())
-    @await Html.PartialAsync("_DeleteModal")
+<div id="modal-container"></div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content glass-panel border-0">
+            <div class="modal-body text-center p-4">
+                <div class="modal-icon-warning mb-3" style="font-size: 2rem; color: var(--pm-warning);">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h5 class="text-white mb-2">Excluir Despesa?</h5>
+                <p class="text-secondary small mb-4">Isso removerá o registro do seu histórico permanentemente.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-premium-danger" onclick="executarExclusao()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="modalEditContainer"></div>
-
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-
-    <script>
-
-        // ABRIR MODAL DE EDIÇÃO
-              function openDespesaModal(id) {
-            $.get('/Despesas/Edit/' + id, function (html) {
-                $('#modalEditContainer').html(html); // carrega modal de edição
-                $('#editDespesaModal').modal('show'); // abre modal
-            });
-        }
-
-        // ABRIR MODAL DE EXCLUSÃO
-        function openDeleteModal(id, name) {
-            $('#delete-id').val(id);
-            $('#delete-name').text(name);
-
-            var modalEl = document.getElementById('deleteModal');
-            var modal = new bootstrap.Modal(modalEl);
-            modal.show();
-        }
-
-        // CONFIRMAR EXCLUSÃO
-        $('#confirm-delete-btn').on('click', function () {
-
-            var id = $('#delete-id').val();
-
-            $.post('/Despesa/Delete/' + id, function () {
-                location.reload();
-            }).fail(function () {
-                alert("Erro ao excluir.");
-            });
-        });
-
-    </script>
+    <script src="~/js/despesas.js" asp-append-version="true"></script>
 }

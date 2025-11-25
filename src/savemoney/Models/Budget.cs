@@ -37,7 +37,6 @@ namespace savemoney.Models
         [BindNever]
         public virtual Usuario? Usuario { get; set; }
 
-        [BindNever]
         public virtual List<BudgetCategory> Categories { get; set; } = new List<BudgetCategory>();
 
         // VALIDAÇÃO PERSONALIZADA

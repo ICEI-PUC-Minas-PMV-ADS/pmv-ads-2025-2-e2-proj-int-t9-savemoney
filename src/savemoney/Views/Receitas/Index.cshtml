@@ -1,70 +1,140 @@
 ﻿@model IEnumerable<savemoney.Models.Receita>
 
 @{
-    ViewData["Title"] = "Receitas";
+    ViewData["Title"] = "Minhas Receitas";
+
+    // Cálculos rápidos para o Header de Resumo
+    var totalRecebido = Model.Where(r => r.Recebido).Sum(r => r.Valor);
+    var totalPendente = Model.Where(r => !r.Recebido).Sum(r => r.Valor);
 }
 
-<h2>Receitas</h2>
+<link rel="stylesheet" href="~/css/receitas.css" />
 
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#receitaModal">
-    + Nova Receita
-</button>
+<div class="premium-container fade-in">
 
-<div id="modalContainer"></div>
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Receitas</h1>
+            <p class="page-subtitle">Gerencie suas fontes de renda e entradas financeiras.</p>
+        </div>
+        <button class="btn-premium-primary" onclick="carregarModalCriar()">
+            <i class="bi bi-plus-lg"></i>
+            <span>Nova Receita</span>
+        </button>
+    </header>
 
-<hr />
+    <section class="stats-row">
+        <div class="stat-card glass-panel">
+            <div class="stat-icon received">
+                <i class="bi bi-arrow-up-right"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Recebido Total</span>
+                <span class="stat-value text-success">@totalRecebido.ToString("C")</span>
+            </div>
+        </div>
+        <div class="stat-card glass-panel">
+            <div class="stat-icon pending">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Pendente</span>
+                <span class="stat-value text-warning">@totalPendente.ToString("C")</span>
+            </div>
+        </div>
+    </section>
 
-<div class="row">
-    @foreach (var receita in Model)
+    <section class="info-banner glass-panel">
+        <div class="banner-content">
+            <i class="bi bi-lightbulb-fill banner-icon"></i>
+            <div>
+                <strong>Dica Financeira:</strong>
+                <span class="text-muted">Separe suas receitas fixas (salário) das variáveis (vendas/freelas) usando a opção "Recorrente" para projeções mais precisas.</span>
+            </div>
+        </div>
+    </section>
+
+    @if (!Model.Any())
     {
-        <div class="col-md-4">
-            @await Html.PartialAsync("_ReceitaCard", receita)
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+            <h3>Nenhuma receita lançada</h3>
+            <p>Comece adicionando seu salário ou outras fontes de renda.</p>
+            <button class="btn-premium-outline" onclick="carregarModalCriar()">Adicionar agora</button>
+        </div>
+    }
+    else
+    {
+        <div class="cards-grid">
+            @foreach (var receita in Model)
+            {
+                <article class="revenue-card glass-panel">
+                    <div class="card-top">
+                        <div class="card-header-row">
+                            <h3 class="card-title text-truncate" title="@receita.Titulo">@receita.Titulo</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" onclick="carregarModalEditar(@receita.Id)" title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button class="btn-icon danger" onclick="confirmarExclusao(@receita.Id)" title="Excluir">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-amount-row">
+                            <span class="currency">@receita.CurrencyType</span>
+                            <span class="amount">@receita.Valor.ToString("N2")</span>
+                        </div>
+                    </div>
+
+                    <div class="card-bottom">
+                        <div class="meta-info">
+                            <div class="meta-item">
+                                <i class="bi bi-calendar4-week"></i>
+                                <span>@receita.DataInicio.ToString("dd MMM, yyyy")</span>
+                            </div>
+                            @if (receita.IsRecurring)
+                            {
+                                <div class="meta-item">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    <span>Recorrente</span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="status-pill @(receita.Recebido ? "status-received" : "status-pending")">
+                            <span class="dot"></span>
+                            @(receita.Recebido ? "Recebido" : "Pendente")
+                        </div>
+                    </div>
+                </article>
+            }
         </div>
     }
 </div>
 
-<!-- Modal de criação/edição -->
-<div id="modalCreateContainer">
-    @await Html.PartialAsync("_CreateOrEditModal", new savemoney.Models.Receita())
-    @await Html.PartialAsync("_DeleteModal")
+<div id="modal-container"></div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content glass-panel border-0">
+            <div class="modal-body text-center p-4">
+                <div class="modal-icon-warning mb-3">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h5 class="text-white mb-2">Excluir Receita?</h5>
+                <p class="text-secondary small mb-4">Essa ação é permanente e não pode ser desfeita.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-premium-danger" onclick="executarExclusao()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="modalEditContainer"></div>
-
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-
-    <script>
-
-        // ABRIR MODAL DE EDIÇÃO
-              function openReceitaModal(id) {
-            $.get('/Receitas/Edit/' + id, function (html) {
-                $('#modalEditContainer').html(html); // carrega modal de edição
-                $('#editReceitaModal').modal('show'); // abre modal
-            });
-        }
-
-        // ABRIR MODAL DE EXCLUSÃO
-        function openDeleteModal(id, name) {
-            $('#delete-id').val(id);
-            $('#delete-name').text(name);
-
-            var modalEl = document.getElementById('deleteModal');
-            var modal = new bootstrap.Modal(modalEl);
-            modal.show();
-        }
-
-        // CONFIRMAR EXCLUSÃO
-        $('#confirm-delete-btn').on('click', function () {
-
-            var id = $('#delete-id').val();
-
-            $.post('/Receitas/Delete/' + id, function () { 
-                location.reload();
-            }).fail(function () {
-                alert("Erro ao excluir.");
-            });
-        });
-
-    </script>
+    <script src="~/js/receitas.js" asp-append-version="true"></script>
 }

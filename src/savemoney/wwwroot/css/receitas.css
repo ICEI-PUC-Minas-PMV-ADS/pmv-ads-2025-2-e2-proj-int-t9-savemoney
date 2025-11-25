@@ -1,0 +1,631 @@
+﻿/* =========================================
+   VARIABLES & ANIMATIONS
+   ========================================= */
+:root {
+    --pm-bg-dark: #10111a;
+    --pm-glass-bg: rgba(27, 29, 41, 0.6);
+    --pm-glass-border: rgba(255, 255, 255, 0.08);
+    --pm-primary: #3b82f6;
+    --pm-primary-glow: rgba(59, 130, 246, 0.4);
+    --pm-success: #10b981;
+    --pm-warning: #f59e0b;
+    --pm-danger: #ef4444;
+    --pm-text-main: #ffffff;
+    --pm-text-muted: #cbd5e1;
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   LAYOUT & HEADER
+   ========================================= */
+.premium-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--pm-glass-border);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--pm-text-main);
+    letter-spacing: -1px;
+    margin: 0;
+}
+
+.page-subtitle {
+    color: var(--pm-text-muted);
+    margin-top: 0.5rem;
+    font-size: 1rem;
+}
+
+.btn-premium-primary {
+    background: var(--pm-primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+    .btn-premium-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+        background: #2563eb;
+    }
+
+/* =========================================
+   STATS DASHBOARD & EMPTY STATE
+   ========================================= */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+    .stat-icon.received {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--pm-success);
+    }
+
+    .stat-icon.pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--pm-warning);
+    }
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--pm-text-main);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--pm-text-muted);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.info-banner {
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--pm-primary);
+    background: linear-gradient(90deg, rgba(59,130,246,0.1), transparent);
+}
+
+.banner-content {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.banner-icon {
+    color: var(--pm-primary);
+    font-size: 1.2rem;
+}
+
+.info-banner strong {
+    color: var(--pm-primary);
+    letter-spacing: 0.5px;
+}
+
+.info-banner span, .info-banner .text-muted {
+    color: #e2e8f0 !important;
+    font-weight: 400;
+}
+
+/* =========================================
+   CARDS GRID & REVENUE CARD
+   ========================================= */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.glass-panel {
+    background: var(--pm-glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--pm-glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.revenue-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+    .revenue-card:hover {
+        border-color: var(--pm-primary);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transform: translateY(-4px);
+    }
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.card-date {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    display: block;
+    margin-top: 4px;
+}
+
+.card-amount-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin-bottom: 1.5rem;
+}
+
+    .card-amount-row .currency {
+        font-size: 0.9rem;
+        color: var(--pm-text-muted);
+        font-weight: 500;
+    }
+
+    .card-amount-row .amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--pm-success);
+        letter-spacing: -1px;
+    }
+
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.revenue-card:hover .card-actions {
+    opacity: 1;
+}
+
+.btn-icon {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .btn-icon:hover {
+        background: var(--pm-primary);
+        color: white;
+    }
+
+    .btn-icon.danger:hover {
+        background: var(--pm-danger);
+    }
+
+.card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--pm-glass-border), transparent);
+    margin: 0 -1.5rem 1rem -1.5rem;
+}
+
+.card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-pill {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.status-received {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--pm-success);
+}
+
+.status-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--pm-warning);
+}
+
+.status-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.meta-tag {
+    font-size: 0.75rem;
+    color: var(--pm-primary);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* =========================================
+   MODAL SYSTEM
+   ========================================= */
+.premium-modal {
+    background: #161822 !important;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+    border: 1px solid var(--pm-glass-border);
+}
+
+.modal-header-clean {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    color: var(--pm-text-main);
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--pm-text-muted);
+}
+
+.btn-close-custom {
+    background: transparent;
+    border: none;
+    color: var(--pm-text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+    .btn-close-custom:hover {
+        color: var(--pm-text-main);
+    }
+
+.modal-body-clean {
+    padding: 2rem;
+}
+
+.modal-footer-clean {
+    padding: 1.5rem 2rem;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.03);
+}
+
+.btn-premium-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--pm-text-muted);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-premium-ghost:hover {
+        background: rgba(255,255,255,0.05);
+        color: white;
+    }
+
+/* =========================================
+   FORM ELEMENTS
+   ========================================= */
+.premium-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--pm-text-muted);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.premium-input, .premium-select {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    color: var(--pm-text-main);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+    .premium-input:focus, .premium-select:focus {
+        outline: none;
+        border-color: var(--pm-primary);
+        background: rgba(59, 130, 246, 0.05);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+.form-group-highlight {
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.currency-selector {
+    position: relative;
+}
+
+.premium-select-minimal {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: var(--pm-text-muted);
+    font-weight: 600;
+    font-size: 1rem;
+    padding-right: 1.5rem;
+    cursor: pointer;
+}
+
+    .premium-select-minimal:focus {
+        outline: none;
+        color: var(--pm-primary);
+    }
+
+.currency-symbol {
+    font-size: 1.5rem;
+    color: var(--pm-text-muted);
+    font-weight: 300;
+}
+
+.premium-input-large {
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--pm-success);
+    width: 100%;
+    padding: 0;
+}
+
+    .premium-input-large:focus {
+        outline: none;
+    }
+
+    .premium-input-large::placeholder {
+        color: rgba(16, 185, 129, 0.3);
+    }
+
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    margin: 1.5rem 0;
+}
+
+/* Toggle Switches */
+.toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-label {
+    display: block;
+    color: var(--pm-text-main);
+    font-weight: 600;
+}
+
+.toggle-desc {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--pm-text-muted);
+}
+
+.premium-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+    .premium-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #2a2c3c;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: var(--pm-primary);
+}
+
+    input:checked + .slider.success {
+        background-color: var(--pm-success);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
+/* =========================================
+   UTILITY & OVERRIDES
+   ========================================= */
+.premium-container .text-muted {
+    color: var(--pm-text-muted) !important;
+}
+/* =========================================
+   5. CORREÇÕES DE CONTRASTE & UX (ATUALIZADO)
+   ========================================= */
+
+/* 1. Força texto claro em datas e descrições dentro dos cards */
+.revenue-card .card-date,
+.revenue-card .text-secondary,
+.revenue-card small,
+.revenue-card .meta-item {
+    color: #cbd5e1 !important; /* Cinza Claro (quase branco) */
+    font-weight: 500;
+}
+
+/* 2. Garante que ícones de data/recorrência tenham destaque (Azul) */
+.revenue-card i.bi-calendar-event,
+.revenue-card i.bi-calendar4-week,
+.revenue-card i.bi-arrow-repeat {
+    color: var(--pm-primary) !important;
+    margin-right: 4px;
+}
+
+/* 3. Banner de Dica Financeira */
+.info-banner strong {
+    color: var(--pm-primary);
+    letter-spacing: 0.5px;
+}
+
+.info-banner span,
+.info-banner .text-muted {
+    color: #e2e8f0 !important;
+    font-weight: 400;
+}
+
+/* 4. Títulos dos Cards */
+.revenue-card .card-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 5. Labels de Estatísticas (Topo) */
+.stat-label {
+    color: #a1a1aa !important;
+    font-weight: 600;
+}
+
+/* 6. Ícones de Ação (Lápis/Lixeira) - Mais visíveis */
+.btn-icon {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}

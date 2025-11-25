@@ -1,8 +1,13 @@
-﻿// TendenciaFinanceira-Index.js - Página de seleção de período
-// Sistema de Análise de Tendências Financeiras
+﻿// TendenciaFinanceira-Index.js
+// Sistema de Análise de Tendências Financeiras - Página Index
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log('📊 Index - Tendência Financeira carregado');
+
+    // Adicionar animações CSS se não existirem
+    adicionarAnimacoesCSS();
+
+    // Inicializar formulário
     inicializarFormulario();
 });
 
@@ -43,7 +48,9 @@ function inicializarFormulario() {
         // Mostrar loading no botão
         if (btnGerar) {
             btnGerar.disabled = true;
+            const textoOriginal = btnGerar.innerHTML;
             btnGerar.innerHTML = '<i class="bi bi-hourglass-split me-2"></i> Analisando...';
+            btnGerar.setAttribute('data-texto-original', textoOriginal);
         }
     });
 
@@ -53,9 +60,16 @@ function inicializarFormulario() {
 function validarFormulario() {
     const selectMeses = document.getElementById('meses');
 
+    if (!selectMeses) {
+        console.error('❌ Select de meses não encontrado');
+        return false;
+    }
+
+    // Limpar validações anteriores
     selectMeses.classList.remove('is-invalid', 'is-valid');
 
-    if (!selectMeses.value || selectMeses.value === '') {
+    // Validar se um período foi selecionado
+    if (!selectMeses.value || selectMeses.value === '' || selectMeses.value === '0') {
         selectMeses.classList.add('is-invalid');
         mostrarErro('Por favor, selecione um período de análise');
         selectMeses.focus();
@@ -64,6 +78,14 @@ function validarFormulario() {
 
     const meses = parseInt(selectMeses.value);
 
+    // Validar se é número válido
+    if (isNaN(meses)) {
+        selectMeses.classList.add('is-invalid');
+        mostrarErro('Período inválido');
+        return false;
+    }
+
+    // Validar valor mínimo e máximo
     if (meses < 1 || meses > 12) {
         selectMeses.classList.add('is-invalid');
         mostrarErro('O período deve estar entre 1 e 12 meses');
@@ -76,6 +98,10 @@ function validarFormulario() {
 }
 
 function mostrarErro(mensagem) {
+    // Remover erro anterior
+    esconderInfoPeriodo();
+
+    // Criar ou atualizar alerta de erro
     let alertErro = document.querySelector('.alert-erro-validacao');
 
     if (!alertErro) {
@@ -87,21 +113,32 @@ function mostrarErro(mensagem) {
         `;
 
         const form = document.querySelector('form[action*="GerarAnalise"]');
-        const formParent = form.parentElement;
-        formParent.appendChild(alertErro);
+        if (form && form.parentElement) {
+            form.parentElement.appendChild(alertErro);
+        }
     } else {
-        alertErro.querySelector('span').textContent = mensagem;
+        const span = alertErro.querySelector('span');
+        if (span) {
+            span.textContent = mensagem;
+        }
     }
 
-    alertErro.classList.add('animate-shake');
+    // Adicionar animação shake
+    alertErro.classList.remove('animate-shake');
+    setTimeout(() => {
+        alertErro.classList.add('animate-shake');
+    }, 10);
+
     setTimeout(() => {
         alertErro.classList.remove('animate-shake');
-    }, 500);
+    }, 510);
 }
 
 function mostrarInfoPeriodo(meses) {
+    // Remover info/erro anterior
     esconderInfoPeriodo();
 
+    // Criar mensagem informativa
     const infoDiv = document.createElement('div');
     infoDiv.className = 'alert-custom alert-info mt-3 alert-info-periodo';
     infoDiv.style.animation = 'fade-in-up 0.3s ease-out';
@@ -129,8 +166,9 @@ function mostrarInfoPeriodo(meses) {
     `;
 
     const form = document.querySelector('form[action*="GerarAnalise"]');
-    const formParent = form.parentElement;
-    formParent.appendChild(infoDiv);
+    if (form && form.parentElement) {
+        form.parentElement.appendChild(infoDiv);
+    }
 }
 
 function esconderInfoPeriodo() {
@@ -146,11 +184,67 @@ function esconderInfoPeriodo() {
 }
 
 // ============================================
+// ANIMAÇÕES CSS DINÂMICAS
+// ============================================
+
+function adicionarAnimacoesCSS() {
+    if (!document.getElementById('tendencia-index-animations')) {
+        const style = document.createElement('style');
+        style.id = 'tendencia-index-animations';
+        style.textContent = `
+            @keyframes animate-shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+            
+            @keyframes fade-in-up {
+                0% {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .animate-shake {
+                animation: animate-shake 0.5s ease-in-out;
+            }
+            
+            .is-valid {
+                border-color: #10b981 !important;
+                background-image: none !important;
+            }
+            
+            .is-invalid {
+                border-color: #ef4444 !important;
+                background-image: none !important;
+            }
+            
+            .form-select.is-valid:focus,
+            .form-select.is-invalid:focus {
+                box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
+            }
+            
+            .form-select.is-invalid:focus {
+                box-shadow: 0 0 0 0.25rem rgba(239, 68, 68, 0.25);
+            }
+        `;
+        document.head.appendChild(style);
+        console.log('✅ Animações CSS adicionadas');
+    }
+}
+
+// ============================================
 // EXPORT PARA DEBUGGING
 // ============================================
 
 window.TendenciaFinanceiraIndex = {
-    validarFormulario
+    validarFormulario: validarFormulario,
+    mostrarErro: mostrarErro,
+    esconderInfoPeriodo: esconderInfoPeriodo
 };
 
-console.log('✅ Módulo TendenciaFinanceira-Index carregado');
+console.log('✅ Módulo TendenciaFinanceira-Index carregado e pronto');
