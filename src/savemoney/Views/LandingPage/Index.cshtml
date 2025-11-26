@@ -1,28 +1,14 @@
 ﻿@{
     Layout = "_LayoutLanding";
-}
-@{
     ViewData["Title"] = "Save Money - Gestão Financeira Premium";
 }
 
-@* --- ESTILOS DA PÁGINA --- *@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<link rel="stylesheet" href="~/css/landingPage.css" asp-append-version="true">
-@* --- FIM DOS ESTILOS --- *@
-
-
-@* [REMOVIDO] 
-   O bloco <header>...</header> foi removido daqui. 
-   Ele agora é carregado pelo _LayoutLanding.cshtml.
-*@
-
+@section css {
+    <link rel="stylesheet" href="~/css/landingPage.css" asp-append-version="true" />
+}
 
 <main>
 
-    @* A seção Hero já é animada pelo CSS no page load, não precisa de classes JS *@
     <section class="hero-section" id="hero">
         <div class="hero-content container">
             <span class="section-eyebrow" style="color: var(--text-secondary);">Nossa Missão</span>
@@ -34,13 +20,13 @@
             <div class="hero-buttons">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Ir para o Painel</a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-hero-cta">Ir para o Painel</a>
                 }
                 else
                 {
-                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary">Comece Agora (É Grátis)</a>
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-hero-cta">Comece Agora (É Grátis)</a>
                 }
-                <a href="#control" class="btn btn-secondary">Ver Funcionalidades</a>
+                <a href="#control" class="btn btn-secondary btn-lg">Ver Funcionalidades</a>
             </div>
         </div>
     </section>
@@ -60,7 +46,7 @@
                 }
                 else
                 {
-                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Começar a controlar</a>
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary">Começar a controlar</a>
                 }
             </div>
             <div class="image-column animate-on-scroll fade-in-right">
@@ -73,7 +59,6 @@
     <section id="invest" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
             <div class="image-column animate-on-scroll fade-in-left">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/investimento-img.jpg" asp-append-version="true"
                      alt="Gráfico de ações subindo em uma tela">
             </div>
@@ -115,7 +100,6 @@
                 }
             </div>
             <div class="image-column animate-on-scroll fade-in-right">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/graficos-img.jpg" asp-append-version="true"
                      alt="Celular mostrando uma carteira de criptomoedas">
             </div>
@@ -125,7 +109,6 @@
     <section id="profiles" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
             <div class="image-column animate-on-scroll fade-in-left">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/homem-escritorio-mapa-mundi.jpg" asp-append-version="true"
                      alt="Homem em mesa de escritório, balançando negócios e vida pessoal">
             </div>
@@ -167,7 +150,6 @@
                 }
             </div>
             <div class="image-column animate-on-scroll fade-in-right">
-                 @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/mapa-moedas.jpg" asp-append-version="true" alt="Mapa-múndi com símbolos de moedas">
             </div>
         </div>
@@ -176,7 +158,6 @@
     <section id="education" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
             <div class="image-column animate-on-scroll fade-in-left">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/background-image-educacao.png" asp-append-version="true"
                      alt="Pessoas em uma mesa estudando juntas">
             </div>
@@ -214,12 +195,13 @@
                 }
                 else
                 {
-                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">Gerar meu primeiro
-                        relatório</a>
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-secondary">
+                        Gerar meu primeiro
+                        relatório
+                    </a>
                 }
             </div>
             <div class="image-column animate-on-scroll fade-in-right">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/relatorios-tendencia.jpg" asp-append-version="true" alt="Dashboard de dados complexo e moderno">
             </div>
         </div>
@@ -228,7 +210,6 @@
     <section id="projection" class="section section-darker content-split content-split-reverse-mobile">
         <div class="container content-split">
             <div class="image-column animate-on-scroll fade-in-left">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/women-smiling.jpg" asp-append-version="true"
                      alt="Pessoa apresentando gráficos de crescimento em reunião">
             </div>
@@ -270,7 +251,6 @@
                 }
             </div>
             <div class="image-column animate-on-scroll fade-in-right">
-                 @* [CORRIGIDO] Caminho da imagem e sintaxe *@
                 <img src="~/assets/tablet-use.jpg" asp-append-version="true"
                      alt="Pote de vidro com economias para viagem">
             </div>
@@ -321,7 +301,6 @@
                 }
             </div>
             <div class="image-column animate-on-scroll fade-in-right">
-                @* [CORRIGIDO] Caminho da imagem *@
                 <img src="~/assets/goal-calculator.jpg" asp-append-version="true"
                      alt="Laptop mostrando gráficos e uma calculadora">
             </div>
@@ -335,15 +314,15 @@
                 Junte-se a milhares de usuários que estão transformando sua relação com o dinheiro. Crie sua conta
                 gratuita e comece a economizar hoje mesmo.
             </p>
-            
+
             <div class="animate-on-scroll fade-in-up" style="animation-delay: 0.2s;">
-                 @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated)
                 {
-                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Ir para meu Painel</a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-hero-cta">Ir para meu Painel</a>
                 }
                 else
                 {
-                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-primary">Criar minha conta Grátis</a>
+                    <a asp-controller="Usuarios" asp-action="Login" class="btn btn-hero-cta">Criar minha conta Grátis</a>
                 }
             </div>
         </div>
@@ -351,11 +330,12 @@
 
 </main>
 
+@* MODAL DE BOAS-VINDAS *@
 <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-glass">
             <div class="modal-header">
-                <h5 class="modal-title" id="welcomeModalLabel">
+                <h5 class="modal-title" id="welcomeModalLabel" style="color: var(--text-primary);">
                     @if (User.Identity.IsAuthenticated)
                     {
                         <span>Bem-vindo de volta!</span>
@@ -367,15 +347,17 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="color: var(--text-secondary);">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <p>Você já está logado! Deseja ir direto para o seu painel de usuário?</p>
                 }
                 else
                 {
-                    <p>Faça login para ter acesso a milhares de ferramentas e informações, acesse já o seu painel do
-                        usuário.</p>
+                    <p>
+                        Faça login para ter acesso a milhares de ferramentas e informações, acesse já o seu painel do
+                        usuário.
+                    </p>
                 }
             </div>
             <div class="modal-footer">
@@ -395,47 +377,10 @@
 </div>
 
 
-<footer class="footer">
-    <div class="container">
-        <div class="footer-content animate-on-scroll fade-in-up">
-            <div class="footer-logo">
-                <a href="#" class="logo">Save Money</a>
-                <p style="margin-top: 1rem; max-width: 300px;">Simplificando a gestão financeira pessoal e empresarial
-                    com design e tecnologia.</p>
-            </div>
-
-            <div class="footer-links">
-                <div>
-                    <h4>Produto</h4>
-                    <ul>
-                        <li><a href="#control">Controle</a></li>
-                        <li><a href="#invest">Investimentos</a></li>
-                        <li><a href="#profiles">Perfis</a></li>
-                        <li><a href="#reports">Relatórios</a></li>
-                        <li><a href="#goals">Metas</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Empresa</h4>
-                    <ul>
-                        <li><a href="#">Sobre Nós</a></li>
-                        <li><a href="#">Carreiras</a></li>
-                        <li><a href="#">Contato</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-copyright">
-            &copy; 2025 Save Money. Todos os direitos reservados.
-        </div>
-    </div>
-</footer>
-
 @section Scripts {
     <script>
         window.isUserAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
     </script>
-    
+
     <script src="~/js/landingPage.js" asp-append-version="true"></script>
 }
