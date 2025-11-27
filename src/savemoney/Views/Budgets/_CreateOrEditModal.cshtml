@@ -1,15 +1,15 @@
 ﻿@model savemoney.Models.Budget
 @using savemoney.Models
 
-<div class="modal fade" 
-     id="budgetModal" 
-     tabindex="-1" 
+<div class="modal fade"
+     id="budgetModal"
+     tabindex="-1"
      aria-labelledby="budgetModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content glass-panel premium-modal">
 
-            <form action="/Budgets/@(Model.Id == 0 ? "Create" : "Edit")/@(Model.Id == 0 ? "" : Model.Id)" 
+            <form action="/Budgets/@(Model.Id == 0 ? "Create" : "Edit")/@(Model.Id == 0 ? "" : Model.Id)"
                   method="post"
                   aria-labelledby="budgetModalLabel">
                 @Html.AntiForgeryToken()
@@ -20,7 +20,6 @@
                     <input type="hidden" name="UserId" value="@Model.UserId" />
                 }
 
-                <!-- Cabeçalho do modal -->
                 <div class="modal-header-clean">
                     <div>
                         <h2 id="budgetModalLabel" class="modal-title">
@@ -28,49 +27,45 @@
                         </h2>
                         <p class="modal-subtitle">Defina limites para controlar seus gastos.</p>
                     </div>
-                    <button type="button" 
-                            class="btn-close-custom" 
+                    <button type="button"
+                            class="btn-close-custom"
                             data-bs-dismiss="modal"
                             aria-label="Fechar">
                         <i class="bi bi-x-lg" aria-hidden="true"></i>
                     </button>
                 </div>
 
-                <!-- Corpo do modal -->
                 <div class="modal-body-clean">
 
-                    <!-- Nome do orçamento -->
                     <div class="form-group">
                         <label asp-for="Name" class="form-label">Nome do Orçamento</label>
-                        <input asp-for="Name" 
-                               class="form-input" 
+                        <input asp-for="Name"
+                               class="form-input"
                                placeholder="Ex: Orçamento Familiar 2025, Viagem..."
                                required />
                         <span asp-validation-for="Name" class="form-error"></span>
                     </div>
 
-                    <!-- Descrição -->
                     <div class="form-group">
                         <label asp-for="Description" class="form-label">Descrição (Opcional)</label>
-                        <textarea asp-for="Description" 
-                                  class="form-input" 
-                                  rows="2" 
+                        <textarea asp-for="Description"
+                                  class="form-input"
+                                  rows="2"
                                   placeholder="Detalhes sobre este planejamento..."></textarea>
                     </div>
 
-                    <!-- Datas -->
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label asp-for="StartDate" class="form-label">Início</label>
-                            <input type="date" 
-                                   asp-for="StartDate" 
+                            <input type="date"
+                                   asp-for="StartDate"
                                    class="form-input"
                                    required />
                         </div>
                         <div class="form-group">
                             <label asp-for="EndDate" class="form-label">Término</label>
-                            <input type="date" 
-                                   asp-for="EndDate" 
+                            <input type="date"
+                                   asp-for="EndDate"
                                    class="form-input"
                                    required />
                         </div>
@@ -78,62 +73,58 @@
 
                     <div class="form-divider"></div>
 
-                    <!-- Status -->
                     <div class="form-group">
                         <label asp-for="Status" class="form-label">Status</label>
-                        <select asp-for="Status" 
-                                asp-items="Html.GetEnumSelectList<BudgetStatus>()" 
+                        <select asp-for="Status"
+                                asp-items="Html.GetEnumSelectList<BudgetStatus>()"
                                 class="form-input">
                         </select>
                     </div>
 
-                    <!-- Categorias -->
                     <div class="categories-section">
                         <div class="categories-header">
                             <label class="form-label mb-0">Categorias e Limites</label>
-                            <button type="button" 
-                                    class="btn-action btn-sm btn-secondary" 
+                            <button type="button"
+                                    class="btn-action btn-sm btn-secondary"
                                     id="addCategoryBtn"
                                     aria-label="Adicionar categoria">
-                                <i class="bi bi-plus-lg" aria-hidden="true"></i> 
+                                <i class="bi bi-plus-lg" aria-hidden="true"></i>
                                 Adicionar
                             </button>
                         </div>
 
-                        <!-- Cabeçalho da tabela -->
                         <div class="category-list-header">
                             <span>CATEGORIA</span>
                             <span>LIMITE (R$)</span>
                             <span></span>
                         </div>
 
-                        <!-- Container de categorias -->
                         <div id="categoriesContainer" class="categories-list">
                             @if (Model.Categories != null && Model.Categories.Any())
                             {
                                 for (int i = 0; i < Model.Categories.Count; i++)
                                 {
                                     <div class="category-row">
-                                        <select name="Categories[@i].CategoryId" 
-                                                class="form-input form-input-sm" 
+                                        <select name="Categories[@i].CategoryId"
+                                                class="form-input form-input-sm"
                                                 required>
                                             <option value="">Selecione...</option>
                                             @foreach (var item in ViewBag.AvailableCategories)
                                             {
-                                                <option value="@item.Value" 
-                                                        @(item.Value == Model.Categories[i].CategoryId.ToString() ? "selected" : "")>
+                                                <option value="@item.Value"
+                                                        selected="@(item.Value == Model.Categories[i].CategoryId.ToString() ? "selected" : null)">
                                                     @item.Text
                                                 </option>
                                             }
                                         </select>
-                                        <input name="Categories[@i].Limit" 
-                                               value="@Model.Categories[i].Limit.ToString("F2")" 
-                                               type="text" 
-                                               class="form-input form-input-sm money-mask" 
-                                               placeholder="0,00" 
+                                        <input name="Categories[@i].Limit"
+                                               value="@Model.Categories[i].Limit.ToString("F2")"
+                                               type="text"
+                                               class="form-input form-input-sm money-mask"
+                                               placeholder="0,00"
                                                required />
-                                        <button type="button" 
-                                                class="btn-icon danger" 
+                                        <button type="button"
+                                                class="btn-icon danger"
                                                 onclick="this.closest('.category-row').remove()"
                                                 aria-label="Remover categoria">
                                             <i class="bi bi-trash" aria-hidden="true"></i>
@@ -143,8 +134,7 @@
                             }
                         </div>
 
-                        <!-- Mensagem de lista vazia -->
-                        <div id="emptyTableMsg" 
+                        <div id="emptyTableMsg"
                              class="empty-categories-msg @(Model.Categories != null && Model.Categories.Any() ? "d-none" : "")">
                             <i class="bi bi-layers" aria-hidden="true"></i>
                             <span>Nenhuma categoria definida.<br />O orçamento será global.</span>
@@ -153,10 +143,9 @@
 
                 </div>
 
-                <!-- Footer do modal -->
                 <div class="modal-footer-clean">
-                    <button type="button" 
-                            class="btn-action btn-secondary" 
+                    <button type="button"
+                            class="btn-action btn-secondary"
                             data-bs-dismiss="modal">
                         Cancelar
                     </button>
@@ -171,23 +160,22 @@
 
 <partial name="_ValidationScriptsPartial" />
 
-<!-- Template para nova categoria -->
 <script id="categoryRowTemplate" type="text/template">
     <div class="category-row">
         <select name="Categories[{INDEX}].CategoryId" class="form-input form-input-sm" required>
             <option value="">Selecione...</option>
             @foreach (var item in ViewBag.AvailableCategories)
             {
-                <option value="@item.Value">@item.Text</option>
+                    <option value="@item.Value">@item.Text</option>
             }
         </select>
-        <input name="Categories[{INDEX}].Limit" 
-               type="text" 
-               class="form-input form-input-sm money-mask" 
-               placeholder="0,00" 
+        <input name="Categories[{INDEX}].Limit"
+               type="text"
+               class="form-input form-input-sm money-mask"
+               placeholder="0,00"
                required />
-        <button type="button" 
-                class="btn-icon danger" 
+        <button type="button"
+                class="btn-icon danger"
                 onclick="removerLinha(this)"
                 aria-label="Remover categoria">
             <i class="bi bi-trash" aria-hidden="true"></i>
