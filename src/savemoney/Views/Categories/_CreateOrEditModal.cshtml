@@ -3,34 +3,58 @@
 @{
     bool isEdit = Model.Id > 0;
     string title = isEdit ? "Editar Categoria" : "Nova Categoria";
+    string subtitle = isEdit ? "Atualize as informações da categoria." : "Crie uma categoria para organizar suas transações.";
 }
 
-<div class="modal-header border-0 pb-0">
-    <h5 class="modal-title text-white fw-bold">@title</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div class="modal-header">
+    <div>
+        <h2 class="modal-title">@title</h2>
+        <p class="modal-subtitle">@subtitle</p>
+    </div>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"></button>
 </div>
 
-<div class="modal-body pt-4">
-    <form asp-action="@(isEdit ? "Edit" : "Create")" id="formCategory">
+<div class="modal-body">
+    <form asp-action="@(isEdit ? "Edit" : "Create")"
+          method="post"
+          id="formCategory"
+          aria-labelledby="categoryModalLabel">
 
         @if (isEdit)
         {
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="IsPredefined" />
         }
 
-        <div class="mb-4">
-            <label asp-for="Name" class="form-label text-muted small fw-bold text-uppercase">Nome da Categoria</label>
-            <input asp-for="Name" class="form-control form-control-premium" placeholder="Ex: Mercado, Lazer..." autocomplete="off" />
-            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">Nome da Categoria</label>
+            <input asp-for="Name"
+                   class="form-input"
+                   placeholder="Ex: Mercado, Lazer, Transporte..."
+                   autocomplete="off"
+                   required />
+            <span asp-validation-for="Name" class="form-error"></span>
         </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-4">
-            <button type="button" class="btn btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-premium-purple">Salvar</button>
+        <div class="form-actions">
+            <button type="button"
+                    class="btn-action btn-secondary"
+                    data-bs-dismiss="modal">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-action btn-primary">
+                @(isEdit ? "Salvar Alterações" : "Criar Categoria")
+            </button>
         </div>
     </form>
 </div>
 
 <script>
-    $.validator.unobtrusive.parse("#formCategory");
+    // Inicializa validação unobtrusive para o formulário
+    if (typeof $.validator !== 'undefined') {
+        $.validator.unobtrusive.parse("#formCategory");
+    }
 </script>

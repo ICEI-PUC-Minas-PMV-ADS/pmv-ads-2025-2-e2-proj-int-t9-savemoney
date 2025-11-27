@@ -1,96 +1,147 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    console.log("Categories JS Loaded!");
-});
+﻿/* ============================================================================
+   CATEGORIES - GERENCIAMENTO DE CATEGORIAS
+   ============================================================================ */
 
-const modalContainer = document.getElementById("modal-container");
+(() => {
+    'use strict';
 
-// Função Faxineira (Impede tela travada)
-function limparModais() {
-    document.querySelectorAll('.modal.show').forEach(el => {
-        const instance = bootstrap.Modal.getInstance(el);
-        if (instance) instance.hide();
-    });
-    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-    document.body.classList.remove('modal-open');
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-}
+    // Elementos principais
+    const modalContainer = document.getElementById('modal-container');
+    let deleteTargetId = 0;
 
-function openBootstrapModal(modalId) {
-    const modalEl = document.getElementById(modalId);
-    if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', initializeCategories);
+
+    function initializeCategories() {
+        console.log('✓ Categories module loaded');
+    }
+
+    /* Gerenciamento de Modais
+       ======================================================================== */
+
+    // Limpa qualquer modal preso e reseta o body
+    function cleanupModals() {
+        // Fecha modais Bootstrap ativos
+        document.querySelectorAll('.modal.show').forEach(modal => {
+            const instance = bootstrap.Modal.getInstance(modal);
+            if (instance) {
+                instance.hide();
+            }
+        });
+
+        // Remove backdrops órfãos
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.remove();
+        });
+
+        // Reseta estado do body
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+
+    // Abre modal Bootstrap
+    function openModal(modalId) {
+        const modalElement = document.getElementById(modalId);
+        if (!modalElement) {
+            console.error(`Modal ${modalId} not found`);
+            return;
+        }
+
+        const modal = new bootstrap.Modal(modalElement);
         modal.show();
     }
-}
 
-// --- CRUD ---
+    // Carrega modal de criação
+    window.carregarModalCriar = function () {
+        cleanupModals();
 
-function carregarModalCriar() {
-    limparModais(); // Limpa antes de abrir
-    console.log("Abrindo modal Criar...");
-
-    fetch("/Categories/Create")
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao carregar modal");
-            return res.text();
-        })
-        .then(html => {
-            modalContainer.innerHTML = `
-                <div class="modal fade" id="categoryModal" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content glass-panel" style="border: 1px solid var(--glass-border);">
-                            ${html}
+        fetch('/Categories/Create')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                modalContainer.innerHTML = `
+                    <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content glass-panel">
+                                ${html}
+                            </div>
                         </div>
                     </div>
-                </div>`;
-            openBootstrapModal('categoryModal');
-        })
-        .catch(err => console.error("Erro Fetch:", err));
-}
+                `;
 
-function carregarModalEditar(id) {
-    limparModais();
-    console.log("Abrindo modal Editar...", id);
+                openModal('categoryModal');
+            })
+            .catch(error => {
+                console.error('Error loading create form:', error);
+                alert('Erro ao carregar formulário.');
+            });
+    };
 
-    fetch(`/Categories/Edit/${id}`)
-        .then(res => res.text())
-        .then(html => {
-            modalContainer.innerHTML = `
-                <div class="modal fade" id="categoryModal" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content glass-panel" style="border: 1px solid var(--glass-border);">
-                            ${html}
+    // Carrega modal de edição
+    window.carregarModalEditar = function (id) {
+        cleanupModals();
+
+        fetch(`/Categories/Edit/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                modalContainer.innerHTML = `
+                    <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content glass-panel">
+                                ${html}
+                            </div>
                         </div>
                     </div>
-                </div>`;
-            openBootstrapModal('categoryModal');
+                `;
+
+                openModal('categoryModal');
+            })
+            .catch(error => {
+                console.error('Error loading edit form:', error);
+                alert('Erro ao carregar formulário de edição.');
+            });
+    };
+
+    /* Exclusão de Categoria
+       ======================================================================== */
+    window.confirmarExclusao = function (id) {
+        deleteTargetId = id;
+        cleanupModals();
+        openModal('deleteModal');
+    };
+
+    window.executarExclusao = function () {
+        if (deleteTargetId <= 0) return;
+
+        fetch(`/Categories/Delete/${deleteTargetId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
-        .catch(err => console.error(err));
-}
-
-let idParaExcluir = 0;
-
-function confirmarExclusao(id) {
-    idParaExcluir = id;
-    limparModais();
-    openBootstrapModal('deleteModal');
-}
-
-function executarExclusao() {
-    if (idParaExcluir > 0) {
-        fetch(`/Categories/Delete/${idParaExcluir}`, {
-            method: 'POST'
-        })
-            .then(res => {
-                if (res.ok) {
-                    // Sucesso: Recarrega a página para atualizar a lista
+            .then(response => {
+                if (response.ok) {
                     window.location.reload();
                 } else {
-                    // Erro (ex: Categoria em uso)
-                    return res.text().then(text => alert("Erro: " + text));
+                    return response.text().then(text => {
+                        throw new Error(text || 'Delete failed');
+                    });
                 }
             })
-            .catch(err => alert("Erro de conexão."));
-    }
-}
+            .catch(error => {
+                console.error('Error deleting category:', error);
+                alert('Erro ao excluir categoria. Pode estar sendo usada em transações.');
+            });
+    };
+
+})();
