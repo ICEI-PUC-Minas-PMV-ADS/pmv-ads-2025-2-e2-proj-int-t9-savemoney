@@ -1,428 +1,562 @@
-/* --- PASSO 1: Paleta "Azul Noite" (Padrão do Site) 
-    CSS da Calculadora de metas financeiras */
+/* --- PASSO 1: Paleta "Azul Noite" (Padrão do Site) */
 
 :root {
-  --bg-primary: #10111a;
-  --bg-secondary: #0d0e16;
-  --bg-card: #1b1d29;
-  --border-color: #2a2c3c;
-  --text-primary: #f5f5f5;
-  --text-secondary: #aaaaaa;
-  --accent-primary: #3b82f6;
-  --accent-primary-hover: #2563eb;
-  --btn-primary-text: #ffffff;
-  --container-width: 1200px;
+    --bg-primary: #10111a;
+    --bg-secondary: #0d0e16;
+    --bg-card: #1b1d29;
+    --border-color: #2a2c3c;
+    --text-primary: #f5f5f5;
+    --text-secondary: #aaaaaa;
+    --accent-primary: #3b82f6;
+    --accent-primary-hover: #2563eb;
+    --btn-primary-text: #ffffff;
+    --container-width: 1200px;
+    /* Variáveis de Status (para consistência, assumindo que são injetadas globalmente) */
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
 }
 
+/* ==============================================================
+   1. RESET & BASE
+   ============================================================== */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Manrope", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Manrope", sans-serif;
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
+/* ==============================================================
+   2. SEÇÃO HERO
+   ============================================================== */
 .hero-calculadora {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/goal-calculator.jpg');
-  background-size: cover;
-  background-position: center;
-
-  position: relative;
-  text-align: center;
-  padding: 120px 1.5rem 4rem 1.5rem;
-  min-height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/goal-calculator.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    text-align: center;
+    padding: 120px 1.5rem 4rem 1.5rem;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero-content {
-  max-width: 800px;
-  margin: 0 auto;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
 .hero-content > p {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
 }
 
 .btn-hero-cta {
-  display: inline-block;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--btn-primary-text);
-  background-color: var(--accent-primary);
-  border: none;
-  border-radius: 50px;
-  padding: 0.8rem 2rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-.btn-hero-cta:hover {
-  background-color: var(--accent-primary-hover);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--btn-primary-text);
+    background-color: var(--accent-primary);
+    border: none;
+    border-radius: 50px;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
+    .btn-hero-cta:hover {
+        background-color: var(--accent-primary-hover);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+/* ==============================================================
+   3. SEÇÃO CALCULADORA (CONTENT)
+   ============================================================== */
 .calculadora-section {
-  padding: 6rem 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  position: relative;
-  z-index: 1;
+    padding: 6rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
 }
 
 .container-calculadora {
-  max-width: var(--container-width);
-  width: 100%;
-  background-color: rgba(13, 14, 22, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(42, 44, 60, 0.2);
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  padding: 3rem;
-  margin-top: -80px;
+    max-width: var(--container-width);
+    width: 100%;
+    /* Glassmorphism */
+    background-color: rgba(13, 14, 22, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(42, 44, 60, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 3rem;
+    margin-top: -80px;
 }
 
 
 .calculadora-header {
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto 3rem auto;
-}
-.calculadora-header h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-.calculadora-header p {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem auto;
 }
 
+    .calculadora-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .calculadora-header p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+    }
+
 .calculadora-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
 .form-card, .results-card {
-  padding: 2rem;
-  height: 100%;
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    height: 100%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form-card h4, .results-placeholder h5 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 2rem;
-  text-align: center;
-}
+    .form-card h4, .results-placeholder h5 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
 
 .form-group {
-  margin-bottom: 1.5rem;
-}
-.form-group label {
-  display: block;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+    margin-bottom: 1.5rem;
 }
 
+    .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+/* ==============================================================
+   4. FORMULÁRIO E INPUTS
+   ============================================================== */
 .form-input {
-  width: 100%;
-  font-size: 1rem;
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  outline: none;
-  height: 3.25rem;
-  padding: 0 1rem;
-  transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    height: 3.25rem;
+    padding: 0 1rem;
+    transition: all 0.3s ease;
 }
-.form-input::placeholder { color: var(--text-secondary); }
-.form-input:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-}
+
+    .form-input::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .form-input:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+    }
 
 .input-group {
-  display: flex;
+    display: flex;
 }
+
 .input-group-start {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  flex-grow: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex-grow: 1;
 }
+
 .btn-group-toggle {
-  display: flex;
-  flex-shrink: 0;
+    display: flex;
+    flex-shrink: 0;
 }
+
 .btn-toggle {
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-left: none;
-  color: var(--text-secondary);
-  padding: 0 1rem;
-  display: inline-block;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-  line-height: 3.25rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-left: none;
+    color: var(--text-secondary);
+    padding: 0 1rem;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    line-height: 3.25rem;
 }
-.btn-toggle:first-of-type {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.btn-toggle:last-of-type {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
+
+    .btn-toggle:first-of-type {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .btn-toggle:last-of-type {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
 .btn-check:checked + .btn-toggle {
-  background-color: var(--accent-primary);
-  border-color: var(--accent-primary);
-  color: var(--btn-primary-text);
-  font-weight: 600;
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--btn-primary-text);
+    font-weight: 600;
 }
+
 .btn-check {
-  display: none;
+    display: none;
 }
 
 .form-group-submit {
-  margin-top: 2rem;
+    margin-top: 2rem;
 }
+
 .btn-submit {
-  width: 100%;
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  background-color: var(--accent-primary);
-  color: var(--btn-primary-text);
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.1rem;
-}
-.btn-submit:hover {
-  background-color: var(--accent-primary-hover);
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    background-color: var(--accent-primary);
+    color: var(--btn-primary-text);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
 }
 
+    .btn-submit:hover {
+        background-color: var(--accent-primary-hover);
+    }
+
+/* ==============================================================
+   5. RESULTADOS E RODAPÉ DA CALCULADORA
+   ============================================================== */
 .results-placeholder {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  text-align: center;
-  color: var(--text-secondary);
-}
-.results-icon {
-  font-size: 4rem;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
-}
-.results-share {
-  text-align: center;
-  margin-top: 1rem;
-}
-.btn-share {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  border-radius: 50px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.btn-share:hover {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-}
-.copy-feedback {
-  color: var(--accent-primary);
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-.calculadora-disclaimer {
-  max-width: 800px;
-  margin: 2rem auto 0 auto;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    color: var(--text-secondary);
 }
 
+.results-icon {
+    font-size: 4rem;
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+}
+
+.results-share {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.btn-share {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-share:hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+.copy-feedback {
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.calculadora-disclaimer {
+    max-width: 800px;
+    margin: 2rem auto 0 auto;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* ==============================================================
+   6. ACORDEÃO DE INFORMAÇÕES
+   ============================================================== */
 .info-accordion-section {
-  background-color: var(--bg-primary);
-  padding: 4rem 1.5rem 6rem 1.5rem;
-  border-top: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    padding: 4rem 1.5rem 6rem 1.5rem;
+    border-top: 1px solid var(--border-color);
 }
+
 .container-accordion {
-  max-width: 900px;
-  margin: 0 auto;
+    max-width: 900px;
+    margin: 0 auto;
 }
-.container-accordion h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  text-align: center;
-  margin-bottom: 3rem;
-}
+
+    .container-accordion h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 3rem;
+    }
 
 .accordion-custom {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.accordion-item {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.accordion-header {
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  padding: 1.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: color 0.3s ease;
-}
-.accordion-header:hover {
-  color: var(--accent-primary);
-}
-.accordion-header[aria-expanded="true"] {
-  color: var(--accent-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
+.accordion-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+    .accordion-header:hover {
+        color: var(--accent-primary);
+    }
+
+    .accordion-header[aria-expanded="true"] {
+        color: var(--accent-primary);
+    }
+
 .accordion-icon {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 1.5em;
-  height: 1.5em;
-  border: 2px solid var(--text-secondary);
-  border-radius: 50%;
-  position: relative;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-  flex-shrink: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em;
+    height: 1.5em;
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
 }
-.accordion-icon::before,
-.accordion-icon::after {
-  content: '';
-  position: absolute;
-  background-color: var(--text-secondary);
-  transition: all 0.3s ease;
-}
-.accordion-icon::before {
-  width: 10px;
-  height: 2px;
-}
-.accordion-icon::after {
-  width: 2px;
-  height: 10px;
-}
+
+    .accordion-icon::before,
+    .accordion-icon::after {
+        content: '';
+        position: absolute;
+        background-color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .accordion-icon::before {
+        width: 10px;
+        height: 2px;
+    }
+
+    .accordion-icon::after {
+        width: 2px;
+        height: 10px;
+    }
+
 .accordion-header:hover .accordion-icon {
-  border-color: var(--accent-primary);
+    border-color: var(--accent-primary);
 }
-.accordion-header:hover .accordion-icon::before,
-.accordion-header:hover .accordion-icon::after {
-  background-color: var(--accent-primary);
-}
+
+    .accordion-header:hover .accordion-icon::before,
+    .accordion-header:hover .accordion-icon::after {
+        background-color: var(--accent-primary);
+    }
+
 .accordion-header[aria-expanded="true"] .accordion-icon {
-  transform: rotate(45deg);
-  border-color: var(--accent-primary);
+    transform: rotate(45deg);
+    border-color: var(--accent-primary);
 }
-.accordion-header[aria-expanded="true"] .accordion-icon::before,
-.accordion-header[aria-expanded="true"] .accordion-icon::after {
-  background-color: var(--accent-primary);
-}
+
+    .accordion-header[aria-expanded="true"] .accordion-icon::before,
+    .accordion-header[aria-expanded="true"] .accordion-icon::after {
+        background-color: var(--accent-primary);
+    }
 
 
 .accordion-content {
-  padding: 0 1.5rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
-.accordion-content p, .accordion-content ul {
-  margin-top: 1rem;
-}
-.accordion-content li {
-  margin-left: 1.5rem;
-  padding-left: 0.5rem;
-  margin-bottom: 0.5rem;
+    padding: 0 1.5rem 1.5rem 1.5rem; /* Adicionado padding bottom para fechar o item */
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
 
+    .accordion-content p, .accordion-content ul {
+        margin-top: 1rem;
+    }
+
+    .accordion-content li {
+        margin-left: 1.5rem;
+        padding-left: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+
+/* ==============================================================
+   7. RESPONSIVIDADE
+   ============================================================== */
 
 @media (max-width: 992px) {
-  .calculadora-grid {
-    grid-template-columns: 1fr;
-  }
-  .container-calculadora {
-      margin-top: -60px;
-  }
+    .calculadora-grid {
+        grid-template-columns: 1fr; /* Coloca formulário e resultado em coluna */
+    }
+
+    .container-calculadora {
+        margin-top: -60px;
+        padding: 2.5rem;
+    }
+    /* Input Toggles: Garante que os botões não quebrem a linha */
+    .btn-toggle {
+        white-space: nowrap;
+    }
 }
 
 @media (max-width: 768px) {
-  .hero-calculadora {
-    padding-top: 100px;
-  }
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  .calculadora-header h2,
-  .container-accordion h2 {
-    font-size: 2rem;
-  }
-  .container-calculadora {
-      padding: 2rem;
-      margin-top: -40px;
-  }
-  .accordion-header {
-      font-size: 1.1rem;
-      padding: 1.2rem;
-  }
-  .accordion-content {
-      padding: 0 1.2rem;
-  }
+    .hero-calculadora {
+        padding-top: 100px;
+        min-height: 35vh; /* REDUZIDO AINDA MAIS: Para não ocupar tanto espaço vertical em tablet/mobile */
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .calculadora-header h2,
+    .container-accordion h2 {
+        font-size: 2rem;
+    }
+
+    .container-calculadora {
+        padding: 2rem;
+        margin-top: -40px;
+    }
+
+    .form-card, .results-card {
+        padding: 1.5rem;
+    }
+
+    /* Acordeão */
+    .accordion-header {
+        font-size: 1.1rem;
+        padding: 1.2rem;
+    }
+
+    .accordion-content {
+        padding: 0 1.2rem 1.2rem 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .calculadora-section {
+        padding: 4rem 0.5rem;
+    }
+
+    .container-calculadora {
+        padding: 1rem;
+        margin-top: -30px;
+    }
+
+    .calculadora-header h2 {
+        font-size: 1.8rem;
+    }
+
+    /* Input Toggles: Ajuste refinado */
+    .input-group {
+        flex-direction: column; /* Coloca o input e o toggle em pilhas separadas */
+    }
+
+    .input-group-start {
+        width: 100%;
+        border-top-right-radius: 8px; /* Restaura o arredondamento */
+        border-bottom-right-radius: 8px;
+    }
+
+    .btn-group-toggle {
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+
+        .btn-group-toggle .btn-toggle {
+            /* Remove a necessidade de flex-grow */
+            border-left: 1px solid var(--border-color);
+            /* Garante que o botão de toggle seja full width e respeite o border-radius */
+            border-radius: 8px !important;
+            margin-top: 0.25rem;
+            padding: 0.8rem 1rem;
+            line-height: 1; /* Centraliza o texto verticalmente */
+        }
+
+    /* Remove os arredondamentos desnecessários em mobile */
+    .btn-toggle:first-of-type {
+        border-top-right-radius: 8px !important;
+    }
 }

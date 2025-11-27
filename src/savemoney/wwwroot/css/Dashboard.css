@@ -30,15 +30,15 @@ body {
     min-height: 100vh;
 }
 
-/* ============ LAYOUT PRINCIPAL ============ */
+/* ============ LAYOUT PRINCIPAL (DESKTOP) ============ */
 .dashboard-container {
     display: grid;
-    grid-template-columns: 20rem 1fr;
+    grid-template-columns: 20rem 1fr; /* 320px sidebar */
     min-height: 100vh;
     gap: 0;
 }
 
-/* ============ PAINEL DO USUÁRIO ============ */
+/* ============ PAINEL DO USUÁRIO (SIDEBAR) ============ */
 .user-panel {
     background: var(--bg-secondary);
     border-right: 1px solid var(--border-color);
@@ -46,6 +46,9 @@ body {
     display: flex;
     flex-direction: column;
     box-shadow: 0.125rem 0 1.25rem rgba(0, 0, 0, 0.3);
+    position: sticky; /* Sticky para telas grandes */
+    top: 0;
+    height: 100vh;
 }
 
 .user-profile {
@@ -211,6 +214,7 @@ body {
 
 /* ============ GRID DE WIDGETS (DESIGN MODERNO) ============ */
 .widgets-grid {
+    /* Define o grid para desktop */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     gap: 1.25rem;
@@ -231,10 +235,11 @@ body {
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    /* Ajusta min/max para garantir que o span funcione corretamente com o gap */
     min-height: 14rem;
-    max-height: 20rem;
 }
-    /* Controle de tamanho dos cards */
+
+    /* Controle de tamanho dos cards (mantido o uso de data- para JS) */
     .widget-card[data-cols="1"] {
         grid-column: span 1;
     }
@@ -247,19 +252,17 @@ body {
         grid-column: span 3;
     }
 
+    /* Altura ajustada com base no grid-auto-rows de 14rem + gap */
     .widget-card[data-rows="1"] {
         grid-row: span 1;
-        min-height: 14rem;
     }
 
     .widget-card[data-rows="2"] {
         grid-row: span 2;
-        min-height: 29.25rem;
     }
 
     .widget-card[data-rows="3"] {
         grid-row: span 3;
-        min-height: 44.5rem;
     }
 
     /* Card com imagem de fundo */
@@ -318,30 +321,7 @@ body {
     border-color: var(--accent-primary);
 }
 
-/* Controle de tamanho dos cards */
-.widget-card[data-cols="1"] {
-    grid-column: span 1;
-}
-
-.widget-card[data-cols="2"] {
-    grid-column: span 2;
-}
-
-.widget-card[data-cols="3"] {
-    grid-column: span 3;
-}
-
-.widget-card[data-rows="1"] {
-    grid-row: span 1;
-}
-
-.widget-card[data-rows="2"] {
-    grid-row: span 2;
-}
-
-.widget-card[data-rows="3"] {
-    grid-row: span 3;
-}
+/* REMOVIDO: Blocos de controle de tamanho duplicados (mantido apenas no .widget-card) */
 
 .widget-header {
     display: flex;
@@ -462,27 +442,17 @@ body {
 }
 
 /* ============ MODAL ============ */
+/* Removido display: none; para usar classes de modal do Bootstrap se aplicável */
 .modal {
-    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+    /* Mantido fundo escuro para fallback */
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(0.3125rem);
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
 }
 
 .modal-content {
@@ -494,23 +464,10 @@ body {
     width: 90%;
     max-width: 34.375rem;
     box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.5);
-    animation: slideDown 0.3s ease;
 }
 
 .modal-small {
     max-width: 25rem;
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-3.125rem);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .close {
@@ -677,76 +634,72 @@ body {
 }
 
 /* ============ MODAL DE TEMAS - CORES FIXAS (PRIORIDADE MÁXIMA) ============ */
+/* Otimização: Remoção de !important onde possível, mas mantendo a cor fixa */
 #modalTemas .modal-content,
 #modalCriarTema .modal-content {
-    background: #1b1d29 !important;
-    border: 1px solid #2a2c3c !important;
-    color: #f5f5ff !important;
-}
-
-#modalTemas *,
-#modalCriarTema * {
-    color: inherit !important;
+    background: #1b1d29; /* var(--bg-card) */
+    border: 1px solid #2a2c3c; /* var(--border-color) */
+    color: #f5f5ff; /* var(--text-primary) */
 }
 
 #modalTemas h2,
 #modalTemas h3,
 #modalCriarTema h2,
 #modalCriarTema h3 {
-    color: #f5f5ff !important;
+    color: #f5f5ff;
 }
 
 #modalTemas label,
 #modalCriarTema label,
 #modalTemas p,
 #modalCriarTema p {
-    color: #f5f5ff !important;
+    color: inherit;
 }
 
 #modalTemas .tema-nome {
-    color: #aaaaaa !important;
+    color: #aaaaaa;
 }
 
 #modalTemas .tema-preview {
-    border: 2px solid #2a2c3c !important;
+    border: 2px solid #2a2c3c;
 }
 
 #modalTemas .tema-card:hover .tema-preview,
 #modalTemas .tema-card.active .tema-preview {
-    border-color: #3b82f6 !important;
+    border-color: #3b82f6;
 }
 
 #modalTemas .btn-primary,
 #modalCriarTema .btn-primary {
-    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
-    color: #ffffff !important;
-    border: none !important;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    border: none;
 }
 
 #modalTemas .btn-cancel,
 #modalCriarTema .btn-cancel {
-    background: #0d0e16 !important;
-    color: #aaaaaa !important;
-    border: 1px solid #2a2c3c !important;
+    background: #0d0e16;
+    color: #aaaaaa;
+    border: 1px solid #2a2c3c;
 }
 
 #modalTemas .form-control,
 #modalCriarTema .form-control {
-    background: #0d0e16 !important;
-    border: 1px solid #2a2c3c !important;
-    color: #f5f5ff !important;
+    background: #0d0e16;
+    border: 1px solid #2a2c3c;
+    color: #f5f5ff;
 }
 
 /* Botão de Reset de Emergência */
 #btnResetTema {
-    background: #ef4444 !important;
-    color: #ffffff !important;
-    border: 2px solid #dc2626 !important;
+    background: #ef4444;
+    color: #ffffff;
+    border: 2px solid #dc2626;
 }
 
     #btnResetTema:hover {
-        background: #dc2626 !important;
-        border-color: #b91c1c !important;
+        background: #dc2626;
+        border-color: #b91c1c;
     }
 
 /* Botões nos temas customizados */
@@ -758,9 +711,9 @@ body {
 }
 
     .tema-actions button {
-        background: rgba(59, 130, 246, 0.2) !important;
-        border: 1px solid rgba(59, 130, 246, 0.5) !important;
-        color: #3b82f6 !important;
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.5);
+        color: #3b82f6;
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
         cursor: pointer;
@@ -769,18 +722,18 @@ body {
     }
 
         .tema-actions button:hover {
-            background: rgba(59, 130, 246, 0.3) !important;
+            background: rgba(59, 130, 246, 0.3);
             transform: scale(1.05);
         }
 
     .tema-actions .btn-delete-tema {
-        border-color: rgba(239, 68, 68, 0.5) !important;
-        background: rgba(239, 68, 68, 0.2) !important;
-        color: #ef4444 !important;
+        border-color: rgba(239, 68, 68, 0.5);
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
     }
 
         .tema-actions .btn-delete-tema:hover {
-            background: rgba(239, 68, 68, 0.3) !important;
+            background: rgba(239, 68, 68, 0.3);
         }
 
 /* ============ RESPONSIVO ============ */
@@ -795,10 +748,15 @@ body {
         grid-template-columns: 1fr;
     }
 
+    /* Ocultar ou tornar o menu lateral dinâmico se a intenção for usar um menu hamburguer global. 
+       Assumindo que o menu lateral deve ser empilhado e compacto no topo para mobile. */
     .user-panel {
         border-right: none;
         border-bottom: 1px solid var(--border-color);
         padding: 1.5rem 1rem;
+        height: auto; /* Permite que o painel se ajuste ao conteúdo */
+        position: relative; /* Remove sticky */
+        box-shadow: none; /* Remove sombra do lado */
     }
 
     .widgets-area {
@@ -808,10 +766,12 @@ body {
     .widgets-grid {
         grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
         gap: 1rem;
+        grid-auto-rows: minmax(12rem, auto); /* Ajusta altura base */
     }
 
     .widget-card {
         min-height: 12rem;
+        max-height: initial; /* Remove max-height para evitar corte */
     }
 
     .widgets-header {
@@ -841,8 +801,8 @@ body {
 
 @media (max-width: 480px) {
     .user-avatar {
-        width: 6rem;
-        height: 6rem;
+        width: 5rem; /* Reduz o avatar */
+        height: 5rem;
     }
 
     .user-greeting {
@@ -853,8 +813,23 @@ body {
             font-size: 1.25rem;
         }
 
+    /* Centraliza o perfil no painel do usuário para visual mobile */
+    .user-panel {
+        align-items: center;
+        text-align: center;
+    }
+
+    .user-profile {
+        margin-bottom: 1rem;
+    }
+
+    .user-menu {
+        width: 100%;
+    }
+
     .widgets-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Força 1 coluna */
+        gap: 0.75rem;
     }
 
     .widget-card {

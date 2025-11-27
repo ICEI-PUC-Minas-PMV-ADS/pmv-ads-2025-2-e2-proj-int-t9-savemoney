@@ -1,17 +1,21 @@
 ﻿/* ==============================================================
-   1. CORES & VARIÁVEIS GLOBAIS
+   1. CORES & VARIÁVEIS GLOBAIS (PADRONIZADAS)
    ============================================================== */
 :root {
+    /* Variáveis base (Padrão Global) */
     --bg-primary: #10111a;
     --bg-card: #1b1d29;
+    --border-color: #2a2c3c; /* Cor sólida para borda (melhor para temas) */
     --accent-primary: #3b82f6;
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
-    --text-primary: #f5f5ff; /* BRANCO PURO (Valores) */
-    --text-muted: #cbd5e1; /* CINZA CLARO (Rótulos) */
+    --text-primary: #f5f5ff;
+    --text-secondary: #aaaaaa; /* Padronizado como texto base */
+    --text-muted: #cbd5e1; /* Cinza claro para rótulos de alto contraste */
+    /* Variáveis de Efeito (Padronizadas) */
     --glass-bg: rgba(27, 29, 41, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-translucent: rgba(255, 255, 255, 0.08); /* Mantida para borda glass */
 }
 
 /* ==============================================================
@@ -56,10 +60,11 @@
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    /* Usando a variável de efeito para a borda */
+    border: 1px solid var(--glass-border-translucent);
     border-radius: 16px;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    color: var(--text-muted); /* Cor de herança geral */
+    color: var(--text-muted);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -72,40 +77,47 @@
    4. CORREÇÃO DE CONTRASTE (ESPECIFICIDADE REFORÇADA)
    ============================================================== */
 
-/* 4.1. Rótulos e Dados nos Cards (Index.cshtml) */
-
-/* Rótulos dos dados no Card de Histórico (strong dentro de .details-list) */
+/* Rótulos e Dados nos Cards (Index.cshtml) */
 .details-list strong {
-    color: var(--text-muted) !important;
+    color: var(--text-muted) !important; /* Mantido para anular herança forte */
     font-weight: 500;
 }
 
-/* Valor dos dados no Card de Histórico (span que não seja status) */
+/* Valor dos dados no Card de Histórico */
 .details-list span:not(.text-success):not(.text-danger) {
-    color: var(--text-primary) !important;
+    color: var(--text-primary) !important; /* Mantido para anular herança forte */
     font-weight: 600;
 }
 
-/* 4.2. Rótulos e Dados na Tela de Detalhes (Details.cshtml) */
-
-/* Rótulos DL (dt) que usam a classe text-muted */
-dt.text-muted, dt.text-secondary {
-    color: var(--text-muted) !important;
-    font-weight: 500 !important;
+/* Rótulos e Dados na Tela de Detalhes (Details.cshtml) */
+/* Aumentando especificidade para evitar !important */
+.details-list dt.text-muted,
+.details-list dt.text-secondary {
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
 /* Valores DD (dd) que herdam a cor */
+/* Aumentando especificidade para evitar !important */
 .details-list dd {
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
     font-weight: 600;
 }
+
+/* Garante que títulos dentro de painéis e cards usem a cor primária */
+.glass-panel h1, .glass-panel h2, .glass-panel h3, .glass-panel h4,
+.glass-card h1, .glass-card h2, .glass-card h3, .glass-card h4 {
+    color: var(--text-primary);
+}
+
 
 /* ==============================================================
    5. FORMULÁRIOS E BOTÕES DE AÇÃO
    ============================================================== */
 .form-control-premium, .form-select-premium {
     background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--glass-border);
+    /* Usando a variável padronizada para a borda */
+    border: 1px solid var(--glass-border-translucent);
     color: var(--text-primary);
     padding: 1rem 1.2rem;
     border-radius: 10px;
@@ -125,15 +137,16 @@ dt.text-muted, dt.text-secondary {
     }
 
 .form-label {
-    color: var(--text-muted) !important;
+    /* Usando a variável padronizada para muted */
+    color: var(--text-muted);
     font-size: 0.9rem;
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
-/* 5.1. Botões de Navegação (Links <a> com estilo de botão) */
-
+/* Botões de Navegação (Links <a> com estilo de botão) */
 .btn-premium-purple {
+    /* Mantendo a cor roxa (Módulo específico) */
     background: #8b5cf6;
     color: white;
     border: none;
@@ -149,11 +162,11 @@ dt.text-muted, dt.text-secondary {
         transform: translateY(-2px);
     }
 
-/* CORREÇÃO CRÍTICA: Botão/Link Fantasma (Elimina a transparência) */
+/* Botão/Link Fantasma */
 .btn-premium-ghost {
     background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-muted) !important; /* Força cor clara no link/botão */
+    border: 1px solid var(--glass-border-translucent);
+    color: var(--text-muted) !important; /* Mantido para anular links padrão */
     padding: 0.6rem 1.2rem;
     border-radius: 12px;
     transition: all 0.2s;
@@ -212,4 +225,51 @@ dt.text-muted, dt.text-secondary {
         color: var(--text-muted) !important;
     }
 
-/* Removido código duplicado de animações */
+
+/* ==============================================================
+   7. RESPONSIVIDADE
+   ============================================================== */
+
+/* Telas Pequenas (Mobile: max-width 768px) */
+@media (max-width: 768px) {
+
+    .premium-container {
+        padding: 1.5rem 0.5rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        text-align: center;
+    }
+
+    .page-subtitle {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    /* Centraliza e torna os botões de ação mais largos em mobile */
+    .btn-premium-purple {
+        display: block;
+        width: 100%;
+        padding: 1rem 1rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    /* Garante que grupos de cards fiquem em coluna em mobile (se estiverem em flex/grid) */
+    .card-group, .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* Telas Muito Pequenas (Mini Mobile: max-width 480px) */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    .premium-container {
+        padding: 1rem 0.5rem;
+    }
+}

@@ -1,14 +1,30 @@
-﻿:root {
-    --glass-bg: rgba(27, 29, 41, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --accent-purple: #8b5cf6;
-    --accent-purple-hover: #7c3aed;
+﻿/* ==============================================================
+   1. CORES & VARIÁVEIS GLOBAIS (PADRONIZADAS)
+   ============================================================== */
+:root {
+    /* Base injetada pelo Dashboard/Layout (Adicionadas para o arquivo ser independente) */
+    --bg-primary: #10111a;
+    --bg-secondary: #0d0e16;
+    --bg-card: #1b1d29;
+    --border-color: #2a2c3c;
     --text-primary: #ffffff;
-    /* === CORREÇÃO DE CONTRASTE AQUI === */
-    --text-muted: #cbd5e1; /* Ajustado de #94a3b8 para um cinza muito mais claro */
+    --text-secondary: #cbd5e1; /* Usado como base para muted */
+    --accent-primary: #3b82f6; /* Azul base do tema */
+    --accent-primary-hover: #2563eb;
+    /* Variáveis de Status (Para consistência) */
+    --success: #10b981;
+    --danger: #ef4444;
+    /* Variáveis Específicas do Módulo (Roxo) */
+    --accent-module: #8b5cf6; /* Roxo para o acento visual das categorias */
+    --accent-module-hover: #7c3aed;
+    /* Variáveis de Efeito (Convertidas para o padrão) */
+    --glass-bg: rgba(27, 29, 41, 0.6);
+    --bg-list-hover: rgba(255, 255, 255, 0.08);
 }
 
-/* Container & Animations */
+/* ==============================================================
+   2. LAYOUT GERAL & ANIMAÇÕES
+   ============================================================== */
 .premium-container {
     padding: 2rem 0;
     max-width: 1000px;
@@ -31,41 +47,52 @@
     }
 }
 
-/* Glass Panel */
+/* ==============================================================
+   3. PAINEL E LISTA
+   ============================================================== */
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    /* Usando a variável padronizada */
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* List Items */
 .list-group-item {
+    background: transparent;
+    /* Usando a variável padronizada */
+    border-color: var(--border-color);
     transition: background 0.2s;
 }
 
-.hover-bg:hover {
-    background: rgba(255, 255, 255, 0.03) !important;
-}
+    /* Aplica o hover background */
+    .list-group-item.hover-bg:hover {
+        background: var(--bg-list-hover);
+    }
 
 .icon-box {
     width: 40px;
     height: 40px;
     border-radius: 10px;
+    /* Usando a cor de módulo roxa */
     background: rgba(139, 92, 246, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-purple);
+    /* Usando a cor de módulo roxa */
+    color: var(--accent-module);
     font-size: 1.2rem;
 }
 
-/* Buttons */
+/* ==============================================================
+   4. BOTÕES
+   ============================================================== */
 .btn-premium-purple {
-    background: var(--accent-purple);
-    color: white;
+    background: var(--accent-module);
+    color: var(--text-primary);
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
@@ -74,15 +101,15 @@
 }
 
     .btn-premium-purple:hover {
-        background: var(--accent-purple-hover);
+        background: var(--accent-module-hover);
         transform: translateY(-1px);
-        color: white;
+        color: var(--text-primary);
     }
 
 .btn-premium-ghost {
     background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-muted); /* Usa a cor de alto contraste */
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
     transition: all 0.2s;
@@ -90,13 +117,13 @@
 
     .btn-premium-ghost:hover {
         background: rgba(255, 255, 255, 0.05);
-        color: white;
+        color: var(--text-primary);
         border-color: rgba(255, 255, 255, 0.2);
     }
 
 .btn-premium-danger {
-    background: #ef4444;
-    color: white;
+    background: var(--danger);
+    color: var(--text-primary);
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
@@ -113,7 +140,7 @@
     border-radius: 8px;
     border: none;
     background: rgba(255, 255, 255, 0.05);
-    color: var(--text-muted); /* Usa a cor de alto contraste */
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -121,30 +148,95 @@
 }
 
     .btn-icon:hover {
-        background: var(--accent-purple);
-        color: white;
+        background: var(--accent-module);
+        color: var(--text-primary);
     }
 
     .btn-icon.danger:hover {
-        background: #ef4444;
+        background: var(--danger);
     }
 
-/* Inputs Premium */
+/* ==============================================================
+   5. INPUTS & UTILS
+   ============================================================== */
 .form-control-premium {
     background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--glass-border);
-    color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
     padding: 0.8rem 1rem;
     border-radius: 8px;
 }
 
     .form-control-premium:focus {
         background: rgba(0, 0, 0, 0.3);
-        border-color: var(--accent-purple);
-        color: white;
+        border-color: var(--accent-module);
+        color: var(--text-primary);
         box-shadow: none;
     }
 
 .fw-600 {
     font-weight: 600;
+}
+
+/* Garante que o texto principal da lista tenha contraste */
+.list-group-item .d-flex span {
+    color: var(--text-primary);
+}
+
+/* Garante que descrições usem a cor muted */
+.list-group-item p {
+    color: var(--text-secondary);
+}
+
+
+/* ==============================================================
+   6. RESPONSIVIDADE
+   ============================================================== */
+
+@media (max-width: 768px) {
+    .premium-container {
+        padding: 1.5rem 1rem;
+    }
+
+    /* Centraliza o cabeçalho e torna o botão de criação full-width */
+    .page-header {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-premium-purple {
+        width: 100%;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+
+    /* Reduz o tamanho da lista em telas menores */
+    .icon-box {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    /* Agrupa os botões de ação na mesma linha em mobile */
+    .list-group-item .d-flex .btn-group {
+        flex-shrink: 0;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .premium-container {
+        padding: 1rem 0.5rem;
+    }
+
+    /* Reduz o padding interno para otimizar o espaço */
+    .glass-panel {
+        padding: 0.5rem;
+    }
+
+    /* Diminui o tamanho da fonte principal da lista para caber mais */
+    .list-group-item span {
+        font-size: 0.95rem;
+    }
 }
