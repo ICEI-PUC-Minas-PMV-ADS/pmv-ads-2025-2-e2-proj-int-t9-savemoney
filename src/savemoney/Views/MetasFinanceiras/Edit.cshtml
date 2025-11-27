@@ -4,59 +4,94 @@
     ViewData["Title"] = "Editar Meta";
 }
 
-<div class="container mt-5">
-    <h1>@ViewData["Title"]</h1>
-    <h4>@Model.Titulo</h4>
-    <hr />
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form asp-action="Edit">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="Id" />
+@section css {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/metasFinanceiras.css" asp-append-version="true" />
+}
 
-                        <div class="mb-3">
-                            <label asp-for="Titulo" class="form-label"></label>
-                            <input asp-for="Titulo" class="form-control" />
-                            <span asp-validation-for="Titulo" class="text-danger"></span>
-                        </div>
+<main class="metas-page-main fade-in">
 
-                        <div class="mb-3">
-                            <label asp-for="ValorObjetivo" class="form-label"></label>
-                            <input asp-for="ValorObjetivo" class="form-control" type="number" step="0.01" />
-                            <span asp-validation-for="ValorObjetivo" class="text-danger"></span>
-                        </div>
+    <!-- Page Header -->
+    <header class="page-header-simple">
+        <h1 class="page-title">Editar Meta</h1>
+        <p class="page-subtitle">@Model.Titulo</p>
+    </header>
 
-                        <div class="mb-3">
-                            <label asp-for="DataLimite" class="form-label"></label>
-                            <input asp-for="DataLimite" class="form-control" type="date" />
-                            <span asp-validation-for="DataLimite" class="text-danger"></span>
-                        </div>
+    <!-- Formulário -->
+    <div class="form-container">
+        <div class="form-card glass-panel">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Descricao" class="form-label"></label>
-                            <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
-                            <span asp-validation-for="Descricao" class="text-danger"></span>
-                        </div>
+                <input type="hidden" asp-for="Id" />
 
-                        <div class="alert alert-info">
-                            O Valor Atual (@Model.ValorAtual.ToString("C")) só pode ser alterado através de aportes.
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancelar</a>
-                            <input type="submit" value="Salvar Alterações" class="btn btn-primary" />
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label asp-for="Titulo" class="form-label">Título da Meta</label>
+                    <input asp-for="Titulo"
+                           class="form-input"
+                           placeholder="Ex: Viagem para Europa" />
+                    <span asp-validation-for="Titulo" class="form-error"></span>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label asp-for="ValorObjetivo" class="form-label">Valor Objetivo</label>
+                    <div class="input-currency">
+                        <span class="currency-symbol">R$</span>
+                        <input asp-for="ValorObjetivo"
+                               type="number"
+                               step="0.01"
+                               min="0.01"
+                               class="form-input"
+                               placeholder="0,00" />
+                    </div>
+                    <span asp-validation-for="ValorObjetivo" class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DataLimite" class="form-label">Data Limite (Opcional)</label>
+                    <input asp-for="DataLimite"
+                           type="date"
+                           class="form-input" />
+                    <span asp-validation-for="DataLimite" class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Descricao" class="form-label">Descrição (Opcional)</label>
+                    <textarea asp-for="Descricao"
+                              class="form-input"
+                              rows="4"
+                              placeholder="Descreva sua meta..."></textarea>
+                    <span asp-validation-for="Descricao" class="form-error"></span>
+                </div>
+
+                <div class="alert alert-info">
+                    <span class="material-symbols-outlined" aria-hidden="true">info</span>
+                    <span>O Valor Atual (<strong>@Model.ValorAtual.ToString("C")</strong>) só pode ser alterado através de aportes na tela de detalhes.</span>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <div class="form-actions">
+                    <a asp-action="Details"
+                       asp-route-id="@Model.Id"
+                       class="btn-action btn-secondary">
+                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn-action btn-primary">
+                        <span class="material-symbols-outlined" aria-hidden="true">check</span>
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+
+</main>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/js/metasFinanceiras.js" asp-append-version="true"></script>
 }

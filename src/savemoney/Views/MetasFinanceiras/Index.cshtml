@@ -4,64 +4,108 @@
     ViewData["Title"] = "Minhas Metas Financeiras";
 }
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>@ViewData["Title"]</h1>
-        <a asp-action="Create" class="btn btn-success">
-            <span class="material-icons align-middle">add_circle</span> Nova Meta
-        </a>
-    </div>
+@section css {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/metasFinanceiras.css" asp-append-version="true" />
+}
 
+<main class="metas-page-main fade-in">
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Minhas Metas Financeiras</h1>
+            <p class="page-subtitle">Acompanhe o progresso dos seus objetivos financeiros</p>
+        </div>
+        <a asp-action="Create"
+           class="btn-action btn-success"
+           aria-label="Criar nova meta financeira">
+            <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
+            Nova Meta
+        </a>
+    </header>
+
+    <!-- Empty State -->
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info text-center" role="alert">
-            Você ainda não possui metas cadastradas. Clique em "Nova Meta" para começar!
+        <div class="empty-state">
+            <span class="material-symbols-outlined empty-icon" aria-hidden="true">flag</span>
+            <h2>Nenhuma meta cadastrada</h2>
+            <p>Comece definindo seus objetivos financeiros e acompanhe seu progresso!</p>
+            <a asp-action="Create" class="btn-action btn-success">
+                Criar Primeira Meta
+            </a>
         </div>
     }
     else
     {
-        <div class="row g-4">
+        <!-- Grid de Metas -->
+        <div class="metas-grid" role="list">
             @foreach (var item in Model)
             {
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Titulo)</h5>
+                <article class="meta-card glass-panel" role="listitem">
+                    <div class="card-header">
+                        <h2 class="card-title">@item.Titulo</h2>
+                        @if (item.EstaConcluida)
+                        {
+                            <span class="badge badge-success" role="status">
+                                <span class="badge-dot"></span>
+                                Concluída
+                            </span>
+                        }
+                        else if (item.DataLimite.HasValue)
+                        {
+                            <span class="card-deadline">
+                                <span class="material-symbols-outlined" aria-hidden="true">event</span>
+                                @item.DataLimite.Value.ToString("dd/MM/yyyy")
+                            </span>
+                        }
+                    </div>
 
-                            <p class="card-text text-muted">
-                                Objetivo: @item.ValorObjetivo.ToString("C")
-                            </p>
+                    <div class="card-body">
+                        <div class="meta-values">
+                            <div class="value-item">
+                                <span class="value-label">Objetivo</span>
+                                <span class="value-amount">@item.ValorObjetivo.ToString("C")</span>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-label">Atual</span>
+                                <span class="value-amount value-current">@item.ValorAtual.ToString("C")</span>
+                            </div>
+                        </div>
 
-                            <div class="mb-3 mt-auto">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <small>Progresso: @item.ValorAtual.ToString("C")</small>
-                                    <small>@((item.Progresso * 100).ToString("0"))%</small>
-                                </div>
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar @(item.EstaConcluida ? "bg-success" : "bg-primary")"
-                                        role="progressbar"
-                                        style="width: @((item.Progresso * 100).ToString("0.##").Replace(",", "."))%"
-                                        aria-valuenow="@item.ValorAtual" aria-valuemin="0" aria-valuemax="@item.ValorObjetivo">
-                                    </div>
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span class="progress-label">Progresso</span>
+                                <span class="progress-percentage">@((item.Progresso * 100).ToString("0"))%</span>
+                            </div>
+                            <div class="progress-bar-container" role="progressbar"
+                                 aria-valuenow="@((item.Progresso * 100).ToString("0"))"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 aria-label="Progresso da meta: @((item.Progresso * 100).ToString("0")) porcento">
+                                <div class="progress-bar-fill @(item.EstaConcluida ? "completed" : "")"
+                                     style="width: @((item.Progresso * 100).ToString("0.##").Replace(",", "."))%">
                                 </div>
                             </div>
-
-                            @if (item.EstaConcluida)
-                            {
-                                <span class="badge bg-success mb-3">Meta Concluída!</span>
-                            }
-                            else if (item.DataLimite.HasValue)
-                            {
-                                <small class="text-muted mb-3">Prazo: @item.DataLimite.Value.ToShortDateString()</small>
-                            }
-
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary w-100">
-                                Ver Detalhes e Aportar
-                            </a>
                         </div>
                     </div>
-                </div>
+
+                    <div class="card-footer">
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="btn-action btn-primary"
+                           aria-label="Ver detalhes da meta @item.Titulo">
+                            Ver Detalhes
+                        </a>
+                    </div>
+                </article>
             }
         </div>
     }
-</div>
+
+</main>
+
+@section Scripts {
+    <script src="~/js/metasFinanceiras.js" asp-append-version="true"></script>
+}
