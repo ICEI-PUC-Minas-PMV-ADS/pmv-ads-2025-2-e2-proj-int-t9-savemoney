@@ -2,22 +2,28 @@
 
 @{
     bool isLandingPage = (ViewData["Title"] as string) == "Save Money - Gestão Financeira Premium";
-    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-    var userPhotoUrl = "https://ui-avatars.com/api/?name=" + (User.FindFirst(ClaimTypes.Name)?.Value ?? "SM") + "&background=3b82f6&color=fff&size=200&bold=true"; // Exemplo, idealmente viria do modelo Usuario
+    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var userPhotoUrl = "https://ui-avatars.com/api/?name=" + (User.FindFirst(ClaimTypes.Name)?.Value ?? "SM") + "&background=3b82f6&color=fff&size=200&bold=true";
 }
 
-<header id="main-header">
+<header id="main-header" role="banner">
     <div class="header-container">
 
-        <a asp-controller="@(User.Identity.IsAuthenticated ? "Dashboard" : "LandingPage")" asp-action="Index" class="header-logo">
+        <a asp-controller="@(User.Identity.IsAuthenticated ? "Dashboard" : "LandingPage")"
+           asp-action="Index"
+           class="header-logo"
+           aria-label="Save Money - Página inicial">
             Save Money
         </a>
 
-        <button id="mobile-menu-toggle" class="header-mobile-toggle" aria-label="Abrir menu de navegação">
+        <button id="mobile-menu-toggle"
+                class="header-mobile-toggle"
+                aria-label="Abrir menu de navegação"
+                aria-expanded="false">
             <i class="bi bi-list"></i>
         </button>
 
-        <nav class="header-nav" id="header-nav-desktop">
+        <nav class="header-nav" id="header-nav-desktop" aria-label="Navegação principal">
             <ul class="header-nav-links">
 
                 @if (isLandingPage)
@@ -25,14 +31,18 @@
                     <li><a href="#control">Controle</a></li>
                     <li><a href="#invest">Investir</a></li>
                     <li class="header-dropdown">
-                        <a href="#">Perfis <i class="bi bi-chevron-down"></i></a>
+                        <a href="#" aria-haspopup="true" aria-expanded="false">
+                            Perfis <i class="bi bi-chevron-down"></i>
+                        </a>
                         <ul class="header-dropdown-menu">
                             <li><a href="#profiles">Pessoa Física</a></li>
                             <li><a href="#profiles">Pessoa Jurídica</a></li>
                         </ul>
                     </li>
                     <li class="header-dropdown">
-                        <a href="#">Relatórios <i class="bi bi-chevron-down"></i></a>
+                        <a href="#" aria-haspopup="true" aria-expanded="false">
+                            Relatórios <i class="bi bi-chevron-down"></i>
+                        </a>
                         <ul class="header-dropdown-menu">
                             <li><a href="#reports">Diagnósticos</a></li>
                             <li><a href="#reports">Análise de Tendências</a></li>
@@ -46,7 +56,9 @@
                     <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
 
                     <li class="header-dropdown">
-                        <a href="#">Gestão <i class="bi bi-chevron-down"></i></a>
+                        <a href="#" aria-haspopup="true" aria-expanded="false">
+                            Gestão <i class="bi bi-chevron-down"></i>
+                        </a>
                         <ul class="header-dropdown-menu">
                             <li><a asp-controller="Receitas" asp-action="Index">Receitas</a></li>
                             <li><a asp-controller="Despesas" asp-action="Index">Despesas</a></li>
@@ -55,19 +67,23 @@
                     </li>
 
                     <li class="header-dropdown">
-                        <a href="#">Estratégia <i class="bi bi-chevron-down"></i></a>
+                        <a href="#" aria-haspopup="true" aria-expanded="false">
+                            Estratégia <i class="bi bi-chevron-down"></i>
+                        </a>
                         <ul class="header-dropdown-menu">
                             <li><a asp-controller="Budgets" asp-action="Index">Orçamentos</a></li>
                             <li><a asp-controller="MetasFinanceiras" asp-action="Index">Metas</a></li>
                             <li><a asp-page="/Relatorios">Relatórios</a></li>
                             <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;"></li>
                             <li><a asp-controller="TendenciaFinanceira" asp-action="Index">Tendências</a></li>
-                            <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" style="color: #3b82f6;">Projeção Futura</a></li>
+                            <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" class="link-featured">Projeção Futura</a></li>
                         </ul>
                     </li>
 
                     <li class="header-dropdown">
-                        <a href="#">Ferramentas <i class="bi bi-chevron-down"></i></a>
+                        <a href="#" aria-haspopup="true" aria-expanded="false">
+                            Ferramentas <i class="bi bi-chevron-down"></i>
+                        </a>
                         <ul class="header-dropdown-menu">
                             <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas">Calc. Metas</a></li>
                             <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilíbrio</a></li>
@@ -84,12 +100,15 @@
                 }
             </ul>
         </nav>
+
         <div class="header-actions">
             @if (User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Usuarios" asp-action="Details" asp-route-id="@currentUserId"
-                   class="header-btn header-btn-icon" title="Meu Perfil">
-                    <img src="@userPhotoUrl" alt="Foto de Perfil" class="profile-photo-icon" />
+                   class="header-btn header-btn-icon"
+                   title="Meu Perfil"
+                   aria-label="Acessar meu perfil">
+                    <img src="@userPhotoUrl" alt="Foto de perfil" class="profile-photo-icon" />
                 </a>
 
                 @if (isLandingPage)
@@ -109,7 +128,7 @@
 
     </div>
 
-    <div id="mobile-nav-drawer" class="mobile-nav-drawer">
+    <nav id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Menu de navegação mobile">
         <ul class="mobile-nav-links">
             @if (isLandingPage)
             {
@@ -125,7 +144,9 @@
                 <li><a asp-controller="Dashboard" asp-action="Index" data-dismiss="mobile-nav">Painel</a></li>
 
                 <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle">Gestão <i class="bi bi-chevron-down"></i></button>
+                    <button class="mobile-dropdown-toggle" aria-expanded="false">
+                        Gestão <i class="bi bi-chevron-down"></i>
+                    </button>
                     <ul class="mobile-dropdown-menu">
                         <li><a asp-controller="Receitas" asp-action="Index" data-dismiss="mobile-nav">Receitas</a></li>
                         <li><a asp-controller="Despesas" asp-action="Index" data-dismiss="mobile-nav">Despesas</a></li>
@@ -134,17 +155,21 @@
                 </li>
 
                 <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle">Estratégia <i class="bi bi-chevron-down"></i></button>
+                    <button class="mobile-dropdown-toggle" aria-expanded="false">
+                        Estratégia <i class="bi bi-chevron-down"></i>
+                    </button>
                     <ul class="mobile-dropdown-menu">
                         <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Orçamentos</a></li>
                         <li><a asp-controller="MetasFinanceiras" asp-action="Index" data-dismiss="mobile-nav">Metas</a></li>
                         <li><a asp-controller="TendenciaFinanceira" asp-action="Index" data-dismiss="mobile-nav">Tendências</a></li>
-                        <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" style="color: #3b82f6;" data-dismiss="mobile-nav">Projeção Futura</a></li>
+                        <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" class="link-featured" data-dismiss="mobile-nav">Projeção Futura</a></li>
                     </ul>
                 </li>
 
                 <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle">Ferramentas <i class="bi bi-chevron-down"></i></button>
+                    <button class="mobile-dropdown-toggle" aria-expanded="false">
+                        Ferramentas <i class="bi bi-chevron-down"></i>
+                    </button>
                     <ul class="mobile-dropdown-menu">
                         <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas" data-dismiss="mobile-nav">Calc. Metas</a></li>
                         <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio" data-dismiss="mobile-nav">Ponto de Equilíbrio</a></li>
@@ -160,8 +185,9 @@
                 }
             }
         </ul>
-    </div>
-    <button id="header-toggle-tab" class="header-toggle-tab" title="Alternar Menu">
+    </nav>
+
+    <button id="header-toggle-tab" class="header-toggle-tab" title="Alternar Menu" aria-label="Alternar visibilidade do menu">
         <i class="bi bi-chevron-up"></i>
     </button>
 </header>
