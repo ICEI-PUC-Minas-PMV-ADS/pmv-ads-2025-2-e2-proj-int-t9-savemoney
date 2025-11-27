@@ -1,116 +1,161 @@
 ﻿@model savemoney.Models.Despesa
 @using savemoney.Models
 
-<div class="modal fade" id="despesaModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content glass-panel premium-modal">
+@{
+    bool isEdit = Model.Id != 0;
+    string title = isEdit ? "Editar Despesa" : "Nova Despesa";
+    string subtitle = isEdit ? "Atualize as informações da despesa." : "Registre seus gastos para manter o controle.";
+}
 
-            <form action="/Despesas/@(Model.Id == 0 ? "Create" : "Edit")/@(Model.Id == 0 ? "" : Model.Id)" method="post">
-                @Html.AntiForgeryToken()
-
-                @if (Model.Id != 0)
-                {
-                    <input type="hidden" name="Id" value="@Model.Id" />
-                }
-
-                <div class="modal-header-clean">
-                    <div>
-                        <h5 class="modal-title">@(Model.Id == 0 ? "Nova Despesa" : "Editar Despesa")</h5>
-                        <p class="modal-subtitle">Registre seus gastos para manter o controle.</p>
-                    </div>
-                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i></button>
-                </div>
-
-                <div class="modal-body-clean">
-
-                    <div class="form-group-highlight mb-4">
-                        <div class="currency-selector">
-                            <select asp-for="CurrencyType" id="currencyType" class="premium-select-minimal">
-                                <option value="BRL">BRL</option>
-                                <option value="USD">USD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="GBP">GBP</option>
-                                <option value="JPY">JPY</option>
-                            </select>
-                            <i class="bi bi-chevron-down"></i>
-                        </div>
-                        <div class="amount-input-wrapper">
-                            <span id="currencySymbol" class="currency-symbol">R$</span>
-                            <input asp-for="Valor" class="premium-input-large" type="text" placeholder="0,00" autocomplete="off" />
-                        </div>
-                        <span asp-validation-for="Valor" class="text-danger small"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Titulo" class="premium-label">Descrição</label>
-                        <input asp-for="Titulo" class="premium-input" placeholder="Ex: Aluguel, Mercado, Uber..." />
-                        <span asp-validation-for="Titulo" class="text-danger small"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="BudgetCategoryId" class="premium-label">Categoria (Orçamento)</label>
-                        <select asp-for="BudgetCategoryId" asp-items="ViewBag.BudgetCategories" class="premium-select">
-                        </select>
-                        <small class="text-muted" style="font-size: 0.75rem; margin-top: 4px; display: block;">
-                            *Vincular a uma categoria ajuda a controlar seu teto de gastos.
-                        </small>
-                    </div>
-
-                    <div class="grid-2-col mb-3">
-                        <div class="form-group">
-                            <label asp-for="DataInicio" class="premium-label">Vencimento</label>
-                            <input type="date" asp-for="DataInicio" class="premium-input" />
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="DataFim" class="premium-label">Competência</label>
-                            <input type="date" asp-for="DataFim" class="premium-input" />
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="toggle-row mb-3">
-                        <div class="toggle-info">
-                            <span class="toggle-label">Recorrência</span>
-                            <span class="toggle-desc">Esta despesa se repete?</span>
-                        </div>
-                        <label class="premium-switch">
-                            <input asp-for="IsRecurring" type="checkbox" id="isRecurringSwitch">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <div class="recurrence-panel grid-2-col" id="recurrenceOptions" style="display: @(Model.IsRecurring ? "grid" : "none");">
-                        <div class="form-group">
-                            <label class="premium-label">Frequência</label>
-                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Despesa.RecurrenceType>()" class="premium-select"></select>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="RecurrenceCount" class="premium-label">Repetições</label>
-                            <input asp-for="RecurrenceCount" class="premium-input" placeholder="∞" />
-                        </div>
-                    </div>
-
-                    <div class="toggle-row mt-2">
-                        <div class="toggle-info">
-                            <span class="toggle-label">Status de Pagamento</span>
-                            <span class="toggle-desc">Já foi pago?</span>
-                        </div>
-                        <label class="premium-switch">
-                            <input asp-for="Pago" type="checkbox">
-                            <span class="slider round success"></span>
-                        </label>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer-clean">
-                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn-premium-danger">Salvar Despesa</button>
-                </div>
-            </form>
-        </div>
+<div class="modal-header">
+    <div>
+        <h2 class="modal-title">@title</h2>
+        <p class="modal-subtitle">@subtitle</p>
     </div>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"></button>
+</div>
+
+<div class="modal-body">
+    <form action="/Despesas/@(isEdit ? "Edit" : "Create")/@(isEdit ? Model.Id.ToString() : "")"
+          method="post"
+          id="formDespesa"
+          aria-labelledby="despesaModalLabel">
+
+        @Html.AntiForgeryToken()
+
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <!-- Valor e Moeda -->
+        <div class="amount-group">
+            <div class="currency-selector">
+                <select asp-for="CurrencyType"
+                        id="currencyType"
+                        class="form-input form-input-sm"
+                        aria-label="Selecionar moeda">
+                    <option value="BRL">BRL</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="JPY">JPY</option>
+                </select>
+            </div>
+            <div class="amount-input-wrapper">
+                <span id="currencySymbol" class="currency-symbol">R$</span>
+                <input asp-for="Valor"
+                       class="amount-input"
+                       type="text"
+                       placeholder="0,00"
+                       autocomplete="off"
+                       required />
+            </div>
+        </div>
+        <span asp-validation-for="Valor" class="form-error"></span>
+
+        <!-- Título -->
+        <div class="form-group">
+            <label asp-for="Titulo" class="form-label">Descrição</label>
+            <input asp-for="Titulo"
+                   class="form-input"
+                   placeholder="Ex: Aluguel, Mercado, Uber..."
+                   required />
+            <span asp-validation-for="Titulo" class="form-error"></span>
+        </div>
+
+        <!-- Categoria do Orçamento -->
+        <div class="form-group">
+            <label asp-for="BudgetCategoryId" class="form-label">Categoria (Orçamento)</label>
+            <select asp-for="BudgetCategoryId"
+                    asp-items="ViewBag.BudgetCategories"
+                    class="form-input">
+            </select>
+            <small class="form-hint">
+                Vincular a uma categoria ajuda a controlar seu teto de gastos.
+            </small>
+        </div>
+
+        <!-- Datas -->
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label asp-for="DataInicio" class="form-label">Vencimento</label>
+                <input type="date"
+                       asp-for="DataInicio"
+                       class="form-input"
+                       required />
+            </div>
+            <div class="form-group">
+                <label asp-for="DataFim" class="form-label">Competência</label>
+                <input type="date"
+                       asp-for="DataFim"
+                       class="form-input" />
+            </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <!-- Recorrência -->
+        <div class="toggle-row">
+            <div class="toggle-info">
+                <span class="toggle-label">Recorrência</span>
+                <span class="toggle-desc">Esta despesa se repete?</span>
+            </div>
+            <label class="toggle-switch">
+                <input asp-for="IsRecurring"
+                       type="checkbox"
+                       id="isRecurringSwitch">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
+        <!-- Opções de recorrência -->
+        <div class="recurrence-panel form-grid-2"
+             id="recurrenceOptions"
+             style="display: @(Model.IsRecurring ? "grid" : "none");">
+            <div class="form-group">
+                <label asp-for="Recurrence" class="form-label">Frequência</label>
+                <select asp-for="Recurrence"
+                        asp-items="Html.GetEnumSelectList<Despesa.RecurrenceType>()"
+                        class="form-input">
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecurrenceCount" class="form-label">Repetições</label>
+                <input asp-for="RecurrenceCount"
+                       class="form-input"
+                       type="number"
+                       min="1"
+                       placeholder="∞" />
+            </div>
+        </div>
+
+        <!-- Status de pagamento -->
+        <div class="toggle-row">
+            <div class="toggle-info">
+                <span class="toggle-label">Status de Pagamento</span>
+                <span class="toggle-desc">Já foi pago?</span>
+            </div>
+            <label class="toggle-switch">
+                <input asp-for="Pago" type="checkbox">
+                <span class="toggle-slider success"></span>
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="button"
+                    class="btn-action btn-secondary"
+                    data-bs-dismiss="modal">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-action btn-danger">
+                @(isEdit ? "Salvar Alterações" : "Salvar Despesa")
+            </button>
+        </div>
+    </form>
 </div>
 
 <partial name="_ValidationScriptsPartial" />
