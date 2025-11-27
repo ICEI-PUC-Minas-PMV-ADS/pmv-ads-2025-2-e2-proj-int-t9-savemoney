@@ -1,0 +1,67 @@
+﻿@page
+@model savemoney.Pages.Relatorios.IndexModel
+
+@{
+    ViewData["Title"] = "Relatório Financeiro";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" id="reportForm">
+    <label>Data início</label>
+    <input asp-for="Request.StartDate" type="date" />
+    <label>Data fim</label>
+    <input asp-for="Request.EndDate" type="date" />
+    <label>Período</label>
+    <select asp-for="Request.Period">
+        <option value="Weekly">Semanal</option>
+        <option value="Monthly">Mensal</option>
+        <option value="Yearly">Anual</option>
+    </select>
+
+    <button type="submit">Gerar</button>
+    <button type="submit" name="handler" value="ExportExcel" onclick="prepareExport()">Exportar Excel</button>
+    <button type="submit" name="handler" value="ExportPdf" onclick="prepareExport()">Exportar PDF</button>
+
+    <input type="hidden" asp-for="ChartImageBase64" id="ChartImage" />
+    <input type="hidden" asp-for="PieImageBase64" id="PieImage" />
+</form>
+
+@if (Model.ViewModel.Periodos.Any())
+{
+    <h4>Resumo (DRE)</h4>
+    <p>Total Receitas: R$ @Model.ViewModel.TotalReceitas.ToString("N2")</p>
+    <p>Total Despesas: R$ @Model.ViewModel.TotalDespesas.ToString("N2")</p>
+    <p>Saldo: R$ @Model.ViewModel.Saldo.ToString("N2")</p>
+
+    <canvas id="barChart" height="150"></canvas>
+    <canvas id="pieChart" height="150"></canvas>
+
+    <table>
+        <thead><tr><th>Período</th><th>Receitas</th><th>Despesas</th><th>Saldo</th></tr></thead>
+        <tbody>
+            @foreach (var p in Model.ViewModel.Periodos)
+            {
+                <tr>
+                    <td>@p.Label</td>
+                    <td class="text-end">@p.TotalReceitas.ToString("N2")</td>
+                    <td class="text-end">@p.TotalDespesas.ToString("N2")</td>
+                    <td class="text-end">@p.Saldo.ToString("N2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ViewModel.Periodos.Select(p => p.Label)));
+        const receitas = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ViewModel.Periodos.Select(p => p.TotalReceitas)));
+        const despesas = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ViewModel.Periodos.Select(p => p.TotalDespesas)));
+        window.relatorioData = { labels, receitas, despesas, totalReceitas: @Model.ViewModel.TotalReceitas, totalDespesas: @Model.ViewModel.TotalDespesas };
+    </script>
+
+    <script src="~/js/relatorio.js" asp-append-version="true"></script>
+}
