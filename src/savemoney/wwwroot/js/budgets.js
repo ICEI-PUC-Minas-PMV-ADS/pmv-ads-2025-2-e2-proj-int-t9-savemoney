@@ -1,217 +1,339 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    console.log("Budgets JS carregado vPremium Final!");
+﻿/* ============================================================================
+   BUDGETS - GERENCIAMENTO DE ORÇAMENTOS
+   ============================================================================ */
 
-    // --- DELEGAÇÃO DE EVENTOS ---
-    document.body.addEventListener('click', function (e) {
-        if (e.target && e.target.id === 'addCategoryBtn') addCategoryRow();
-        if (e.target && e.target.closest('.remove-cat-btn')) removerLinha(e.target.closest('.remove-cat-btn'));
-    });
+(() => {
+    'use strict';
 
-    document.body.addEventListener('input', function (e) {
-        if (e.target && e.target.classList.contains('money-mask')) aplicarMascaraMoeda(e.target);
-    });
-});
+    // Elementos principais
+    const modalContainer = document.getElementById('modal-container');
+    let deleteTargetId = 0;
 
-// ==============================================================
-// 1. GERENCIAMENTO DE MODAIS (CORREÇÃO DA TELA CINZA)
-// ==============================================================
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', initializeBudgets);
 
-const modalContainer = document.getElementById("modal-container");
+    function initializeBudgets() {
+        console.log('✓ Budgets module loaded');
+        setupEventDelegation();
+    }
 
-// Função Faxineira: Remove backdrops presos e reseta o body
-function limparModais() {
-    // 1. Esconde qualquer modal Bootstrap ativo
-    document.querySelectorAll('.modal.show').forEach(el => {
-        const instance = bootstrap.Modal.getInstance(el);
-        if (instance) instance.hide();
-    });
+    /* Delegação de Eventos
+       ======================================================================== */
+    function setupEventDelegation() {
+        // Delegação para botões dinâmicos
+        document.body.addEventListener('click', handleBodyClick);
 
-    // 2. Remove forçadamente os backdrops órfãos
-    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        // Delegação para inputs de máscara
+        document.body.addEventListener('input', handleBodyInput);
+    }
 
-    // 3. Destrava o scroll do body
-    document.body.classList.remove('modal-open');
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-}
+    function handleBodyClick(e) {
+        const target = e.target;
 
-function openBootstrapModal(modalId) {
-    const modalEl = document.getElementById(modalId);
-    if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
+        // Adicionar categoria
+        if (target.id === 'addCategoryBtn' || target.closest('#addCategoryBtn')) {
+            e.preventDefault();
+            addCategoryRow();
+        }
+
+        // Remover linha (detecta vários seletores possíveis)
+        const removeBtn = target.closest('.btn-icon.danger');
+        if (removeBtn && removeBtn.onclick?.toString().includes('removerLinha')) {
+            // Deixa o onclick inline funcionar
+            return;
+        }
+    }
+
+    function handleBodyInput(e) {
+        if (e.target.classList.contains('money-mask')) {
+            applyMoneyMask(e.target);
+        }
+    }
+
+    /* Gerenciamento de Modais
+       ======================================================================== */
+
+    // Limpa qualquer modal preso e reseta o body
+    function cleanupModals() {
+        // Fecha modais Bootstrap ativos
+        document.querySelectorAll('.modal.show').forEach(modal => {
+            const instance = bootstrap.Modal.getInstance(modal);
+            if (instance) {
+                instance.hide();
+            }
+        });
+
+        // Remove backdrops órfãos
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.remove();
+        });
+
+        // Reseta estado do body
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+
+    // Abre modal Bootstrap
+    function openModal(modalId) {
+        const modalElement = document.getElementById(modalId);
+        if (!modalElement) {
+            console.error(`Modal ${modalId} not found`);
+            return;
+        }
+
+        const modal = new bootstrap.Modal(modalElement);
         modal.show();
     }
-}
 
-function carregarModalDetalhes(id) {
-    limparModais(); // <--- LIMPEZA ANTES DE ABRIR
+    // Carrega modal de detalhes
+    window.carregarModalDetalhes = function (id) {
+        cleanupModals();
 
-    fetch(`/Budgets/Details/${id}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Erro");
-            return res.text();
-        })
-        .then(html => {
-            modalContainer.innerHTML = `
-                <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content glass-panel" style="border: 1px solid var(--pm-glass-border);">
-                            ${html}
+        fetch(`/Budgets/Details/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                modalContainer.innerHTML = `
+                    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content glass-panel premium-modal">
+                                ${html}
+                            </div>
                         </div>
                     </div>
-                </div>`;
+                `;
 
-            const modalElement = document.getElementById('detailModal');
+                const modalElement = document.getElementById('detailModal');
 
-            // Só desenha quando o modal estiver visível (evita bugs visuais)
-            modalElement.addEventListener('shown.bs.modal', function () {
-                initDonutChart();
+                // Renderiza gráfico quando modal estiver visível
+                modalElement.addEventListener('shown.bs.modal', () => {
+                    initDonutChart();
+                }, { once: true });
+
+                openModal('detailModal');
+            })
+            .catch(error => {
+                console.error('Error loading details:', error);
+                alert('Erro ao carregar detalhes do orçamento.');
             });
+    };
 
-            openBootstrapModal('detailModal');
-        })
-        .catch(console.error);
-}
+    // Carrega modal de criação
+    window.carregarModalCriar = function () {
+        cleanupModals();
 
-function carregarModalCriar() {
-    limparModais(); // <--- LIMPEZA
-    fetch("/Budgets/Create")
-        .then(res => res.text())
-        .then(html => {
-            modalContainer.innerHTML = html;
-            openBootstrapModal('budgetModal');
+        fetch('/Budgets/Create')
+            .then(response => response.text())
+            .then(html => {
+                modalContainer.innerHTML = html;
+                openModal('budgetModal');
+            })
+            .catch(error => {
+                console.error('Error loading create form:', error);
+                alert('Erro ao carregar formulário.');
+            });
+    };
+
+    // Carrega modal de edição
+    window.carregarModalEditar = function (id) {
+        cleanupModals();
+
+        fetch(`/Budgets/Edit/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                modalContainer.innerHTML = html;
+                openModal('budgetModal');
+            })
+            .catch(error => {
+                console.error('Error loading edit form:', error);
+                alert('Erro ao carregar formulário de edição.');
+            });
+    };
+
+    /* Gráfico Donut
+       ======================================================================== */
+    function initDonutChart() {
+        const canvas = document.getElementById('budgetDonutChart');
+        if (!canvas) return;
+
+        const chartData = canvas.dataset.chart;
+        const limitData = canvas.dataset.limit;
+
+        if (!chartData) return;
+
+        let categories = [];
+        try {
+            categories = JSON.parse(chartData);
+        } catch (error) {
+            console.error('Error parsing chart data:', error);
+            return;
+        }
+
+        // Configurações do gráfico
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radius = 75;
+        const lineWidth = 14;
+        const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+        // Processa dados
+        let totalSpent = 0;
+        categories.forEach((category, index) => {
+            category.value = parseFloat(category.value) || 0;
+            if (category.value < 0) category.value = 0;
+            totalSpent += category.value;
+            category.color = colors[index % colors.length];
         });
-}
 
-function carregarModalEditar(id) {
-    limparModais(); // <--- LIMPEZA CRÍTICA AQUI (Pois vem do modal de detalhes)
+        // Obtém o limite total
+        const totalLimit = limitData ? parseFloat(limitData) : totalSpent;
+        const denominator = totalLimit > 0 ? totalLimit : totalSpent;
 
-    fetch(`/Budgets/Edit/${id}`)
-        .then(res => res.text())
-        .then(html => {
-            modalContainer.innerHTML = html;
-            openBootstrapModal('budgetModal');
-        });
-}
+        if (denominator === 0) return;
 
-// ==============================================================
-// 2. GRÁFICO DONUT (CORREÇÃO DA MATEMÁTICA 50%)
-// ==============================================================
-function initDonutChart() {
-    const canvas = document.getElementById("budgetDonutChart");
-    if (!canvas || !canvas.dataset.chart) return;
+        // Limpa canvas
+        ctx.clearRect(0, 0, width, height);
 
-    let categories = [];
-    try { categories = JSON.parse(canvas.dataset.chart); } catch (e) { return; }
-
-    // LER O LIMITE DO HTML (Se não existir, usa a soma como fallback)
-    const limitAttr = canvas.dataset.limit;
-    let limitTotal = limitAttr ? parseFloat(limitAttr) : 0;
-
-    const ctx = canvas.getContext("2d");
-    const width = canvas.width;
-    const height = canvas.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const radius = 75;
-    const lineWidth = 14;
-    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-
-    // Prepara dados
-    let totalSpent = 0;
-    categories.forEach((cat, i) => {
-        cat.value = parseFloat(cat.value);
-        if (cat.value < 0) cat.value = 0;
-        totalSpent += cat.value;
-        cat.color = colors[i % colors.length];
-    });
-
-    // Se não tiver limite definido (0), usa o total gasto para evitar divisão por zero
-    // Isso mantém o gráfico cheio se não houver orçamento definido
-    const denominator = limitTotal > 0 ? limitTotal : totalSpent;
-
-    ctx.clearRect(0, 0, width, height);
-
-    // 1. Fundo do Donut (Trilha completa)
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
-    ctx.stroke();
-
-    if (denominator === 0) return;
-
-    // 2. Desenha os Arcos (Proporcionais ao LIMITE)
-    let startAngle = -0.5 * Math.PI; // 12 horas
-
-    categories.forEach(cat => {
-        if (cat.value <= 0) return;
-
-        // AQUI ESTÁ A CORREÇÃO MÁGICA: Divide pelo LIMITE, não pelo Gasto Total
-        // Math.min garante que não desenhe mais que 360 graus se estourar
-        const share = Math.min(cat.value / denominator, 1);
-        const sliceAngle = share * 2 * Math.PI;
-        const endAngle = startAngle + sliceAngle;
-
+        // Desenha trilha de fundo
         ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = cat.color;
-        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.stroke();
 
-        startAngle = endAngle;
-    });
-}
+        // Desenha arcos das categorias
+        let startAngle = -0.5 * Math.PI;
 
-// ==============================================================
-// 3. UTILITÁRIOS E TABELA
-// ==============================================================
+        categories.forEach(category => {
+            if (category.value <= 0) return;
 
-function addCategoryRow() {
-    const container = document.getElementById('categoriesContainer');
-    const emptyMsg = document.getElementById('emptyTableMsg');
-    const template = document.getElementById('categoryRowTemplate').innerHTML;
-    const currentIndex = container.querySelectorAll('.category-row').length;
-    container.insertAdjacentHTML('beforeend', template.replace(/{INDEX}/g, currentIndex));
-    if (emptyMsg) emptyMsg.classList.add('d-none');
-}
+            const percentage = Math.min(category.value / denominator, 1);
+            const sliceAngle = percentage * 2 * Math.PI;
+            const endAngle = startAngle + sliceAngle;
 
-function removerLinha(btn) {
-    btn.closest('.category-row').remove();
-    const container = document.getElementById('categoriesContainer');
-    if (container.children.length === 0) document.getElementById('emptyTableMsg').classList.remove('d-none');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = category.color;
+            ctx.lineCap = 'round';
+            ctx.stroke();
 
-    // Reindexar
-    container.querySelectorAll('.category-row').forEach((row, index) => {
-        const select = row.querySelector('select');
-        const input = row.querySelector('input');
-        if (select) select.name = `Categories[${index}].CategoryId`;
-        if (input) input.name = `Categories[${index}].Limit`;
-    });
-}
-
-function aplicarMascaraMoeda(input) {
-    let value = input.value.replace(/[^0-9,]/g, '');
-    const parts = value.split(',');
-    if (parts.length > 2) value = parts[0] + ',' + parts.slice(1).join('');
-    if (value !== input.value) input.value = value;
-}
-
-let idParaExcluir = 0;
-function confirmarExclusao(id) {
-    idParaExcluir = id;
-    limparModais(); // Limpa antes de abrir confirmação
-    openBootstrapModal('deleteModal');
-}
-
-function executarExclusao() {
-    if (idParaExcluir > 0) {
-        fetch("/Budgets/Delete/" + idParaExcluir, { method: 'POST' })
-            .then(r => {
-                if (r.ok) window.location.reload();
-                else alert("Erro ao excluir.");
-            })
-            .catch(() => alert("Erro de conexão."));
+            startAngle = endAngle;
+        });
     }
-}
+
+    /* Gerenciamento de Categorias
+       ======================================================================== */
+    function addCategoryRow() {
+        const container = document.getElementById('categoriesContainer');
+        const emptyMsg = document.getElementById('emptyTableMsg');
+        const template = document.getElementById('categoryRowTemplate');
+
+        if (!container || !template) return;
+
+        const currentIndex = container.querySelectorAll('.category-row').length;
+        const newRow = template.innerHTML.replace(/{INDEX}/g, currentIndex);
+
+        container.insertAdjacentHTML('beforeend', newRow);
+
+        if (emptyMsg) {
+            emptyMsg.classList.add('d-none');
+        }
+    }
+
+    window.removerLinha = function (button) {
+        const row = button.closest('.category-row');
+        if (!row) return;
+
+        row.remove();
+
+        const container = document.getElementById('categoriesContainer');
+        const emptyMsg = document.getElementById('emptyTableMsg');
+
+        // Mostra mensagem vazia se não houver mais linhas
+        if (container && container.children.length === 0 && emptyMsg) {
+            emptyMsg.classList.remove('d-none');
+        }
+
+        // Reindexa as categorias restantes
+        reindexCategories();
+    };
+
+    function reindexCategories() {
+        const container = document.getElementById('categoriesContainer');
+        if (!container) return;
+
+        container.querySelectorAll('.category-row').forEach((row, index) => {
+            const select = row.querySelector('select');
+            const input = row.querySelector('input[type="text"]');
+
+            if (select) {
+                select.name = `Categories[${index}].CategoryId`;
+            }
+            if (input) {
+                input.name = `Categories[${index}].Limit`;
+            }
+        });
+    }
+
+    /* Máscara de Moeda
+       ======================================================================== */
+    function applyMoneyMask(input) {
+        let value = input.value;
+
+        // Remove tudo exceto números e vírgula
+        value = value.replace(/[^0-9,]/g, '');
+
+        // Garante apenas uma vírgula
+        const parts = value.split(',');
+        if (parts.length > 2) {
+            value = parts[0] + ',' + parts.slice(1).join('');
+        }
+
+        // Limita casas decimais a 2
+        if (parts[1] && parts[1].length > 2) {
+            value = parts[0] + ',' + parts[1].substring(0, 2);
+        }
+
+        input.value = value;
+    }
+
+    /* Exclusão de Orçamento
+       ======================================================================== */
+    window.confirmarExclusao = function (id) {
+        deleteTargetId = id;
+        cleanupModals();
+        openModal('deleteModal');
+    };
+
+    window.executarExclusao = function () {
+        if (deleteTargetId <= 0) return;
+
+        fetch(`/Budgets/Delete/${deleteTargetId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    throw new Error('Delete failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting budget:', error);
+                alert('Erro ao excluir orçamento. Tente novamente.');
+            });
+    };
+
+})();
