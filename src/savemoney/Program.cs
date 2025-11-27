@@ -21,7 +21,6 @@ namespace savemoney
                     .PersistKeysToFileSystem(new DirectoryInfo(@"h:\root\home\maiconvts-001\www\site1\DataProtection-Keys"));
             }
 
-            builder.Services.AddControllersWithViews();
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
@@ -83,6 +82,9 @@ namespace savemoney
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=LandingPage}/{action=Index}/{id?}");
+
+            // MAPEAR RAZOR PAGES (corrige páginas que não eram alcançadas)
+            app.MapRazorPages();
 
             app.Run();
         }

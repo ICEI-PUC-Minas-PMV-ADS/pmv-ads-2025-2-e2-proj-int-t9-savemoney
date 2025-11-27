@@ -11,31 +11,38 @@ namespace savemoney.Services
     {
         public static RelatorioViewModel BuildReport(AppDbContext db, int userId, DateTime start, DateTime end, AggregationPeriod period)
         {
+            // normalize dates (date-only)
+            start = start.Date;
+            end = end.Date;
             if (start > end) (start, end) = (end, start);
 
-            var receitas = db.Receitas.AsNoTracking().Where(r => r.UsuarioId == userId).ToList();
-            var despesas = db.Despesas.AsNoTracking().Where(d => d.UsuarioId == userId).ToList();
+            // Filtrar no banco: pegar itens recorrentes OU itens com DataInicio <= end (podem ocorrer dentro do intervalo)
+            var receitasQuery = db.Receitas
+                .AsNoTracking()
+                .Where(r => r.UsuarioId == userId && (r.IsRecurring || r.DataInicio.Date <= end));
+
+            var despesasQuery = db.Despesas
+                .AsNoTracking()
+                .Where(d => d.UsuarioId == userId && (d.IsRecurring || d.DataInicio.Date <= end));
+
+            var receitas = receitasQuery.ToList();
+            var despesas = despesasQuery.ToList();
 
             var receitaOccurrences = receitas
-                .SelectMany(r => ExpandOccurrences(r, start, end).Select(dt => (Date: dt, Value: (double)r.Valor)));
+                .SelectMany(r => ExpandOccurrences(r, start, end).Select(dt => (Date: dt, Value: Convert.ToDouble(r.Valor))));
 
             var despesaOccurrences = despesas
-                .SelectMany(d => ExpandOccurrences(d, start, end).Select(dt => (Date: dt, Value: (double)d.Valor)));
+                .SelectMany(d => ExpandOccurrences(d, start, end).Select(dt => (Date: dt, Value: Convert.ToDouble(d.Valor))));
 
-            IEnumerable<KeyValuePair<DateTime, (double receitas, double despesas)>> grouped;
-
-            switch (period)
+            // key selector
+            Func<DateTime, DateTime> keySelector = period switch
             {
-                case AggregationPeriod.Weekly:
-                    grouped = GroupByPeriod(receitaOccurrences, despesaOccurrences, dt => StartOfWeek(dt));
-                    break;
-                case AggregationPeriod.Yearly:
-                    grouped = GroupByPeriod(receitaOccurrences, despesaOccurrences, dt => new DateTime(dt.Year, 1, 1));
-                    break;
-                default:
-                    grouped = GroupByPeriod(receitaOccurrences, despesaOccurrences, dt => new DateTime(dt.Year, dt.Month, 1));
-                    break;
-            }
+                AggregationPeriod.Weekly => dt => StartOfWeek(dt),
+                AggregationPeriod.Yearly => dt => new DateTime(dt.Year, 1, 1),
+                _ => dt => new DateTime(dt.Year, dt.Month, 1)
+            };
+
+            var grouped = GroupByPeriod(receitaOccurrences, despesaOccurrences, keySelector, period, start, end);
 
             var vm = new RelatorioViewModel { Request = new RelatorioRequest { StartDate = start, EndDate = end, Period = period } };
 
@@ -66,13 +73,34 @@ namespace savemoney.Services
         private static IEnumerable<KeyValuePair<DateTime, (double receitas, double despesas)>> GroupByPeriod(
             IEnumerable<(DateTime Date, double Value)> receitas,
             IEnumerable<(DateTime Date, double Value)> despesas,
-            Func<DateTime, DateTime> keySelector)
+            Func<DateTime, DateTime> keySelector,
+            AggregationPeriod period,
+            DateTime start,
+            DateTime end)
         {
+            // agrupar ocorrências existentes
             var r = receitas.GroupBy(x => keySelector(x.Date)).ToDictionary(g => g.Key, g => g.Sum(x => x.Value));
             var d = despesas.GroupBy(x => keySelector(x.Date)).ToDictionary(g => g.Key, g => g.Sum(x => x.Value));
-            var keys = r.Keys.Union(d.Keys).OrderBy(k => k);
 
-            foreach (var k in keys)
+            // criar lista de chaves esperadas entre start e end (meses/semanas/anos) para garantir períodos vazios
+            var expectedKeys = new List<DateTime>();
+            var cursor = keySelector(start);
+
+            while (cursor <= keySelector(end))
+            {
+                expectedKeys.Add(cursor);
+                cursor = period switch
+                {
+                    AggregationPeriod.Weekly => cursor.AddDays(7),
+                    AggregationPeriod.Yearly => cursor.AddYears(1),
+                    _ => cursor.AddMonths(1)
+                };
+            }
+
+            // combinar com as chaves reais (caso exista movimento fora do intervalo "esperado" — raro)
+            var allKeys = expectedKeys.Union(r.Keys).Union(d.Keys).OrderBy(k => k);
+
+            foreach (var k in allKeys)
             {
                 r.TryGetValue(k, out var rv);
                 d.TryGetValue(k, out var dv);
@@ -85,7 +113,7 @@ namespace savemoney.Services
             {
                 AggregationPeriod.Weekly => $"{key:dd/MM/yyyy} - {key.AddDays(6):dd/MM/yyyy}",
                 AggregationPeriod.Yearly => key.Year.ToString(),
-                _ => key.ToString("MMM/yyyy")
+                _ => key.ToString("MM/yyyy")
             };
 
         private static DateTime StartOfWeek(DateTime dt, DayOfWeek start = DayOfWeek.Monday)
@@ -98,13 +126,16 @@ namespace savemoney.Services
         {
             var list = new List<DateTime>();
             var current = r.DataInicio.Date;
+
             if (r.IsRecurring)
             {
-                int max = r.RecurrenceCount ?? 365;
-                DateTime limit = r.DataFim != default ? r.DataFim.Date : DateTime.MaxValue;
+                int max = r.RecurrenceCount.HasValue && r.RecurrenceCount.Value > 0 ? r.RecurrenceCount.Value : 365;
+                DateTime limit = (r.DataFim != default && r.DataFim != DateTime.MinValue) ? r.DataFim.Date : DateTime.MaxValue;
+
                 for (int i = 0; i < max && current <= end && current <= limit; i++)
                 {
-                    if (current >= start) list.Add(current);
+                    if (current >= start && current <= end) list.Add(current);
+
                     current = r.Recurrence switch
                     {
                         Receita.RecurrenceType.Daily => current.AddDays(1),
@@ -126,13 +157,16 @@ namespace savemoney.Services
         {
             var list = new List<DateTime>();
             var current = d.DataInicio.Date;
+
             if (d.IsRecurring)
             {
-                int max = d.RecurrenceCount ?? 365;
-                DateTime limit = d.DataFim != default ? d.DataFim.Date : DateTime.MaxValue;
+                int max = d.RecurrenceCount.HasValue && d.RecurrenceCount.Value > 0 ? d.RecurrenceCount.Value : 365;
+                DateTime limit = (d.DataFim != default && d.DataFim != DateTime.MinValue) ? d.DataFim.Date : DateTime.MaxValue;
+
                 for (int i = 0; i < max && current <= end && current <= limit; i++)
                 {
-                    if (current >= start) list.Add(current);
+                    if (current >= start && current <= end) list.Add(current);
+
                     current = d.Recurrence switch
                     {
                         Despesa.RecurrenceType.Daily => current.AddDays(1),

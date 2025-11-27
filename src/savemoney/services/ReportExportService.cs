@@ -35,21 +35,30 @@ namespace savemoney.Services
                 row++;
             }
 
-            ws.Cell(row + 1, 1).Value = "Total";
-            ws.Cell(row + 1, 2).FormulaA1 = $"SUM(B6:B{row - 1})";
-            ws.Cell(row + 1, 3).FormulaA1 = $"SUM(C6:C{row - 1})";
-            ws.Cell(row + 1, 4).FormulaA1 = $"B{row + 1}-C{row + 1}";
+            // colocar totais na linha 'row' (logo após os dados)
+            ws.Cell(row, 1).Value = "Total";
+            ws.Cell(row, 2).FormulaA1 = $"SUM(B6:B{row - 1})";
+            ws.Cell(row, 3).FormulaA1 = $"SUM(C6:C{row - 1})";
+            ws.Cell(row, 4).FormulaA1 = $"B{row}-C{row}";
 
-            if (barImg != null)
+            // aplicar formatação numérica para colunas de valores
+            ws.Column(2).Style.NumberFormat.Format = "#,##0.00";
+            ws.Column(3).Style.NumberFormat.Format = "#,##0.00";
+            ws.Column(4).Style.NumberFormat.Format = "#,##0.00";
+
+            if (barImg != null && barImg.Length > 0)
             {
                 using var s = new MemoryStream(barImg);
-                ws.AddPicture(s).MoveTo(ws.Cell("F2"));
+                var pic = ws.AddPicture(s).MoveTo(ws.Cell("F2"));
+                // redimensiona se necessário
+                pic.Scale(0.5);
             }
 
-            if (pieImg != null)
+            if (pieImg != null && pieImg.Length > 0)
             {
                 using var s2 = new MemoryStream(pieImg);
-                ws.AddPicture(s2).MoveTo(ws.Cell("F20"));
+                var pic2 = ws.AddPicture(s2).MoveTo(ws.Cell("F20"));
+                pic2.Scale(0.5);
             }
 
             wb.SaveAs(ms);
@@ -90,8 +99,8 @@ namespace savemoney.Services
                             }
                         });
 
-                        if (barImg != null) col.Item().Image(barImg).FitWidth();
-                        if (pieImg != null) col.Item().Image(pieImg).FitWidth();
+                        if (barImg != null && barImg.Length > 0) col.Item().Image(barImg).FitWidth();
+                        if (pieImg != null && pieImg.Length > 0) col.Item().Image(pieImg).FitWidth();
 
                         col.Item().PaddingTop(8).Text($"Total Receitas: {vm.TotalReceitas:N2}    Total Despesas: {vm.TotalDespesas:N2}    Saldo: {vm.Saldo:N2}");
                     });
