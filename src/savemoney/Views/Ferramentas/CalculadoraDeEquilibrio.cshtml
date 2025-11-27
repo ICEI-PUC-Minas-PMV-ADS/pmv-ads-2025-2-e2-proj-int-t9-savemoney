@@ -2,85 +2,105 @@
     ViewData["Title"] = "Calculadora de Ponto de Equilíbrio";
 }
 
-@* --- ESTILOS DA PÁGINA --- *@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    rel="stylesheet" />
-<link rel="stylesheet" href="~/css/pontoEquilibrio.css" asp-append-version="true" />
-@* --- FIM DOS ESTILOS --- *@
+@section css {
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/pontoEquilibrio.css" asp-append-version="true" />
+}
 
+<main class="equilibrio-page-main fade-in">
 
-<div class="background-fixed-image" aria-hidden="true"></div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Cálculo do Ponto de Equilíbrio</h1>
+            <p class="hero-subtitle">
+                Quer saber exatamente quantas unidades precisa vender para cobrir todos os seus custos e começar a lucrar? Use nossa calculadora de ponto de equilíbrio e obtenha essa resposta rapidamente!
+            </p>
+            <a href="#calculadora" class="btn-hero-cta">Calcular Ponto de Equilíbrio</a>
+        </div>
+    </section>
 
-
-<section class="hero-pe">
-    <div class="hero-content">
-        <h1 class="hero-title">Cálculo do Ponto de Equilíbrio</h1>
-        <p class="hero-subtitle">
-            Quer saber exatamente quantas unidades precisa vender para cobrir todos os seus custos e começar a lucrar?
-            Use nossa calculadora de ponto de equilíbrio e obtenha essa resposta rapidamente!
-        </p>
-        <a href="#calculadora" class="btn-hero-cta">Calcular Ponto de Equilíbrio</a>
-    </div>
-</section>
-<main class="content-wrapper">
     <div class="container-pe">
 
-
-        <section class="calculadora-pe-section glass-effect" id="calculadora">
+        <!-- Calculadora Section -->
+        <section class="calculadora-pe-section glass-panel" id="calculadora">
             <div class="calculadora-grid">
 
-                <div class="calculadora-form">
+                <article class="calculadora-form">
                     <h2 class="form-title">Calcule seu Ponto de Equilíbrio</h2>
-                    <form id="pe-form" onsubmit="return false;">
+                    <form id="pe-form">
                         <div class="form-group">
                             <label for="custos-fixos">Custos Fixos (R$)</label>
-                            <input type="text" id="custos-fixos" class="form-input" placeholder="Ex: 5000.00" required>
-                            <small class="form-text">Gastos que não mudam (aluguel, salários, etc.)</small>
+                            <input type="text"
+                                   id="custos-fixos"
+                                   class="form-input"
+                                   placeholder="Ex: 5000.00"
+                                   required
+                                   aria-describedby="custosFixosHelp">
+                            <small id="custosFixosHelp" class="form-text">Gastos que não mudam (aluguel, salários, etc.)</small>
                         </div>
+
                         <div class="form-group">
                             <label for="preco-venda">Preço de Venda por Unidade (R$)</label>
-                            <input type="text" id="preco-venda" class="form-input" placeholder="Ex: 50.00" required>
-                            <small class="form-text">Quanto você cobra por cada item.</small>
+                            <input type="text"
+                                   id="preco-venda"
+                                   class="form-input"
+                                   placeholder="Ex: 50.00"
+                                   required
+                                   aria-describedby="precoVendaHelp">
+                            <small id="precoVendaHelp" class="form-text">Quanto você cobra por cada item</small>
                         </div>
+
                         <div class="form-group">
                             <label for="custo-variavel">Custo Variável por Unidade (R$)</label>
-                            <input type="text" id="custo-variavel" class="form-input" placeholder="Ex: 20.00" required>
-                            <small class="form-text">Quanto custa para produzir cada item (matéria-prima, etc.)</small>
+                            <input type="text"
+                                   id="custo-variavel"
+                                   class="form-input"
+                                   placeholder="Ex: 20.00"
+                                   required
+                                   aria-describedby="custoVariavelHelp">
+                            <small id="custoVariavelHelp" class="form-text">Quanto custa para produzir cada item (matéria-prima, etc.)</small>
                         </div>
+
                         <div class="form-group-submit">
-                            <button type="submit" id="btn-calcular" class="btn-submit">Calcular</button>
+                            <button type="submit"
+                                    id="btn-calcular"
+                                    class="btn-submit"
+                                    aria-label="Calcular ponto de equilíbrio">
+                                Calcular
+                            </button>
                         </div>
                     </form>
-                </div>
+                </article>
 
-                <div class="calculadora-resultado">
+                <article class="calculadora-resultado">
                     <div id="resultado-placeholder" class="resultado-placeholder">
-                        <span class="material-symbols-outlined icon-placeholder">calculate</span>
-                        <h5>Ponto de Equilíbrio (Unidades)</h5>
+                        <span class="material-symbols-outlined icon-placeholder" aria-hidden="true">calculate</span>
+                        <h3>Ponto de Equilíbrio (Unidades)</h3>
                         <p>O número de unidades que você precisa vender para cobrir seus custos aparecerá aqui.</p>
                     </div>
-                </div>
+                </article>
 
             </div>
         </section>
 
+        <!-- Info Section -->
         <section class="info-pe-section">
             <div class="info-header">
-                <h2>O que é Ponto do Equilíbrio em finanças?</h2>
-                <p>O ponto de equilíbrio é uma métrica financeira crucial que indica o momento em que a receita total de
-                    uma empresa iguala seus custos totais, resultando em lucro zero. Em outras palavras, é o ponto em
-                    que um negócio cobre todas as suas despesas, mas ainda não gera lucro. Entender o cálculo do ponto
-                    de equilíbrio é essencial para avaliar a viabilidade financeira e a sustentabilidade de um negócio.
+                <h2>O que é Ponto de Equilíbrio em finanças?</h2>
+                <p>
+                    O ponto de equilíbrio é uma métrica financeira crucial que indica o momento em que a receita total de uma empresa iguala seus custos totais, resultando em lucro zero. Em outras palavras, é o ponto em que um negócio cobre todas as suas despesas, mas ainda não gera lucro. Entender o cálculo do ponto de equilíbrio é essencial para avaliar a viabilidade financeira e a sustentabilidade de um negócio.
                 </p>
             </div>
 
             <div class="passo-a-passo">
                 <h3>Como calcular o Ponto de Equilíbrio?</h3>
-                <p>Calcular o ponto de equilíbrio pode parecer complicado, mas vamos aprender de um jeito fácil! Imagine
-                    que você tem uma barraca de limonada:</p>
+                <p>
+                    Calcular o ponto de equilíbrio pode parecer complicado, mas vamos aprender de um jeito fácil! Imagine que você tem uma barraca de limonada:
+                </p>
                 <div class="passos-grid">
                     <div class="passo-card glass-effect">
                         <strong>1. Custos Fixos (R$)</strong>
@@ -107,87 +127,116 @@
                 <div class="beneficios-grid">
                     <div class="info-card">
                         <div class="info-card-content">
-                            <h3>Precisão e Economia de Tempo</h3>
-                            <p>Evite erros manuais e obtenha resultados instantâneos, economizando tempo que pode ser
-                                usado em outras áreas do seu negócio.</p>
+                            <h4>Precisão e Economia de Tempo</h4>
+                            <p>
+                                Evite erros manuais e obtenha resultados instantâneos, economizando tempo que pode ser usado em outras áreas do seu negócio.
+                            </p>
                         </div>
                     </div>
                     <div class="info-card">
                         <div class="info-card-content">
-                            <h3>Planejamento Eficiente</h3>
-                            <p>Permite que você planeje melhor suas metas de vendas, controle seus custos e mantenha a
-                                saúde financeira do seu negócio.</p>
+                            <h4>Planejamento Eficiente</h4>
+                            <p>
+                                Permite que você planeje melhor suas metas de vendas, controle seus custos e mantenha a saúde financeira do seu negócio.
+                            </p>
                         </div>
                     </div>
                     <div class="info-card">
                         <div class="info-card-content">
-                            <h3>Tomada de Decisões Informadas</h3>
-                            <p>Com dados precisos, você pode tomar decisões estratégicas sobre preços, produção e custos
-                                para melhorar a rentabilidade.</p>
+                            <h4>Tomada de Decisões Informadas</h4>
+                            <p>
+                                Com dados precisos, você pode tomar decisões estratégicas sobre preços, produção e custos para melhorar a rentabilidade.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- FAQ -->
             <div class="container-accordion">
                 <h2>Perguntas Frequentes (FAQ)</h2>
-                <div class="accordion-custom">
+                <div class="accordion-custom" role="region" aria-label="Perguntas frequentes sobre ponto de equilíbrio">
+
                     <div class="accordion-item">
-                        <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-1">
+                        <button class="accordion-header"
+                                aria-expanded="false"
+                                aria-controls="faq-content-1">
                             O que é ponto de equilíbrio?
-                            <span class="accordion-icon"></span>
+                            <span class="accordion-icon" aria-hidden="true"></span>
                         </button>
-                        <div id="faq-content-1" class="accordion-content" role="region" aria-hidden="true">
-                            <p>O ponto de equilíbrio é o ponto em que a receita total de um negócio iguala seus custos
-                                totais, resultando em lucro zero. Ele indica quantas unidades de um produto precisam ser
-                                vendidas para cobrir todos os custos fixos e variáveis.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-2">
-                            Qual a fórmula do Ponto de Equilíbrio?
-                            <span class="accordion-icon"></span>
-                        </button>
-                        <div id="faq-content-2" class="accordion-content" role="region" aria-hidden="true">
-                            <p>Ponto de Equilíbrio (unidades) = Custos Fixos ÷ (Preço de Venda por Unidade − Custo
-                                Variável por Unidade)</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-3">
-                            O que são custos fixos e custos variáveis?
-                            <span class="accordion-icon"></span>
-                        </button>
-                        <div id="faq-content-3" class="accordion-content" role="region" aria-hidden="true">
-                            <p><strong>Custos Fixos:</strong> Despesas que não variam com o nível de produção, como
-                                aluguel, salários administrativos e seguros.</p>
-                            <p><strong>Custos Variáveis:</strong> Despesas que variam diretamente com o nível de
-                                produção, como matérias-primas e mão-de-obra direta.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-4">
-                            Como o ponto de equilíbrio ajuda na precificação?
-                            <span class="accordion-icon"></span>
-                        </button>
-                        <div id="faq-content-4" class="accordion-content" role="region" aria-hidden="true">
-                            <p>O ponto de equilíbrio é fundamental para determinar o preço adequado. Conhecendo seus
-                                custos fixos e variáveis, você pode definir um preço de venda que cubra esses custos e
-                                permita lucro. Ele ajuda a identificar o preço mínimo necessário para evitar prejuízos.
+                        <div id="faq-content-1"
+                             class="accordion-content"
+                             role="region"
+                             aria-hidden="true">
+                            <p>
+                                O ponto de equilíbrio é o ponto em que a receita total de um negócio iguala seus custos totais, resultando em lucro zero. Ele indica quantas unidades de um produto precisam ser vendidas para cobrir todos os custos fixos e variáveis.
                             </p>
                         </div>
                     </div>
+
                     <div class="accordion-item">
-                        <button class="accordion-header" aria-expanded="false" aria-controls="faq-content-5">
-                            Qual a diferença entre ponto de equilíbrio econômico e financeiro?
-                            <span class="accordion-icon"></span>
+                        <button class="accordion-header"
+                                aria-expanded="false"
+                                aria-controls="faq-content-2">
+                            Qual a fórmula do Ponto de Equilíbrio?
+                            <span class="accordion-icon" aria-hidden="true"></span>
                         </button>
-                        <div id="faq-content-5" class="accordion-content" role="region" aria-hidden="true">
-                            <p><strong>Ponto de Equilíbrio Financeiro:</strong> Foca apenas nos custos efetivamente
-                                desembolsados (que saem do caixa).</p>
-                            <p><strong>Ponto de Equilíbrio Econômico:</strong> Considera todos os custos, incluindo o
-                                "custo de oportunidade" (o retorno que você poderia ter se investisse o dinheiro em
-                                outra coisa). É uma visão mais estratégica.</p>
+                        <div id="faq-content-2"
+                             class="accordion-content"
+                             role="region"
+                             aria-hidden="true">
+                            <p>
+                                Ponto de Equilíbrio (unidades) = Custos Fixos ÷ (Preço de Venda por Unidade − Custo Variável por Unidade)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header"
+                                aria-expanded="false"
+                                aria-controls="faq-content-3">
+                            O que são custos fixos e custos variáveis?
+                            <span class="accordion-icon" aria-hidden="true"></span>
+                        </button>
+                        <div id="faq-content-3"
+                             class="accordion-content"
+                             role="region"
+                             aria-hidden="true">
+                            <p><strong>Custos Fixos:</strong> Despesas que não variam com o nível de produção, como aluguel, salários administrativos e seguros.</p>
+                            <p><strong>Custos Variáveis:</strong> Despesas que variam diretamente com o nível de produção, como matérias-primas e mão-de-obra direta.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header"
+                                aria-expanded="false"
+                                aria-controls="faq-content-4">
+                            Como o ponto de equilíbrio ajuda na precificação?
+                            <span class="accordion-icon" aria-hidden="true"></span>
+                        </button>
+                        <div id="faq-content-4"
+                             class="accordion-content"
+                             role="region"
+                             aria-hidden="true">
+                            <p>
+                                O ponto de equilíbrio é fundamental para determinar o preço adequado. Conhecendo seus custos fixos e variáveis, você pode definir um preço de venda que cubra esses custos e permita lucro. Ele ajuda a identificar o preço mínimo necessário para evitar prejuízos.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header"
+                                aria-expanded="false"
+                                aria-controls="faq-content-5">
+                            Qual a diferença entre ponto de equilíbrio econômico e financeiro?
+                            <span class="accordion-icon" aria-hidden="true"></span>
+                        </button>
+                        <div id="faq-content-5"
+                             class="accordion-content"
+                             role="region"
+                             aria-hidden="true">
+                            <p><strong>Ponto de Equilíbrio Financeiro:</strong> Foca apenas nos custos efetivamente desembolsados (que saem do caixa).</p>
+                            <p><strong>Ponto de Equilíbrio Econômico:</strong> Considera todos os custos, incluindo o "custo de oportunidade" (o retorno que você poderia ter se investisse o dinheiro em outra coisa). É uma visão mais estratégica.</p>
                         </div>
                     </div>
 
@@ -195,7 +244,9 @@
             </div>
 
         </section>
+
     </div>
+
 </main>
 
 @section Scripts {
