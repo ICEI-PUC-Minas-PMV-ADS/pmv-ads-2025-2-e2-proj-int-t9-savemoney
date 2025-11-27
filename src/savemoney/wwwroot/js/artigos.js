@@ -1,12 +1,16 @@
-document.addEventListener('DOMContentLoaded', function () {
-    
-    // Estado da Aplicação
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* ==========================================
+       Estado da Aplicação
+       ========================================== */
     let currentPage = 1;
     const PAGE_SIZE = 6;
     let isLoading = false;
     let hasMoreData = true;
 
-
+    /* ==========================================
+       Elementos DOM
+       ========================================== */
     const container = document.getElementById('artigos-container');
     const spinner = document.getElementById('loading-spinner');
     const statusMessageContainer = document.getElementById('status-message-container');
@@ -19,30 +23,42 @@ document.addEventListener('DOMContentLoaded', function () {
     const paginationContainer = document.getElementById('pagination-container');
     const btnExibirMais = document.getElementById('btn-exibir-mais');
 
-    // 1. Iniciar nova busca
-    if (formBusca) formBusca.addEventListener('submit', iniciarNovaBusca);
-    if (btnExibirMais) btnExibirMais.addEventListener('click', carregarMaisArtigos);
+    /* ==========================================
+       Event Listeners
+       ========================================== */
+    if (formBusca) {
+        formBusca.addEventListener('submit', (e) => {
+            e.preventDefault();
+            iniciarNovaBusca();
+        });
+    }
 
-    function iniciarNovaBusca(event) {
-        if (event) event.preventDefault();
-        currentPage = 1; 
-        hasMoreData = true; 
+    if (btnExibirMais) {
+        btnExibirMais.addEventListener('click', carregarMaisArtigos);
+    }
+
+    /* ==========================================
+       Funções Principais
+       ========================================== */
+
+    function iniciarNovaBusca() {
+        currentPage = 1;
+        hasMoreData = true;
         carregarArtigos(true);
     }
 
-    // 2. Carregar mais artigos (paginação)
     function carregarMaisArtigos() {
         currentPage++;
         carregarArtigos(false);
     }
 
-    // 3. Função principal para carregar os dados da API
     async function carregarArtigos(isNewSearch = false) {
+        // Verificações de estado
         if (isLoading || (!hasMoreData && !isNewSearch)) return;
 
         const apiUrl = '/Artigos/GetArtigos';
-        
-        // Coleta os parâmetros dos filtros para enviar ao backend
+
+        // Construir parâmetros da query
         const params = new URLSearchParams({
             searchTerm: filtroTexto.value.trim(),
             region: filtroRegiao.value,
@@ -50,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
             page: currentPage,
             pageSize: PAGE_SIZE
         });
-        // NOTA: O backend deve usar esses parâmetros para filtrar e paginar os resultados.
 
         const fullUrl = `${apiUrl}?${params.toString()}`;
 
@@ -65,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const dadosCompletos = await response.json();
 
+            // Validar resposta
             if (!dadosCompletos || dadosCompletos.status !== "ok" || !Array.isArray(dadosCompletos.articles)) {
                 console.error("Resposta da API inválida:", dadosCompletos);
                 const mensagem = dadosCompletos.message || "Erro na comunicação com a API.";
@@ -74,37 +90,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const listaDeArtigos = dadosCompletos.articles;
 
+            // Atualizar estado de paginação
             hasMoreData = dadosCompletos.hasNextPage || (listaDeArtigos.length === PAGE_SIZE);
-            
 
+            // Renderizar artigos
             renderizarArtigos(listaDeArtigos, isNewSearch);
-
 
         } catch (error) {
             console.error("Falha ao carregar artigos:", error);
-            mostrarStatus("Ocorreu um erro inesperado ao buscar os artigos. Verifique a conexão ou tente novamente.", true);
+            mostrarStatus(
+                "Ocorreu um erro inesperado ao buscar os artigos. Verifique a conexão ou tente novamente.",
+                true
+            );
         } finally {
             setLoadingState(false);
             atualizarVisibilidadePaginacao();
         }
     }
 
-    // 4. Funções de Renderização e Estado
+    /* ==========================================
+       Funções de UI
+       ========================================== */
+
     function setLoadingState(loading, isNewSearch = false) {
         isLoading = loading;
-        
+
+        // Atualizar estado dos botões
         btnPesquisar.disabled = loading;
         btnExibirMais.disabled = loading;
+
+        // Atualizar ARIA
+        container.setAttribute('aria-busy', loading);
 
         if (loading) {
             spinner.style.display = 'flex';
             mostrarStatus(null);
+
             if (isNewSearch) {
                 container.innerHTML = '';
-                paginationContainer.style.display = 'none'; 
+                paginationContainer.style.display = 'none';
             }
+
             if (currentPage > 1) {
-                 btnExibirMais.textContent = "Carregando...";
+                btnExibirMais.textContent = "Carregando...";
             }
         } else {
             spinner.style.display = 'none';
@@ -112,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Renderiza a lista de artigos no DOM
     function renderizarArtigos(artigos, isNewSearch) {
         if (isNewSearch) {
             container.innerHTML = '';
@@ -124,30 +151,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         artigos.forEach(artigo => {
-            // Processa os dados do artigo antes de criar o card
             const artigoProcessado = processarArtigo(artigo);
-            container.innerHTML += criarCardArtigo(artigoProcessado);
+            container.insertAdjacentHTML('beforeend', criarCardArtigo(artigoProcessado));
         });
     }
 
-     // Função auxiliar para mostrar/esconder mensagens de status
     function mostrarStatus(mensagem, isError = false) {
-        // Remove classes de status anteriores
         statusMessage.classList.remove('status-error');
-        
+
         if (mensagem) {
             statusMessage.textContent = mensagem;
             statusMessageContainer.style.display = 'block';
+
             if (isError) {
                 statusMessage.classList.add('status-error');
             }
         } else {
-             statusMessageContainer.style.display = 'none';
+            statusMessageContainer.style.display = 'none';
         }
     }
 
     function atualizarVisibilidadePaginacao() {
-        // Mostra o botão apenas se houver mais dados E se já houver algum artigo na tela
         if (hasMoreData && container.children.length > 0) {
             paginationContainer.style.display = 'flex';
         } else {
@@ -155,27 +179,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // 5. Funções Auxiliares (Formatação e Criação de Cards)
+    /* ==========================================
+       Processamento de Dados
+       ========================================== */
 
-    // Processa e formata os dados de um único artigo
     function processarArtigo(artigo) {
         let anoPublicacao = "Ano desc.";
 
-         // Tratamento robusto da data
-         if (artigo.publicationDate) {
-             try {
-                 // Adicionar 'T00:00:00' força o JS a interpretar como meia-noite local, 
-                 // evitando erros de fuso horário ao analisar apenas a data (YYYY-MM-DD).
-                 const data = new Date(artigo.publicationDate + 'T00:00:00');
-                 if (!isNaN(data.getTime())) {
-                     anoPublicacao = data.getFullYear();
-                 }
-             } catch (e) {
-                 console.warn("Erro ao processar data:", artigo.publicationDate);
-             }
-         }
+        // Processar data com segurança
+        if (artigo.publicationDate) {
+            try {
+                const data = new Date(artigo.publicationDate + 'T00:00:00');
+                if (!isNaN(data.getTime())) {
+                    anoPublicacao = data.getFullYear();
+                }
+            } catch (e) {
+                console.warn("Erro ao processar data:", artigo.publicationDate);
+            }
+        }
 
         const autoresFormatados = formatarAutores(artigo.authors);
+
         return {
             ...artigo,
             anoPublicacao,
@@ -187,51 +211,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!autoresList || autoresList.length === 0) {
             return "Autores não disponíveis";
         }
+
         const maxAutores = 2;
         if (autoresList.length > maxAutores) {
             return `${autoresList.slice(0, maxAutores).join(', ')} et al.`;
         }
+
         return autoresList.join(', ');
     }
 
-    function criarCardArtigo(artigo) {
-        const title = artigo.title || "Sem título";
-        const url = artigo.url || "#";
-        const authorsFormatted = artigo.autoresFormatados;
-        const source = artigo.source || "Fonte desconhecida";
-        const citedByCount = artigo.citedByCount || 0;
-        const publicationYear = artigo.anoPublicacao;
-
-        let abstractText = artigo.abstractText || "Abstract (Resumo) não disponível.";
-        const maxLength = 160;
-        if (abstractText.length > maxLength) {
-            abstractText = abstractText.substring(0, maxLength) + '...';
-        }
-
-        const categoryTag = `Citações: ${citedByCount}`;
-
-        const cardHTML = `
-            <a href="${url}" target="_blank" rel="noopener noreferrer" class="article-card glass-effect">
-                <span class="card-category">${categoryTag}</span>
-                
-                <h3 class="card-title">${title}</h3>
-                
-                <p class="card-meta">
-                    ${authorsFormatted} • ${source}, ${publicationYear}
-                </p>
-                
-                <p class="card-abstract">
-                    ${abstractText}
-                </p>
-                
-                <div class="card-footer-link">
-                    Ler Artigo
-                    <span class="material-symbols-outlined card-link-icon">arrow_forward</span>
-                </div>
-            </a>
-        `;
-        return cardHTML;
-    }
-
-    carregarArtigos(true);
-});
+    function criarCa
