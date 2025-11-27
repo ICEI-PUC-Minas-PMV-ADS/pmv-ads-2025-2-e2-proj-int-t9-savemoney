@@ -2,80 +2,118 @@
 
 @{
     ViewData["Title"] = "Detalhes da Conversão";
-    // Propriedades do Controller (ViewBag)
     string dica = ViewBag.Dica;
     string tarifa = ViewBag.Tarifa;
-
-    // Cálculo do Custo Estimado para o destaque do resultado (baseado na lógica do Controller)
-    var custoEstimado = (Model.ConsumoMensal ?? 0) * (double.TryParse(tarifa.Replace("R$", "").Replace(",", "."), out double t) ? t : 0.75);
 }
 
-<link rel="stylesheet" href="~/css/conversor.css" asp-append-version="true" />
+@section css {
+    <link rel="stylesheet" href="~/css/conversor.css" asp-append-version="true" />
+}
 
-<div class="premium-container py-4 d-flex flex-column align-items-center fade-in">
+<div class="conversor-details-main fade-in">
 
-    <h1 class="page-title text-center text-white mb-4">
-        <i class="bi bi-graph-up me-2 text-warning"></i>
-        Análise da Conversão
-    </h1>
+    <!-- Cabeçalho -->
+    <header class="details-header">
+        <h1 class="page-title">
+            <i class="bi bi-graph-up" aria-hidden="true"></i>
+            Análise da Conversão
+        </h1>
+    </header>
 
-    <div class="glass-card p-5 mb-4" style="max-width: 800px; width: 100%;">
-
-        <div class="row text-center mb-4 pb-4 border-bottom border-secondary border-opacity-25">
-            <div class="col-md-6 mb-3">
-                <div class="p-3 glass-panel rounded-3 h-100" style="border-color: var(--success);">
-                    <p class="small text-success fw-bold mb-1">CONSUMO MENSAL ESTIMADO</p>
-                    <h2 class="text-white fw-bolder">@Model.ConsumoMensal?.ToString("F2") kWh</h2>
-                    <p class="text-secondary mb-0">Baseado no uso de @Model.TipoDispositivo</p>
-                </div>
+    <!-- Resultados principais -->
+    <div class="results-panel glass-panel">
+        <div class="results-grid">
+            <!-- Consumo -->
+            <div class="result-card result-success">
+                <span class="result-label">CONSUMO MENSAL</span>
+                <strong class="result-value">@Model.ConsumoMensal?.ToString("F2") kWh</strong>
+                <span class="result-description">@Model.TipoDispositivo usado @Model.TempoUso h/dia</span>
             </div>
-            <div class="col-md-6 mb-3">
-                <div class="p-3 glass-panel rounded-3 h-100" style="border-color: var(--danger);">
-                    <p class="small text-danger fw-bold mb-1">CUSTO MENSAL ESTIMADO</p>
-                    <h2 class="text-white fw-bolder">@custoEstimado.ToString("C")</h2>
-                    <p class="text-secondary mb-0">Tarifa média utilizada: @tarifa / kWh</p>
-                </div>
+
+            <!-- Custo -->
+            <div class="result-card result-danger">
+                <span class="result-label">CUSTO MENSAL ESTIMADO</span>
+                <strong class="result-value">@Model.CustoMensal?.ToString("C")</strong>
+                <span class="result-description">Tarifa final: @tarifa / kWh</span>
             </div>
         </div>
 
+        <!-- Dica de economia -->
         @if (!string.IsNullOrEmpty(dica))
         {
-            <div class="alert-premium-dica p-3 rounded-3 mb-4">
-                <i class="bi bi-lightbulb-fill me-2 text-warning fs-5 align-middle"></i>
-                <span class="text-secondary">@Html.Raw(dica)</span>
+            <div class="alert-tip" role="alert">
+                <i class="bi bi-lightbulb-fill" aria-hidden="true"></i>
+                <span>@Html.Raw(dica)</span>
             </div>
         }
 
-        <h4 class="text-white fw-bold mt-4 mb-3 border-bottom border-secondary border-opacity-25 pb-2">
-            Dados de Entrada
-        </h4>
-        <dl class="row mb-0 details-list">
-            <dt class="col-sm-6 text-muted">Valor Base e Tipo</dt>
-            <dd class="col-sm-6 text-white text-end">@Html.DisplayFor(model => model.ValorBase) (@Model.TipoValor)</dd>
+        <!-- Dados de entrada -->
+        <section aria-labelledby="input-data-title">
+            <h2 id="input-data-title" class="section-title">Dados de Entrada</h2>
 
-            <dt class="col-sm-6 text-muted">Dispositivo e Uso Diário</dt>
-            <dd class="col-sm-6 text-white text-end">@Html.DisplayFor(model => model.TipoDispositivo) (@Html.DisplayFor(model => model.TempoUso))</dd>
+            <dl class="details-list">
+                <div class="detail-row">
+                    <dt>Valor Base e Unidade</dt>
+                    <dd>@Model.ValorBase @Model.TipoValor</dd>
+                </div>
+                <div class="detail-row">
+                    <dt>Tipo de Aparelho</dt>
+                    <dd>@Model.TipoDispositivo</dd>
+                </div>
+                <div class="detail-row">
+                    <dt>Tempo de Uso Diário</dt>
+                    <dd>@Model.TempoUso horas/dia</dd>
+                </div>
+                <div class="detail-row">
+                    <dt>Estado</dt>
+                    <dd>@Model.Estado</dd>
+                </div>
+                <div class="detail-row">
+                    <dt>Modalidade de Energia</dt>
+                    <dd>@Model.Modalidade</dd>
+                </div>
+                <div class="detail-row">
+                    <dt>Bandeira Tarifária</dt>
+                    <dd>@Model.BandeiraTarifaria</dd>
+                </div>
+            </dl>
 
-            <dt class="col-sm-6 text-muted">Localização (Estado)</dt>
-            <dd class="col-sm-6 text-white text-end">@Html.DisplayFor(model => model.Estado)</dd>
-
-            <dt class="col-sm-6 text-muted">Modalidade de Energia</dt>
-            <dd class="col-sm-6 text-white text-end">@Html.DisplayFor(model => model.Modalidade)</dd>
-
-            <dt class="col-sm-6 text-muted">Bandeira Tarifária</dt>
-            <dd class="col-sm-6 text-white text-end">@Html.DisplayFor(model => model.BandeiraTarifaria)</dd>
-        </dl>
+            <!-- Info adicional -->
+            <div class="info-box">
+                <h3>Como foi calculado?</h3>
+                @if (Model.TipoValor == "Watts")
+                {
+                    <p>
+                        <strong>Fórmula:</strong> (@Model.ValorBase W ÷ 1000) × @Model.TempoUso h/dia × 30 dias = @Model.ConsumoMensal?.ToString("F2") kWh/mês
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>Fórmula:</strong> @Model.ValorBase R$ ÷ @tarifa/kWh = @Model.ConsumoMensal?.ToString("F2") kWh/mês
+                    </p>
+                }
+            </div>
+        </section>
     </div>
 
-    <div class="d-flex justify-content-between gap-3 mt-4" style="max-width: 800px; width: 100%;">
-        <a asp-action="Index" class="btn btn-premium-ghost">
-            <i class="bi bi-arrow-left me-2"></i> Voltar ao Histórico
+    <!-- Ações -->
+    <div class="details-actions">
+        <a asp-action="Index" class="btn-action btn-secondary">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            Voltar ao Histórico
         </a>
-        <button class="btn btn-premium-purple" onclick="carregarModalEditar(@Model.Id)">
-            <i class="bi bi-pencil me-2"></i> Editar Dados
+        <button class="btn-action btn-primary"
+                onclick="carregarModalEditar(@Model.Id)"
+                aria-label="Editar dados da conversão">
+            <i class="bi bi-pencil" aria-hidden="true"></i>
+            Editar Dados
         </button>
     </div>
 </div>
+
+<!-- Container para modal -->
+<div id="modal-container"></div>
 
 @section Scripts {
     <script src="~/js/conversor.js" asp-append-version="true"></script>

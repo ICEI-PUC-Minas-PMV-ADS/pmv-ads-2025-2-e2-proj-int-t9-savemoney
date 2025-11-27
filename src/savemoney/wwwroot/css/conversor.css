@@ -1,50 +1,27 @@
-﻿/* ==============================================================
-   1. CORES & VARIÁVEIS GLOBAIS (PADRONIZADAS)
-   ============================================================== */
+﻿/* ============================================================================
+   CONVERSOR ENERGIAS - CALCULADORA DE CONSUMO E CUSTO
+   Design System: Dark Mode + Glassmorphism
+   ============================================================================ */
+
+/* Variáveis do Módulo
+   ========================================================================== */
 :root {
-    /* Variáveis base (Padrão Global) */
-    --bg-primary: #10111a;
-    --bg-card: #1b1d29;
-    --border-color: #2a2c3c; /* Cor sólida para borda (melhor para temas) */
-    --accent-primary: #3b82f6;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --text-primary: #f5f5ff;
-    --text-secondary: #aaaaaa; /* Padronizado como texto base */
-    --text-muted: #cbd5e1; /* Cinza claro para rótulos de alto contraste */
-    /* Variáveis de Efeito (Padronizadas) */
-    --glass-bg: rgba(27, 29, 41, 0.7);
-    --glass-border-translucent: rgba(255, 255, 255, 0.08); /* Mantida para borda glass */
+    --conversor-accent: #10b981;
+    --conversor-accent-hover: #059669;
+    --conversor-accent-glow: rgba(16, 185, 129, 0.2);
+    --conversor-info: #3b82f6;
 }
 
-/* ==============================================================
-   2. LAYOUT GERAL & ANIMAÇÕES
-   ============================================================== */
-.premium-container {
-    padding: 2rem 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.page-title {
-    font-size: 2.8rem;
-    font-weight: 800;
-}
-
-.page-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-}
-
+/* Animação de Entrada
+   ========================================================================== */
 .fade-in {
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(1.25rem);
     }
 
     to {
@@ -53,223 +30,820 @@
     }
 }
 
-/* ==============================================================
-   3. GLASSMORPHISM & CARDS (Histórico e Painéis)
-   ============================================================== */
-.glass-panel, .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    /* Usando a variável de efeito para a borda */
-    border: 1px solid var(--glass-border-translucent);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    color: var(--text-muted);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-    .glass-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+@media (prefers-reduced-motion: reduce) {
+    .fade-in {
+        animation: none;
     }
-
-/* ==============================================================
-   4. CORREÇÃO DE CONTRASTE (ESPECIFICIDADE REFORÇADA)
-   ============================================================== */
-
-/* Rótulos e Dados nos Cards (Index.cshtml) */
-.details-list strong {
-    color: var(--text-muted) !important; /* Mantido para anular herança forte */
-    font-weight: 500;
 }
 
-/* Valor dos dados no Card de Histórico */
-.details-list span:not(.text-success):not(.text-danger) {
-    color: var(--text-primary) !important; /* Mantido para anular herança forte */
-    font-weight: 600;
+/* Container Principal
+   ========================================================================== */
+.conversor-page-main,
+.conversor-details-main {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
-/* Rótulos e Dados na Tela de Detalhes (Details.cshtml) */
-/* Aumentando especificidade para evitar !important */
-.details-list dt.text-muted,
-.details-list dt.text-secondary {
-    color: var(--text-muted);
-    font-weight: 500;
+.conversor-details-main {
+    max-width: 50rem;
 }
 
-/* Valores DD (dd) que herdam a cor */
-/* Aumentando especificidade para evitar !important */
-.details-list dd {
-    color: var(--text-primary);
-    font-weight: 600;
+/* Cabeçalho da Página
+   ========================================================================== */
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.0625rem solid var(--border-color);
 }
 
-/* Garante que títulos dentro de painéis e cards usem a cor primária */
-.glass-panel h1, .glass-panel h2, .glass-panel h3, .glass-panel h4,
-.glass-card h1, .glass-card h2, .glass-card h3, .glass-card h4 {
-    color: var(--text-primary);
+.details-header {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-
-/* ==============================================================
-   5. FORMULÁRIOS E BOTÕES DE AÇÃO
-   ============================================================== */
-.form-control-premium, .form-select-premium {
-    background: rgba(0, 0, 0, 0.4);
-    /* Usando a variável padronizada para a borda */
-    border: 1px solid var(--glass-border-translucent);
-    color: var(--text-primary);
-    padding: 1rem 1.2rem;
-    border-radius: 10px;
-    transition: all 0.2s;
+.header-content {
+    max-width: 43.75rem;
+    margin: 0 auto;
 }
 
-    .form-control-premium:focus, .form-select-premium:focus {
-        background: rgba(0, 0, 0, 0.5);
-        border-color: var(--accent-primary);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
-        color: var(--text-primary);
-    }
-
-    .form-select-premium option {
-        background-color: var(--bg-card);
-        color: var(--text-primary);
-    }
-
-.form-label {
-    /* Usando a variável padronizada para muted */
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-/* Botões de Navegação (Links <a> com estilo de botão) */
-.btn-premium-purple {
-    /* Mantendo a cor roxa (Módulo específico) */
-    background: #8b5cf6;
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 12px;
+.page-title {
+    font-size: 2.5rem;
     font-weight: 700;
-    transition: all 0.2s;
-}
-
-    .btn-premium-purple:hover {
-        background: #7c3aed;
-        color: white;
-        transform: translateY(-2px);
-    }
-
-/* Botão/Link Fantasma */
-.btn-premium-ghost {
-    background: transparent;
-    border: 1px solid var(--glass-border-translucent);
-    color: var(--text-muted) !important; /* Mantido para anular links padrão */
-    padding: 0.6rem 1.2rem;
-    border-radius: 12px;
-    transition: all 0.2s;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-    .btn-premium-ghost:hover {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--text-primary) !important;
-        border-color: var(--accent-primary);
-    }
-
-
-/* ==============================================================
-   6. ÍCONES E UTILS
-   ============================================================== */
-.btn-success {
-    background-color: var(--success) !important;
-    border-color: var(--success) !important;
-    color: white;
-}
-
-.btn-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-muted);
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.0625rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
-    font-size: 1.1rem;
+    gap: 0.75rem;
+}
+
+    .page-title i {
+        color: var(--conversor-info);
+    }
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Botão de Ação Principal
+   ========================================================================== */
+.action-button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+    .btn-action:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+    .btn-action.btn-primary {
+        background: var(--conversor-accent);
+        color: var(--text-primary);
+        box-shadow: 0 0.25rem 1.25rem var(--conversor-accent-glow);
+    }
+
+        .btn-action.btn-primary:hover {
+            background: var(--conversor-accent-hover);
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 1.5625rem rgba(16, 185, 129, 0.3);
+        }
+
+    .btn-action.btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    }
+
+        .btn-action.btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+    .btn-action.btn-success {
+        background: var(--success);
+        color: var(--text-primary);
+    }
+
+        .btn-action.btn-success:hover {
+            background: #059669;
+            transform: translateY(-0.125rem);
+        }
+
+    .btn-action.btn-danger {
+        background: var(--danger);
+        color: var(--text-primary);
+    }
+
+        .btn-action.btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-0.125rem);
+        }
+
+    .btn-action.btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.0625rem;
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-action:hover {
+        transform: none;
+    }
+}
+
+/* Painel Glass
+   ========================================================================== */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Painel de Informações
+   ========================================================================== */
+.info-panel {
+    max-width: 53.125rem;
+    margin: 0 auto 3rem;
+    padding: 2.5rem;
+}
+
+.info-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.1);
+}
+
+    .info-title i {
+        color: var(--warning);
+    }
+
+.info-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 37.5rem;
+    margin: 0 auto;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 0.75rem;
+    transition: background 0.2s ease;
+}
+
+    .info-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .info-item:last-child {
+        margin-bottom: 0;
+    }
+
+.info-icon {
+    font-size: 1.5rem;
+    color: var(--success);
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex: 1;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+    .info-content strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+/* Seção de Conversões
+   ========================================================================== */
+.conversions-section {
+    margin-top: 3rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+    .section-title i {
+        color: var(--text-secondary);
+    }
+
+.conversions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(21.875rem, 1fr));
+    gap: 1.5rem;
+}
+
+/* Card de Conversão
+   ========================================================================== */
+.conversion-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+    .conversion-card:hover {
+        border-color: var(--conversor-accent);
+        box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
+        transform: translateY(-0.25rem);
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .conversion-card:hover {
+        transform: none;
+    }
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.05);
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+    .card-title i {
+        color: var(--conversor-accent);
+    }
+
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+}
+
+.conversion-card:hover .card-actions {
+    opacity: 1;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.03);
+}
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-row dt {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .detail-row dd {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        text-align: right;
+    }
+
+.highlight-success {
+    color: var(--success) !important;
+}
+
+.highlight-danger {
+    color: var(--danger) !important;
+}
+
+/* Ícones de Ação
+   ========================================================================== */
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    flex-shrink: 0;
 }
 
     .btn-icon:hover {
-        background: var(--accent-primary);
-        color: white;
+        background: var(--conversor-accent);
+        color: var(--text-primary);
     }
 
     .btn-icon.danger:hover {
         background: var(--danger);
-        color: white;
     }
 
-.alert-premium-dica {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 5px solid var(--warning);
-    border-radius: 8px;
+    .btn-icon:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+/* Estado Vazio
+   ========================================================================== */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 37.5rem;
+    margin: 0 auto;
 }
 
-    .alert-premium-dica span {
-        color: var(--text-muted) !important;
+.empty-icon {
+    font-size: 4rem;
+    color: var(--conversor-info);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Página de Detalhes
+   ========================================================================== */
+.results-panel {
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.result-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+    .result-card.result-success {
+        border-color: rgba(16, 185, 129, 0.3);
     }
 
-
-/* ==============================================================
-   7. RESPONSIVIDADE
-   ============================================================== */
-
-/* Telas Pequenas (Mobile: max-width 768px) */
-@media (max-width: 768px) {
-
-    .premium-container {
-        padding: 1.5rem 0.5rem;
+    .result-card.result-danger {
+        border-color: rgba(239, 68, 68, 0.3);
     }
 
-    .page-title {
-        font-size: 2.2rem;
-        text-align: center;
+.result-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.result-success .result-label {
+    color: var(--success);
+}
+
+.result-danger .result-label {
+    color: var(--danger);
+}
+
+.result-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.result-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Alerta de Dica
+   ========================================================================== */
+.alert-tip {
+    background: rgba(245, 158, 11, 0.1);
+    border: 0.0625rem solid rgba(245, 158, 11, 0.2);
+    border-left: 0.25rem solid var(--warning);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+    .alert-tip i {
+        color: var(--warning);
+        font-size: 1.5rem;
+        flex-shrink: 0;
     }
 
-    .page-subtitle {
+    .alert-tip span {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+/* Lista de Detalhes
+   ========================================================================== */
+.details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem 0;
+}
+
+/* Caixa de Informação
+   ========================================================================== */
+.info-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 0.0625rem solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+}
+
+    .info-box h3 {
         font-size: 1rem;
-        text-align: center;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem 0;
     }
 
-    /* Centraliza e torna os botões de ação mais largos em mobile */
-    .btn-premium-purple {
-        display: block;
-        width: 100%;
-        padding: 1rem 1rem;
-        margin-top: 1rem;
-        text-align: center;
+    .info-box p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.6;
     }
 
-    /* Garante que grupos de cards fiquem em coluna em mobile (se estiverem em flex/grid) */
-    .card-group, .form-row {
-        flex-direction: column;
-        gap: 1rem;
+    .info-box strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+/* Ações da Página de Detalhes
+   ========================================================================== */
+.details-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Modal - Estrutura Base
+   ========================================================================== */
+.modal-content.glass-panel,
+.modal-content.glass-card {
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-subtitle {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+    .btn-close:hover {
+        opacity: 1;
+    }
+
+.modal-body {
+    padding: 2rem;
+}
+
+/* Formulário
+   ========================================================================== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.form-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.625rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--conversor-accent);
+        background: rgba(16, 185, 129, 0.05);
+        box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.1);
+    }
+
+    .form-input option {
+        background: var(--bg-card);
+        color: var(--text-primary);
+    }
+
+.form-hint {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+.form-error {
+    display: block;
+    color: var(--danger);
+    font-size: 0.8125rem;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1);
+    border: 0.0625rem solid rgba(239, 68, 68, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--danger);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 0.0625rem solid rgba(255, 255, 255, 0.05);
+}
+
+/* Modal de Confirmação
+   ========================================================================== */
+.modal-icon-warning {
+    font-size: 3rem;
+    color: var(--danger);
+    margin-bottom: 1rem;
+}
+
+.modal-title-warning {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-subtitle-warning {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-text-secondary {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+/* Responsividade
+   ========================================================================== */
+
+/* Desktop Pequeno: 992px */
+@media (max-width: 62rem) {
+    .conversions-grid {
+        grid-template-columns: 1fr;
     }
 }
 
-/* Telas Muito Pequenas (Mini Mobile: max-width 480px) */
-@media (max-width: 480px) {
-    .page-title {
-        font-size: 1.8rem;
+/* Tablet: 768px */
+@media (max-width: 48rem) {
+    .conversor-page-main,
+    .conversor-details-main {
+        padding: 0 0.75rem;
     }
 
-    .premium-container {
-        padding: 1rem 0.5rem;
+    .page-title {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info-panel {
+        padding: 1.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .details-actions {
+        flex-direction: column;
+    }
+
+        .details-actions .btn-action {
+            width: 100%;
+        }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+}
+
+/* Mobile: 576px */
+@media (max-width: 36rem) {
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .btn-action.btn-lg {
+        width: 100%;
+    }
+
+    .info-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+        .form-actions .btn-action {
+            width: 100%;
+        }
+}
+
+/* Mobile Extremo: 430px */
+@media (max-width: 26.875rem) {
+    .conversor-page-main,
+    .conversor-details-main {
+        padding: 0 0.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .info-panel {
+        padding: 1rem;
+    }
+
+    .results-panel {
+        padding: 1rem;
+    }
+
+    .conversion-card {
+        padding: 1rem;
+    }
+
+    .card-actions {
+        opacity: 1;
+    }
+
+    .modal-body {
+        padding: 1rem;
     }
 }
