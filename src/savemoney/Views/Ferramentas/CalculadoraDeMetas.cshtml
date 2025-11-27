@@ -2,221 +2,279 @@
     ViewData["Title"] = "Calculadora de Metas Financeiras";
 }
 
-@* --- ESTILOS DA PÁGINA --- *@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<link rel="stylesheet" href="~/css/calculadoraMetas.css" asp-append-version="true" />
-@* --- FIM DOS ESTILOS --- *@
+@section css {
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/calculadoraMetas.css" asp-append-version="true" />
+}
 
+<main class="metas-page-main fade-in">
 
-<section class="hero-calculadora">
-    <div class="hero-content">
-        <h1 class="hero-title">Calculadora de Meta Financeira</h1>
-        <p class="hero-subtitle">Descubra quanto precisa poupar mensalmente para alcançar seus objetivos financeiros.
-        </p>
-        <p>Seja uma viagem, a compra de um imóvel, ou a reforma dos seus sonhos, o planeamento é o primeiro passo. Use a
-            nossa ferramenta para visualizar o caminho.</p>
-        <a href="#calculadora" class="btn-hero-cta">Começar a Simular</a>
-    </div>
-</section>
-
-<section class="calculadora-section" id="calculadora">
-    <div class="container-calculadora">
-
-        <div class="calculadora-header">
-            <h2>Como Usar a Calculadora</h2>
-            <p>Preencha os campos abaixo com os detalhes da sua meta: informe o <strong>valor total do seu
-                    objetivo</strong>, quanto você <strong>já tem para começar</strong> (investimento inicial), em
-                <strong>quanto tempo</strong> pretende alcançá-lo (meses ou anos) e a <strong>taxa de retorno
-                    anual</strong> esperada para seus investimentos.</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Calculadora de Meta Financeira</h1>
+            <p class="hero-subtitle">
+                Descubra quanto precisa poupar mensalmente para alcançar seus objetivos financeiros.
+            </p>
+            <p class="hero-description">
+                Seja uma viagem, a compra de um imóvel, ou a reforma dos seus sonhos, o planejamento é o primeiro passo. Use a nossa ferramenta para visualizar o caminho.
+            </p>
+            <a href="#calculadora" class="btn-hero-cta">Começar a Simular</a>
         </div>
+    </section>
 
-        <div class="calculadora-grid">
-            <div class="form-card glass-effect">
-                <h4>Simule sua Meta</h4>
-                <form id="goalForm">
-                    <div class="form-group">
-                        <label for="goalValue">Valor do Objetivo (R$)</label>
-                        <input type="number" step="0.01" min="0.01" class="form-input" id="goalValue"
-                            placeholder="Ex: 50000.00" required>
-                    </div>
+    <!-- Calculadora Section -->
+    <section class="calculadora-section" id="calculadora">
+        <div class="container-calculadora">
 
-                    <div class="form-group">
-                        <label for="initialInvestment">Investimento Inicial (R$)</label>
-                        <input type="number" step="0.01" class="form-input" id="initialInvestment"
-                            placeholder="Ex: 1000.00" value="1000">
-                    </div>
+            <header class="calculadora-header">
+                <h2>Como Usar a Calculadora</h2>
+                <p>
+                    Preencha os campos abaixo com os detalhes da sua meta: informe o <strong>valor total do seu objetivo</strong>, quanto você <strong>já tem para começar</strong> (investimento inicial), em <strong>quanto tempo</strong> pretende alcançá-lo (meses ou anos) e a <strong>taxa de retorno anual</strong> esperada para seus investimentos.
+                </p>
+            </header>
 
-                    <div class="form-group">
-                        <label for="timeForGrowth">Tempo para atingir a meta</label>
-                        <div class="input-group">
-                            <input type="number" class="form-input input-group-start" id="timeForGrowth"
-                                placeholder="Ex: 5" value="5" required min="1">
-                            <div class="btn-group-toggle" role="group">
-                                <input type="radio" class="btn-check" name="timeUnit" id="months" autocomplete="off">
-                                <label class="btn-toggle" for="months">Meses</label>
+            <div class="calculadora-grid">
+                <!-- Formulário -->
+                <article class="form-card glass-panel">
+                    <h3>Simule sua Meta</h3>
+                    <form id="goalForm">
+                        <div class="form-group">
+                            <label for="goalValue">Valor do Objetivo (R$)</label>
+                            <input type="number"
+                                   step="0.01"
+                                   min="0.01"
+                                   class="form-input"
+                                   id="goalValue"
+                                   placeholder="Ex: 50000.00"
+                                   required
+                                   aria-describedby="goalValueHelp">
+                            <small id="goalValueHelp" class="form-text">Quanto você quer juntar?</small>
+                        </div>
 
-                                <input type="radio" class="btn-check" name="timeUnit" id="years" autocomplete="off"
-                                    checked>
-                                <label class="btn-toggle btn-toggle-active" for="years">Anos</label>
+                        <div class="form-group">
+                            <label for="initialInvestment">Investimento Inicial (R$)</label>
+                            <input type="number"
+                                   step="0.01"
+                                   min="0"
+                                   class="form-input"
+                                   id="initialInvestment"
+                                   placeholder="Ex: 1000.00"
+                                   value="1000"
+                                   aria-describedby="initialHelp">
+                            <small id="initialHelp" class="form-text">Quanto você já tem guardado?</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="timeForGrowth">Tempo para atingir a meta</label>
+                            <div class="input-group">
+                                <input type="number"
+                                       class="form-input input-group-start"
+                                       id="timeForGrowth"
+                                       placeholder="Ex: 5"
+                                       value="5"
+                                       required
+                                       min="1"
+                                       aria-describedby="timeHelp">
+                                <div class="btn-group-toggle" role="group" aria-label="Unidade de tempo">
+                                    <input type="radio"
+                                           class="btn-check"
+                                           name="timeUnit"
+                                           id="months"
+                                           autocomplete="off">
+                                    <label class="btn-toggle" for="months">Meses</label>
+
+                                    <input type="radio"
+                                           class="btn-check"
+                                           name="timeUnit"
+                                           id="years"
+                                           autocomplete="off"
+                                           checked>
+                                    <label class="btn-toggle btn-toggle-active" for="years">Anos</label>
+                                </div>
                             </div>
+                            <small id="timeHelp" class="form-text">Prazo para alcançar o objetivo</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="annualReturnRate">Taxa de retorno anual (%)</label>
+                            <input type="number"
+                                   step="0.1"
+                                   min="0"
+                                   class="form-input"
+                                   id="annualReturnRate"
+                                   placeholder="Ex: 8.0"
+                                   value="8"
+                                   aria-describedby="rateHelp">
+                            <small id="rateHelp" class="form-text">Rentabilidade esperada do investimento</small>
+                        </div>
+
+                        <div class="form-group-submit">
+                            <button type="button"
+                                    class="btn-submit"
+                                    id="calculateBtn"
+                                    aria-label="Calcular contribuição mensal necessária">
+                                Calcular Contribuição Mensal
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <!-- Resultados -->
+                <article class="results-card glass-panel">
+                    <div id="resultsContent" class="results-placeholder">
+                        <i class="bi bi-calculator results-icon" aria-hidden="true"></i>
+                        <h4>Contribuição Mensal</h4>
+                        <p>O valor da poupança mensal necessária para atingir seu objetivo financeiro aparecerá aqui.</p>
+                    </div>
+                    <div class="results-share">
+                        <button id="copyLinkBtn"
+                                class="btn-share"
+                                style="display: none;"
+                                aria-label="Copiar link da simulação">
+                            <i class="bi bi-share" aria-hidden="true"></i> Copiar Link da Simulação
+                        </button>
+                        <div id="copyFeedback"
+                             class="copy-feedback"
+                             style="display: none;"
+                             role="status"
+                             aria-live="polite">
+                            Link copiado!
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="annualReturnRate">Taxa de retorno anual (%)</label>
-                        <input type="number" step="0.1" class="form-input" id="annualReturnRate" placeholder="Ex: 8.0"
-                            value="8">
-                    </div>
-
-                    <div class="form-group-submit">
-                        <button type="button" class="btn-submit" id="calculateBtn">Calcular Contribuição Mensal</button>
-                    </div>
-                </form>
+                </article>
             </div>
 
-            <div class="results-card glass-effect">
-                <div id="resultsContent" class="results-placeholder">
-                    <i class="bi bi-calculator results-icon"></i>
-                    <h5>Contribuição Mensal</h5>
-                    <p>O valor da poupança mensal necessária para atingir seu objetivo financeiro aparecerá aqui.</p>
-                </div>
-                <div class="results-share">
-                    <button id="copyLinkBtn" class="btn-share" style="display: none;">
-                        <i class="bi bi-share"></i> Copiar Link da Simulação
+            <div class="calculadora-disclaimer">
+                <p>
+                    <strong>Aviso:</strong> As informações fornecidas por esta ferramenta são apenas simulações e não constituem assessoria de investimentos. Os resultados não refletem taxas, impostos, inflação ou outras considerações relevantes. Consulte um profissional.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="info-accordion-section">
+        <div class="container-accordion">
+            <h2>Entenda Mais Sobre Metas Financeiras</h2>
+
+            <div class="accordion-custom" role="region" aria-label="Perguntas frequentes sobre metas financeiras">
+                <div class="accordion-item">
+                    <button class="accordion-header"
+                            aria-expanded="false"
+                            aria-controls="accordion-content-1">
+                        Como usar a calculadora de meta financeira?
+                        <span class="accordion-icon" aria-hidden="true"></span>
                     </button>
-                    <div id="copyFeedback" class="copy-feedback" style="display: none;">Link copiado!</div>
+                    <div id="accordion-content-1"
+                         class="accordion-content"
+                         role="region"
+                         aria-hidden="true">
+                        <p>
+                            Comece com o campo <strong>"Valor do Objetivo"</strong>, onde irá inserir o valor necessário para realizar o objetivo. Em seguida, informe em <strong>"Investimento Inicial"</strong> o valor que você possui para essa finalidade atualmente (se não tiver, basta deixar 0).
+                        </p>
+                        <p>
+                            A próxima informação é o período. Em <strong>"Tempo para atingir a meta"</strong>, você pode informar em meses ou anos. Por último, em <strong>"Taxa de retorno anual"</strong>, informe o rendimento líquido esperado por ano do seu investimento (ex: 8% para 8.0).
+                        </p>
+                        <p>
+                            Após inserir todos os dados, a calculadora mostrará o valor necessário para poupar ao mês. Se tiver vários objetivos, faça uma simulação para cada um.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header"
+                            aria-expanded="false"
+                            aria-controls="accordion-content-2">
+                        O que são as metas financeiras?
+                        <span class="accordion-icon" aria-hidden="true"></span>
+                    </button>
+                    <div id="accordion-content-2"
+                         class="accordion-content"
+                         role="region"
+                         aria-hidden="true">
+                        <p>
+                            Metas financeiras são objetivos claros e específicos que você define para o seu dinheiro. Elas são a base de qualquer planejamento financeiro, pois dão um propósito ao seu esforço de economizar e investir.
+                        </p>
+                        <p>
+                            Elas transformam desejos vagos (como "quero ser rico") em alvos concretos (como "quero acumular R$ 50.000 para a entrada de um imóvel em 3 anos"). Ter metas claras é o que permite traçar uma estratégia e medir seu progresso.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header"
+                            aria-expanded="false"
+                            aria-controls="accordion-content-3">
+                        Por que devo criar metas?
+                        <span class="accordion-icon" aria-hidden="true"></span>
+                    </button>
+                    <div id="accordion-content-3"
+                         class="accordion-content"
+                         role="region"
+                         aria-hidden="true">
+                        <p>
+                            O principal benefício é a <strong>motivação</strong>. Sem um objetivo claro, economizar pode parecer um sacrifício sem recompensa. Quando você sabe *por que* está guardando dinheiro (seja para uma viagem, um curso ou sua aposentadoria), fica mais fácil resistir a gastos impulsivos.
+                        </p>
+                        <p>
+                            Metas transformam o ato de poupar de uma "perda" no presente em um "investimento" no futuro. Elas dão direção, reduzem a ansiedade financeira e são a ferramenta mais poderosa para tomar decisões inteligentes sobre onde seu dinheiro deve ir.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header"
+                            aria-expanded="false"
+                            aria-controls="accordion-content-4">
+                        Como criá-las? (Método SMART)
+                        <span class="accordion-icon" aria-hidden="true"></span>
+                    </button>
+                    <div id="accordion-content-4"
+                         class="accordion-content"
+                         role="region"
+                         aria-hidden="true">
+                        <p>O método SMART é a ferramenta mais famosa para criar metas eficazes. O acrônimo significa:</p>
+                        <ul>
+                            <li><strong>Específico (S):</strong> O que exatamente você quer? 'Economizar' é vago. 'Economizar R$ 10.000 para minha reserva de emergência' é específico.</li>
+                            <li><strong>Mensurável (M):</strong> Como você saberá que atingiu? A meta deve ser um número claro (R$ 10.000).</li>
+                            <li><strong>Alcançável (A):</strong> A meta é realista com a sua renda e seus custos? Definir um objetivo impossível só gera frustração.</li>
+                            <li><strong>Relevante (R):</strong> Por que essa meta é importante para você? Ela está alinhada com seus valores e objetivos de vida?</li>
+                            <li><strong>Prazo determinado (T):</strong> Quando você irá atingir essa meta? 'Em 24 meses'. Um prazo cria um senso de urgência e permite calcular o esforço mensal (exatamente o que esta calculadora faz!).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header"
+                            aria-expanded="false"
+                            aria-controls="accordion-content-5">
+                        Separe os períodos de concretização
+                        <span class="accordion-icon" aria-hidden="true"></span>
+                    </button>
+                    <div id="accordion-content-5"
+                         class="accordion-content"
+                         role="region"
+                         aria-hidden="true">
+                        <p>
+                            Classificar suas metas por prazo é crucial porque isso define a <strong>estratégia de investimento</strong> correta. Você não investe o dinheiro da aposentadoria da mesma forma que o dinheiro da viagem do ano que vem.
+                        </p>
+                        <ul>
+                            <li><strong>Curto prazo (Até 2 anos):</strong> São objetivos que você precisa realizar logo. Ex: criar uma reserva de emergência, fazer uma viagem de férias. O foco aqui é <strong>segurança</strong> (investimentos de baixo risco e alta liquidez, como Tesouro Selic ou CDBs diários).</li>
+                            <li><strong>Médio prazo (Entre 3 e 10 anos):</strong> São metas que exigem mais planejamento. Ex: dar entrada em um imóvel, trocar de carro. Aqui você pode buscar um equilíbrio entre segurança e <strong>rentabilidade</strong>.</li>
+                            <li><strong>Longo prazo (Acima de 10 anos):</strong> São os seus grandes projetos de vida. Ex: aposentadoria, independência financeira. Com o tempo a seu favor, o foco é a <strong>rentabilidade</strong> (investimentos de maior risco, como ações, podem ser usados para acelerar o crescimento).</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="calculadora-disclaimer">
-            <p>As informações fornecidas por esta ferramenta são apenas simulações e não compreendem uma assessoria de
-                investimentos. Os resultados não refletem taxas, impostos, inflação ou outras considerações relevantes
-                para um investidor. Consulte um profissional.</p>
-        </div>
-
-    </div>
-</section>
-
-<section class="info-accordion-section">
-    <div class="container-accordion">
-        <h2>Entenda Mais Sobre Metas Financeiras</h2>
-
-        <div class="accordion-custom">
-            <div class="accordion-item">
-                <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-1">
-                    Como usar a calculadora de meta financeira?
-                    <span class="accordion-icon"></span>
-                </button>
-                <div id="accordion-content-1" class="accordion-content" role="region" aria-hidden="true">
-                    <p>
-                        Comece com o campo <strong>"Valor do Objetivo"</strong>, onde irá inserir o valor necessário
-                        para realizar o objetivo. Em seguida, informe em <strong>"Investimento Inicial"</strong> o valor
-                        que você possui para essa finalidade atualmente (se não tiver, basta deixar 0).
-                    </p>
-                    <p>
-                        A próxima informação é o período. Em <strong>"Tempo para atingir a meta"</strong>, você pode
-                        informar em meses ou anos. Por último, em <strong>"Taxa de retorno anual"</strong>, informe o
-                        rendimento líquido esperado por ano do seu investimento (ex: 8% para 8.0).
-                    </p>
-                    <p>
-                        Após inserir todos os dados, a calculadora mostrará o valor necessário para poupar ao mês. Se
-                        tiver vários objetivos, faça uma simulação para cada um.
-                    </p>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-2">
-                    O que são as metas financeiras?
-                    <span class="accordion-icon"></span>
-                </button>
-                <div id="accordion-content-2" class="accordion-content" role="region" aria-hidden="true">
-                    <p>
-                        Metas financeiras são objetivos claros e específicos que você define para o seu dinheiro. Elas
-                        são a base de qualquer planejamento financeiro, pois dão um propósito ao seu esforço de
-                        economizar e investir.
-                    </p>
-                    <p>
-                        Elas transformam desejos vagos (como "quero ser rico") em alvos concretos (como "quero acumular
-                        R$ 50.000 para a entrada de um imóvel em 3 anos"). Ter metas claras é o que permite traçar uma
-                        estratégia e medir seu progresso.
-                    </p>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-3">
-                    Por que devo criar metas?
-                    <span class="accordion-icon"></span>
-                </button>
-                <div id="accordion-content-3" class="accordion-content" role="region" aria-hidden="true">
-                    <p>
-                        O principal benefício é a <strong>motivação</strong>. Sem um objetivo claro, economizar pode
-                        parecer um sacrifício sem recompensa. Quando você sabe *por que* está guardando dinheiro (seja
-                        para uma viagem, um curso ou sua aposentadoria), fica mais fácil resistir a gastos impulsivos.
-                    </p>
-                    <p>
-                        Metas transformam o ato de poupar de uma "perda" no presente em um "investimento" no futuro.
-                        Elas dão direção, reduzem a ansiedade financeira e são a ferramenta mais poderosa para tomar
-                        decisões inteligentes sobre onde seu dinheiro deve ir.
-                    </p>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-4">
-                    Como criá-las? (Método SMART)
-                    <span class="accordion-icon"></span>
-                </button>
-                <div id="accordion-content-4" class="accordion-content" role="region" aria-hidden="true">
-                    <p>O método SMART é a ferramenta mais famosa para criar metas eficazes. O acrônimo significa:</p>
-                    <ul>
-                        <li><strong>Específico (S):</strong> O que exatamente você quer? 'Economizar' é vago.
-                            'Economizar R$ 10.000 para minha reserva de emergência' é específico.</li>
-                        <li><strong>Mensurável (M):</strong> Como você saberá que atingiu? A meta deve ser um número
-                            claro (R$ 10.000).</li>
-                        <li><strong>Alcançável (A):</strong> A meta é realista com a sua renda e seus custos? Definir um
-                            objetivo impossível só gera frustração.</li>
-                        <li><strong>Relevante (R):</strong> Por que essa meta é importante para você? Ela está alinhada
-                            com seus valores e objetivos de vida?</li>
-                        <li><strong>Prazo determinado (T):</strong> Quando você irá atingir essa meta? 'Em 24 meses'. Um
-                            prazo cria um senso de urgência e permite calcular o esforço mensal (exatamente o que esta
-                            calculadora faz!).</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-5">
-                    Separe os períodos de concretização
-                    <span class="accordion-icon"></span>
-                </button>
-                <div id="accordion-content-5" class="accordion-content" role="region" aria-hidden="true">
-                    <p>
-                        Classificar suas metas por prazo é crucial porque isso define a <strong>estratégia de
-                            investimento</strong> correta. Você não investe o dinheiro da aposentadoria da mesma forma
-                        que o dinheiro da viagem do ano que vem.
-                    </p>
-                    <ul>
-                        <li><strong>Curto prazo (Até 2 anos):</strong> São objetivos que você precisa realizar logo. Ex:
-                            criar uma reserva de emergência, fazer uma viagem de férias. O foco aqui é
-                            <strong>segurança</strong> (investimentos de baixo risco e alta liquidez, como Tesouro Selic
-                            ou CDBs diários).</li>
-                        <li><strong>Médio prazo (Entre 3 e 10 anos):</strong> São metas que exigem mais planejamento.
-                            Ex: dar entrada em um imóvel, trocar de carro. Aqui você pode buscar um equilíbrio entre
-                            segurança e <strong>rentabilidade</strong>.</li>
-                        <li><strong>Longo prazo (Acima de 10 anos):</strong> São os seus grandes projetos de vida. Ex:
-                            aposentadoria, independência financeira. Com o tempo a seu favor, o foco é a
-                            <strong>rentabilidade</strong> (investimentos de maior risco, como ações, podem ser usados
-                            para acelerar o crescimento).</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+</main>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/calculadoraMetas.js" asp-append-version="true"></script>
 }
