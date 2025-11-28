@@ -1,34 +1,68 @@
 @{
-    ViewData["Title"] = "Educação Financeira";
+    ViewData["Title"] = "Notícias do Mercado Financeiro";
 }
+
 @section css {
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="~/css/noticias.css" asp-append-version="true" />
 }
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
 
 <div class="background-fixed-image" aria-hidden="true"></div>
 
-<main>
+<main class="noticias-page-main fade-in">
+
+    <!-- Hero Section -->
     <section class="hero-section">
-        <div class="title-page text-center mb-4">
-            <h1>Notícias do Mercado Financeiro</h1>
-        </div>
-        <div class="main-paragraph">
-            <p>Fique atualizado com notícias em tempo real do mundo financeiro.</p>
-        </div>
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Pesquisar...">
+        <div class="hero-content">
+            <h1 class="hero-title">Notícias do Mercado Financeiro</h1>
+            <p class="hero-subtitle">
+                Fique atualizado com notícias em tempo real do mundo financeiro e econômico
+            </p>
+
+            <!-- Search -->
+            <div class="search-container">
+                <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+                <input type="search"
+                       class="search-input"
+                       id="searchInput"
+                       placeholder="Pesquisar notícias..."
+                       aria-label="Pesquisar notícias">
+            </div>
         </div>
     </section>
 
+    <!-- Notícias Container -->
+    <div class="noticias-container-wrapper">
+        <div id="noticias-container"
+             class="noticias-grid"
+             role="list"
+             aria-live="polite"
+             aria-busy="false">
+            <!-- Cards serão inseridos aqui via JavaScript -->
+        </div>
 
-    <div id="noticias-container" class=""></div>
-    
-    <div class="carregar-mais-container">
-        <button id="btnCarregarMais" class="carregar-mais-button">Carregar mais notícias</button>
+        <!-- Loading State -->
+        <div id="loading-state" class="loading-state" style="display: none;">
+            <div class="spinner"></div>
+            <p>Carregando notícias...</p>
+        </div>
+
+        <!-- Botão Carregar Mais -->
+        <div class="load-more-container">
+            <button id="btnCarregarMais"
+                    class="btn-action btn-primary"
+                    aria-label="Carregar mais notícias">
+                <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                Carregar Mais Notícias
+            </button>
+        </div>
     </div>
+
 </main>
-<script src="~/js/noticias.js" asp-append-version="true"></script>
+
+@section Scripts {
+    <script src="~/js/noticias.js" asp-append-version="true"></script>
+}
