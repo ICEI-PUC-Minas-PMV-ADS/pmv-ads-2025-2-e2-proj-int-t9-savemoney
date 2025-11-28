@@ -1,0 +1,383 @@
+﻿/* ============================================================================
+   DETAILS (MODAL CENTRADO)
+   Design System: Glassmorphism Modal
+   ============================================================================ */
+
+/* Variáveis do Módulo
+   ========================================================================== */
+:root {
+    --details-accent: #3b82f6;
+    --details-accent-hover: #2563eb;
+}
+
+/* Reset & Base
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modal Overlay
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(0.5rem);
+    -webkit-backdrop-filter: blur(0.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal Container
+   ========================================================================== */
+.modal-container {
+    width: 100%;
+    max-width: 50rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(2rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-container::-webkit-scrollbar {
+    width: 0.375rem;
+}
+
+.modal-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+}
+
+/* Details Card
+   ========================================================================== */
+.details-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.5), 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+}
+
+/* Header
+   ========================================================================== */
+.details-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    background: linear-gradient(135deg, var(--details-accent) 0%, #2563eb 100%);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.4);
+}
+
+    .header-icon .material-symbols-outlined {
+        font-size: 3rem;
+        color: #ffffff;
+    }
+
+.details-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.0625rem;
+}
+
+.details-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Info Grid
+   ========================================================================== */
+.details-content {
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+    .info-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.12);
+        transform: translateY(-0.125rem);
+    }
+
+.info-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.label-icon {
+    font-size: 1.125rem;
+    color: var(--details-accent);
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+/* Badges
+   ========================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-administrador {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    border: 0.0625rem solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-usuario {
+    background: rgba(59, 130, 246, 0.15);
+    color: #93c5fd;
+    border: 0.0625rem solid rgba(59, 130, 246, 0.3);
+}
+
+.text-muted {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Stats Section
+   ========================================================================== */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--details-accent);
+    flex-shrink: 0;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Footer Actions
+   ========================================================================== */
+.details-footer {
+    display: flex;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 0.0625rem solid rgba(255, 255, 255, 0.1);
+}
+
+.btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+    .btn .material-symbols-outlined {
+        font-size: 1.25rem;
+    }
+
+.btn-primary {
+    background: var(--details-accent);
+    color: #ffffff;
+    box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.3);
+}
+
+    .btn-primary:hover {
+        background: var(--details-accent-hover);
+        transform: translateY(-0.125rem);
+        box-shadow: 0 0.75rem 2rem rgba(59, 130, 246, 0.4);
+    }
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+}
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn:hover {
+        transform: none;
+    }
+}
+
+/* Responsividade
+   ========================================================================== */
+
+/* Tablet: 768px */
+@media (max-width: 48rem) {
+    .modal-overlay {
+        padding: 1rem;
+    }
+
+    .details-card {
+        padding: 2rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+
+    .details-title {
+        font-size: 1.75rem;
+    }
+
+    .header-icon {
+        width: 4rem;
+        height: 4rem;
+    }
+
+        .header-icon .material-symbols-outlined {
+            font-size: 2.5rem;
+        }
+}
+
+/* Mobile: 576px */
+@media (max-width: 36rem) {
+    .details-card {
+        padding: 1.5rem;
+    }
+
+    .details-header {
+        margin-bottom: 2rem;
+    }
+
+    .details-title {
+        font-size: 1.5rem;
+    }
+
+    .details-footer {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
