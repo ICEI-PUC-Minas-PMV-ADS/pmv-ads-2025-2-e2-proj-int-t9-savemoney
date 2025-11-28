@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using savemoney.Models;
 
 namespace savemoney.Controllers
 {
+    [Authorize] // ✅ NOVO: Requer autenticação
     public class ConversorEnergiasController : Controller
     {
         private readonly AppDbContext _context;
@@ -44,6 +47,17 @@ namespace savemoney.Controllers
         public ConversorEnergiasController(AppDbContext context)
         {
             _context = context;
+        }
+
+        // ✅ NOVO: Método para obter UsuarioId
+        private int ObterUsuarioId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                throw new UnauthorizedAccessException("Usuário não autenticado.");
+            }
+            return int.Parse(userIdClaim);
         }
 
         private void CarregarViewBags()
@@ -99,17 +113,26 @@ namespace savemoney.Controllers
             return "Monitore equipamentos em standby. Pequenos vazamentos de energia somam no final do mês. Use tomadas com interruptor!";
         }
 
+        // ✅ ATUALIZADO: Filtra por usuário
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ConversoresEnergia.ToListAsync());
+            var usuarioId = ObterUsuarioId();
+            var conversores = await _context.ConversoresEnergia
+                .Where(c => c.UsuarioId == usuarioId)
+                .OrderByDescending(c => c.Id)
+                .ToListAsync();
+
+            return View(conversores);
         }
 
+        // ✅ ATUALIZADO: Valida propriedade do usuário
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
+            var usuarioId = ObterUsuarioId();
             var conversor = await _context.ConversoresEnergia
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UsuarioId == usuarioId);
 
             if (conversor == null) return NotFound();
 
@@ -126,17 +149,22 @@ namespace savemoney.Controllers
             return PartialView("_ConversorModal", new ConversorEnergia());
         }
 
+        // ✅ ATUALIZADO: Valida propriedade do usuário
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var conversor = await _context.ConversoresEnergia.FindAsync(id);
+            var usuarioId = ObterUsuarioId();
+            var conversor = await _context.ConversoresEnergia
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
+
             if (conversor == null) return NotFound();
 
             CarregarViewBags();
             return PartialView("_ConversorModal", conversor);
         }
 
+        // ✅ ATUALIZADO: Adiciona UsuarioId ao criar/editar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrEdit(ConversorEnergia conversor)
@@ -145,6 +173,28 @@ namespace savemoney.Controllers
 
             if (ModelState.IsValid)
             {
+                var usuarioId = ObterUsuarioId();
+
+                // ✅ Se for criação, define o UsuarioId
+                if (conversor.Id == 0)
+                {
+                    conversor.UsuarioId = usuarioId;
+                }
+                else
+                {
+                    // ✅ Se for edição, valida que pertence ao usuário
+                    var conversorExistente = await _context.ConversoresEnergia
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(c => c.Id == conversor.Id && c.UsuarioId == usuarioId);
+
+                    if (conversorExistente == null)
+                    {
+                        return Forbid();
+                    }
+
+                    conversor.UsuarioId = usuarioId;
+                }
+
                 // Obtém tarifa final considerando estado e bandeira
                 double tarifaFinal = ObterTarifaFinal(conversor.Estado, conversor.BandeiraTarifaria);
 
@@ -180,31 +230,41 @@ namespace savemoney.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Conversão salva com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
 
             return PartialView("_ConversorModal", conversor);
         }
 
+        // ✅ ATUALIZADO: Valida propriedade do usuário
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var conversor = await _context.ConversoresEnergia.FindAsync(id);
+            var usuarioId = ObterUsuarioId();
+            var conversor = await _context.ConversoresEnergia
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
+
             if (conversor == null) return NotFound();
 
             return PartialView("_DeleteModal", conversor);
         }
 
+        // ✅ ATUALIZADO: Valida propriedade do usuário
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var conversor = await _context.ConversoresEnergia.FindAsync(id);
+            var usuarioId = ObterUsuarioId();
+            var conversor = await _context.ConversoresEnergia
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
+
             if (conversor != null)
             {
                 _context.ConversoresEnergia.Remove(conversor);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Conversão excluída com sucesso!";
             }
 
             return RedirectToAction(nameof(Index));

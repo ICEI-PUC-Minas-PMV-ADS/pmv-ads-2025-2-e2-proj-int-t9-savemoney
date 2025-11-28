@@ -25,7 +25,7 @@ namespace savemoney.Models
 
         public DateTime DataCadastro { get; set; }
 
-        // ✅ NOVO: Último acesso do usuário
+        // Último acesso do usuário
         public DateTime? UltimoAcesso { get; set; }
 
         [Required(ErrorMessage = "O perfil da conta é obrigatório.")]
@@ -44,6 +44,9 @@ namespace savemoney.Models
         public virtual ICollection<Widget> Widgets { get; set; } = new List<Widget>();
         public virtual ICollection<Receita> Receitas { get; set; } = new List<Receita>();
         public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
+
+        // ✅ NOVO: Relacionamento com ConversorEnergia
+        public virtual ICollection<ConversorEnergia> ConversoresEnergia { get; set; } = new List<ConversorEnergia>();
     }
 
     public enum Perfil

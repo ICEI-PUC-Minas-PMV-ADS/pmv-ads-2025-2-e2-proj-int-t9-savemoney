@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace savemoney.Models
 {
@@ -6,6 +7,12 @@ namespace savemoney.Models
     {
         [Key]
         public int Id { get; set; }
+
+        // ✅ NOVO: Relacionamento com Usuário
+        [Required(ErrorMessage = "O usuário é obrigatório.")]
+        [ForeignKey("Usuario")]
+        public int UsuarioId { get; set; }
+        public virtual Usuario? Usuario { get; set; }
 
         [Required(ErrorMessage = "O campo Valor Base é obrigatório.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Informe um valor base maior que zero.")]
