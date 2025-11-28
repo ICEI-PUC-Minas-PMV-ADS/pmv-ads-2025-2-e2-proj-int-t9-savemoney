@@ -4,169 +4,196 @@
     ViewData["Title"] = "Resultado da Análise";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/TendenciaFinanceira-Resultado.css" />
+@section css {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/tendenciaFinanceiraResultado.css" asp-append-version="true" />
 }
 
-<!-- Background Fixo (Padrão SaveMoney) -->
-<div class="background-fixed-image-resultado"></div>
+<div class="background-fixed-image" aria-hidden="true"></div>
 
-<div class="container py-5">
+<main class="tendencia-page-main fade-in">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="resultado-title">📊 Resultado da Análise</h2>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Nova Análise
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <span class="material-symbols-outlined page-icon" aria-hidden="true">analytics</span>
+                Resultado da Análise
+            </h1>
+        </div>
+        <a asp-action="Index" class="btn-action btn-secondary">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Nova Análise
         </a>
-    </div>
+    </header>
 
-    <!-- Verifica Dados Suficientes -->
+    <!-- Dados Insuficientes -->
     @if (!Model.DadosSuficientes)
     {
-        <div class="alert-custom alert-warning">
-            <h5><i class="bi bi-exclamation-triangle me-2"></i>Dados Insuficientes</h5>
-            <p>@Model.MensagemTendencia</p>
+        <div class="alert alert-warning">
+            <span class="material-symbols-outlined alert-icon" aria-hidden="true">warning</span>
+            <div class="alert-content">
+                <h2 class="alert-title">Dados Insuficientes</h2>
+                <p class="alert-text">@Model.MensagemTendencia</p>
+            </div>
         </div>
 
         @foreach (var alerta in Model.Alertas)
         {
-            <div class="alert-custom alert-info mt-3">@alerta</div>
+            <div class="alert alert-info">
+                <span class="material-symbols-outlined alert-icon" aria-hidden="true">info</span>
+                <span>@alerta</span>
+            </div>
         }
 
-        <a asp-controller="Receitas" asp-action="Create" class="btn-tendencia mt-3">
-            <i class="bi bi-plus-circle me-2"></i>Adicionar Receitas
+        <a asp-controller="Receitas" asp-action="Create" class="btn-action btn-success">
+            <span class="material-symbols-outlined" aria-hidden="true">add</span>
+            Adicionar Receitas
         </a>
 
         return;
     }
 
-    <!-- Banner Principal -->
-    <div class="summary-banner">
-        <h3>@Model.MensagemTendencia</h3>
-        <div class="summary-stats">
-            <div class="summary-stat">
-                <h5>Período Analisado</h5>
-                <p>@Model.DataInicio.ToString("MMM/yyyy") - @Model.DataFim.ToString("MMM/yyyy")</p>
-                <small class="opacity-80">(@Model.PeriodoMeses meses)</small>
-            </div>
-            <div class="summary-stat">
-                <h5>Saldo Atual</h5>
-                <p>R$ @Model.SaldoAtual.ToString("N2")</p>
-            </div>
-            <div class="summary-stat">
-                <h5>Variação Total</h5>
-                <p>
+    <!-- Summary Banner -->
+    <section class="summary-banner glass-panel">
+        <h2 class="summary-title">@Model.MensagemTendencia</h2>
+        <div class="summary-grid">
+            <article class="summary-stat">
+                <h3 class="stat-label">Período Analisado</h3>
+                <p class="stat-value">@Model.DataInicio.ToString("MMM/yyyy") - @Model.DataFim.ToString("MMM/yyyy")</p>
+                <small class="stat-subtitle">@Model.PeriodoMeses @(Model.PeriodoMeses == 1 ? "mês" : "meses")</small>
+            </article>
+
+            <article class="summary-stat">
+                <h3 class="stat-label">Saldo Atual</h3>
+                <p class="stat-value">@Model.SaldoAtual.ToString("C")</p>
+                <small class="stat-subtitle">posição atual</small>
+            </article>
+
+            <article class="summary-stat">
+                <h3 class="stat-label">Variação Total</h3>
+                <p class="stat-value stat-value-dynamic">
                     @Model.VariacaoPercentualTotal.ToString("F1")%
                     @if (Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Crescente)
                     {
-                        <i class="bi bi-arrow-up-circle icon-success"></i>
+                        <span class="material-symbols-outlined stat-icon stat-icon-success" aria-hidden="true">trending_up</span>
                     }
                     else if (Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Decrescente)
                     {
-                        <i class="bi bi-arrow-down-circle icon-danger"></i>
+                        <span class="material-symbols-outlined stat-icon stat-icon-danger" aria-hidden="true">trending_down</span>
                     }
                     else
                     {
-                        <i class="bi bi-arrow-right-circle icon-warning"></i>
+                        <span class="material-symbols-outlined stat-icon stat-icon-warning" aria-hidden="true">trending_flat</span>
                     }
                 </p>
-            </div>
+                <small class="stat-subtitle">no período</small>
+            </article>
         </div>
-    </div>
+    </section>
 
-    <!-- Cards de Métricas -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-4">
-            <div class="metric-card">
-                <div class="metric-icon">💰</div>
-                <div class="metric-label">Média Receitas</div>
-                <div class="metric-value metric-value-success">
-                    R$ @Model.MediaReceitas.ToString("N2")
+    <!-- Metrics Cards -->
+    <section class="metrics-section">
+        <div class="metrics-grid">
+            <article class="metric-card glass-panel">
+                <div class="metric-icon-wrapper metric-icon-success">
+                    <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
                 </div>
-                <div class="metric-subtitle">por mês</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="metric-card">
-                <div class="metric-icon">💸</div>
-                <div class="metric-label">Média Despesas</div>
-                <div class="metric-value metric-value-danger">
-                    R$ @Model.MediaDespesas.ToString("N2")
+                <div class="metric-content">
+                    <h3 class="metric-label">Média de Receitas</h3>
+                    <p class="metric-value metric-value-success">@Model.MediaReceitas.ToString("C")</p>
+                    <small class="metric-subtitle">por mês</small>
                 </div>
-                <div class="metric-subtitle">por mês</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="metric-card">
-                <div class="metric-icon">📊</div>
-                <div class="metric-label">Média Saldo</div>
-                <div class="metric-value metric-value-primary">
-                    R$ @Model.MediaSaldo.ToString("N2")
+            </article>
+
+            <article class="metric-card glass-panel">
+                <div class="metric-icon-wrapper metric-icon-danger">
+                    <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
                 </div>
-                <div class="metric-subtitle">por mês</div>
-            </div>
+                <div class="metric-content">
+                    <h3 class="metric-label">Média de Despesas</h3>
+                    <p class="metric-value metric-value-danger">@Model.MediaDespesas.ToString("C")</p>
+                    <small class="metric-subtitle">por mês</small>
+                </div>
+            </article>
+
+            <article class="metric-card glass-panel">
+                <div class="metric-icon-wrapper metric-icon-primary">
+                    <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+                </div>
+                <div class="metric-content">
+                    <h3 class="metric-label">Média de Saldo</h3>
+                    <p class="metric-value metric-value-primary">@Model.MediaSaldo.ToString("C")</p>
+                    <small class="metric-subtitle">por mês</small>
+                </div>
+            </article>
         </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section class="chart-section glass-panel">
+        <h2 class="section-title">
+            <span class="material-symbols-outlined" aria-hidden="true">show_chart</span>
+            Evolução Financeira
+        </h2>
+        <div class="chart-wrapper">
+            <canvas id="graficoTendencia"
+                    role="img"
+                    aria-label="Gráfico de evolução financeira ao longo do tempo"
+                    data-labels='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.MesAno).ToList()))'
+                    data-receitas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.TotalReceitas).ToList()))'
+                    data-despesas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.TotalDespesas).ToList()))'
+                    data-saldos='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.Saldo).ToList()))'></canvas>
+        </div>
+    </section>
+
+    <!-- Best/Worst Month -->
+    <div class="month-comparison">
+        <article class="month-card glass-panel card-success">
+            <div class="month-header">
+                <span class="material-symbols-outlined month-icon" aria-hidden="true">star</span>
+                <h3 class="month-title">Melhor Mês</h3>
+            </div>
+            <p class="month-value">@Model.MelhorMes</p>
+        </article>
+
+        <article class="month-card glass-panel card-danger">
+            <div class="month-header">
+                <span class="material-symbols-outlined month-icon" aria-hidden="true">warning</span>
+                <h3 class="month-title">Pior Mês</h3>
+            </div>
+            <p class="month-value">@Model.PiorMes</p>
+        </article>
     </div>
 
-    <!-- Gráfico -->
-    <div class="glass-card mb-4">
-        <h5 class="grafico-title">
-            <i class="bi bi-graph-up me-2"></i>Evolução Financeira
-        </h5>
-        <canvas id="graficoTendencia"
-                height="80"
-                data-labels='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.MesAno).ToList()))'
-                data-receitas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.TotalReceitas).ToList()))'
-                data-despesas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.TotalDespesas).ToList()))'
-                data-saldos='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.Saldo).ToList()))'></canvas>
-    </div>
-
-    <!-- Melhor e Pior Mês -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-6">
-            <div class="glass-card card-border-success">
-                <h6 class="card-title-success">
-                    <i class="bi bi-star-fill me-2"></i>Melhor Mês
-                </h6>
-                <p class="card-mes-value">
-                    @Model.MelhorMes
-                </p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="glass-card card-border-danger">
-                <h6 class="card-title-danger">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Pior Mês
-                </h6>
-                <p class="card-mes-value">
-                    @Model.PiorMes
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Alertas -->
+    <!-- Alerts -->
     @if (Model.Alertas.Any())
     {
-        <div class="glass-card mb-4">
-            <h5 class="alertas-title">
-                <i class="bi bi-bell-fill text-warning me-2"></i>Alertas e Observações
-            </h5>
-            @foreach (var alerta in Model.Alertas)
-            {
-                <div class="alert-custom alert-warning mb-2">@alerta</div>
-            }
-        </div>
+        <section class="alerts-section glass-panel">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+                Alertas e Observações
+            </h2>
+            <div class="alerts-list">
+                @foreach (var alerta in Model.Alertas)
+                {
+                    <div class="alert alert-warning">
+                        <span class="material-symbols-outlined alert-icon" aria-hidden="true">info</span>
+                        <span>@alerta</span>
+                    </div>
+                }
+            </div>
+        </section>
     }
 
-    <!-- Tabela Detalhada -->
-    <div class="glass-card">
-        <h5 class="tabela-title">
-            <i class="bi bi-table me-2"></i>Detalhamento Mensal
-        </h5>
+    <!-- Detailed Table -->
+    <section class="table-section glass-panel">
+        <h2 class="section-title">
+            <span class="material-symbols-outlined" aria-hidden="true">table_chart</span>
+            Detalhamento Mensal
+        </h2>
         <div class="table-responsive">
-            <table class="table-glass">
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>Mês</th>
@@ -181,45 +208,45 @@
                     @foreach (var dado in Model.DadosMensais)
                     {
                         <tr class="@(dado.IsOutlier ? "row-outlier" : "")">
-                            <td class="td-mes">
+                            <td class="td-month">
                                 @dado.MesAno
                                 @if (dado.IsOutlier)
                                 {
-                                    <i class="bi bi-exclamation-circle text-warning ms-1"></i>
+                                    <span class="material-symbols-outlined outlier-icon" aria-label="Mês atípico" title="Mês atípico">error</span>
                                 }
                             </td>
-                            <td class="text-end td-receita">
-                                R$ @dado.TotalReceitas.ToString("N2")
+                            <td class="text-end td-value-positive">
+                                @dado.TotalReceitas.ToString("C")
                             </td>
-                            <td class="text-end td-despesa">
-                                R$ @dado.TotalDespesas.ToString("N2")
+                            <td class="text-end td-value-negative">
+                                @dado.TotalDespesas.ToString("C")
                             </td>
                             <td class="text-end">
-                                <strong class="@(dado.Saldo >= 0 ? "td-saldo-positivo" : "td-saldo-negativo")">
-                                    R$ @dado.Saldo.ToString("N2")
+                                <strong class="@(dado.Saldo >= 0 ? "value-positive" : "value-negative")">
+                                    @dado.Saldo.ToString("C")
                                 </strong>
                             </td>
                             <td class="text-end">
                                 @if (dado.VariacaoPercentual.HasValue)
                                 {
                                     var variacao = dado.VariacaoPercentual.Value;
-                                    <span class="@(variacao > 0 ? "variacao-positiva" : variacao < 0 ? "variacao-negativa" : "variacao-neutra")">
+                                    <span class="variation @(variacao > 0 ? "variation-positive" : variacao < 0 ? "variation-negative" : "variation-neutral")">
                                         @(variacao > 0 ? "+" : "")@variacao.ToString("F1")%
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="variacao-neutra">-</span>
+                                    <span class="variation variation-neutral">-</span>
                                 }
                             </td>
                             <td class="text-center">
                                 @if (dado.Saldo >= 0)
                                 {
-                                    <span class="badge-custom badge-success">Positivo</span>
+                                    <span class="status-badge status-success">Positivo</span>
                                 }
                                 else
                                 {
-                                    <span class="badge-custom badge-danger">Negativo</span>
+                                    <span class="status-badge status-danger">Negativo</span>
                                 }
                             </td>
                         </tr>
@@ -227,10 +254,10 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </section>
 
-</div>
+</main>
 
 @section Scripts {
-    <script src="~/js/TendenciaFinanceira-Resultado.js"></script>
+    <script src="~/js/tendenciaFinanceiraResultado.js" asp-append-version="true"></script>
 }
