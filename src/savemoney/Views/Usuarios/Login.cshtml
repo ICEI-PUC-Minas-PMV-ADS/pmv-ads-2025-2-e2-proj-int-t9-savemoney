@@ -2,135 +2,134 @@
 
 @{
     ViewData["Title"] = "Login";
+    Layout = null;
 }
 
-<style>
-    :root {
-        /* Puxando do CONTEXTO */
-        --bg-primary: #10111a;
-        --bg-card: #1b1d29;
-        --accent-primary: #3b82f6;
-        --accent-primary-hover: #2563eb;
-        --glass-bg: rgba(27, 29, 41, 0.7);
-        --glass-border: rgba(59, 130, 246, 0.2);
-        --text-primary: #f5f5ff;
-    }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SaveMoney</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="login-page">
 
-    .login-container {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        background-color: var(--bg-primary); /* Garante o fundo */
-    }
-
-    .login-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        border-radius: 16px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        padding: 40px;
-        max-width: 400px;
-        width: 100%;
-        color: var(--text-primary);
-    }
-
-        .login-card .h2, .login-card .form-label {
-            color: var(--text-primary);
-        }
-
-    .form-control, .input-group-text {
-        background-color: var(--bg-card);
-        border: 1px solid var(--glass-border);
-        color: var(--text-primary);
-    }
-
-        .form-control:focus {
-            background-color: var(--bg-card);
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.3); /* Cor do accent */
-            color: var(--text-primary);
-        }
-
-    .input-group-text {
-        background-color: var(--bg-card) !important;
-        border-right: none !important;
-        color: var(--text-secondary);
-    }
-
-    .form-control.border-start-0 {
-        border-left: none !important;
-    }
-
-    .btn-success {
-        background-color: var(--success); /* Padrão SaveMoney: #10b981 */
-        border-color: var(--success);
-    }
-
-        .btn-success:hover {
-            background-color: #0d996d; /* Um pouco mais escuro */
-            border-color: #0d996d;
-        }
-</style>
-
-<div class="login-container">
-    <div class="login-card">
-        <h2 class="text-center mb-4">
-            <span class="material-icons align-middle me-2" style="font-size: 32px;">login</span>
-            Login
-        </h2>
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
-
-            @if (!string.IsNullOrEmpty(ViewBag.Message))
-            {
-                <div class="alert alert-danger text-center py-2" role="alert">@ViewBag.Message</div>
-            }
-
-            <div class="form-group mb-3">
-                <label asp-for="Email" class="form-label">Email</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <span class="material-icons" style="color: var(--accent-primary);">person</span>
-                    </span>
-                    <input asp-for="Email" class="form-control" placeholder="seu@email.com" />
+        <!-- Left Side - Form -->
+        <div class="login-left">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo-wrapper">
+                        <span class="material-symbols-outlined logo-icon" aria-hidden="true">account_balance_wallet</span>
+                        <h1 class="logo-text">SaveMoney</h1>
+                    </div>
+                    <h2 class="login-title">Bem-vindo de volta</h2>
+                    <p class="login-subtitle">Acesse sua conta para gerenciar suas finanças</p>
                 </div>
-                <span asp-validation-for="Email" class="text-danger small mt-1"></span>
+
+                <form asp-action="Login" id="loginForm" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    @if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-danger">
+                            <span class="material-symbols-outlined alert-icon" aria-hidden="true">error</span>
+                            <span>@ViewBag.Message</span>
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">
+                            <span class="material-symbols-outlined label-icon" aria-hidden="true">mail</span>
+                            Email
+                        </label>
+                        <input asp-for="Email"
+                               class="form-input"
+                               placeholder="seu@email.com"
+                               aria-describedby="emailHelp" />
+                        <span asp-validation-for="Email" class="form-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Senha" class="form-label">
+                            <span class="material-symbols-outlined label-icon" aria-hidden="true">lock</span>
+                            Senha
+                        </label>
+                        <div class="password-wrapper">
+                            <input asp-for="Senha"
+                                   type="password"
+                                   class="form-input"
+                                   id="passwordInput"
+                                   placeholder="••••••••"
+                                   aria-describedby="senhaHelp" />
+                            <button type="button"
+                                    class="password-toggle"
+                                    id="togglePassword"
+                                    aria-label="Mostrar/ocultar senha">
+                                <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Senha" class="form-error"></span>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <span class="material-symbols-outlined" aria-hidden="true">login</span>
+                        Entrar
+                    </button>
+
+                    <div class="form-footer">
+                        <p>Não tem uma conta?</p>
+                        <a asp-action="Create" class="link-primary">
+                            <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+                            Criar conta gratuita
+                        </a>
+                    </div>
+                </form>
             </div>
-            <div class="form-group mb-4">
-                <label asp-for="Senha" class="form-label">Senha</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <span class="material-icons" style="color: var(--accent-primary);">lock</span>
-                    </span>
-                    <input asp-for="Senha" class="form-control" type="password" placeholder="Sua senha secreta" />
-                </div>
-                <span asp-validation-for="Senha" class="text-danger small mt-1"></span>
-            </div>
-            <button type="submit" class="btn btn-success w-100 btn-lg mb-3">
-                <span class="material-icons align-middle me-1" style="font-size: 20px;">arrow_forward</span>
-                Entrar
-            </button>
-        </form>
-        <div class="text-center mt-3">
-            <a asp-action="Create" class="btn btn-link" style="color: var(--accent-primary);">
-                <span class="material-icons align-middle me-1" style="font-size: 20px;">person_add</span>
-                Criar novo usuário
-            </a>
         </div>
+
+        <!-- Right Side - Hero -->
+        <div class="login-right">
+            <div class="hero-content">
+                <div class="floating-card card-1">
+                    <span class="material-symbols-outlined card-icon" aria-hidden="true">trending_up</span>
+                    <div class="card-text">
+                        <h3>Controle Total</h3>
+                        <p>Gerencie suas finanças em um só lugar</p>
+                    </div>
+                </div>
+
+                <div class="floating-card card-2">
+                    <span class="material-symbols-outlined card-icon" aria-hidden="true">insights</span>
+                    <div class="card-text">
+                        <h3>Análises Inteligentes</h3>
+                        <p>Identifique padrões e oportunidades</p>
+                    </div>
+                </div>
+
+                <div class="floating-card card-3">
+                    <span class="material-symbols-outlined card-icon" aria-hidden="true">savings</span>
+                    <div class="card-text">
+                        <h3>Metas Financeiras</h3>
+                        <p>Alcance seus objetivos com facilidade</p>
+                    </div>
+                </div>
+
+                <div class="hero-text">
+                    <h2 class="hero-title">Transforme sua relação com o dinheiro</h2>
+                    <p class="hero-description">
+                        Planeje, organize e conquiste seus objetivos financeiros
+                        com inteligência e simplicidade.
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    <script>
-        // JS de validação de login pode ir aqui, se necessário.
-        // Por exemplo, checar se os campos estão vazios antes de submeter.
-    </script>
-}
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/login.js" asp-append-version="true"></script>
+</body>
+</html>
