@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using savemoney.Models;
 
@@ -11,9 +12,11 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251128224857_AddDragDropFields")]
+    partial class AddDragDropFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -476,7 +479,7 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2025, 11, 29, 1, 34, 40, 412, DateTimeKind.Local).AddTicks(4533),
+                            DataCadastro = new DateTime(2025, 11, 28, 19, 48, 56, 777, DateTimeKind.Local).AddTicks(1950),
                             Documento = "000.000.000-00",
                             Email = "admin@savemoney.com",
                             FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true",
