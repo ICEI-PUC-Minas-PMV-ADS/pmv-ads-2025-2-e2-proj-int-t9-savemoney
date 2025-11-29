@@ -4,28 +4,45 @@
     var totalEntradas = ViewBag.TotalEntradas as decimal? ?? 0;
     var totalSaidas = ViewBag.TotalSaidas as decimal? ?? 0;
     var saldo = ViewBag.SaldoPeriodo as decimal? ?? 0;
+    var labels = ViewBag.GraficoLabels as List<string> ?? new List<string>();
+    var dados = ViewBag.GraficoDados as List<decimal> ?? new List<decimal>();
 }
 
 <div class="container py-5">
-    <!-- Título + Filtro -->
+    <!-- Cabeçalho + Botão PDF + Filtro -->
     <div class="text-center mb-5">
         <h1 class="display-5 fw-bold text-primary mb-3">
-            <i class="bi bi-clock-history"></i> Histórico Financeiro
+            Histórico Financeiro
         </h1>
-        <h3 class="text-white">@ViewBag.MesAno</h3>
+        <h3 class="text-white mb-4">@ViewBag.MesAno</h3>
 
-        <form asp-action="Index" method="get" class="d-inline-block mt-3">
+        <a asp-action="ExportarPdf"
+           asp-route-mes="@ViewBag.Mes"
+           asp-route-ano="@ViewBag.Ano"
+           class="btn btn-danger btn-lg mb-4" target="_blank">
+            Exportar este mês como PDF
+        </a>
+
+        <form asp-action="Index" method="get" class="d-inline-block">
             <select name="mes" class="form-select d-inline-block w-auto" style="width:180px;" onchange="this.form.submit()">
                 @for (int m = 1; m <= 12; m++)
                 {
-                    <option value="@m" selected="@(m == ViewBag.Mes)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
+                    <option value="@m" selected="@(m == ViewBag.Mes)">
+                        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)
+                    </option>
                 }
             </select>
-            <input type="number" name="ano" value="@ViewBag.Ano" class="form-control d-inline-block w-auto ms-2" style="width:100px;" min="2020" />
-            <button type="submit" class="btn btn-outline-primary ms-2">
-                <i class="bi bi-calendar-check"></i> Ir
-            </button>
+            <input type="number" name="ano" value="@ViewBag.Ano" class="form-control d-inline-block w-auto ms-2" style="width:100px;" />
+            <button type="submit" class="btn btn-outline-primary ms-2">Ir</button>
         </form>
+    </div>
+
+    <!-- Gráfico dos últimos 6 meses -->
+    <div class="card glass-card shadow-lg mb-5">
+        <div class="card-body">
+            <h4 class="text-center text-white mb-4">Saldo mensal – últimos 6 meses</h4>
+            <canvas id="chartSaldo" height="120"></canvas>
+        </div>
     </div>
 
     <!-- Cards de Resumo -->
@@ -34,7 +51,7 @@
             <div class="card bg-success text-white shadow-lg h-100 border-0 glass-card">
                 <div class="card-body text-center py-4">
                     <i class="bi bi-arrow-up-circle-fill fs-1 mb-3"></i>
-                    <h5 class="card-title">Entradas</h5>
+                    <h5>Entradas</h5>
                     <h2 class="fw-bold">@totalEntradas:C</h2>
                 </div>
             </div>
@@ -43,7 +60,7 @@
             <div class="card bg-danger text-white shadow-lg h-100 border-0 glass-card">
                 <div class="card-body text-center py-4">
                     <i class="bi bi-arrow-down-circle-fill fs-1 mb-3"></i>
-                    <h5 class="card-title">Saídas</h5>
+                    <h5>Saídas</h5>
                     <h2 class="fw-bold">@totalSaidas:C</h2>
                 </div>
             </div>
@@ -52,7 +69,7 @@
             <div class="card @(saldo >= 0 ? "bg-primary" : "bg-warning text-dark") text-white shadow-lg h-100 border-0 glass-card">
                 <div class="card-body text-center py-4">
                     <i class="bi @(saldo >= 0 ? "bi-wallet2" : "bi-exclamation-triangle-fill") fs-1 mb-3"></i>
-                    <h5 class="card-title">Saldo do Mês</h5>
+                    <h5>Saldo do Mês</h5>
                     <h2 class="fw-bold">@saldo:C</h2>
                 </div>
             </div>
@@ -68,8 +85,8 @@
                 var isEntrada = m.Valor > 0;
                 <div class="timeline-item @(isEntrada ? "entrada" : "saida")">
                     <div class="timeline-date">
-                        <span class="day">@m.Data:dd</span>
-                        <span class="month">@m.Data:MMM</span>
+                        <span class="day">@m.Data.ToString("dd")</span>
+                        <span class="month">@m.Data.ToString("MMM")</span>
                     </div>
                     <div class="timeline-marker @(isEntrada ? "bg-success" : "bg-danger")">
                         <i class="@m.Icone"></i>
@@ -81,11 +98,11 @@
                                     @m.Descricao
                                 </h5>
                                 <small class="text-muted">
-                                    <i class="bi bi-calendar-event"></i> @m.Data:dd/MM/yyyy HH:mm
+                                    @m.Data.ToString("dd/MM/yyyy")
                                 </small>
                             </div>
                             <h4 class="fw-bold @(isEntrada ? "text-success" : "text-danger")">
-                                @m.Valor:C
+                                @m.Valor.ToString("C")
                             </h4>
                         </div>
                     </div>
@@ -97,7 +114,6 @@
             <div class="text-center py-5">
                 <i class="bi bi-inbox display-1 text-muted opacity-50"></i>
                 <h4 class="text-muted mt-4">Nenhum movimento neste período</h4>
-                <p class="text-muted">Comece a registrar suas receitas e despesas!</p>
             </div>
         }
     </div>
@@ -111,23 +127,30 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
         }
-        .timeline-container { position: relative; padding: 20px 0; }
+
+        .timeline-container {
+            position: relative;
+            padding: 20px 0;
+        }
+
         .timeline-item {
             position: relative;
             margin: 40px 0;
             display: flex;
             align-items: center;
         }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 50px;
-            bottom: -50px;
-            left: 60px;
-            width: 2px;
-            background: rgba(255,255,255,0.2);
-            z-index: 0;
-        }
+
+            .timeline-item::before {
+                content: '';
+                position: absolute;
+                top: 50px;
+                bottom: -50px;
+                left: 60px;
+                width: 2px;
+                background: rgba(255,255,255,0.2);
+                z-index: 0;
+            }
+
         .timeline-date {
             width: 70px;
             text-align: center;
@@ -135,8 +158,18 @@
             color: #fff;
             z-index: 1;
         }
-        .day { display: block; font-size: 2rem; line-height: 1; }
-        .month { font-size: 0.9rem; opacity: 0.8; }
+
+        .day {
+            display: block;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .month {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         .timeline-marker {
             width: 50px;
             height: 50px;
@@ -148,31 +181,59 @@
             z-index: 1;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
+
         .timeline-content {
             flex: 1;
             padding: 20px;
             margin-left: 20px;
             transition: all 0.3s;
         }
-        .timeline-content:hover { transform: translateY(-5px); }
+
+            .timeline-content:hover {
+                transform: translateY(-5px);
+            }
+
         @@media (max-width: 768px) {
-            .timeline-item { flex-direction: column; text-align: center; }
-            .timeline-item::before { display: none; }
-            .timeline-marker { margin: 10px 0; }
+            .timeline-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+                .timeline-item::before {
+                    display: none;
+                }
+
+            .timeline-marker {
+                margin: 10px 0;
+            }
         }
     </style>
 }
 
 @section Scripts {
     <script>
-        // Animação suave ao rolar até a timeline
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        const ctx = document.getElementById('chartSaldo').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw("\"" + string.Join("\",\"", labels) + "\"")],
+                datasets: [{
+                    label: 'Saldo',
+                    data: [@Html.Raw(string.Join(",", dados))],
+                    backgroundColor: [@Html.Raw(string.Join(",", dados.Select(v => v >= 0 ? "\"rgba(25, 135, 84, 0.8)\"" : "\"rgba(220, 53, 69, 0.8)\"")))],
+                    borderColor: [@Html.Raw(string.Join(",", dados.Select(v => v >= 0 ? "\"#198754\"" : "\"#dc3545\"")))],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' }, beginAtZero: true },
+                    x: { ticks: { color: '#fff' }, grid: { display: false } }
+                }
+            }
         });
     </script>
 }
