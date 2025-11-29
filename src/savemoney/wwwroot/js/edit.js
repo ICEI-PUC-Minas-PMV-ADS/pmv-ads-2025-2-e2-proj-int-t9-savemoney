@@ -133,7 +133,7 @@
         modalOverlay.style.animation = 'fadeOut 0.3s ease';
 
         setTimeout(() => {
-            window.location.href = '/Usuarios';
+            window.location.href = '/Dashboard';  // ✅ CORRIGIDO - era /Usuarios
         }, 300);
     }
 

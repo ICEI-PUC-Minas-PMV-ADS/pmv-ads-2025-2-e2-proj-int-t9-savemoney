@@ -1,15 +1,63 @@
-﻿// ============ CONTROLE DE MODAIS ============
+﻿// ============================================
+// DASHBOARD.JS - REFATORADO PROFISSIONAL
+// SaveMoney Dashboard v2.0
+// ============================================
 
-// Modal de Widget
+// ============ CONFIGURAÇÕES GLOBAIS ============
+const CONFIG = {
+    GRID_COLS: 3,
+    DEBOUNCE_DELAY: 300,
+    ANIMATION_DURATION: 300,
+    MAX_IMAGE_SIZE: 2 * 1024 * 1024, // 2MB
+    NOTIFICATION_DURATION: 3000
+};
+
+// ============ ESTADO DA APLICAÇÃO ============
+const AppState = {
+    draggedWidget: null,
+    isDragging: false,
+    currentTab: 'galeria',
+    newsletterShown: false
+};
+
+// ============ INICIALIZAÇÃO ============
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 SaveMoney Dashboard v2.0 Iniciando...');
+
+    inicializarDragDrop();
+    inicializarAvatarUpload();
+    carregarTemaInicial();
+    verificarNewsletter();
+
+    console.log('✅ Dashboard carregado com sucesso!');
+    console.log('⌨️ Atalhos: ESC | Ctrl+N | Ctrl+T');
+});
+
+// ============================================
+// CONTROLE DE MODAIS
+// ============================================
+
 function abrirModalWidget() {
-    document.getElementById('modalWidget').style.display = 'block';
-    document.getElementById('modalTitle').textContent = 'Adicionar Widget';
+    const modal = document.getElementById('modalWidget');
+    modal.classList.add('active');
+    document.getElementById('modalTitle').innerHTML = '<i class="bi bi-plus-square-fill"></i> Adicionar Widget';
+    switchTab('galeria');
     limparFormulario();
 }
 
 function fecharModalWidget() {
-    document.getElementById('modalWidget').style.display = 'none';
-    limparFormulario();
+    const modal = document.getElementById('modalWidget');
+    modal.classList.remove('active');
+    setTimeout(() => limparFormulario(), CONFIG.ANIMATION_DURATION);
+}
+
+function confirmarDeletar(id) {
+    document.getElementById('deletarId').value = id;
+    document.getElementById('modalConfirmar').classList.add('active');
+}
+
+function fecharModalConfirmar() {
+    document.getElementById('modalConfirmar').classList.remove('active');
 }
 
 function limparFormulario() {
@@ -22,143 +70,537 @@ function limparFormulario() {
     document.getElementById('largura').value = '1';
     document.getElementById('corFundo').value = '#1b1d29';
 
-    // Limpar preview
+    const tipoWidget = document.getElementById('tipoWidget');
+    if (tipoWidget) tipoWidget.value = 'custom';
+
     const preview = document.getElementById('imagemPreview');
-    if (preview) {
-        preview.style.display = 'none';
-    }
-}
+    if (preview) preview.style.display = 'none';
 
-// Modal de Confirmação
-function confirmarDeletar(id) {
-    document.getElementById('deletarId').value = id;
-    document.getElementById('modalConfirmar').style.display = 'block';
-}
-
-function fecharModalConfirmar() {
-    document.getElementById('modalConfirmar').style.display = 'none';
+    document.querySelectorAll('.erro-imagem').forEach(e => e.remove());
 }
 
 // Fechar modal ao clicar fora
 window.onclick = function (event) {
-    const modalWidget = document.getElementById('modalWidget');
-    const modalConfirmar = document.getElementById('modalConfirmar');
-    const modalTemas = document.getElementById('modalTemas');
-    const modalCriarTema = document.getElementById('modalCriarTema');
+    const modals = ['modalWidget', 'modalConfirmar', 'modalTemas', 'modalCriarTema', 'modalNewsletter'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal && event.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+};
 
-    if (event.target === modalWidget) {
-        fecharModalWidget();
-    }
+// ============================================
+// SISTEMA DE TABS
+// ============================================
 
-    if (event.target === modalConfirmar) {
-        fecharModalConfirmar();
-    }
+function switchTab(tabName) {
+    AppState.currentTab = tabName;
 
-    if (event.target === modalTemas) {
-        fecharModalTemas();
-    }
+    // Remover active de todas as tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
 
-    if (event.target === modalCriarTema) {
-        fecharModalCriarTema();
+    // Ativar tab selecionada
+    document.querySelector(`[onclick="switchTab('${tabName}')"]`)?.classList.add('active');
+    document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`)?.classList.add('active');
+}
+
+// ============================================
+// WIDGETS PRÉ-DEFINIDOS COM SELEÇÃO DE TAMANHO
+// ============================================
+
+async function criarWidgetPredefinido(tipo, titulo, icon, url, cor) {
+    // Abrir modal para escolher tamanho ANTES de criar
+    abrirModalTamanhoWidget(tipo, titulo, icon, url, cor);
+}
+
+function abrirModalTamanhoWidget(tipo, titulo, icon, url, cor) {
+    // Criar modal dinâmico
+    const modalHTML = `
+        <div class="modal active" id="modalTamanhoWidget" style="z-index: 10001;">
+            <div class="modal-content" style="max-width: 32rem; animation: slideUp 0.3s ease;">
+                
+                <!-- Header -->
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h3 style="display: flex; align-items: center; gap: 0.75rem; margin: 0; font-size: 1.25rem;">
+                            <i class="bi bi-grid-3x3-gap-fill" style="color: var(--accent-primary);"></i>
+                            Escolher Tamanho
+                        </h3>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                            Widget: <strong style="color: ${cor};">${titulo}</strong>
+                        </p>
+                    </div>
+                    <button onclick="fecharModalTamanho()" class="modal-close" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; padding: 0.5rem; border-radius: 0.5rem; transition: all 0.2s;">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                
+                <!-- Body -->
+                <div class="modal-body">
+                    
+                    <!-- Preview Widget -->
+                    <div style="background: ${cor}; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.2) 100%);"></div>
+                        <div style="position: relative; z-index: 1;">
+                            <i class="bi ${icon}" style="font-size: 2.5rem; color: white; opacity: 0.9;"></i>
+                            <h4 style="color: white; margin: 0.75rem 0 0 0; font-size: 1.125rem;">${titulo}</h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Largura -->
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-primary);">
+                            <i class="bi bi-arrows-expand" style="color: var(--accent-primary);"></i>
+                            Largura (Colunas)
+                        </label>
+                        <select id="widgetCols" class="form-input" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9375rem; cursor: pointer;">
+                            <option value="1">🟦 1 Coluna - Pequeno (33% largura)</option>
+                            <option value="2" selected>🟦🟦 2 Colunas - Médio (66% largura)</option>
+                            <option value="3">🟦🟦🟦 3 Colunas - Grande (100% largura)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Altura -->
+                    <div class="form-group">
+                        <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-primary);">
+                            <i class="bi bi-arrows-vertical" style="color: var(--accent-primary);"></i>
+                            Altura (Linhas)
+                        </label>
+                        <select id="widgetRows" class="form-input" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9375rem; cursor: pointer;">
+                            <option value="1">📏 1 Linha - Baixo</option>
+                            <option value="2" selected>📏📏 2 Linhas - Médio</option>
+                            <option value="3">📏📏📏 3 Linhas - Alto</option>
+                        </select>
+                    </div>
+                    
+                </div>
+                
+                <!-- Footer -->
+                <div class="modal-footer" style="display: flex; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <button onclick="confirmarCriacaoWidget('${tipo}', '${titulo}', '${icon}', '${url}', '${cor}')" 
+                            class="btn btn-primary" 
+                            style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.875rem 1.5rem; background: var(--accent-primary); color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Criar Widget
+                    </button>
+                    <button onclick="fecharModalTamanho()" 
+                            class="btn btn-secondary" 
+                            style="padding: 0.875rem 1.5rem; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+    `;
+
+    // Inserir no body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Adicionar estilos hover dinâmicos
+    const style = document.createElement('style');
+    style.id = 'modal-tamanho-styles';
+    style.textContent = `
+        #modalTamanhoWidget .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: var(--danger) !important;
+        }
+        #modalTamanhoWidget .btn-primary:hover {
+            background: var(--accent-primary-hover) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        #modalTamanhoWidget .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.1) !important;
+            border-color: var(--accent-primary) !important;
+        }
+        #modalTamanhoWidget .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function fecharModalTamanho() {
+    const modal = document.getElementById('modalTamanhoWidget');
+    const styles = document.getElementById('modal-tamanho-styles');
+
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            modal.remove();
+            if (styles) styles.remove();
+        }, 300);
     }
 }
 
-// ============ PREVIEW DE IMAGEM ============
+async function confirmarCriacaoWidget(tipo, titulo, icon, url, cor) {
+    const cols = document.getElementById('widgetCols').value;
+    const rows = document.getElementById('widgetRows').value;
+
+    mostrarLoader();
+    fecharModalTamanho();
+    fecharModalWidget(); // Fecha o modal principal também
+
+    const formData = new FormData();
+    formData.append('Id', '0');
+    formData.append('Titulo', titulo);
+    formData.append('Link', url);
+    formData.append('TipoWidget', tipo);
+    formData.append('Colunas', cols);
+    formData.append('Largura', rows);
+    formData.append('CorFundo', cor);
+    formData.append('Descricao', '');
+    formData.append('ImagemUrl', '');
+
+    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+    try {
+        const response = await fetch('/Dashboard/SalvarWidget', {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': token },
+            body: formData
+        });
+
+        if (response.ok) {
+            mostrarNotificacao(`Widget "${titulo}" criado!`, 'success');
+            setTimeout(() => window.location.reload(), 500);
+        } else {
+            throw new Error('Erro ao criar widget');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarNotificacao('Erro ao criar widget', 'error');
+    } finally {
+        ocultarLoader();
+    }
+}
+
+
+// ============================================
+// PREVIEW DE IMAGEM (COM DEBOUNCE)
+// ============================================
+
+let previewTimeout;
 
 function previewImagem() {
-    const imagemUrlInput = document.getElementById('imagemUrl');
-    const imagemPreview = document.getElementById('imagemPreview');
-    const imagemPreviewImg = document.getElementById('imagemPreviewImg');
-    const corFundoInput = document.getElementById('corFundo');
+    clearTimeout(previewTimeout);
 
-    const url = imagemUrlInput.value.trim();
+    previewTimeout = setTimeout(() => {
+        const imagemUrlInput = document.getElementById('imagemUrl');
+        const imagemPreview = document.getElementById('imagemPreview');
+        const imagemPreviewImg = document.getElementById('imagemPreviewImg');
+        const corFundoInput = document.getElementById('corFundo');
+        const url = imagemUrlInput.value.trim();
 
-    // Remover mensagem de erro anterior
-    const erroAnterior = imagemUrlInput.parentElement.querySelector('.erro-imagem');
-    if (erroAnterior) {
-        erroAnterior.remove();
-    }
+        // Remover erros anteriores
+        document.querySelectorAll('.erro-imagem').forEach(e => e.remove());
 
-    if (url) {
-        // Mostrar preview
-        imagemPreviewImg.src = url;
-        imagemPreview.style.display = 'block';
+        if (url) {
+            try {
+                new URL(url);
 
-        // Desabilitar cor de fundo
-        corFundoInput.style.opacity = '0.5';
-        corFundoInput.title = 'Cor de fundo não será usada quando houver imagem';
+                imagemPreviewImg.src = url;
+                imagemPreview.style.display = 'block';
+                corFundoInput.style.opacity = '0.5';
 
-        // Validar se a imagem carrega
-        imagemPreviewImg.onerror = function () {
-            // Criar mensagem de erro inline
-            const erroMsg = document.createElement('div');
-            erroMsg.className = 'erro-imagem';
-            erroMsg.textContent = '❌ URL de imagem inválida ou inacessível';
-            erroMsg.style.color = '#ef4444';
-            erroMsg.style.fontSize = '0.875rem';
-            erroMsg.style.marginTop = '0.5rem';
-            erroMsg.style.padding = '0.5rem';
-            erroMsg.style.background = 'rgba(239, 68, 68, 0.1)';
-            erroMsg.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-            erroMsg.style.borderRadius = '0.5rem';
+                imagemPreviewImg.onerror = function () {
+                    const erroMsg = document.createElement('div');
+                    erroMsg.className = 'erro-imagem';
+                    erroMsg.innerHTML = '<i class="bi bi-exclamation-circle-fill"></i> URL de imagem inválida';
+                    erroMsg.style.cssText = `
+                        color: var(--danger);
+                        font-size: 0.875rem;
+                        margin-top: 0.5rem;
+                        padding: 0.75rem 1rem;
+                        background: rgba(239, 68, 68, 0.1);
+                        border: 1px solid rgba(239, 68, 68, 0.3);
+                        border-radius: 0.5rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    `;
+                    imagemUrlInput.parentElement.appendChild(erroMsg);
+                    imagemPreview.style.display = 'none';
+                };
 
-            imagemUrlInput.parentElement.appendChild(erroMsg);
+            } catch (error) {
+                const erroMsg = document.createElement('div');
+                erroMsg.className = 'erro-imagem';
+                erroMsg.textContent = 'URL inválida';
+                erroMsg.style.color = 'var(--danger)';
+                imagemUrlInput.parentElement.appendChild(erroMsg);
+            }
+        } else {
             imagemPreview.style.display = 'none';
-        };
-
-        imagemPreviewImg.onload = function () {
-            // Sucesso - não precisa fazer nada
-        };
-    } else {
-        // Esconder preview
-        imagemPreview.style.display = 'none';
-        corFundoInput.style.opacity = '1';
-        corFundoInput.title = '';
-    }
+            corFundoInput.style.opacity = '1';
+        }
+    }, CONFIG.DEBOUNCE_DELAY);
 }
 
-// ============ EDITAR WIDGET ============
+// ============================================
+// EDITAR WIDGET - CORRIGIDO (BUG DE DUPLICAÇÃO)
+// ============================================
 
 async function editarWidget(id) {
     try {
-        const response = await fetch(`/Dashboard/ObterWidget/${id}`);
+        mostrarLoader();
 
-        if (!response.ok) {
-            throw new Error('Erro ao carregar widget');
-        }
+        const response = await fetch(`/Dashboard/ObterWidget/${id}`);
+        if (!response.ok) throw new Error('Erro ao carregar widget');
 
         const widget = await response.json();
 
-        // Preencher o formulário
-        document.getElementById('widgetId').value = widget.id;
-        document.getElementById('titulo').value = widget.titulo;
+        // ✅ ABRIR MODAL MANUALMENTE (sem chamar abrirModalWidget)
+        const modal = document.getElementById('modalWidget');
+        modal.classList.add('active');
+
+        // ✅ MUDAR PARA ABA PERSONALIZADO
+        switchTab('personalizado');
+
+        // ✅ MUDAR TÍTULO PARA "EDITAR"
+        document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil-square"></i> Editar Widget';
+
+        // ✅ AGORA SIM, PREENCHER OS CAMPOS (depois de abrir o modal)
+        document.getElementById('widgetId').value = widget.id;  // ID > 0 para EDIÇÃO
+        document.getElementById('titulo').value = widget.titulo || '';
         document.getElementById('descricao').value = widget.descricao || '';
         document.getElementById('imagemUrl').value = widget.imagemUrl || '';
         document.getElementById('link').value = widget.link || '';
-        document.getElementById('colunas').value = widget.colunas;
-        document.getElementById('largura').value = widget.largura;
-        document.getElementById('corFundo').value = widget.corFundo;
+        document.getElementById('colunas').value = widget.colunas || 1;
+        document.getElementById('largura').value = widget.largura || 1;
+        document.getElementById('corFundo').value = widget.corFundo || '#1b1d29';
+
+        // TipoWidget
+        const tipoWidget = document.getElementById('tipoWidget');
+        if (tipoWidget) {
+            tipoWidget.value = widget.tipoWidget || 'custom';
+        }
 
         // Preview da imagem se houver
         if (widget.imagemUrl) {
-            previewImagem();
+            setTimeout(() => previewImagem(), 100);
         }
 
-        // Abrir modal
-        document.getElementById('modalTitle').textContent = 'Editar Widget';
-        document.getElementById('modalWidget').style.display = 'block';
+        ocultarLoader();
+
+        console.log('✅ Widget carregado para EDIÇÃO (ID=' + widget.id + ')');
 
     } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao carregar dados do widget');
+        console.error('Erro ao carregar widget:', error);
+        ocultarLoader();
+        mostrarNotificacao('Erro ao carregar widget', 'error');
     }
 }
 
-// ============ UPLOAD DE FOTO DE PERFIL ============
+// ============================================
+// DRAG & DROP SISTEMA COMPLETO
+// ============================================
 
-// Criar input file invisível
-const avatarContainer = document.getElementById('avatarContainer');
-if (avatarContainer) {
+function inicializarDragDrop() {
+    const widgets = document.querySelectorAll('.widget-card');
+    const grid = document.getElementById('widgetsGrid');
+
+    widgets.forEach(widget => {
+        const isPinned = widget.dataset.pinned === 'true';
+
+        if (!isPinned) {
+            widget.draggable = true;
+            widget.addEventListener('dragstart', handleDragStart);
+            widget.addEventListener('dragend', handleDragEnd);
+        }
+    });
+
+    if (grid) {
+        grid.addEventListener('dragover', handleDragOver);
+        grid.addEventListener('drop', handleDrop);
+    }
+}
+
+function handleDragStart(e) {
+    AppState.draggedWidget = this;
+    AppState.isDragging = true;
+
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+
+    document.querySelectorAll('.widget-card:not(.dragging)').forEach(w => {
+        w.classList.add('drag-target');
+    });
+}
+
+function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    AppState.isDragging = false;
+
+    document.querySelectorAll('.widget-card').forEach(w => {
+        w.classList.remove('drag-over', 'drag-target');
+    });
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) e.stopPropagation();
+
+    if (AppState.draggedWidget) {
+        const allWidgets = Array.from(document.querySelectorAll('.widget-card'));
+        const draggedIndex = allWidgets.indexOf(AppState.draggedWidget);
+        const dropTarget = e.target.closest('.widget-card');
+
+        if (dropTarget && dropTarget !== AppState.draggedWidget) {
+            const dropIndex = allWidgets.indexOf(dropTarget);
+
+            if (draggedIndex < dropIndex) {
+                dropTarget.parentNode.insertBefore(AppState.draggedWidget, dropTarget.nextSibling);
+            } else {
+                dropTarget.parentNode.insertBefore(AppState.draggedWidget, dropTarget);
+            }
+        }
+
+        salvarPosicoesWidgets();
+    }
+
+    return false;
+}
+
+async function salvarPosicoesWidgets() {
+    const widgets = document.querySelectorAll('.widget-card');
+    const posicoes = [];
+
+    widgets.forEach((widget, index) => {
+        posicoes.push({
+            Id: parseInt(widget.dataset.id),
+            X: index % CONFIG.GRID_COLS,
+            Y: Math.floor(index / CONFIG.GRID_COLS),
+            ZIndex: index
+        });
+    });
+
+    try {
+        const response = await fetch('/Dashboard/AtualizarPosicoes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(posicoes)
+        });
+
+        if (response.ok) {
+            mostrarNotificacao('Posições salvas!', 'success');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarNotificacao('Erro ao salvar posições', 'error');
+    }
+}
+
+// ============================================
+// FIXAR/OCULTAR WIDGETS
+// ============================================
+
+async function toggleFixar(id) {
+    try {
+        const response = await fetch(`/Dashboard/FixarWidget?id=${id}`, {
+            method: 'POST'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const widget = document.querySelector(`[data-id="${id}"]`);
+            widget.dataset.pinned = result.isPinned;
+
+            if (result.isPinned) {
+                widget.draggable = false;
+                widget.classList.add('widget-pinned');
+                mostrarNotificacao('Widget fixado!', 'success');
+            } else {
+                widget.draggable = true;
+                widget.classList.remove('widget-pinned');
+                mostrarNotificacao('Widget liberado!', 'success');
+            }
+
+            setTimeout(() => location.reload(), 1000);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarNotificacao('Erro ao fixar widget', 'error');
+    }
+}
+
+async function toggleVisibilidade(id) {
+    try {
+        const response = await fetch(`/Dashboard/ToggleVisibilidade?id=${id}`, {
+            method: 'POST'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const widget = document.querySelector(`[data-id="${id}"]`);
+            widget.style.animation = 'fadeOut 0.3s ease';
+
+            setTimeout(() => {
+                widget.remove();
+                mostrarNotificacao('Widget ocultado!', 'success');
+            }, 300);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarNotificacao('Erro ao ocultar widget', 'error');
+    }
+}
+
+// ============================================
+// USER HUB - DROPDOWN & TOGGLE PF/PJ
+// ============================================
+
+function toggleDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+function togglePerfil(tipo) {
+    // Remover active de todos
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Adicionar active no clicado
+    document.querySelector(`[data-type="${tipo}"]`).classList.add('active');
+
+    // Salvar preferência (futuro - backend)
+    localStorage.setItem('perfil-tipo', tipo);
+
+    mostrarNotificacao(`Modo ${tipo.toUpperCase()} ativado`, 'success');
+
+    // TODO: Recarregar widgets específicos do perfil
+}
+
+function abrirNotificacoes() {
+    mostrarNotificacao('Sistema de notificações em breve!', 'info');
+}
+
+// ============================================
+// UPLOAD DE AVATAR
+// ============================================
+
+function inicializarAvatarUpload() {
+    const avatarContainer = document.getElementById('avatarContainer');
+    if (!avatarContainer) return;
+
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -166,38 +608,28 @@ if (avatarContainer) {
     fileInput.id = 'avatarFileInput';
     document.body.appendChild(fileInput);
 
-    // Clicar no avatar abre seleção de arquivo
-    avatarContainer.addEventListener('click', () => {
-        fileInput.click();
-    });
+    avatarContainer.addEventListener('click', () => fileInput.click());
 
-    // Quando selecionar arquivo
     fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
-
         if (!file) return;
 
-        // Validar tamanho (2MB)
-        const maxSize = 2 * 1024 * 1024; // 2MB em bytes
-        if (file.size > maxSize) {
-            alert('A imagem deve ter no máximo 2MB!');
+        if (file.size > CONFIG.MAX_IMAGE_SIZE) {
+            mostrarNotificacao('Imagem deve ter no máximo 2MB!', 'error');
             return;
         }
 
-        // Validar tipo
         if (!file.type.startsWith('image/')) {
-            alert('Por favor, selecione uma imagem válida!');
+            mostrarNotificacao('Selecione uma imagem válida!', 'error');
             return;
         }
 
-        // Preview da imagem
         const reader = new FileReader();
         reader.onload = (event) => {
             document.getElementById('avatarImage').src = event.target.result;
         };
         reader.readAsDataURL(file);
 
-        // Upload para o servidor
         await uploadFotoPerfil(file);
     });
 }
@@ -207,119 +639,178 @@ async function uploadFotoPerfil(file) {
     formData.append('foto', file);
 
     try {
+        mostrarLoader();
+
         const response = await fetch('/Usuarios/UploadFotoPerfil', {
             method: 'POST',
             body: formData
         });
 
-        if (!response.ok) {
-            throw new Error('Erro ao fazer upload');
-        }
+        if (!response.ok) throw new Error('Erro ao fazer upload');
 
         const result = await response.json();
 
         if (result.success) {
-            // Atualizar a imagem
             document.getElementById('avatarImage').src = result.caminhoFoto;
-
-            // Mostrar mensagem de sucesso
-            mostrarNotificacao('Foto atualizada com sucesso!', 'success');
-        } else {
-            throw new Error(result.message || 'Erro ao salvar foto');
+            mostrarNotificacao('Foto atualizada!', 'success');
         }
+
+        ocultarLoader();
 
     } catch (error) {
         console.error('Erro:', error);
-        alert('Erro ao fazer upload da foto: ' + error.message);
+        ocultarLoader();
+        mostrarNotificacao('Erro ao fazer upload', 'error');
     }
 }
 
-// ============ NOTIFICAÇÕES ============
+// ============================================
+// NEWSLETTER
+// ============================================
+
+function verificarNewsletter() {
+    const jaViu = localStorage.getItem('newsletter-decidido');
+
+    if (!jaViu) {
+        setTimeout(() => {
+            abrirModalNewsletter();
+        }, 2000); // Abre 2s após carregar
+    }
+}
+
+function abrirModalNewsletter() {
+    document.getElementById('modalNewsletter').classList.add('active');
+    document.getElementById('newsletterBemVindo').style.display = 'block';
+    document.getElementById('newsletterForm').style.display = 'none';
+}
+
+function fecharModalNewsletter() {
+    document.getElementById('modalNewsletter').classList.remove('active');
+}
+
+function mostrarFormNewsletter() {
+    document.getElementById('newsletterBemVindo').style.display = 'none';
+    document.getElementById('newsletterForm').style.display = 'block';
+}
+
+function recusarNewsletter() {
+    localStorage.setItem('newsletter-decidido', 'recusado');
+    fecharModalNewsletter();
+    mostrarNotificacao('Você não verá este aviso novamente', 'info');
+}
+
+async function inscreverNewsletter(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById('newsletterNome').value;
+    const email = document.getElementById('newsletterEmail').value;
+
+    // TODO: Enviar para backend
+    console.log('Newsletter:', { nome, email });
+
+    localStorage.setItem('newsletter-decidido', 'inscrito');
+    fecharModalNewsletter();
+    mostrarNotificacao('Inscrito com sucesso!', 'success');
+}
+
+// ============================================
+// NOTIFICAÇÕES
+// ============================================
 
 function mostrarNotificacao(mensagem, tipo = 'success') {
-    // Criar elemento de notificação
+    const iconMap = {
+        success: 'bi-check-circle-fill',
+        error: 'bi-x-circle-fill',
+        warning: 'bi-exclamation-triangle-fill',
+        info: 'bi-info-circle-fill'
+    };
+
     const notificacao = document.createElement('div');
     notificacao.className = `notificacao notificacao-${tipo}`;
-    notificacao.textContent = mensagem;
+    notificacao.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <i class="bi ${iconMap[tipo]}" style="font-size: 1.25rem;"></i>
+            <span>${mensagem}</span>
+        </div>
+    `;
 
-    // Estilos inline
-    notificacao.style.position = 'fixed';
-    notificacao.style.top = '1.25rem';
-    notificacao.style.right = '1.25rem';
-    notificacao.style.padding = '1rem 1.5rem';
-    notificacao.style.borderRadius = '0.5rem';
-    notificacao.style.zIndex = '9999';
-    notificacao.style.animation = 'slideInRight 0.3s ease';
-    notificacao.style.fontWeight = '600';
-    notificacao.style.fontSize = '0.9375rem';
+    notificacao.style.cssText = `
+        position: fixed;
+        top: 5.5rem;
+        right: 1.5rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        z-index: 10000;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        animation: slideInRight 0.3s ease;
+        min-width: 18rem;
+    `;
 
-    if (tipo === 'success') {
-        notificacao.style.background = 'rgba(16, 185, 129, 0.2)';
-        notificacao.style.border = '1px solid rgba(16, 185, 129, 0.4)';
-        notificacao.style.color = '#10b981';
-    } else if (tipo === 'error') {
-        notificacao.style.background = 'rgba(239, 68, 68, 0.2)';
-        notificacao.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-        notificacao.style.color = '#ef4444';
-    }
+    const colors = {
+        success: { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.4)', color: '#10b981' },
+        error: { bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.4)', color: '#ef4444' },
+        warning: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.4)', color: '#f59e0b' },
+        info: { bg: 'rgba(6, 182, 212, 0.15)', border: 'rgba(6, 182, 212, 0.4)', color: '#06b6d4' }
+    };
+
+    const style = colors[tipo];
+    notificacao.style.background = style.bg;
+    notificacao.style.border = `2px solid ${style.border}`;
+    notificacao.style.color = style.color;
 
     document.body.appendChild(notificacao);
 
-    // Remover após 3 segundos
     setTimeout(() => {
         notificacao.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            notificacao.remove();
-        }, 300);
-    }, 3000);
+        setTimeout(() => notificacao.remove(), 300);
+    }, CONFIG.NOTIFICATION_DURATION);
 }
 
-// Adicionar animações de notificação
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(25rem);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(25rem);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
+// ============================================
+// LOADER
+// ============================================
 
-// ============ ATALHOS DE TECLADO ============
+function mostrarLoader() {
+    let loader = document.getElementById('globalLoader');
 
-document.addEventListener('keydown', (e) => {
-    // ESC fecha modais
-    if (e.key === 'Escape') {
-        fecharModalWidget();
-        fecharModalConfirmar();
-        fecharModalTemas();
-        fecharModalCriarTema();
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'globalLoader';
+        loader.innerHTML = `
+            <div class="loader-spinner"></div>
+            <p style="color: var(--text-primary); margin-top: 1rem; font-weight: 600;">Carregando...</p>
+        `;
+        loader.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        `;
+        document.body.appendChild(loader);
     }
 
-    // Ctrl + N abre modal de novo widget
-    if (e.ctrlKey && e.key === 'n') {
-        e.preventDefault();
-        abrirModalWidget();
-    }
-});
+    loader.style.display = 'flex';
+}
 
-// ============ VALIDAÇÃO DO FORMULÁRIO ============
+function ocultarLoader() {
+    const loader = document.getElementById('globalLoader');
+    if (loader) loader.style.display = 'none';
+}
+
+// ============================================
+// VALIDAÇÃO DE FORMULÁRIO
+// ============================================
 
 const formWidget = document.getElementById('formWidget');
 if (formWidget) {
@@ -328,19 +819,18 @@ if (formWidget) {
 
         if (!titulo) {
             e.preventDefault();
-            alert('O título é obrigatório!');
+            mostrarNotificacao('O título é obrigatório!', 'error');
             document.getElementById('titulo').focus();
             return;
         }
 
-        // Validar URL da imagem se preenchida
         const imagemUrl = document.getElementById('imagemUrl').value.trim();
         if (imagemUrl) {
             try {
                 new URL(imagemUrl);
             } catch (error) {
                 e.preventDefault();
-                alert('Por favor, insira uma URL de imagem válida!');
+                mostrarNotificacao('URL de imagem inválida!', 'error');
                 document.getElementById('imagemUrl').focus();
                 return;
             }
@@ -348,28 +838,28 @@ if (formWidget) {
     });
 }
 
-// ============ SISTEMA DE TEMAS ============
+// ============================================
+// SISTEMA DE TEMAS
+// ============================================
 
-// Modal de Temas
 function abrirModalTemas() {
-    document.getElementById('modalTemas').style.display = 'block';
+    document.getElementById('modalTemas').classList.add('active');
     carregarTemasCustomizados();
     marcarTemaAtivo();
 }
 
 function fecharModalTemas() {
-    document.getElementById('modalTemas').style.display = 'none';
+    document.getElementById('modalTemas').classList.remove('active');
 }
 
-// Modal Criar/Editar Tema
 function abrirModalCriarTema() {
-    document.getElementById('modalCriarTema').style.display = 'block';
-    document.getElementById('tituloModalTema').textContent = 'Criar Tema Customizado';
+    document.getElementById('modalCriarTema').classList.add('active');
+    document.getElementById('tituloModalTema').innerHTML = '<i class="bi bi-brush-fill"></i> Criar Tema Customizado';
     limparFormularioTema();
 }
 
 function fecharModalCriarTema() {
-    document.getElementById('modalCriarTema').style.display = 'none';
+    document.getElementById('modalCriarTema').classList.remove('active');
 }
 
 function limparFormularioTema() {
@@ -386,63 +876,43 @@ function limparFormularioTema() {
     document.getElementById('btnPrimaryText').value = '#ffffff';
 }
 
-// Aplicar Tema Pré-definido
-// Aplicar Tema Pré-definido
 async function aplicarTemaPadrao(nomeTema) {
     try {
-        // LIMPAR cores customizadas primeiro
         const root = document.documentElement;
-        root.style.removeProperty('--bg-primary');
-        root.style.removeProperty('--bg-secondary');
-        root.style.removeProperty('--bg-card');
-        root.style.removeProperty('--border-color');
-        root.style.removeProperty('--text-primary');
-        root.style.removeProperty('--text-secondary');
-        root.style.removeProperty('--accent-primary');
-        root.style.removeProperty('--accent-primary-hover');
-        root.style.removeProperty('--btn-primary-text');
+        ['--bg-primary', '--bg-secondary', '--bg-card', '--border-color', '--text-primary',
+            '--text-secondary', '--accent-primary', '--accent-primary-hover', '--btn-primary-text']
+            .forEach(prop => root.style.removeProperty(prop));
 
-        // Desativar temas customizados no backend
         const response = await fetch('/Theme/AplicarTemaPadrao', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(nomeTema)
         });
 
         if (response.ok) {
-            // Carregar CSS do tema
             carregarCssTema(nomeTema);
             await marcarTemaAtivo();
-            mostrarNotificacao('Tema aplicado com sucesso!', 'success');
+            mostrarNotificacao('Tema aplicado!', 'success');
         }
     } catch (error) {
-        console.error('Erro ao aplicar tema:', error);
+        console.error('Erro:', error);
         mostrarNotificacao('Erro ao aplicar tema', 'error');
     }
 }
 
-// Carregar CSS do Tema
 function carregarCssTema(nomeTema) {
-    // Remover CSS de tema anterior
     const temaAnterior = document.getElementById('tema-css');
-    if (temaAnterior) {
-        temaAnterior.remove();
-    }
+    if (temaAnterior) temaAnterior.remove();
 
-    // Adicionar novo CSS
     const link = document.createElement('link');
     link.id = 'tema-css';
     link.rel = 'stylesheet';
     link.href = `/css/themes/theme-${nomeTema}.css`;
     document.head.appendChild(link);
 
-    // Salvar no localStorage
     localStorage.setItem('tema-atual', nomeTema);
 }
 
-// Carregar Temas Customizados
 async function carregarTemasCustomizados() {
     try {
         const response = await fetch('/Theme/ListarTemas');
@@ -452,7 +922,7 @@ async function carregarTemasCustomizados() {
         container.innerHTML = '';
 
         if (temas.length === 0) {
-            container.innerHTML = '<p style="color: #aaaaaa; text-align: center; grid-column: 1 / -1;">Nenhum tema customizado ainda</p>';
+            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; grid-column: 1 / -1;">Nenhum tema customizado ainda</p>';
             return;
         }
 
@@ -465,44 +935,39 @@ async function carregarTemasCustomizados() {
                 <div class="tema-preview" style="background: linear-gradient(135deg, ${tema.accentPrimary}, ${tema.accentPrimary}40);"></div>
                 <span class="tema-nome">${tema.nomeTema}</span>
                 <div class="tema-actions" onclick="event.stopPropagation();">
-                    <button onclick="editarTemaCustomizado(${tema.id})">✏️</button>
-                    <button onclick="confirmarDeletarTema(${tema.id})" class="btn-delete-tema">🗑️</button>
+                    <button onclick="editarTemaCustomizado(${tema.id})"><i class="bi bi-pencil-fill"></i></button>
+                    <button onclick="confirmarDeletarTema(${tema.id})" class="btn-delete-tema"><i class="bi bi-trash-fill"></i></button>
                 </div>
             `;
 
             container.appendChild(temaCard);
         });
     } catch (error) {
-        console.error('Erro ao carregar temas:', error);
+        console.error('Erro:', error);
     }
 }
 
-// Ativar Tema Customizado
 async function ativarTemaCustomizado(temaId) {
     try {
         const response = await fetch('/Theme/AtivarTema', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(temaId)
         });
 
         if (response.ok) {
-            // Carregar cores do tema
             const temaResponse = await fetch('/Theme/ObterTemaAtivo');
             const tema = await temaResponse.json();
             aplicarCoresCustomizadas(tema);
             marcarTemaAtivo();
-            mostrarNotificacao('Tema aplicado com sucesso!', 'success');
+            mostrarNotificacao('Tema aplicado!', 'success');
         }
     } catch (error) {
-        console.error('Erro ao ativar tema:', error);
+        console.error('Erro:', error);
         mostrarNotificacao('Erro ao ativar tema', 'error');
     }
 }
 
-// Aplicar Cores Customizadas
 function aplicarCoresCustomizadas(tema) {
     const root = document.documentElement;
     root.style.setProperty('--bg-primary', tema.bgPrimary);
@@ -515,16 +980,12 @@ function aplicarCoresCustomizadas(tema) {
     root.style.setProperty('--accent-primary-hover', tema.accentPrimaryHover);
     root.style.setProperty('--btn-primary-text', tema.btnPrimaryText);
 
-    // Remover CSS de tema pré-definido
     const temaAnterior = document.getElementById('tema-css');
-    if (temaAnterior) {
-        temaAnterior.remove();
-    }
+    if (temaAnterior) temaAnterior.remove();
 
     localStorage.removeItem('tema-atual');
 }
 
-// Salvar Tema Customizado
 async function salvarTema(event) {
     event.preventDefault();
 
@@ -556,26 +1017,23 @@ async function salvarTema(event) {
             const result = await response.json();
             fecharModalCriarTema();
 
-            // Ativar o tema automaticamente após salvar
             if (result.temaId) {
                 await ativarTemaCustomizado(result.temaId);
             }
 
             carregarTemasCustomizados();
-            mostrarNotificacao('Tema salvo e aplicado com sucesso!', 'success');
+            mostrarNotificacao('Tema salvo!', 'success');
         }
     } catch (error) {
-        console.error('Erro ao salvar tema:', error);
+        console.error('Erro:', error);
         mostrarNotificacao('Erro ao salvar tema', 'error');
     }
 }
 
-// Editar Tema Customizado
 async function editarTemaCustomizado(temaId) {
     try {
         const response = await fetch('/Theme/ListarTemas');
         const temas = await response.json();
-
         const tema = temas.find(t => t.id === temaId);
 
         if (!tema) {
@@ -583,155 +1041,100 @@ async function editarTemaCustomizado(temaId) {
             return;
         }
 
-        // Preencher formulário
         document.getElementById('temaId').value = tema.id;
         document.getElementById('nomeTema').value = tema.nomeTema;
-
-        // Abrir modal
-        document.getElementById('tituloModalTema').textContent = 'Editar Tema';
-        document.getElementById('modalCriarTema').style.display = 'block';
+        document.getElementById('tituloModalTema').innerHTML = '<i class="bi bi-pencil-fill"></i> Editar Tema';
+        abrirModalCriarTema();
 
     } catch (error) {
-        console.error('Erro ao editar tema:', error);
+        console.error('Erro:', error);
         mostrarNotificacao('Erro ao carregar tema', 'error');
     }
 }
 
-// Confirmar Deletar Tema
 function confirmarDeletarTema(temaId) {
     if (confirm('Tem certeza que deseja excluir este tema?')) {
         deletarTema(temaId);
     }
 }
 
-// Deletar Tema
 async function deletarTema(temaId) {
     try {
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
         const response = await fetch('/Theme/DeletarTema', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `id=${temaId}&__RequestVerificationToken=${token}`
         });
 
         if (response.ok) {
             carregarTemasCustomizados();
-            // Resetar para tema padrão
             aplicarTemaPadrao('default');
-            mostrarNotificacao('Tema excluído com sucesso!', 'success');
+            mostrarNotificacao('Tema excluído!', 'success');
         }
     } catch (error) {
-        console.error('Erro ao deletar tema:', error);
+        console.error('Erro:', error);
         mostrarNotificacao('Erro ao excluir tema', 'error');
     }
 }
 
-// Resetar Tema de Emergência
-async function resetarTemaEmergencia() {
-    try {
-        // Limpar todas as variáveis CSS customizadas
-        const root = document.documentElement;
-        root.style.removeProperty('--bg-primary');
-        root.style.removeProperty('--bg-secondary');
-        root.style.removeProperty('--bg-card');
-        root.style.removeProperty('--border-color');
-        root.style.removeProperty('--text-primary');
-        root.style.removeProperty('--text-secondary');
-        root.style.removeProperty('--accent-primary');
-        root.style.removeProperty('--accent-primary-hover');
-        root.style.removeProperty('--btn-primary-text');
-
-        // Remover CSS de tema pré-definido
-        const temaAnterior = document.getElementById('tema-css');
-        if (temaAnterior) {
-            temaAnterior.remove();
-        }
-
-        // Limpar localStorage
-        localStorage.removeItem('tema-atual');
-
-        // Desativar todos os temas customizados no backend
-        await fetch('/Theme/AplicarTemaPadrao', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify('default')
-        });
-
-        mostrarNotificacao('Tema resetado para o padrão!', 'success');
-
-        // Recarregar página após 1 segundo
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
-
-    } catch (error) {
-        console.error('Erro ao resetar tema:', error);
-        // Forçar reload mesmo com erro
-        window.location.reload();
-    }
-}
-
-// Marcar Tema Ativo
 async function marcarTemaAtivo() {
     try {
-        // Remover active de todos
-        document.querySelectorAll('.tema-card').forEach(card => {
-            card.classList.remove('active');
-        });
+        document.querySelectorAll('.tema-card').forEach(card => card.classList.remove('active'));
 
-        // Verificar se tem tema customizado ativo
         const response = await fetch('/Theme/ObterTemaAtivo');
         const tema = await response.json();
 
         if (tema.id) {
-            // Tema customizado está ativo
             const temaCard = document.querySelector(`.tema-card[data-tema-id="${tema.id}"]`);
-            if (temaCard) {
-                temaCard.classList.add('active');
-            }
+            if (temaCard) temaCard.classList.add('active');
         } else {
-            // Tema pré-definido está ativo
             const temaAtual = localStorage.getItem('tema-atual') || 'default';
             const temaCard = document.querySelector(`.tema-card[data-theme="${temaAtual}"]`);
-            if (temaCard) {
-                temaCard.classList.add('active');
-            }
+            if (temaCard) temaCard.classList.add('active');
         }
     } catch (error) {
-        console.error('Erro ao marcar tema ativo:', error);
+        console.error('Erro:', error);
     }
 }
 
-// Carregar Tema ao Iniciar
-window.addEventListener('DOMContentLoaded', async () => {
+async function carregarTemaInicial() {
     try {
-        // Verificar se tem tema customizado ativo
         const response = await fetch('/Theme/ObterTemaAtivo');
         const tema = await response.json();
 
         if (tema.id) {
-            // Tem tema customizado ativo
             aplicarCoresCustomizadas(tema);
         } else {
-            // Carregar tema pré-definido do localStorage
             const temaSalvo = localStorage.getItem('tema-atual');
             if (temaSalvo && temaSalvo !== 'default') {
                 carregarCssTema(temaSalvo);
             }
         }
     } catch (error) {
-        console.error('Erro ao carregar tema inicial:', error);
+        console.error('Erro ao carregar tema:', error);
+    }
+}
+
+// ============================================
+// ATALHOS DE TECLADO
+// ============================================
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+
+    if (e.ctrlKey && e.key === 'n') {
+        e.preventDefault();
+        abrirModalWidget();
+    }
+
+    if (e.ctrlKey && e.key === 't') {
+        e.preventDefault();
+        abrirModalTemas();
     }
 });
-
-// ============ CONSOLE LOG ============
-console.log('Sistema de Temas carregado! 🎨');
-console.log('Dashboard.js carregado com sucesso! 🚀');
-console.log('Atalhos disponíveis:');
-console.log('- ESC: Fechar modais');
-console.log('- Ctrl+N: Novo widget');

@@ -63,8 +63,7 @@
         modalOverlay.style.animation = 'fadeOut 0.3s ease';
 
         setTimeout(() => {
-            // Redireciona para Index
-            window.location.href = '/Usuarios';
+            window.location.href = '/Dashboard';  // ✅ CORRIGIDO - era /Usuarios
         }, 300);
     }
 
