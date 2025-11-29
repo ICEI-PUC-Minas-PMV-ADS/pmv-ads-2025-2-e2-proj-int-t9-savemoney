@@ -1,16 +1,7 @@
 ﻿/* ============================================================================
    CONVERSOR ENERGIAS - CALCULADORA DE CONSUMO E CUSTO
-   Design System: Dark Mode + Glassmorphism
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --conversor-accent: #10b981;
-    --conversor-accent-hover: #059669;
-    --conversor-accent-glow: rgba(16, 185, 129, 0.2);
-    --conversor-info: #3b82f6;
-}
 
 /* Animação de Entrada
    ========================================================================== */
@@ -81,7 +72,7 @@
 }
 
     .page-title i {
-        color: var(--conversor-info);
+        color: var(--info);
     }
 
 .page-subtitle {
@@ -120,13 +111,13 @@
     }
 
     .btn-action.btn-primary {
-        background: var(--conversor-accent);
-        color: var(--text-primary);
-        box-shadow: 0 0.25rem 1.25rem var(--conversor-accent-glow);
+        background: var(--success);
+        color: var(--btn-primary-text);
+        box-shadow: 0 0.25rem 1.25rem rgba(16, 185, 129, 0.2);
     }
 
         .btn-action.btn-primary:hover {
-            background: var(--conversor-accent-hover);
+            background: #0f9980;
             transform: translateY(-0.125rem);
             box-shadow: 0 0.5rem 1.5625rem rgba(16, 185, 129, 0.3);
         }
@@ -144,17 +135,17 @@
 
     .btn-action.btn-success {
         background: var(--success);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
     }
 
         .btn-action.btn-success:hover {
-            background: #059669;
+            background: #0f9980;
             transform: translateY(-0.125rem);
         }
 
     .btn-action.btn-danger {
         background: var(--danger);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
     }
 
         .btn-action.btn-danger:hover {
@@ -292,7 +283,7 @@
 }
 
     .conversion-card:hover {
-        border-color: var(--conversor-accent);
+        border-color: var(--success);
         box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
         transform: translateY(-0.25rem);
     }
@@ -324,7 +315,7 @@
 }
 
     .card-title i {
-        color: var(--conversor-accent);
+        color: var(--success);
     }
 
 .card-actions {
@@ -399,8 +390,8 @@
 }
 
     .btn-icon:hover {
-        background: var(--conversor-accent);
-        color: var(--text-primary);
+        background: var(--success);
+        color: var(--btn-primary-text);
     }
 
     .btn-icon.danger:hover {
@@ -423,7 +414,7 @@
 
 .empty-icon {
     font-size: 4rem;
-    color: var(--conversor-info);
+    color: var(--info);
     opacity: 0.5;
     margin-bottom: 1rem;
 }
@@ -661,7 +652,7 @@
 
     .form-input:focus {
         outline: none;
-        border-color: var(--conversor-accent);
+        border-color: var(--success);
         background: rgba(16, 185, 129, 0.05);
         box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.1);
     }

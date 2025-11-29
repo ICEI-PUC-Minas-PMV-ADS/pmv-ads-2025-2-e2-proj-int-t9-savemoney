@@ -1,19 +1,12 @@
 /* ============================================================================
    CALCULADORA DE METAS FINANCEIRAS
-   Design System: Dark Mode + Glassmorphism
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
    Font: Manrope
    ============================================================================ */
 
 /* Importa fonte específica do módulo
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --metas-font: 'Manrope', 'Inter', system-ui, sans-serif;
-    --metas-accent: #3b82f6;
-}
 
 /* Animação de Entrada
    ========================================================================== */
@@ -45,10 +38,10 @@
     width: 100%;
     overflow-x: hidden;
     position: relative;
-    font-family: var(--metas-font);
+    font-family: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
-/* Hero Section - CORRIGIDO
+/* Hero Section
    ========================================================================== */
 .hero-section {
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/goal-calculator.jpg');
@@ -58,7 +51,7 @@
     padding: 9rem 1.5rem 5rem;
     text-align: center;
     position: relative;
-    min-height: 31.25rem; /* 500px */
+    min-height: 31.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,7 +94,7 @@
     display: inline-block;
     font-size: 1rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--btn-primary-text);
     background: var(--accent-primary);
     border: none;
     border-radius: 3.125rem;
@@ -149,7 +142,7 @@
     border-radius: 1.5rem;
     box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.2);
     padding: 3rem;
-    margin-top: -5rem; /* Overlap com hero */
+    margin-top: -5rem;
 }
 
 .calculadora-header {
@@ -300,7 +293,7 @@
 .btn-check:checked + .btn-toggle {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    color: var(--text-primary);
+    color: var(--btn-primary-text);
     font-weight: 600;
 }
 
@@ -315,7 +308,7 @@
     padding: 0.875rem 1.5rem;
     border-radius: 3.125rem;
     background: var(--accent-primary);
-    color: var(--text-primary);
+    color: var(--btn-primary-text);
     font-weight: 700;
     font-size: 1.0625rem;
     border: none;
@@ -683,7 +676,6 @@
     .calculadora-header p {
         font-size: 1rem;
     }
-
     /* Input group em coluna no mobile */
     .input-group {
         flex-direction: column;

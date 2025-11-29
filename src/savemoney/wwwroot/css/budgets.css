@@ -1,15 +1,7 @@
 ﻿/* ============================================================================
    BUDGETS - SISTEMA DE ORÇAMENTOS
-   Design System: Dark Mode + Glassmorphism
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --budgets-accent: #8b5cf6;
-    --budgets-accent-hover: #7c3aed;
-    --budgets-accent-glow: rgba(139, 92, 246, 0.4);
-}
 
 /* Animação de Entrada
    ========================================================================== */
@@ -96,15 +88,15 @@
     }
 
     .btn-action.btn-primary {
-        background: var(--budgets-accent);
-        color: var(--text-primary);
-        box-shadow: 0 0.25rem 1.25rem var(--budgets-accent-glow);
+        background: var(--accent-primary);
+        color: var(--btn-primary-text);
+        box-shadow: 0 0.25rem 1.25rem rgba(59, 130, 246, 0.4);
     }
 
         .btn-action.btn-primary:hover {
-            background: var(--budgets-accent-hover);
+            background: var(--accent-primary-hover);
             transform: translateY(-0.125rem);
-            box-shadow: 0 0.5rem 1.5625rem rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0.5rem 1.5625rem rgba(59, 130, 246, 0.5);
         }
 
     .btn-action.btn-secondary {
@@ -126,12 +118,12 @@
 
         .btn-action.btn-outline:hover {
             background: rgba(255, 255, 255, 0.05);
-            border-color: var(--budgets-accent);
+            border-color: var(--accent-primary);
         }
 
     .btn-action.btn-danger {
         background: var(--danger);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
     }
 
         .btn-action.btn-danger:hover {
@@ -178,7 +170,7 @@
 }
 
     .budget-card:hover {
-        border-color: var(--budgets-accent);
+        border-color: var(--accent-primary);
         box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
         transform: translateY(-0.25rem);
     }
@@ -325,8 +317,8 @@
 }
 
     .btn-icon:hover {
-        background: var(--budgets-accent);
-        color: var(--text-primary);
+        background: var(--accent-primary);
+        color: var(--btn-primary-text);
     }
 
     .btn-icon.danger:hover {
@@ -518,7 +510,7 @@
 
 .alert-info {
     background: rgba(59, 130, 246, 0.1);
-    border-left: 0.25rem solid var(--accent-primary);
+    border-left: 0.25rem solid var(--info);
     border-radius: 0.5rem;
     padding: 0.75rem 1rem;
     margin-bottom: 1.5rem;
@@ -625,9 +617,9 @@
 
     .form-input:focus {
         outline: none;
-        border-color: var(--budgets-accent);
-        background: rgba(139, 92, 246, 0.05);
-        box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.1);
+        border-color: var(--accent-primary);
+        background: rgba(59, 130, 246, 0.05);
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.1);
     }
 
     .form-input.form-input-sm {
