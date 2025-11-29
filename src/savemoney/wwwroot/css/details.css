@@ -1,14 +1,7 @@
 ﻿/* ============================================================================
    DETAILS (MODAL CENTRADO)
-   Design System: Glassmorphism Modal
+   Design System: Glassmorphism Modal - Tema Adaptado
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --details-accent: #3b82f6;
-    --details-accent-hover: #2563eb;
-}
 
 /* Reset & Base
    ========================================================================== */
@@ -119,7 +112,7 @@ body {
     justify-content: center;
     width: 5rem;
     height: 5rem;
-    background: linear-gradient(135deg, var(--details-accent) 0%, #2563eb 100%);
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
     border-radius: 50%;
     margin-bottom: 1.5rem;
     box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.4);
@@ -127,7 +120,7 @@ body {
 
     .header-icon .material-symbols-outlined {
         font-size: 3rem;
-        color: #ffffff;
+        color: var(--btn-primary-text);
     }
 
 .details-title {
@@ -183,7 +176,7 @@ body {
 
 .label-icon {
     font-size: 1.125rem;
-    color: var(--details-accent);
+    color: var(--accent-primary);
 }
 
 .info-value {
@@ -207,13 +200,13 @@ body {
 
 .badge-administrador {
     background: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
+    color: var(--danger);
     border: 0.0625rem solid rgba(239, 68, 68, 0.3);
 }
 
 .badge-usuario {
     background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
+    color: var(--info);
     border: 0.0625rem solid rgba(59, 130, 246, 0.3);
 }
 
@@ -242,7 +235,7 @@ body {
 
 .stat-icon {
     font-size: 2rem;
-    color: var(--details-accent);
+    color: var(--accent-primary);
     flex-shrink: 0;
 }
 
@@ -295,13 +288,13 @@ body {
     }
 
 .btn-primary {
-    background: var(--details-accent);
-    color: #ffffff;
+    background: var(--accent-primary);
+    color: var(--btn-primary-text);
     box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.3);
 }
 
     .btn-primary:hover {
-        background: var(--details-accent-hover);
+        background: var(--accent-primary-hover);
         transform: translateY(-0.125rem);
         box-shadow: 0 0.75rem 2rem rgba(59, 130, 246, 0.4);
     }

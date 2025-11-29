@@ -1,15 +1,7 @@
 ﻿/* ============================================================================
    DESPESAS - CONTROLE DE GASTOS
-   Design System: Dark Mode + Glassmorphism (Red Accent)
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --despesas-accent: #ef4444;
-    --despesas-accent-hover: #dc2626;
-    --despesas-accent-glow: rgba(239, 68, 68, 0.2);
-}
 
 /* Animação de Entrada
    ========================================================================== */
@@ -96,13 +88,13 @@
     }
 
     .btn-action.btn-danger {
-        background: var(--despesas-accent);
-        color: var(--text-primary);
-        box-shadow: 0 0.25rem 1.25rem var(--despesas-accent-glow);
+        background: var(--danger);
+        color: var(--btn-primary-text);
+        box-shadow: 0 0.25rem 1.25rem rgba(239, 68, 68, 0.2);
     }
 
         .btn-action.btn-danger:hover {
-            background: var(--despesas-accent-hover);
+            background: #dc2626;
             transform: translateY(-0.125rem);
             box-shadow: 0 0.5rem 1.5625rem rgba(239, 68, 68, 0.3);
         }
@@ -220,7 +212,7 @@
 }
 
     .expense-card:hover {
-        border-color: var(--despesas-accent);
+        border-color: var(--danger);
         box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
         transform: translateY(-0.25rem);
     }
@@ -286,7 +278,7 @@
 .amount {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--despesas-accent);
+    color: var(--danger);
     letter-spacing: -0.0625rem;
 }
 
@@ -367,8 +359,8 @@
 }
 
     .btn-icon:hover {
-        background: var(--despesas-accent);
-        color: var(--text-primary);
+        background: var(--danger);
+        color: var(--btn-primary-text);
     }
 
     .btn-icon.danger:hover {
@@ -391,7 +383,7 @@
 
 .empty-icon {
     font-size: 4rem;
-    color: var(--despesas-accent);
+    color: var(--danger);
     opacity: 0.5;
     margin-bottom: 1rem;
 }
@@ -493,7 +485,7 @@
     border: none;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--despesas-accent);
+    color: var(--danger);
     width: 100%;
     padding: 0;
 }
@@ -537,7 +529,7 @@
 
     .form-input:focus {
         outline: none;
-        border-color: var(--despesas-accent);
+        border-color: var(--danger);
         background: rgba(239, 68, 68, 0.05);
         box-shadow: 0 0 0 0.25rem rgba(239, 68, 68, 0.1);
     }
@@ -653,7 +645,7 @@
     }
 
 input:checked + .toggle-slider {
-    background: var(--despesas-accent);
+    background: var(--danger);
 }
 
     input:checked + .toggle-slider.success {

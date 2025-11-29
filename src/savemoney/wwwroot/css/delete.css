@@ -1,15 +1,7 @@
 ﻿/* ============================================================================
    DELETE (MODAL CENTRADO)
-   Design System: Glassmorphism Modal with Danger Theme
+   Design System: Glassmorphism Modal with Danger Theme - Tema Adaptado
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --delete-danger: #ef4444;
-    --delete-danger-hover: #dc2626;
-    --delete-danger-light: #fca5a5;
-}
 
 /* Reset & Base
    ========================================================================== */
@@ -144,7 +136,7 @@ body {
 
 .header-icon .material-symbols-outlined {
     font-size: 3rem;
-    color: var(--delete-danger);
+    color: var(--danger);
     filter: drop-shadow(0 0.25rem 0.75rem rgba(239, 68, 68, 0.5));
 }
 
@@ -158,7 +150,7 @@ body {
 
 .delete-subtitle {
     font-size: 1rem;
-    color: var(--delete-danger-light);
+    color: var(--danger);
     margin: 0;
     font-weight: 600;
 }
@@ -180,7 +172,7 @@ body {
 
 .alert-icon {
     font-size: 2rem;
-    color: var(--delete-danger);
+    color: var(--danger);
     flex-shrink: 0;
 }
 
@@ -192,7 +184,7 @@ body {
         display: block;
         font-size: 1rem;
         font-weight: 700;
-        color: var(--delete-danger-light);
+        color: var(--danger);
         margin-bottom: 0.5rem;
     }
 
@@ -251,7 +243,7 @@ body {
 
 .label-icon {
     font-size: 1.125rem;
-    color: var(--delete-danger);
+    color: var(--danger);
 }
 
 .info-value {
@@ -275,13 +267,13 @@ body {
 
 .badge-administrador {
     background: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
+    color: var(--danger);
     border: 0.0625rem solid rgba(239, 68, 68, 0.3);
 }
 
 .badge-usuario {
     background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
+    color: var(--info);
     border: 0.0625rem solid rgba(59, 130, 246, 0.3);
 }
 
@@ -320,8 +312,8 @@ body {
     }
 
 .btn-danger {
-    background: var(--delete-danger);
-    color: #ffffff;
+    background: var(--danger);
+    color: var(--btn-primary-text);
     box-shadow: 0 0.5rem 1.5rem rgba(239, 68, 68, 0.4);
     position: relative;
     overflow: hidden;
@@ -343,7 +335,7 @@ body {
     }
 
     .btn-danger:hover {
-        background: var(--delete-danger-hover);
+        background: #dc2626;
         transform: translateY(-0.125rem);
         box-shadow: 0 0.75rem 2rem rgba(239, 68, 68, 0.5);
     }

@@ -1,16 +1,7 @@
 ﻿/* ============================================================================
    EDIT (MODAL CENTRADO)
-   Design System: Glassmorphism Modal Form
+   Design System: Glassmorphism Modal Form - Tema Adaptado
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --edit-accent: #3b82f6;
-    --edit-accent-hover: #2563eb;
-    --edit-text-dark: #1e293b;
-    --edit-text-muted: #64748b;
-}
 
 /* Reset & Base
    ========================================================================== */
@@ -121,7 +112,7 @@ body {
     justify-content: center;
     width: 5rem;
     height: 5rem;
-    background: linear-gradient(135deg, var(--edit-accent) 0%, #2563eb 100%);
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
     border-radius: 50%;
     margin-bottom: 1.5rem;
     box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.4);
@@ -129,7 +120,7 @@ body {
 
     .header-icon .material-symbols-outlined {
         font-size: 3rem;
-        color: #ffffff;
+        color: var(--btn-primary-text);
     }
 
 .edit-title {
@@ -164,7 +155,7 @@ body {
 
 .label-icon {
     font-size: 1.125rem;
-    color: var(--edit-accent);
+    color: var(--accent-primary);
 }
 
 .form-input {
@@ -185,7 +176,7 @@ body {
 
     .form-input:focus {
         outline: none;
-        border-color: var(--edit-accent);
+        border-color: var(--accent-primary);
         background: rgba(59, 130, 246, 0.05);
         box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.1);
     }
@@ -336,13 +327,13 @@ select.form-input {
     }
 
 .btn-primary {
-    background: var(--edit-accent);
-    color: #ffffff;
+    background: var(--accent-primary);
+    color: var(--btn-primary-text);
     box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.3);
 }
 
     .btn-primary:hover {
-        background: var(--edit-accent-hover);
+        background: var(--accent-primary-hover);
         transform: translateY(-0.125rem);
         box-shadow: 0 0.75rem 2rem rgba(59, 130, 246, 0.4);
     }

@@ -1,6 +1,6 @@
 /* ============================================================================
    EDUCAÇÃO FINANCEIRA - HUB DE CONHECIMENTO
-   Design System: Dark Mode + Glassmorphism
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
    Font: Manrope
    ============================================================================ */
 
@@ -182,7 +182,7 @@
 
     .btn-action.btn-primary {
         background: var(--accent-primary);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
         box-shadow: 0 0.25rem 0.9375rem rgba(59, 130, 246, 0.3);
     }
 
@@ -213,7 +213,7 @@
 /* Info Section
    ========================================================================== */
 .info-section {
-    background: rgba(13, 14, 22, 0.6);
+    background-color: rgba(13, 14, 22, 0.6);
     backdrop-filter: blur(0.625rem);
     -webkit-backdrop-filter: blur(0.625rem);
     border: 0.0625rem solid var(--border-color);
@@ -386,7 +386,6 @@
         .section-header p {
             font-size: 1rem;
         }
-
     /* CORREÇÃO: Em tablet, mantém 2 colunas se couber, senão 1 */
     .info-cards-grid {
         grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
@@ -414,7 +413,6 @@
     .section-header h2 {
         font-size: 1.5rem;
     }
-
     /* CORREÇÃO: Em mobile, sempre 1 coluna */
     .info-cards-grid {
         grid-template-columns: 1fr;

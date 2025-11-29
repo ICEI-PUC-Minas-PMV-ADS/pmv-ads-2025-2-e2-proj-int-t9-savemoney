@@ -1,5 +1,5 @@
 ﻿/* ============================================
-   FOOTER - Design System Dark Mode
+   FOOTER - Design System Dark Mode - Tema Adaptado
    ============================================ */
 
 #main-footer {
@@ -78,7 +78,7 @@
             #main-footer .footer-socials a:hover,
             #main-footer .footer-socials a:focus {
                 background-color: var(--accent-primary);
-                color: var(--text-primary);
+                color: var(--btn-primary-text);
                 transform: translateY(-0.1875rem);
                 box-shadow: 0 0.3125rem 0.9375rem rgba(59, 130, 246, 0.3);
                 border-color: var(--accent-primary);
@@ -129,7 +129,7 @@
     /* Badge "Novo" */
     #main-footer .footer-badge {
         background-color: var(--accent-primary);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
         font-size: 0.7rem;
         padding: 0.125rem 0.375rem;
         border-radius: 0.25rem;
