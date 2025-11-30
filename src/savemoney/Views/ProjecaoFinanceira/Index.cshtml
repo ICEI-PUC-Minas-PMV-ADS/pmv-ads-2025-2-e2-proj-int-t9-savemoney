@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Projeção Financeira";
     int mesesSelecionados = ViewBag.MesesSelecionados ?? 6;
+    bool temDados = Model.Saldos != null && Model.Saldos.Count > 0;
 }
 
 @section css {
@@ -20,205 +21,322 @@
                     <span class="material-symbols-outlined page-icon" aria-hidden="true">trending_up</span>
                     Projeção Financeira
                 </h1>
-                <p class="page-subtitle">Análise de tendências baseada no seu comportamento recorrente</p>
+                <p class="page-subtitle">Análise preditiva baseada em padrões recorrentes</p>
             </div>
         </div>
 
         <div class="header-actions">
-            <button class="btn-action btn-info"
-                    id="btnToggleInfo"
-                    aria-expanded="false"
-                    aria-controls="infoSection">
-                <span class="material-symbols-outlined" aria-hidden="true">school</span>
-                <span id="btnInfoText">Entenda o Cálculo</span>
-            </button>
-
+            <!-- Seletor de Meses -->
             <form method="get" class="select-container">
-                <label for="mesesSelect" class="visually-hidden">Selecionar meses de projeção</label>
+                <label for="mesesSelect" class="visually-hidden">Período de projeção</label>
                 <select name="meses"
                         id="mesesSelect"
                         class="select-input"
-                        onchange="this.form.submit()"
-                        aria-label="Quantidade de meses para projeção">
+                        onchange="this.form.submit()">
                     @for (int i = 1; i <= 12; i++)
                     {
                         <option value="@i" selected="@(i == mesesSelecionados)">
-                            Projetar @i @(i == 1 ? "Mês" : "Meses")
+                            @i @(i == 1 ? "Mês" : "Meses")
                         </option>
                     }
                 </select>
                 <span class="material-symbols-outlined select-icon" aria-hidden="true">expand_more</span>
             </form>
+
+            <!-- Botão Info -->
+            <button class="btn-action btn-info"
+                    id="btnToggleInfo"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="infoSection">
+                <span class="material-symbols-outlined" aria-hidden="true">school</span>
+                <span id="btnInfoText">Como Funciona</span>
+            </button>
         </div>
     </header>
 
-    <!-- KPI Cards -->
-    <section class="kpi-section" aria-label="Indicadores financeiros">
-        <div class="kpi-grid">
-
-            <!-- Saldo Atual -->
-            <article class="kpi-card glass-panel">
-                <div class="kpi-content">
-                    <div class="kpi-info">
-                        <span class="kpi-label">Saldo Hoje</span>
-                        <h2 class="kpi-value">@Model.SaldoAtual.ToString("C")</h2>
-                        <span class="kpi-description">Disponível em conta</span>
-                    </div>
-                    <div class="kpi-icon-box kpi-icon-primary">
-                        <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Fluxo Mensal -->
-            <article class="kpi-card glass-panel">
-                <div class="kpi-content">
-                    <div class="kpi-info">
-                        <span class="kpi-label">Fluxo Mensal Recorrente</span>
-                        <h2 class="kpi-value @(Model.FluxoMensal >= 0 ? "value-positive" : "value-negative")">
-                            @((Model.FluxoMensal > 0 ? "+" : "") + Model.FluxoMensal.ToString("C"))
-                        </h2>
-                        <span class="kpi-description">Quanto sobra (ou falta) todo mês</span>
-                    </div>
-                    <div class="kpi-icon-box @(Model.FluxoMensal >= 0 ? "kpi-icon-success" : "kpi-icon-danger")">
-                        <span class="material-symbols-outlined" aria-hidden="true">
-                            @(Model.FluxoMensal >= 0 ? "savings" : "trending_down")
-                        </span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Saldo Projetado -->
-            <article class="kpi-card glass-panel kpi-card-featured">
-                <div class="kpi-glow"></div>
-                <div class="kpi-content">
-                    <div class="kpi-info">
-                        <span class="kpi-label">Estimativa em @mesesSelecionados @(mesesSelecionados == 1 ? "Mês" : "Meses")</span>
-                        <h2 class="kpi-value @(Model.SaldoProjetado6Meses >= 0 ? "value-positive" : "value-negative")">
-                            @Model.SaldoProjetado6Meses.ToString("C")
-                        </h2>
-                        <span class="kpi-description">Previsão matemática</span>
-                    </div>
-                    <div class="kpi-icon-box kpi-icon-accent">
-                        <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
-                    </div>
-                </div>
-            </article>
-
-        </div>
-    </section>
-
-    <!-- Info Alert -->
-    <div class="alert alert-info">
-        <span class="material-symbols-outlined alert-icon" aria-hidden="true">info</span>
-        <div class="alert-content">
-            <h3 class="alert-title">Por que o gráfico é uma linha reta?</h3>
-            <p class="alert-text">
-                Esta projeção assume que suas receitas e despesas recorrentes (o Fluxo Mensal acima)
-                se repetirão exatamente iguais no futuro. Gastos variáveis imprevisíveis não entram nesta conta.
+    @if (!temDados)
+    {
+        <!-- Empty State -->
+        <section class="empty-state glass-panel">
+            <div class="empty-icon">
+                <span class="material-symbols-outlined" aria-hidden="true">insert_chart</span>
+            </div>
+            <h2 class="empty-title">Nenhuma Projeção Disponível</h2>
+            <p class="empty-description">
+                Para gerar uma projeção financeira, você precisa cadastrar
+                <strong>receitas e despesas recorrentes</strong>.
             </p>
-        </div>
-    </div>
+            <div class="empty-actions">
+                <a href="@Url.Action("Index", "Receitas")" class="btn-action btn-success">
+                    <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
+                    <span>Adicionar Receita</span>
+                </a>
+                <a href="@Url.Action("Index", "Despesas")" class="btn-action btn-danger">
+                    <span class="material-symbols-outlined" aria-hidden="true">remove_circle</span>
+                    <span>Adicionar Despesa</span>
+                </a>
+            </div>
+        </section>
+    }
+    else
+    {
+        <!-- Resumo Executivo -->
+        <section class="summary-section glass-panel">
+            <div class="summary-header">
+                <span class="material-symbols-outlined summary-icon" aria-hidden="true">
+                    @(Model.FluxoMensal >= 0 ? "trending_up" : "trending_down")
+                </span>
+                <div class="summary-content">
+                    <h2 class="summary-title">
+                        @if (Model.FluxoMensal >= 0)
+                        {
+                            <span>Cenário Positivo</span>
+                        }
+                        else
+                        {
+                            <span>Atenção Necessária</span>
+                        }
+                    </h2>
+                    <p class="summary-text">
+                        @if (Model.FluxoMensal >= 0)
+                        {
+                            <text>
+                                Você economiza <strong>@Model.FluxoMensal.ToString("C")</strong> por mês.
+                                Em @mesesSelecionados meses, terá aproximadamente
+                                <strong>@Model.SaldoProjetado6Meses.ToString("C")</strong>.
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                Déficit de <strong>@Math.Abs(Model.FluxoMensal).ToString("C")</strong>/mês.
+                                Sem ajustes, seu saldo pode chegar a
+                                <strong>@Model.SaldoProjetado6Meses.ToString("C")</strong>.
+                            </text>
+                        }
+                    </p>
+                </div>
+            </div>
 
-    <!-- Gráfico -->
-    <section class="chart-section glass-panel">
-        <header class="chart-header">
-            <h2 class="chart-title">
-                <span class="material-symbols-outlined" aria-hidden="true">show_chart</span>
-                Linha do Tempo Patrimonial
-            </h2>
-        </header>
-        <div class="chart-wrapper">
-            <canvas id="meuGraficoCanvas"
-                    role="img"
-                    aria-label="Gráfico de projeção financeira ao longo do tempo"></canvas>
-        </div>
-    </section>
+            @if (Model.FluxoMensal < 0)
+            {
+                <div class="summary-alert">
+                    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+                    <span>Revise suas despesas fixas ou busque fontes de renda adicionais.</span>
+                </div>
+            }
+        </section>
 
-    <!-- Seção Educativa (Toggle) -->
-    <section id="infoSection" class="info-section" style="display: none;" aria-labelledby="infoSectionTitle">
+        <!-- KPI Cards -->
+        <section class="kpi-section">
+            <div class="kpi-grid">
 
-        <!-- Header -->
+                <!-- Saldo Atual -->
+                <article class="kpi-card glass-panel">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <span class="kpi-label">Saldo Hoje</span>
+                            <h2 class="kpi-value">@Model.SaldoAtual.ToString("C")</h2>
+                            <span class="kpi-description">Patrimônio líquido atual</span>
+                        </div>
+                        <div class="kpi-icon-box kpi-icon-primary">
+                            <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Fluxo Mensal -->
+                <article class="kpi-card glass-panel">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <span class="kpi-label">Fluxo Mensal</span>
+                            <h2 class="kpi-value @(Model.FluxoMensal >= 0 ? "value-positive" : "value-negative")">
+                                @((Model.FluxoMensal > 0 ? "+" : "") + Model.FluxoMensal.ToString("C"))
+                            </h2>
+                            <span class="kpi-description">
+                                @(Model.FluxoMensal >= 0 ? "Economia recorrente" : "Déficit recorrente")
+                            </span>
+                        </div>
+                        <div class="kpi-icon-box @(Model.FluxoMensal >= 0 ? "kpi-icon-success" : "kpi-icon-danger")">
+                            <span class="material-symbols-outlined" aria-hidden="true">
+                                @(Model.FluxoMensal >= 0 ? "savings" : "trending_down")
+                            </span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Saldo Projetado -->
+                <article class="kpi-card glass-panel kpi-card-featured">
+                    <div class="kpi-glow"></div>
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <span class="kpi-label">Projeção @mesesSelecionados @(mesesSelecionados == 1 ? "Mês" : "Meses")</span>
+                            <h2 class="kpi-value @(Model.SaldoProjetado6Meses >= 0 ? "value-positive" : "value-negative")">
+                                @Model.SaldoProjetado6Meses.ToString("C")
+                            </h2>
+                            <span class="kpi-description">
+                                @{
+                                    var diferenca = Model.SaldoProjetado6Meses - Model.SaldoAtual;
+                                    var percentual = Model.SaldoAtual != 0 ? (diferenca / Model.SaldoAtual * 100) : 0;
+                                }
+                                @((diferenca > 0 ? "+" : "") + diferenca.ToString("C"))
+                                (@(percentual > 0 ? "+" : "")@percentual.ToString("F1")%)
+                            </span>
+                        </div>
+                        <div class="kpi-icon-box kpi-icon-accent">
+                            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Gráfico -->
+        <section class="chart-section glass-panel">
+            <header class="chart-header">
+                <div class="chart-title-group">
+                    <h2 class="chart-title">
+                        <span class="material-symbols-outlined" aria-hidden="true">show_chart</span>
+                        Evolução Patrimonial
+                    </h2>
+                    <p class="chart-subtitle">Projeção linear baseada em recorrências</p>
+                </div>
+
+                <div class="chart-controls">
+                    <!-- Toggle Área/Linha -->
+                    <div class="view-toggle">
+                        <button class="toggle-btn active"
+                                data-view="line"
+                                type="button"
+                                title="Visualização em linha">
+                            <span class="material-symbols-outlined">show_chart</span>
+                        </button>
+                        <button class="toggle-btn"
+                                data-view="area"
+                                type="button"
+                                title="Visualização em área">
+                            <span class="material-symbols-outlined">area_chart</span>
+                        </button>
+                    </div>
+
+                    <!-- Botão Exportar -->
+                    <button class="btn-icon"
+                            id="btnExportar"
+                            type="button"
+                            title="Exportar dados (CSV)">
+                        <span class="material-symbols-outlined">download</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="chart-wrapper">
+                <!-- Canvas -->
+                <canvas id="meuGraficoCanvas"></canvas>
+
+                <!-- Tooltip (aparece no hover) -->
+                <div class="chart-tooltip" id="chartTooltip">
+                    <div class="tooltip-month"></div>
+                    <div class="tooltip-value"></div>
+                </div>
+            </div>
+
+            <!-- Legenda -->
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-dot legend-dot-current"></div>
+                    <span>Saldo Atual: @Model.SaldoAtual.ToString("C")</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot legend-dot-projected"></div>
+                    <span>Projeção Final: @Model.SaldoProjetado6Meses.ToString("C")</span>
+                </div>
+            </div>
+        </section>
+    }
+
+    <!-- Seção Educativa -->
+    <section id="infoSection" class="info-section" style="display: none;">
+
         <div class="info-header">
-            <h2 id="infoSectionTitle" class="info-title">O que é Projeção Financeira?</h2>
+            <h2 class="info-title">O que é Projeção Financeira?</h2>
             <p class="info-intro">
-                A projeção financeira é uma estimativa de como estarão suas finanças no futuro.
-                Ela utiliza seu <strong>saldo atual</strong> e seus hábitos de consumo (receitas e despesas <strong>recorrentes</strong>)
-                para prever se você terá dinheiro sobrando ou faltando nos próximos meses.
+                Estimativa matemática do seu patrimônio futuro baseada em
+                <strong>receitas e despesas recorrentes</strong> (salário, aluguel, assinaturas, etc).
             </p>
         </div>
 
         <!-- Passo a Passo -->
         <div class="passos-container">
-            <h3 class="passos-title">Como o cálculo é feito?</h3>
-            <p class="passos-intro">O sistema ignora gastos pontuais (como um jantar caro) e foca no que se repete. Imagine o seguinte cenário:</p>
+            <h3 class="passos-title">Como o Cálculo Funciona?</h3>
+            <p class="passos-intro">Ignoramos gastos pontuais e focamos no padrão mensal:</p>
 
             <div class="passos-grid">
                 <div class="passo-card glass-panel">
                     <div class="passo-number">1</div>
-                    <h4 class="passo-title">Saldo Inicial</h4>
-                    <p class="passo-text">Você começa com o dinheiro que tem hoje na conta. Ex: <strong>R$ 1.000</strong>.</p>
+                    <h4 class="passo-title">Ponto de Partida</h4>
+                    <p class="passo-text">Seu saldo atual. Exemplo: <strong>R$ 1.000</strong></p>
                 </div>
                 <div class="passo-card glass-panel">
                     <div class="passo-number">2</div>
-                    <h4 class="passo-title">O que entra todo mês</h4>
-                    <p class="passo-text">Seu salário e rendas fixas. Ex: <strong>+ R$ 3.000</strong>.</p>
+                    <h4 class="passo-title">Entradas Fixas</h4>
+                    <p class="passo-text">Salário e rendas recorrentes. Ex: <strong>+R$ 3.000</strong></p>
                 </div>
                 <div class="passo-card glass-panel">
                     <div class="passo-number">3</div>
-                    <h4 class="passo-title">O que sai todo mês</h4>
-                    <p class="passo-text">Aluguel, internet, contas fixas. Ex: <strong>- R$ 2.000</strong>.</p>
+                    <h4 class="passo-title">Saídas Fixas</h4>
+                    <p class="passo-text">Aluguel, contas, assinaturas. Ex: <strong>-R$ 2.000</strong></p>
                 </div>
             </div>
 
             <div class="formula-box glass-panel">
-                <p class="formula-item"><strong>A Lógica:</strong> Todo mês sobra R$ 1.000 (3.000 - 2.000).</p>
-                <p class="formula-item"><strong>Em 6 meses:</strong> R$ 1.000 (hoje) + (6 × R$ 1.000 de sobra) = <strong>R$ 7.000</strong>.</p>
-                <p class="formula-item"><strong>Conclusão:</strong> Você consegue visualizar seu crescimento patrimonial.</p>
+                <p class="formula-item"><strong>Fluxo Mensal:</strong> R$ 3.000 - R$ 2.000 = <strong>R$ 1.000/mês</strong></p>
+                <p class="formula-item"><strong>Em 6 meses:</strong> R$ 1.000 (hoje) + (6 × R$ 1.000) = <strong>R$ 7.000</strong></p>
+                <p class="formula-item"><strong>Resultado:</strong> Crescimento patrimonial de <strong>+600%</strong></p>
             </div>
         </div>
 
-        <!-- FAQ Accordion -->
+        <!-- FAQ -->
         <div class="faq-container">
-            <h3 class="faq-title">Dúvidas Comuns</h3>
+            <h3 class="faq-title">Perguntas Frequentes</h3>
 
             <div class="accordion">
                 <div class="accordion-item">
-                    <button class="accordion-button"
-                            type="button"
-                            aria-expanded="false"
-                            aria-controls="faq-1">
-                        <span class="accordion-question">Por que minha projeção deu errada?</span>
-                        <span class="accordion-icon material-symbols-outlined" aria-hidden="true">expand_more</span>
+                    <button class="accordion-button" type="button">
+                        <span class="accordion-question">Por que minha projeção está errada?</span>
+                        <span class="accordion-icon material-symbols-outlined">expand_more</span>
                     </button>
-                    <div id="faq-1" class="accordion-content">
-                        <p>Verifique se você marcou suas Receitas e Despesas fixas (como salário e aluguel) com a opção <strong>"É Recorrente?"</strong> e se a data de início delas engloba o período atual.</p>
+                    <div class="accordion-content">
+                        <p>
+                            Verifique se marcou receitas/despesas fixas como <strong>"Recorrente"</strong>
+                            e se as datas de início englobam o período atual.
+                        </p>
                     </div>
                 </div>
 
                 <div class="accordion-item">
-                    <button class="accordion-button"
-                            type="button"
-                            aria-expanded="false"
-                            aria-controls="faq-2">
-                        <span class="accordion-question">Gastos únicos afetam a projeção?</span>
-                        <span class="accordion-icon material-symbols-outlined" aria-hidden="true">expand_more</span>
+                    <button class="accordion-button" type="button">
+                        <span class="accordion-question">Gastos únicos afetam?</span>
+                        <span class="accordion-icon material-symbols-outlined">expand_more</span>
                     </button>
-                    <div id="faq-2" class="accordion-content">
-                        <p>Não. A projeção ignora gastos únicos (não recorrentes) para focar na tendência de longo prazo do seu fluxo de caixa.</p>
+                    <div class="accordion-content">
+                        <p>
+                            Não. Ignoramos gastos pontuais para focar na tendência de longo prazo.
+                        </p>
                     </div>
                 </div>
 
                 <div class="accordion-item">
-                    <button class="accordion-button"
-                            type="button"
-                            aria-expanded="false"
-                            aria-controls="faq-3">
-                        <span class="accordion-question">O que acontece se a projeção for negativa?</span>
-                        <span class="accordion-icon material-symbols-outlined" aria-hidden="true">expand_more</span>
+                    <button class="accordion-button" type="button">
+                        <span class="accordion-question">E se a projeção for negativa?</span>
+                        <span class="accordion-icon material-symbols-outlined">expand_more</span>
                     </button>
-                    <div id="faq-3" class="accordion-content">
-                        <p>Significa que suas despesas fixas são maiores que suas receitas fixas. Seu saldo vai diminuir mês a mês até ficar vermelho. É um alerta para cortar gastos fixos!</p>
+                    <div class="accordion-content">
+                        <p>
+                            Significa que suas despesas fixas > receitas fixas.
+                            É um alerta para <strong>cortar gastos</strong> ou <strong>aumentar renda</strong>!
+                        </p>
                     </div>
                 </div>
             </div>
@@ -232,7 +350,10 @@
     <script>
         window.saveMoneyDados = {
             labels: @Html.Raw(Json.Serialize(Model.Meses)),
-            values: @Html.Raw(Json.Serialize(Model.Saldos))
+            values: @Html.Raw(Json.Serialize(Model.Saldos)),
+            saldoAtual: @Model.SaldoAtual,
+            fluxoMensal: @Model.FluxoMensal,
+            saldoProjetado: @Model.SaldoProjetado6Meses
         };
     </script>
     <script src="~/js/projecao.js" asp-append-version="true"></script>

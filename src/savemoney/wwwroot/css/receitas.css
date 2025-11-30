@@ -1,15 +1,8 @@
 ﻿/* ============================================================================
    RECEITAS
    Design System: Dark Mode + Glassmorphism (Success Accent)
+   Usa variáveis globais do site.css
    ============================================================================ */
-
-/* Variáveis do Módulo
-   ========================================================================== */
-:root {
-    --receitas-accent: #10b981;
-    --receitas-accent-hover: #059669;
-    --receitas-accent-glow: rgba(16, 185, 129, 0.2);
-}
 
 /* Animação de Entrada
    ========================================================================== */
@@ -87,7 +80,7 @@
 
 .page-icon {
     font-size: 2.75rem;
-    color: var(--receitas-accent);
+    color: var(--success);
 }
 
 .page-subtitle {
@@ -125,20 +118,20 @@
     }
 
     .btn-action.btn-success {
-        background: var(--receitas-accent);
-        color: var(--text-primary);
-        box-shadow: 0 0.25rem 1.25rem var(--receitas-accent-glow);
+        background: var(--success);
+        color: var(--btn-primary-text);
+        box-shadow: 0 0.25rem 1.25rem rgba(16, 185, 129, 0.2);
     }
 
         .btn-action.btn-success:hover {
-            background: var(--receitas-accent-hover);
+            background: #059669;
             transform: translateY(-0.125rem);
             box-shadow: 0 0.5rem 1.5625rem rgba(16, 185, 129, 0.3);
         }
 
     .btn-action.btn-primary {
         background: var(--accent-primary);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
         box-shadow: 0 0.25rem 1.25rem rgba(59, 130, 246, 0.2);
     }
 
@@ -162,7 +155,7 @@
 
     .btn-action.btn-danger {
         background: var(--danger);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
         box-shadow: 0 0.25rem 1.25rem rgba(239, 68, 68, 0.2);
     }
 
@@ -241,7 +234,7 @@
 }
 
     .stat-icon-warning .material-symbols-outlined {
-        color: #f59e0b;
+        color: var(--warning);
     }
 
 .stat-info {
@@ -269,7 +262,7 @@
 }
 
 .value-warning {
-    color: #f59e0b;
+    color: var(--warning);
 }
 
 /* Alert
@@ -324,7 +317,7 @@
 
 .empty-icon {
     font-size: 5rem;
-    color: var(--receitas-accent);
+    color: var(--success);
     opacity: 0.5;
     margin-bottom: 1.5rem;
 }
@@ -368,7 +361,7 @@
     .receita-card:hover {
         transform: translateY(-0.25rem);
         box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
-        border-color: var(--receitas-accent);
+        border-color: var(--success);
     }
 
 @media (prefers-reduced-motion: reduce) {
@@ -443,7 +436,7 @@
 
     .btn-icon:hover {
         background: var(--accent-primary);
-        color: var(--text-primary);
+        color: var(--btn-primary-text);
         border-color: var(--accent-primary);
     }
 
@@ -471,7 +464,7 @@
 .amount-value {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--receitas-accent);
+    color: var(--success);
     letter-spacing: -0.0625rem;
 }
 
@@ -547,8 +540,9 @@
 
 .status-warning {
     background: rgba(245, 158, 11, 0.15);
-    color: #f59e0b;
+    color: var(--warning);
 }
+
 /* Modal System
    ========================================================================== */
 .modal-content.glass-panel {
@@ -705,7 +699,7 @@
 }
 
     .currency-select:hover {
-        color: var(--receitas-accent);
+        color: var(--success);
     }
 
     .currency-select option {
@@ -741,7 +735,7 @@
     border: none;
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--receitas-accent);
+    color: var(--success);
     outline: none;
     padding: 0;
 }
@@ -768,7 +762,7 @@
 
 .label-icon {
     font-size: 1.125rem;
-    color: var(--receitas-accent);
+    color: var(--success);
 }
 
 .form-input {
@@ -788,7 +782,7 @@
 
     .form-input:focus {
         outline: none;
-        border-color: var(--receitas-accent);
+        border-color: var(--success);
         background: rgba(16, 185, 129, 0.05);
         box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.1);
     }
@@ -855,7 +849,7 @@
 
     .toggle-title .material-symbols-outlined {
         font-size: 1.25rem;
-        color: var(--receitas-accent);
+        color: var(--success);
     }
 
 .toggle-description {
@@ -912,8 +906,8 @@
 }
 
 .toggle-success input:checked + .toggle-slider {
-    background-color: var(--receitas-accent);
-    border-color: var(--receitas-accent);
+    background-color: var(--success);
+    border-color: var(--success);
 }
 
 .toggle-switch input:checked + .toggle-slider::before {
