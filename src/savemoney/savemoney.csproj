@@ -47,11 +47,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\" />
+    <None Include="SaveMonney\SaveMonney.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="SaveMonney\SaveMonney.csproj" />
+    <Folder Include="Views\Relatorio\" />
   </ItemGroup>
 
 </Project>
