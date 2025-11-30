@@ -1,5 +1,5 @@
 ﻿/* ============================================================================
-   LOGIN
+   LOGIN - VERSÃO CORRIGIDA
    ============================================================================ */
 
 (() => {
@@ -259,7 +259,7 @@
             }
 
             .form-input.is-valid {
-                border-color: var(--success);
+                border-color: var(--login-success);
             }
 
             .form-input.is-valid:focus {
@@ -267,7 +267,7 @@
             }
 
             .form-input.is-invalid {
-                border-color: var(--danger);
+                border-color: var(--login-danger);
             }
 
             .form-input.is-invalid:focus {

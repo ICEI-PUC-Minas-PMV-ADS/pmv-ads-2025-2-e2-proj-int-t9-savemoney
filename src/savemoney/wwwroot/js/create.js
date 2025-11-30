@@ -1,5 +1,5 @@
 ﻿/* ============================================================================
-   CREATE (CADASTRO)
+   CREATE (CADASTRO) - VERSÃO CORRIGIDA
    ============================================================================ */
 
 (() => {
@@ -486,7 +486,7 @@
             }
 
             .form-input.is-valid {
-                border-color: var(--create-accent);
+                border-color: var(--create-success);
             }
 
             .form-input.is-valid:focus {
@@ -494,7 +494,7 @@
             }
 
             .form-input.is-invalid {
-                border-color: var(--danger);
+                border-color: var(--create-danger);
             }
 
             .form-input.is-invalid:focus {
