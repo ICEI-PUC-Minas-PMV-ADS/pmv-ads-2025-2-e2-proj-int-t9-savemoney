@@ -1,110 +1,496 @@
-﻿@page
-@model savemoney.Pages.Relatorios.IndexModel
-
+﻿@model savemoney.Models.ViewModels.RelatorioFinanceiroViewModel
 @{
-    ViewData["Title"] = "Relatório Financeiro";
+    ViewData["Title"] = "Relatórios Financeiros";
 }
 
-<h2>@ViewData["Title"]</h2>
+<script>
+    window.relatoriosData = {
+        timeline: {
+            labels: @Html.Raw(Model.JsonLabelsTimeline),
+            receitas: @Html.Raw(Model.JsonDadosReceitas),
+            despesas: @Html.Raw(Model.JsonDadosDespesas)
+        },
+        categorias: {
+            labels: @Html.Raw(Model.JsonLabelsCategorias),
+            valores: @Html.Raw(Model.JsonValoresCategorias)
+        },
+        diasSemana: {
+            labels: @Html.Raw(Model.JsonDiasSemana ?? "[]"),
+            valores: @Html.Raw(Model.JsonValoresDiaSemana ?? "[]")
+        },
+        projecao: {
+            meses: @Html.Raw(Model.JsonProjecaoMeses ?? "[]"),
+            saldos: @Html.Raw(Model.JsonProjecaoSaldos ?? "[]")
+        },
+        kpis: {
+            receitas: "@Model.TotalReceitas.ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            despesas: "@Model.TotalDespesas.ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            saldo: "@Model.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            taxaPoupanca: "@Model.TaxaPoupanca.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+        },
+        filtros: {
+            dataInicio: '@Model.DataInicio.ToString("yyyy-MM-dd")',
+            dataFim: '@Model.DataFim.ToString("yyyy-MM-dd")'
+        }
+    };
+</script>
 
-<form method="post" id="reportForm">
-    @Html.AntiForgeryToken()
-
-    <div>
-        <label>Data início</label>
-        <input asp-for="Request.StartDate" type="date" class="form-control" />
-        <span asp-validation-for="Request.StartDate" class="text-danger"></span>
+<div class="relatorios-container">
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-title-wrapper">
+                <span class="material-symbols-outlined header-icon">analytics</span>
+                <div>
+                    <h1 class="page-title">Relatórios Financeiros</h1>
+                    <p class="page-subtitle">Análise completa das suas finanças</p>
+                </div>
+            </div>
+            <div class="header-actions no-print">
+                <a asp-action="ExportarCsv"
+                   asp-route-dataInicio="@Model.DataInicio.ToString("yyyy-MM-dd")"
+                   asp-route-dataFim="@Model.DataFim.ToString("yyyy-MM-dd")"
+                   asp-route-tipoRecorrencia="@Model.TipoRecorrenciaFiltro"
+                   class="btn-export">
+                    <span class="material-symbols-outlined">download</span>
+                    Exportar CSV
+                </a>
+                <button type="button" class="btn-print" onclick="window.print()">
+                    <span class="material-symbols-outlined">print</span>
+                    Imprimir
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <label>Data fim</label>
-        <input asp-for="Request.EndDate" type="date" class="form-control" />
-        <span asp-validation-for="Request.EndDate" class="text-danger"></span>
+    <div class="filters-section glass-card no-print">
+        <form method="get" id="filterForm" class="filters-form">
+            <div class="date-chips">
+                <button type="button" class="date-chip" data-period="today">Hoje</button>
+                <button type="button" class="date-chip" data-period="week">Esta Semana</button>
+                <button type="button" class="date-chip" data-period="month">Este Mês</button>
+                <button type="button" class="date-chip" data-period="quarter">Trimestre</button>
+                <button type="button" class="date-chip" data-period="year">Este Ano</button>
+            </div>
+
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        Data Início
+                    </label>
+                    <input type="date" name="dataInicio" value="@Model.DataInicio.ToString("yyyy-MM-dd")" class="filter-input" />
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="material-symbols-outlined">event</span>
+                        Data Fim
+                    </label>
+                    <input type="date" name="dataFim" value="@Model.DataFim.ToString("yyyy-MM-dd")" class="filter-input" />
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="material-symbols-outlined">view_timeline</span>
+                        Visualização
+                    </label>
+                    <select name="agregacao" class="filter-input">
+                        @foreach (var item in Enum.GetValues(typeof(savemoney.Models.PeriodoAgregacao)))
+                        {
+                            <!option value="@item" @(Model.Agregacao.ToString() == item.ToString() ? "selected" : "")>@item</!option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="material-symbols-outlined">repeat</span>
+                        Tipo
+                    </label>
+                    <select name="tipoRecorrencia" class="filter-input">
+                        <!option value="" @(string.IsNullOrEmpty(Model.TipoRecorrenciaFiltro) ? "selected" : "")>Todos</!option>
+                        <!option value="fixo" @(Model.TipoRecorrenciaFiltro == "fixo" ? "selected" : "")>Fixos (Recorrentes)</!option>
+                        <!option value="variavel" @(Model.TipoRecorrenciaFiltro == "variavel" ? "selected" : "")>Variáveis (Únicos)</!option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="material-symbols-outlined">category</span>
+                        Categoria
+                    </label>
+                    <select name="categoria" class="filter-input">
+                        <!option value="" @(string.IsNullOrEmpty(Model.CategoriaFiltro) ? "selected" : "")>Todas</!option>
+                        @foreach (var cat in Model.CategoriasDisponiveis)
+                        {
+                            <!option value="@cat" @(Model.CategoriaFiltro == cat ? "selected" : "")>@cat</!option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group filter-actions">
+                    <button type="submit" class="btn-filter">
+                        <span class="material-symbols-outlined">filter_alt</span>
+                        Filtrar
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <div>
-        <label>Período</label>
-        <select asp-for="Request.Period" class="form-control">
-            <option value="Weekly">Semanal</option>
-            <option value="Monthly">Mensal</option>
-            <option value="Yearly">Anual</option>
-        </select>
-    </div>
+    @if (!Model.TemDadosSuficientes)
+    {
+        <div class="empty-state glass-card">
+            <div class="empty-icon">
+                <span class="material-symbols-outlined">query_stats</span>
+            </div>
+            <h2 class="empty-title">Nenhum dado encontrado</h2>
+            <p class="empty-text">@Model.MensagemVazia Tente ajustar o período ou verifique seus lançamentos.</p>
+            <div class="empty-actions">
+                <a asp-controller="Receitas" asp-action="Index" class="btn-primary">
+                    <span class="material-symbols-outlined">list_alt</span>
+                    Ir para Receitas
+                </a>
+                <a asp-controller="Despesas" asp-action="Index" class="btn-secondary">
+                    <span class="material-symbols-outlined">list_alt</span>
+                    Ir para Despesas
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="kpis-section">
+            <div class="glass-card kpi-card">
+                <div class="kpi-icon-wrapper kpi-icon-success">
+                    <span class="material-symbols-outlined">trending_up</span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value kpi-counter" data-target="@Model.TotalReceitas.ToString(System.Globalization.CultureInfo.InvariantCulture)">R$ 0,00</span>
+                    <span class="kpi-label">Total Receitas</span>
+                </div>
+                <div class="kpi-variation @Model.ClasseCssVariacaoReceitas">
+                    <span class="material-symbols-outlined">@Model.IconeVariacaoReceitas</span>
+                    <span>@Math.Abs(Model.VariacaoReceitas).ToString("F1")%</span>
+                </div>
+            </div>
 
-    <div style="margin-top:10px;">
-        <button type="submit" class="btn btn-primary">Gerar</button>
-        <button type="submit" name="handler" value="ExportExcel" class="btn btn-outline-secondary" onclick="return prepareExport()">Exportar Excel</button>
-        <button type="submit" name="handler" value="ExportPdf" class="btn btn-outline-secondary" onclick="return prepareExport()">Exportar PDF</button>
-    </div>
+            <div class="glass-card kpi-card">
+                <div class="kpi-icon-wrapper kpi-icon-danger">
+                    <span class="material-symbols-outlined">trending_down</span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value kpi-counter" data-target="@Model.TotalDespesas.ToString(System.Globalization.CultureInfo.InvariantCulture)">R$ 0,00</span>
+                    <span class="kpi-label">Total Despesas</span>
+                </div>
+                <div class="kpi-variation @Model.ClasseCssVariacaoDespesas">
+                    <span class="material-symbols-outlined">@Model.IconeVariacaoDespesas</span>
+                    <span>@Math.Abs(Model.VariacaoDespesas).ToString("F1")%</span>
+                </div>
+            </div>
 
-    <input type="hidden" asp-for="ChartImageBase64" id="ChartImage" />
-    <input type="hidden" asp-for="PieImageBase64" id="PieImage" />
-</form>
+            <div class="glass-card kpi-card">
+                <div class="kpi-icon-wrapper kpi-icon-primary">
+                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value @Model.ClasseCssSaldo kpi-counter" data-target="@Model.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)">R$ 0,00</span>
+                    <span class="kpi-label">Saldo do Período</span>
+                </div>
+                <div class="kpi-variation @Model.ClasseCssVariacaoSaldo">
+                    <span class="material-symbols-outlined">@Model.IconeVariacaoSaldo</span>
+                    <span>@Math.Abs(Model.VariacaoSaldo).ToString("F1")%</span>
+                </div>
+            </div>
 
-<hr />
+            <div class="glass-card kpi-card">
+                <div class="kpi-icon-wrapper kpi-icon-warning">
+                    <span class="material-symbols-outlined">savings</span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value kpi-counter-percent" data-target="@Model.TaxaPoupanca.ToString(System.Globalization.CultureInfo.InvariantCulture)">0%</span>
+                    <span class="kpi-label">Taxa de Poupança</span>
+                </div>
+                <div class="kpi-subtext">
+                    @if (Model.TaxaPoupanca >= 20)
+                    {
+                        <span class="text-success">Excelente!</span>
+                    }
+                    else if (Model.TaxaPoupanca >= 10)
+                    {
+                        <span class="text-warning">Bom</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Atenção</span>
+                    }
+                </div>
+            </div>
+        </div>
 
-<!-- diagnóstico rápido para debug -->
-<p>Qtd períodos: @(Model.ViewModel?.Periodos?.Count())</p>
+        <div class="charts-section">
+            <div class="glass-card chart-card chart-wide">
+                <div class="chart-header">
+                    <div class="chart-title-wrapper">
+                        <span class="material-symbols-outlined">bar_chart</span>
+                        <h3 class="chart-title">Fluxo Financeiro</h3>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-item legend-success">
+                            <span class="legend-dot"></span> Receitas
+                        </span>
+                        <span class="legend-item legend-danger">
+                            <span class="legend-dot"></span> Despesas
+                        </span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="chartFluxo"></canvas>
+                </div>
+            </div>
 
-@if (Model.ViewModel?.Periodos != null && Model.ViewModel.Periodos.Count > 0)
-{
-    <h4>Resumo (DRE)</h4>
-    <p>Total Receitas: R$ @(Model.ViewModel.TotalReceitas.ToString("N2"))</p>
-    <p>Total Despesas: R$ @(Model.ViewModel.TotalDespesas.ToString("N2"))</p>
-    <p>Saldo: R$ @(Model.ViewModel.Saldo.ToString("N2"))</p>
+            <div class="glass-card chart-card">
+                <div class="chart-header">
+                    <div class="chart-title-wrapper">
+                        <span class="material-symbols-outlined">donut_large</span>
+                        <h3 class="chart-title">Gastos por Categoria</h3>
+                    </div>
+                </div>
+                <div class="chart-body chart-body-doughnut">
+                    <canvas id="chartCategorias"></canvas>
+                </div>
+            </div>
 
-    <canvas id="barChart" height="150"></canvas>
-    <canvas id="pieChart" height="150"></canvas>
+            <div class="glass-card chart-card">
+                <div class="chart-header">
+                    <div class="chart-title-wrapper">
+                        <span class="material-symbols-outlined">calendar_view_week</span>
+                        <h3 class="chart-title">Gastos por Dia da Semana</h3>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="chartDiaSemana"></canvas>
+                </div>
+            </div>
 
-    <table class="table table-sm">
-        <thead><tr><th>Período</th><th class="text-end">Receitas</th><th class="text-end">Despesas</th><th class="text-end">Saldo</th></tr></thead>
-        <tbody>
-            @foreach (var p in Model.ViewModel.Periodos)
+            <div class="glass-card chart-card chart-wide">
+                <div class="chart-header">
+                    <div class="chart-title-wrapper">
+                        <span class="material-symbols-outlined">trending_up</span>
+                        <h3 class="chart-title">Projeção de Saldo (Próximos 6 meses)</h3>
+                    </div>
+                    <span class="badge badge-info">Baseado na média dos últimos 3 meses</span>
+                </div>
+                <div class="chart-body">
+                    <canvas id="chartProjecao"></canvas>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.CategoriaVila) || !string.IsNullOrEmpty(Model.CategoriaHeroina))
+        {
+            <div class="analysis-section">
+                @if (!string.IsNullOrEmpty(Model.CategoriaVila) && Model.CategoriaVilaVariacao > 10)
+                {
+                    <div class="glass-card analysis-card analysis-vila">
+                        <div class="analysis-icon">
+                            <span class="material-symbols-outlined">warning</span>
+                        </div>
+                        <div class="analysis-content">
+                            <span class="analysis-label">Categoria em Alta</span>
+                            <span class="analysis-value">@Model.CategoriaVila</span>
+                            <span class="analysis-variation text-danger">
+                                <span class="material-symbols-outlined">arrow_upward</span>
+                                +@Model.CategoriaVilaVariacao.ToString("F0")%
+                            </span>
+                        </div>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.CategoriaHeroina) && Model.CategoriaHeroinaVariacao < -5)
+                {
+                    <div class="glass-card analysis-card analysis-heroina">
+                        <div class="analysis-icon">
+                            <span class="material-symbols-outlined">emoji_events</span>
+                        </div>
+                        <div class="analysis-content">
+                            <span class="analysis-label">Economia Identificada</span>
+                            <span class="analysis-value">@Model.CategoriaHeroina</span>
+                            <span class="analysis-variation text-success">
+                                <span class="material-symbols-outlined">arrow_downward</span>
+                                @Model.CategoriaHeroinaVariacao.ToString("F0")%
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="tops-section">
+            <div class="glass-card tops-card">
+                <div class="tops-header">
+                    <span class="material-symbols-outlined text-success">arrow_circle_up</span>
+                    <h3 class="tops-title">Top 5 Receitas</h3>
+                </div>
+                <div class="tops-list">
+                    @if (Model.TopReceitas.Any())
+                    {
+                        @foreach (var item in Model.TopReceitas)
+                        {
+                            <div class="top-item">
+                                <div class="top-item-info">
+                                    <span class="top-item-name">@item.Nome</span>
+                                    <span class="top-item-qty">@item.Quantidade ocorrência(s)</span>
+                                </div>
+                                <span class="top-item-value text-success">@item.ValorFormatado</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="tops-empty">Nenhuma receita no período</div>
+                    }
+                </div>
+            </div>
+
+            <div class="glass-card tops-card">
+                <div class="tops-header">
+                    <span class="material-symbols-outlined text-danger">arrow_circle_down</span>
+                    <h3 class="tops-title">Top 5 Despesas</h3>
+                </div>
+                <div class="tops-list">
+                    @if (Model.TopDespesas.Any())
+                    {
+                        @foreach (var item in Model.TopDespesas)
+                        {
+                            <div class="top-item">
+                                <div class="top-item-info">
+                                    <span class="top-item-name">@item.Nome</span>
+                                    <span class="top-item-category">@item.Categoria</span>
+                                </div>
+                                <span class="top-item-value text-danger">@item.ValorFormatado</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="tops-empty">Nenhuma despesa no período</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Diagnosticos.Any())
+        {
+            <div class="diagnostics-section glass-card">
+                <div class="diagnostics-header">
+                    <span class="material-symbols-outlined">psychology</span>
+                    <h3 class="diagnostics-title">Diagnósticos Inteligentes</h3>
+                </div>
+                <div class="diagnostics-list">
+                    @foreach (var diag in Model.Diagnosticos)
+                    {
+                        <div class="diag-item @diag.ClasseCss">
+                            <div class="diag-icon" style="color: @diag.CorIcone">
+                                <span class="material-symbols-outlined">@diag.Icone</span>
+                            </div>
+                            <div class="diag-content">
+                                <span class="diag-title">@diag.Titulo</span>
+                                <span class="diag-message">@diag.Mensagem</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="transactions-section glass-card">
+            <div class="transactions-header">
+                <div class="transactions-title-wrapper">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    <h3 class="transactions-title">Transações Detalhadas</h3>
+                    <span class="transactions-count">@Model.QuantidadeTransacoes itens</span>
+                </div>
+                <div class="transactions-search no-print">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="searchTransactions" placeholder="Buscar transações..." class="search-input" />
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="table-custom" id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="data">Data</th>
+                            <th>Dia</th>
+                            <th class="sortable" data-sort="descricao">Descrição</th>
+                            <th class="sortable" data-sort="categoria">Categoria</th>
+                            <th>Tipo</th>
+                            <th class="sortable" data-sort="valor">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.TransacoesDetalhadas.OrderByDescending(x => x.Data).Take(100))
+                        {
+                            <tr class="@t.ClasseCssLinha" data-categoria="@t.Categoria.ToLower()">
+                                <td>
+                                    <span class="date-badge">@t.DataCurta</span>
+                                </td>
+                                <td>
+                                    <span class="weekday-badge">@t.DiaSemanaAbrev</span>
+                                </td>
+                                <td>
+                                    <div class="transaction-desc">
+                                        <span class="material-symbols-outlined @t.ClasseCssStatus">@t.Icone</span>
+                                        <span>@t.Descricao</span>
+                                        @if (t.IsRecorrente)
+                                        {
+                                            <span class="material-symbols-outlined recurrence-icon" title="Recorrente">repeat</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="category-badge">@t.Categoria</span>
+                                </td>
+                                <td>
+                                    <span class="type-badge @t.ClasseCssBadge">@t.TipoTexto</span>
+                                </td>
+                                <td class="@t.ClasseCssStatus">
+                                    <strong>@t.ValorComSinal</strong>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (Model.TransacoesDetalhadas.Count > 100)
             {
-                <tr>
-                    <td>@p.Label</td>
-                    <td class="text-end">@p.TotalReceitas.ToString("N2")</td>
-                    <td class="text-end">@p.TotalDespesas.ToString("N2")</td>
-                    <td class="text-end">@p.Saldo.ToString("N2")</td>
-                </tr>
+                <div class="table-footer">
+                    <span class="text-secondary">Exibindo 100 de @Model.TransacoesDetalhadas.Count transações. Exporte o CSV para ver todas.</span>
+                </div>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="alert alert-info">Nenhum dado encontrado para o período selecionado.</div>
+        </div>
+    }
+</div>
+
+<template id="skeleton-template">
+    <div class="skeleton-container">
+        <div class="skeleton-kpis">
+            <div class="skeleton-card skeleton-pulse"></div>
+            <div class="skeleton-card skeleton-pulse"></div>
+            <div class="skeleton-card skeleton-pulse"></div>
+            <div class="skeleton-card skeleton-pulse"></div>
+        </div>
+        <div class="skeleton-charts">
+            <div class="skeleton-chart-wide skeleton-pulse"></div>
+            <div class="skeleton-chart skeleton-pulse"></div>
+        </div>
+    </div>
+</template>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/relatorios.css" asp-append-version="true" />
 }
 
 @section Scripts {
-    <script>
-        const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ViewModel?.Periodos?.Select(p => p.Label) ?? Array.Empty<string>()));
-        const receitas = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ViewModel?.Periodos?.Select(p => p.TotalReceitas) ?? Array.Empty<double>()));
-        const despesas = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ViewModel?.Periodos?.Select(p => p.TotalDespesas) ?? Array.Empty<double>()));
-        const totalReceitas = @(Model.ViewModel?.TotalReceitas ?? 0);
-        const totalDespesas = @(Model.ViewModel?.TotalDespesas ?? 0);
-
-        window.relatorioData = { labels, receitas, despesas, totalReceitas, totalDespesas };
-
-        // função chamada pelos botões de export (retorna true para permitir submit)
-        function prepareExport() {
-            try {
-                // espera que relatorio.js já tenha criado os charts e exposto as imagens
-                const barInput = document.getElementById('ChartImage');
-                const pieInput = document.getElementById('PieImage');
-
-                // se relatorio.js criou os charts e expôs as imagens em window, usar
-                if (window.__chartImageBase64) barInput.value = window.__chartImageBase64;
-                if (window.__pieImageBase64) pieInput.value = window.__pieImageBase64;
-
-                // se não tiver imagens, não impede o submit: exportará sem gráfico
-                return true;
-            } catch (err) {
-                console.error('Erro ao preparar export:', err);
-                return true;
-            }
-        }
-    </script>
-
-    <script src="~/js/relatorio.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="~/js/relatorios.js" asp-append-version="true"></script>
 }

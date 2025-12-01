@@ -10,13 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Relatorios\**" />
     <Compile Remove="wwwroot\css\receitas\**" />
-    <Content Remove="Views\Relatorios\**" />
     <Content Remove="wwwroot\css\receitas\**" />
-    <EmbeddedResource Remove="Views\Relatorios\**" />
     <EmbeddedResource Remove="wwwroot\css\receitas\**" />
-    <None Remove="Views\Relatorios\**" />
     <None Remove="wwwroot\css\receitas\**" />
   </ItemGroup>
 
@@ -48,10 +44,6 @@
 
   <ItemGroup>
     <None Include="SaveMonney\SaveMonney.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Relatorio\" />
   </ItemGroup>
 
 </Project>

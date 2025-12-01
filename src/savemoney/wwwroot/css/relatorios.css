@@ -1,154 +1,832 @@
-﻿/* Container principal com animação de entrada */
+﻿/* =========================================
+   1. Variáveis & Configurações Base
+   ========================================= */
+:root {
+    --glass-bg: rgba(20, 22, 30, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --card-radius: 1.25rem;
+    --transition-speed: 0.3s;
+}
+
 .relatorios-container {
+    padding-bottom: 3rem;
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Glassmorphism Card Premium */
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
-    border: 0.0625rem solid var(--glass-border);
-    border-radius: 1.25rem;
-    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
-}
-
-/* KPI Cards (Indicadores) */
-.kpi-card {
-    padding: 1.5rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
-
-    .kpi-card:hover {
-        transform: translateY(-0.25rem);
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
-        border-color: rgba(255, 255, 255, 0.15);
-    }
-
-.kpi-icon-wrapper {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.kpi-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.25rem;
-}
-
-.kpi-label {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-/* Área dos Gráficos */
-.chart-header {
-    padding: 1.5rem;
-    border-bottom: 0.0625rem solid var(--glass-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chart-body {
-    padding: 1.5rem;
-    position: relative;
-    height: 20rem; /* Altura fixa para o Canvas */
-}
-
-/* Inputs de Filtro (Contraste Aumentado) */
-.filter-input {
-    background: rgba(255, 255, 255, 0.08); /* Contraste 0.08 */
-    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
-    color: var(--text-primary);
-    border-radius: 0.75rem;
-    padding: 0.625rem 1rem;
-    font-size: 0.9375rem;
-    transition: all 0.2s ease;
-}
-
-    .filter-input:focus {
-        background: rgba(255, 255, 255, 0.12);
-        border-color: var(--accent-primary);
-        outline: none;
-        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.2);
-    }
-
-/* Botão de Filtrar */
-.btn-filter {
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    border-radius: 0.75rem;
-    padding: 0.625rem 1.5rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-    .btn-filter:hover {
-        background: var(--accent-primary-hover);
-        transform: translateY(-0.125rem);
-        box-shadow: 0 0.5rem 1.5rem rgba(59, 130, 246, 0.3);
-    }
-
-/* Tabela de Detalhes */
-.table-custom th {
-    background: rgba(0, 0, 0, 0.2);
-    color: var(--text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    padding: 1rem;
-    border: none;
-}
-
-.table-custom td {
-    padding: 1rem;
-    vertical-align: middle;
-    color: var(--text-primary);
-    border-bottom: 0.0625rem solid var(--glass-border);
-    background: transparent;
-}
-
-.table-custom tr:last-child td {
-    border-bottom: none;
-}
-
-/* Diagnósticos */
-.diag-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 0.25rem solid var(--accent-primary);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
 }
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(1.25rem);
+        transform: translateY(20px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* =========================================
+   2. Componentes Glassmorphism
+   ========================================= */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--glass-shadow);
+    transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    overflow: hidden;
+}
+
+/* =========================================
+   3. Header & Ações
+   ========================================= */
+.page-header {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icon {
+    font-size: 2.5rem;
+    color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.5rem;
+    border-radius: 12px;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-export, .btn-print {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .btn-export:hover {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+    }
+
+    .btn-print:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+/* =========================================
+   4. Filtros Avançados
+   ========================================= */
+.filters-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.date-chips {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none; /* Firefox */
+}
+
+    .date-chips::-webkit-scrollbar {
+        display: none;
+    }
+/* Chrome */
+
+.date-chip {
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .date-chip:hover, .date-chip.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+    }
+
+.filters-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+    .filter-label span {
+        font-size: 1rem;
+    }
+
+.filter-input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+    .filter-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+.btn-filter {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 0.6rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 42px; /* Alinhar com inputs */
+    transition: background 0.2s;
+}
+
+    .btn-filter:hover {
+        background: var(--accent-primary-hover);
+    }
+
+/* =========================================
+   5. KPIs
+   ========================================= */
+.kpis-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    padding: 1.5rem;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .kpi-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+.kpi-icon-wrapper {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.05);
+}
+
+.kpi-icon-success {
+    color: var(--success);
+}
+
+.kpi-icon-danger {
+    color: var(--danger);
+}
+
+.kpi-icon-primary {
+    color: var(--info);
+}
+
+.kpi-icon-warning {
+    color: var(--warning);
+}
+
+.kpi-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.kpi-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.kpi-variation {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    gap: 0.2rem;
+}
+
+/* =========================================
+   6. Gráficos
+   ========================================= */
+.charts-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+}
+
+.chart-wide {
+    grid-column: span 2;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chart-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.chart-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+}
+
+.chart-body {
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-success .legend-dot {
+    background: var(--success);
+}
+
+.legend-danger .legend-dot {
+    background: var(--danger);
+}
+
+/* =========================================
+   7. Diagnósticos e Tops
+   ========================================= */
+.analysis-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.analysis-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.analysis-vila {
+    border-left: 4px solid var(--danger);
+}
+
+.analysis-heroina {
+    border-left: 4px solid var(--success);
+}
+
+.analysis-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.analysis-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.analysis-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.analysis-variation {
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.tops-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tops-card {
+    padding: 1.5rem;
+}
+
+.tops-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tops-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.top-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+    .top-item:last-child {
+        border-bottom: none;
+    }
+
+.top-item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.top-item-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.top-item-qty, .top-item-category {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.top-item-value {
+    font-weight: 700;
+}
+
+.diagnostics-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.diagnostics-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-primary);
+}
+
+.diagnostics-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.diag-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    align-items: flex-start;
+}
+
+.diag-title {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: var(--text-primary);
+}
+
+.diag-message {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* =========================================
+   8. Tabela de Transações
+   ========================================= */
+.transactions-section {
+    padding: 0;
+    overflow: hidden;
+}
+
+.transactions-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.transactions-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.transactions-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.transactions-count {
+    background: rgba(255,255,255,0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.search-input {
+    background: rgba(0,0,0,0.2);
+    border: none;
+    color: var(--text-primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table-custom th {
+        text-align: left;
+        padding: 1rem 1.5rem;
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-bottom: 1px solid var(--glass-border);
+        cursor: pointer;
+    }
+
+    .table-custom td {
+        padding: 1rem 1.5rem;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--glass-border);
+        vertical-align: middle;
+    }
+
+    .table-custom tbody tr {
+        transition: background 0.2s;
+    }
+
+        .table-custom tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+.date-badge, .weekday-badge, .category-badge, .type-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.date-badge {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    font-family: monospace;
+}
+
+.weekday-badge {
+    color: var(--text-secondary);
+}
+
+.category-badge {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+}
+
+.type-badge.receita {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.type-badge.despesa {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.transaction-desc {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.recurrence-icon {
+    font-size: 1rem;
+    color: var(--info);
+}
+
+.hidden-row {
+    display: none !important;
+}
+
+/* =========================================
+   9. Empty State
+   ========================================= */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
+.empty-title {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-text {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.empty-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* =========================================
+   10. Responsividade (5 Breakpoints)
+   ========================================= */
+
+/* XS - Mobile Pequeno (< 576px) */
+@media (max-width: 575.98px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn-export, .btn-print {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .kpis-section {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wide {
+        grid-column: span 1;
+    }
+
+    .analysis-section, .tops-section {
+        grid-template-columns: 1fr;
+    }
+
+    .table-custom th:nth-child(2), .table-custom td:nth-child(2), /* Dia */
+    .table-custom th:nth-child(5), .table-custom td:nth-child(5) /* Tipo */ {
+        display: none;
+    }
+}
+
+/* SM - Mobile (576px - 768px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .kpis-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wide {
+        grid-column: span 1;
+    }
+
+    .analysis-section, .tops-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MD - Tablet Portrait (768px - 992px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .kpis-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wide {
+        grid-column: span 1;
+    }
+}
+
+/* LG - Desktop (992px - 1200px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .kpis-section {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* XL - Large Desktop (> 1200px) - Padrão */
+
+/* =========================================
+   11. Print Styles
+   ========================================= */
+@media print {
+    .no-print, header, footer, .sidebar {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .glass-card {
+        background: none !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        color: black !important;
+    }
+
+    .text-white {
+        color: black !important;
+    }
+
+    .text-secondary {
+        color: #555 !important;
+    }
+
+    .kpi-value {
+        color: black !important;
+    }
+
+    canvas {
+        max-height: 300px !important;
+        page-break-inside: avoid;
+    }
+
+    .relatorios-container {
+        padding: 0;
+    }
+
+    .page-header {
+        margin-bottom: 1rem;
+    }
+
+    .table-custom {
+        font-size: 0.8rem;
+    }
+
+    .kpis-section {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 0.5rem;
+    }
+
+    .kpi-card {
+        padding: 0.5rem;
+        border: 1px solid #eee;
     }
 }

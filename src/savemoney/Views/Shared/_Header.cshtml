@@ -41,7 +41,7 @@
                     </li>
                     <li class="header-dropdown">
                         <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Relatórios <i class="bi bi-chevron-down"></i>
+                            Recursos <i class="bi bi-chevron-down"></i>
                         </a>
                         <ul class="header-dropdown-menu">
                             <li><a href="#reports">Diagnósticos</a></li>
@@ -57,27 +57,41 @@
 
                     <li class="header-dropdown">
                         <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Gestão <i class="bi bi-chevron-down"></i>
+                            Transações <i class="bi bi-chevron-down"></i>
                         </a>
                         <ul class="header-dropdown-menu">
                             <li><a asp-controller="Receitas" asp-action="Index">Receitas</a></li>
                             <li><a asp-controller="Despesas" asp-action="Index">Despesas</a></li>
+                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;"></li>
                             <li><a asp-controller="Categories" asp-action="Index">Categorias</a></li>
-                            <li><a asp-controller="Historico" asp-action="Index">Historico Financeiro</a></li>
                         </ul>
                     </li>
 
                     <li class="header-dropdown">
                         <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Estratégia <i class="bi bi-chevron-down"></i>
+                            Planejamento <i class="bi bi-chevron-down"></i>
                         </a>
                         <ul class="header-dropdown-menu">
                             <li><a asp-controller="Budgets" asp-action="Index">Orçamentos</a></li>
-                            <li><a asp-controller="MetasFinanceiras" asp-action="Index">Metas</a></li>
-                            <li><a class="nav-link" asp-controller="Relatorios" asp-action="Index">Relatórios</a></li>
-                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;"></li>
+                            <li><a asp-controller="MetasFinanceiras" asp-action="Index">Metas de Vida</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="header-dropdown">
+                        <a href="#" aria-haspopup="true" aria-expanded="false" class="text-accent">
+                            Inteligência <i class="bi bi-chevron-down"></i>
+                        </a>
+                        <ul class="header-dropdown-menu">
+                            <li>
+                                <a asp-controller="Relatorios" asp-action="Index" class="d-flex justify-content-between align-items-center">
+                                    Relatórios & Insights
+                                    <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.6rem;">NOVO</span>
+                                </a>
+                            </li>
                             <li><a asp-controller="TendenciaFinanceira" asp-action="Index">Tendências</a></li>
-                            <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" class="link-featured">Projeção Futura</a></li>
+                            <li><a asp-controller="ProjecaoFinanceira" asp-action="Index">Projeção Futura</a></li>
+                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;"></li>
+                            <li><a asp-controller="Historico" asp-action="Index">Histórico Completo</a></li>
                         </ul>
                     </li>
 
@@ -96,7 +110,7 @@
 
                     @if (User.IsInRole("Administrador"))
                     {
-                        <li><a asp-controller="Usuarios" asp-action="Index">Usuários</a></li>
+                        <li><a asp-controller="Usuarios" asp-action="Index">Admin</a></li>
                     }
                 }
             </ul>
@@ -146,7 +160,7 @@
 
                 <li class="mobile-dropdown">
                     <button class="mobile-dropdown-toggle" aria-expanded="false">
-                        Gestão <i class="bi bi-chevron-down"></i>
+                        Transações <i class="bi bi-chevron-down"></i>
                     </button>
                     <ul class="mobile-dropdown-menu">
                         <li><a asp-controller="Receitas" asp-action="Index" data-dismiss="mobile-nav">Receitas</a></li>
@@ -157,13 +171,23 @@
 
                 <li class="mobile-dropdown">
                     <button class="mobile-dropdown-toggle" aria-expanded="false">
-                        Estratégia <i class="bi bi-chevron-down"></i>
+                        Planejamento <i class="bi bi-chevron-down"></i>
                     </button>
                     <ul class="mobile-dropdown-menu">
                         <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Orçamentos</a></li>
-                        <li><a asp-controller="MetasFinanceiras" asp-action="Index" data-dismiss="mobile-nav">Metas</a></li>
+                        <li><a asp-controller="MetasFinanceiras" asp-action="Index" data-dismiss="mobile-nav">Metas de Vida</a></li>
+                    </ul>
+                </li>
+
+                <li class="mobile-dropdown">
+                    <button class="mobile-dropdown-toggle" aria-expanded="false">
+                        Inteligência <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <ul class="mobile-dropdown-menu">
+                        <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav" class="text-accent">Relatórios & Insights</a></li>
                         <li><a asp-controller="TendenciaFinanceira" asp-action="Index" data-dismiss="mobile-nav">Tendências</a></li>
-                        <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" class="link-featured" data-dismiss="mobile-nav">Projeção Futura</a></li>
+                        <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" data-dismiss="mobile-nav">Projeção Futura</a></li>
+                        <li><a asp-controller="Historico" asp-action="Index" data-dismiss="mobile-nav">Histórico Completo</a></li>
                     </ul>
                 </li>
 
@@ -182,7 +206,7 @@
 
                 @if (User.IsInRole("Administrador"))
                 {
-                    <li><a asp-controller="Usuarios" asp-action="Index" data-dismiss="mobile-nav">Usuários</a></li>
+                    <li><a asp-controller="Usuarios" asp-action="Index" data-dismiss="mobile-nav">Admin</a></li>
                 }
             }
         </ul>
