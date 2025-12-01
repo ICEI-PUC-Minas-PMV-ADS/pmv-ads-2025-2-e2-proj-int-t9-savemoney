@@ -19,6 +19,7 @@ namespace savemoney.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<BudgetCategory> BudgetCategories { get; set; }
+        public DbSet<NotificacaoUsuario> Notificacoes { get; set; }
 
         // NOVO: DbSet para Widgets
         public DbSet<Widget> Widgets { get; set; }
@@ -53,6 +54,7 @@ namespace savemoney.Models
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
+
             // Budget → BudgetCategory (Cascade)
             modelBuilder.Entity<Budget>()
                 .HasMany(b => b.Categories)
@@ -78,6 +80,13 @@ namespace savemoney.Models
                 .HasMany(u => u.Receitas)
                 .WithOne(r => r.Usuario)
                 .HasForeignKey(r => r.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // TiposNotificações 
+            modelBuilder.Entity<NotificacaoUsuario>()
+                .HasOne(nu => nu.Usuario)
+                .WithMany()
+                .HasForeignKey(nu => nu.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Usuario → Despesas (Cascade)

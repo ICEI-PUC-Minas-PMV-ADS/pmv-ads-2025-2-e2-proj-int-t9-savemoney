@@ -1,0 +1,26 @@
+﻿[
+  {
+    "id": "upd_2025_12_01_relatorios",
+    "titulo": "Novo Módulo de Inteligência",
+    "mensagem": "Lançamos a nova tela de Relatórios! Agora com gráficos interativos, projeções financeiras para os próximos 6 meses e diagnósticos automáticos.",
+    "data": "2025-12-01T09:00:00"
+  },
+  {
+    "id": "upd_2025_11_28_notificacoes",
+    "titulo": "Central de Notificações",
+    "mensagem": "Agora você recebe alertas sobre contas vencendo e orçamentos estourados diretamente no sininho do topo.",
+    "data": "2025-11-28T15:30:00"
+  },
+  {
+    "id": "upd_2025_11_25_ui",
+    "titulo": "Design Premium",
+    "mensagem": "Atualizamos toda a interface para o novo padrão Glassmorphism com modo escuro nativo e melhor responsividade.",
+    "data": "2025-11-25T10:00:00"
+  },
+  {
+    "id": "upd_2025_11_20_perfis",
+    "titulo": "Ajuste em Perfis",
+    "mensagem": "Correção no upload de fotos de perfil e melhoria na segurança das senhas.",
+    "data": "2025-11-20T18:00:00"
+  }
+]
