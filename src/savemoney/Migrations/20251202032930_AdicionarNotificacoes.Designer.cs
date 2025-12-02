@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using savemoney.Models;
 
@@ -11,9 +12,11 @@ using savemoney.Models;
 namespace savemoney.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251202032930_AdicionarNotificacoes")]
+    partial class AdicionarNotificacoes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
@@ -258,7 +261,7 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.HasKey("Id");
 
@@ -293,10 +296,10 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ValorAtual")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal>("ValorObjetivo")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
@@ -389,7 +392,7 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,3)");
 
                     b.HasKey("Id");
 
@@ -521,7 +524,7 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2025, 12, 2, 1, 46, 27, 167, DateTimeKind.Local).AddTicks(1916),
+                            DataCadastro = new DateTime(2025, 12, 2, 0, 29, 29, 761, DateTimeKind.Local).AddTicks(865),
                             Documento = "000.000.000-00",
                             Email = "admin@savemoney.com",
                             FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true",

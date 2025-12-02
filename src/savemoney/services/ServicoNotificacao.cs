@@ -21,7 +21,7 @@ namespace savemoney.Services
             _env = env;
         }
 
-        // 1. Método Genérico para criar qualquer notificação
+        // 1. Método Genérico
         public async Task Criar(int userId, string titulo, string mensagem, TipoNotificacao tipo, string? link = null)
         {
             var notif = new NotificacaoUsuario
@@ -40,17 +40,15 @@ namespace savemoney.Services
             await _context.SaveChangesAsync();
         }
 
-        // 2. R11 - Verificar Orçamentos (Gastos próximos ou acima do limite)
-        // Deve ser chamado ao carregar o Dashboard ou ao adicionar uma Despesa
+        // 2. R11 - Verificar Orçamentos
         public async Task VerificarAlertasOrcamento(int userId)
         {
             var hoje = DateTime.Today;
 
-            // Busca categorias de orçamentos ativos
             var categoriasOrcamento = await _context.BudgetCategories
                 .Include(bc => bc.Budget)
                 .Include(bc => bc.Category)
-                .Where(bc => bc.Budget.UserId == userId
+                .Where(bc => bc.Budget!.UserId == userId // Adicionado ! para silenciar warning
                              && bc.Budget.StartDate <= hoje
                              && bc.Budget.EndDate >= hoje)
                 .ToListAsync();
@@ -63,24 +61,23 @@ namespace savemoney.Services
                 string titulo = "";
                 string msg = "";
                 TipoNotificacao tipo = TipoNotificacao.Info;
+                var categoriaNome = item.Category?.Name ?? "Categoria"; // Null safety
 
-                // Lógica de alerta
                 if (percentual >= 100)
                 {
                     titulo = "Orçamento Estourado!";
-                    msg = $"Você excedeu o limite de {item.Category.Name}. Gasto: {item.CurrentSpent:C} / Limite: {item.Limit:C}";
+                    msg = $"Você excedeu o limite de {categoriaNome}. Gasto: {item.CurrentSpent:C} / Limite: {item.Limit:C}";
                     tipo = TipoNotificacao.AlertaOrcamento;
                 }
                 else if (percentual >= 90)
                 {
                     titulo = "Atenção ao Orçamento";
-                    msg = $"Você já consumiu {percentual:F0}% do limite de {item.Category.Name}.";
+                    msg = $"Você já consumiu {percentual:F0}% do limite de {categoriaNome}.";
                     tipo = TipoNotificacao.AlertaOrcamento;
                 }
 
                 if (!string.IsNullOrEmpty(titulo))
                 {
-                    // Evita spam: Só cria se não houver notificação idêntica criada hoje
                     bool jaNotificadoHoje = await _context.Notificacoes.AnyAsync(n =>
                         n.UsuarioId == userId &&
                         n.Titulo == titulo &&
@@ -95,18 +92,17 @@ namespace savemoney.Services
             }
         }
 
-        // 3. R11 - Verificar Contas a Pagar (Próximos 3 dias ou Vencidas)
+        // 3. R11 - Verificar Contas a Pagar
         public async Task VerificarContasProximas(int userId)
         {
             var hoje = DateTime.Today;
             var limiteAlerta = hoje.AddDays(3);
 
-            // Busca despesas não pagas vencendo em breve ou vencidas recentemente
             var contasPendentes = await _context.Despesas
                 .Where(d => d.UsuarioId == userId
                             && !d.Pago
                             && d.DataFim <= limiteAlerta
-                            && d.DataFim >= hoje.AddDays(-30)) // Olha até 30 dias pra trás
+                            && d.DataFim >= hoje.AddDays(-30))
                 .ToListAsync();
 
             foreach (var conta in contasPendentes)
@@ -115,7 +111,6 @@ namespace savemoney.Services
                 string msg = $"{conta.Titulo} ({conta.Valor:C}) vence em {conta.DataFim:dd/MM}.";
                 var tipo = conta.DataFim < hoje ? TipoNotificacao.Erro : TipoNotificacao.ContaPendente;
 
-                // Evita spam diário da mesma conta
                 bool jaNotificadoHoje = await _context.Notificacoes.AnyAsync(n =>
                         n.UsuarioId == userId &&
                         n.Mensagem == msg &&
@@ -128,7 +123,7 @@ namespace savemoney.Services
             }
         }
 
-        // 4. Sincronizar Updates do Sistema (Lê do JSON e salva no banco)
+        // 4. Sincronizar Updates do Sistema
         public async Task SincronizarSistema(int userId)
         {
             var path = Path.Combine(_env.WebRootPath, "data", "sistema_updates.json");
@@ -137,12 +132,10 @@ namespace savemoney.Services
             try
             {
                 var jsonContent = await File.ReadAllTextAsync(path);
-                // Case insensitive para garantir leitura correta
                 var updates = JsonSerializer.Deserialize<List<UpdateItemDto>>(jsonContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 if (updates == null) return;
 
-                // Busca quais updates esse usuário já recebeu
                 var idsRecebidos = await _context.Notificacoes
                     .Where(n => n.UsuarioId == userId && n.CodigoReferenciaSistema != null)
                     .Select(n => n.CodigoReferenciaSistema)
@@ -152,15 +145,16 @@ namespace savemoney.Services
 
                 foreach (var update in updates)
                 {
-                    if (!idsRecebidos.Contains(update.Id))
+                    // Null safety checks para o DTO
+                    if (update.Id != null && !idsRecebidos.Contains(update.Id))
                     {
                         var novaNotif = new NotificacaoUsuario
                         {
                             UsuarioId = userId,
-                            Titulo = update.Titulo,
-                            Mensagem = update.Mensagem,
+                            Titulo = update.Titulo ?? "Atualização do Sistema",
+                            Mensagem = update.Mensagem ?? "Confira as novidades.",
                             Tipo = TipoNotificacao.Sistema,
-                            DataCriacao = update.Data, // Usa a data do update, não a de hoje
+                            DataCriacao = update.Data,
                             CodigoReferenciaSistema = update.Id,
                             Lida = false
                         };
@@ -177,24 +171,21 @@ namespace savemoney.Services
             }
             catch
             {
-                // Ignora falhas na leitura do JSON para não travar o sistema
+                // Ignora falhas na leitura
             }
         }
 
-        // 5. Gerenciamento de Limite (Privado)
-        // Mantém apenas as 100 mais recentes
+        // 5. Gerenciamento de Limite
         private async Task GerenciarLimiteArmazenamento(int userId)
         {
-            // Verifica contagem local na memória do tracker ou no banco
             var count = await _context.Notificacoes.CountAsync(n => n.UsuarioId == userId);
 
             if (count >= 100)
             {
-                var qtdRemover = count - 99; // Remove o excesso para deixar espaço para a nova
-
+                var qtdRemover = count - 99;
                 var paraRemover = await _context.Notificacoes
                     .Where(n => n.UsuarioId == userId)
-                    .OrderBy(n => n.DataCriacao) // Pega as mais antigas
+                    .OrderBy(n => n.DataCriacao)
                     .Take(qtdRemover)
                     .ToListAsync();
 
@@ -206,12 +197,12 @@ namespace savemoney.Services
         }
     }
 
-    // DTO auxiliar para ler o JSON
+    // DTO Null Safe
     public class UpdateItemDto
     {
-        public string Id { get; set; }
-        public string Titulo { get; set; }
-        public string Mensagem { get; set; }
+        public string? Id { get; set; }
+        public string? Titulo { get; set; }
+        public string? Mensagem { get; set; }
         public DateTime Data { get; set; }
     }
 }

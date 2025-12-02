@@ -589,9 +589,9 @@ function togglePerfil(tipo) {
     // TODO: Recarregar widgets específicos do perfil
 }
 
-function abrirNotificacoes() {
-    mostrarNotificacao('Sistema de notificações em breve!', 'info');
-}
+//function abrirNotificacoes() {
+//    mostrarNotificacao('Sistema de notificações em breve!', 'info');
+//} <--- Essa função foi movida para notificacoes.js
 
 // ============================================
 // UPLOAD DE AVATAR

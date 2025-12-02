@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Services;
-using System.Globalization; // <--- ADICIONADO
-using Microsoft.AspNetCore.Localization; // <--- ADICIONADO
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using savemoney.Data.Interceptors; // <--- NECESSÁRIO PARA O INTERCEPTOR
 
 namespace savemoney
 {
@@ -24,8 +25,23 @@ namespace savemoney
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-            builder.Services.AddDbContext<Models.AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            // ==============================================================================
+            // 1. REGISTRO DO INTERCEPTOR DE NOTIFICAÇÕES (NOVO)
+            // ==============================================================================
+            builder.Services.AddHttpContextAccessor(); // Permite acessar o usuário logado no interceptor
+            builder.Services.AddScoped<NotificacaoAutomaticaInterceptor>();
+
+            // ==============================================================================
+            // 2. CONFIGURAÇÃO DO DBCONTEXT COM INTERCEPTOR
+            // ==============================================================================
+            builder.Services.AddDbContext<Models.AppDbContext>((sp, options) =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+                // Injeta e adiciona o interceptor resolvido via DI
+                var interceptor = sp.GetRequiredService<NotificacaoAutomaticaInterceptor>();
+                options.AddInterceptors(interceptor);
+            });
 
             builder.Services.Configure<CookiePolicyOptions>(options =>
             {
@@ -47,12 +63,15 @@ namespace savemoney
             builder.Services.AddScoped<RecurrenceService>();
             builder.Services.AddScoped<BudgetService>();
             builder.Services.AddScoped<savemoney.Services.Interfaces.ITendenciaFinanceiraService,
-                          savemoney.Services.TendenciaFinanceiraService>();
+                                      savemoney.Services.TendenciaFinanceiraService>();
+
+            // Serviço de Notificações (Lógica de Negócio e Verificações R11)
+            builder.Services.AddScoped<savemoney.Services.ServicoNotificacao>();
 
             var app = builder.Build();
 
             // ==============================================================================
-            // 1. CONFIGURAÇÃO DE CULTURA (PT-BR) - Para aceitar vírgula em decimais
+            // 3. CONFIGURAÇÃO DE CULTURA (PT-BR) - Para aceitar vírgula em decimais
             // ==============================================================================
             var defaultDateCulture = "pt-BR";
             var ci = new CultureInfo(defaultDateCulture);

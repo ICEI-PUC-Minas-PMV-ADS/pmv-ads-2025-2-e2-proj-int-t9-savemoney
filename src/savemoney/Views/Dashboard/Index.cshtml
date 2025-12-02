@@ -54,11 +54,17 @@
                         <span>Newsletter</span>
                     </button>
 
-                    <!-- Notificações (Futuro) -->
-                    <button class="hub-btn" onclick="abrirNotificacoes()" title="Notificações">
-                        <i class="bi bi-bell-fill"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
+                    <!-- Notificações -->
+                    <div class="notification-container">
+                        <button class="hub-btn" onclick="notificacoesManager.toggle(event)" title="Notificações">
+                            <i class="bi bi-bell-fill"></i>
+                            <span id="badge-contador" class="notification-badge" style="display: none;">0</span>
+                        </button>
+
+                        <div id="notification-dropdown" class="notification-dropdown" style="display: none;">
+                            <partial name="_NotificacoesDropdown" />
+                        </div>
+                    </div>
 
                     <!-- Temas -->
                     <button class="hub-btn" onclick="abrirModalTemas()" title="Personalizar Tema">
@@ -557,8 +563,10 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Dashboard.css">
+    <link rel="stylesheet" href="~/css/notificacoes.css" asp-append-version="true">
 }
 
 @section Scripts {
     <script src="~/js/Dashboard.js"></script>
+    <script src="~/js/notificacoes.js" asp-append-version="true"></script>
 }
