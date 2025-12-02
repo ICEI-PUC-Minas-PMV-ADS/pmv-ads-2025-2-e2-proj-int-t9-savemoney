@@ -30,5 +30,10 @@ namespace savemoney.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        // Dentro da classe FerramentasController
+        public IActionResult JurosCompostos()
+        {
+            return View();
+        }
     }
 }
