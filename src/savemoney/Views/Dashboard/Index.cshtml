@@ -34,45 +34,48 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="user-hub-actions">
+                <div class="user-hub-actions" style="display: flex; align-items: center; gap: 1rem; padding-top: 1.5rem;">
 
-                    <!-- Toggle PF/PJ -->
                     <div class="profile-toggle">
-                        <button class="toggle-btn active" data-type="pf" onclick="togglePerfil('pf')">
+                        <button class="toggle-btn active" data-type="pf" onclick="togglePerfil('pf')" title="Visualizar Pessoa Física">
                             <i class="bi bi-person-fill"></i>
                             <span>PF</span>
                         </button>
-                        <button class="toggle-btn" data-type="pj" onclick="togglePerfil('pj')">
+                        <button class="toggle-btn" data-type="pj" onclick="togglePerfil('pj')" title="Visualizar Pessoa Jurídica">
                             <i class="bi bi-building"></i>
                             <span>PJ</span>
                         </button>
+                        <button class="toggle-btn" data-type="ambos" onclick="togglePerfil('ambos')" title="Visualizar Tudo">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Ambos</span>
+                        </button>
                     </div>
 
-                    <!-- Newsletter -->
                     <button class="hub-btn" onclick="abrirModalNewsletter()" title="Newsletter">
                         <i class="bi bi-envelope-fill"></i>
                         <span>Newsletter</span>
                     </button>
 
-                    <!-- Notificações -->
                     <div class="notification-container">
                         <button class="hub-btn" onclick="notificacoesManager.toggle(event)" title="Notificações">
                             <i class="bi bi-bell-fill"></i>
                             <span id="badge-contador" class="notification-badge" style="display: none;">0</span>
                         </button>
-
                         <div id="notification-dropdown" class="notification-dropdown" style="display: none;">
                             <partial name="_NotificacoesDropdown" />
                         </div>
                     </div>
 
-                    <!-- Temas -->
                     <button class="hub-btn" onclick="abrirModalTemas()" title="Personalizar Tema">
                         <i class="bi bi-palette-fill"></i>
                         <span>Temas</span>
                     </button>
 
-                    <!-- Perfil -->
+                    <button class="hub-btn" data-bs-toggle="modal" data-bs-target="#modalExportacao" title="Exportar Relatório">
+                        <i class="bi bi-cloud-download-fill text-primary"></i>
+                        <span>Exportar</span>
+                    </button>
+
                     <div class="dropdown-menu-container">
                         <button class="hub-btn" onclick="toggleDropdown()" title="Configurações">
                             <i class="bi bi-gear-fill"></i>
@@ -93,6 +96,7 @@
                             </a>
                         </div>
                     </div>
+
                 </div>
             </div>
         </header>

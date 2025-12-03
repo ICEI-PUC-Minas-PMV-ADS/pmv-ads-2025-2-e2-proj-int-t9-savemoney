@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="~/css/header.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/toast-messages.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/export-modal.css" />
     @RenderSection("Styles", required: false)
     @await RenderSectionAsync("css", required: false)
 </head>
@@ -102,7 +103,7 @@
     </main>
 
     @await Html.PartialAsync("_Footer")
-
+    <partial name="_ExportModal" />
     <!-- Scripts - ORDEM CORRETA -->
     <!-- 1. jQuery PRIMEIRO (obrigatório) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -121,6 +122,7 @@
     <script src="~/js/notificacoes.js" asp-append-version="true"></script>
     <script src="~/js/toast-messages.js" asp-append-version="true"></script>
     <script src="~/js/theme-loader.js" asp-append-version="true"></script>
+    <script src="~/js/export-modal.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- LEMBRETE, retirar e ajustar posteriormente, devido a restrição de escopo -->
     @await RenderSectionAsync("Scripts", required: false)

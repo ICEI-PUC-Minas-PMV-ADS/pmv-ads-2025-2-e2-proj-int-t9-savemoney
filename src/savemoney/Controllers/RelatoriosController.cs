@@ -9,16 +9,19 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
+using System;
+
 namespace savemoney.Controllers
 {
     [Authorize]
     public class RelatoriosController : Controller
     {
         private readonly AppDbContext _context;
-
-        public RelatoriosController(AppDbContext context)
+        private readonly ServicoExportacao _servicoExportacao;
+        public RelatoriosController(AppDbContext context, ServicoExportacao servicoExportacao)
         {
             _context = context;
+            _servicoExportacao = servicoExportacao;
         }
 
         [HttpGet]
@@ -386,6 +389,107 @@ namespace savemoney.Controllers
 
             return File(bytes, "text/csv; charset=utf-8", nomeArquivo);
         }
+
+        /// <summary>
+        /// Novo método para exportar PDF e Excel (QuestPDF / ClosedXML)
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ExportarRelatorio(string tipoRelatorio, string formato, DateTime dataInicio, DateTime dataFim)
+        {
+            try
+            {
+                // Validação segura do ID
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                {
+                    return RedirectToAction("Login", "Usuarios");
+                }
+
+                // Validação segura do Usuário
+                var usuario = await _context.Usuarios.FindAsync(userId);
+                if (usuario == null)
+                {
+                    return RedirectToAction("Login", "Usuarios");
+                }
+
+                // CORREÇÃO CS8600: Inicializa vazio ao invés de null, pois byte[] não aceita null
+                byte[] arquivoBytes = Array.Empty<byte>();
+
+                string mimeType = formato == "EXCEL" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf";
+                string extensao = formato == "EXCEL" ? "xlsx" : "pdf";
+                string nomeArquivo = $"SaveMoney_Relatorio_{tipoRelatorio}_{DateTime.Now:yyyyMMdd_HHmm}.{extensao}";
+
+                // 1. Busca Dados
+                var receitas = await _context.Receitas
+                    .Where(r => r.UsuarioId == userId && r.DataInicio >= dataInicio && r.DataInicio <= dataFim)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var despesas = await _context.Despesas
+                    // CORREÇÃO CS8602: Adicionado '!' em bc!.Category para silenciar o aviso de nulo no Include
+                    .Include(d => d.BudgetCategory).ThenInclude(bc => bc!.Category)
+                    .Where(d => d.UsuarioId == userId && d.DataInicio >= dataInicio && d.DataInicio <= dataFim)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                // 2. Decisão
+                if (tipoRelatorio == "COMPLETO")
+                {
+                    var orcamentos = await _context.Budgets
+                        .Include(b => b.Categories)
+                        .Where(b => b.UserId == userId && b.StartDate <= dataFim && b.EndDate >= dataInicio)
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                    var metas = await _context.MetasFinanceiras
+                        .Where(m => m.UsuarioId == userId)
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                    if (formato == "EXCEL")
+                        arquivoBytes = _servicoExportacao.GerarExcelCompleto(receitas, despesas, orcamentos, metas);
+                    else
+                        arquivoBytes = _servicoExportacao.GerarPdfCompleto(receitas, despesas, orcamentos, metas, usuario);
+                }
+                else // SIMPLES
+                {
+                    var listaUnificada = new List<TransacaoProcessada>();
+
+                    listaUnificada.AddRange(receitas.Select(r => new TransacaoProcessada
+                    {
+                        Data = r.DataInicio,
+                        Descricao = r.Titulo,
+                        Categoria = "Receita",
+                        Valor = r.Valor,
+                        EhReceita = true,
+                        IsRecorrente = r.IsRecurring
+                    }));
+
+                    listaUnificada.AddRange(despesas.Select(d => new TransacaoProcessada
+                    {
+                        Data = d.DataInicio,
+                        Descricao = d.Titulo,
+                        Categoria = d.BudgetCategory?.Category?.Name ?? "Outros",
+                        Valor = d.Valor,
+                        EhReceita = false,
+                        IsRecorrente = d.IsRecurring
+                    }));
+
+                    if (formato == "EXCEL")
+                        arquivoBytes = _servicoExportacao.GerarExcel(listaUnificada, dataInicio, dataFim);
+                    else
+                        arquivoBytes = _servicoExportacao.GerarPdf(listaUnificada, dataInicio, dataFim, usuario);
+                }
+
+                return File(arquivoBytes, mimeType, nomeArquivo);
+            }
+            catch (Exception ex)
+            {
+                TempData["Erro"] = "Falha na exportação: " + ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
 
         /// <summary>
         /// Retorna dados filtrados via AJAX para drill-down

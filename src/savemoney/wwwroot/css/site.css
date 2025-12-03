@@ -60,7 +60,6 @@ body {
     /* Main Container */
     body > main {
         flex: 1;
-        padding-top: var(--header-height);
         padding-left: 1rem;
         padding-right: 1rem;
     }

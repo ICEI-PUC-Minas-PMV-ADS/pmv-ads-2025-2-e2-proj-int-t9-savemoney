@@ -67,6 +67,7 @@ namespace savemoney
 
             // Serviço de Notificações (Lógica de Negócio e Verificações R11)
             builder.Services.AddScoped<savemoney.Services.ServicoNotificacao>();
+            builder.Services.AddScoped<savemoney.Services.ServicoExportacao>();
 
             var app = builder.Build();
 
