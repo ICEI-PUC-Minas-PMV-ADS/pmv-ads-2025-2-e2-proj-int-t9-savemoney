@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.EntityFrameworkCore;
-using savemoney.Services;
-using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using savemoney.Data.Interceptors;
+using savemoney.Services;
+using savemoney.Services.Interfaces;
+using System.Globalization;
 
 namespace savemoney
 {
@@ -66,6 +67,8 @@ namespace savemoney
                                       savemoney.Services.TendenciaFinanceiraService>();
             builder.Services.AddScoped<savemoney.Services.ServicoNotificacao>();
             builder.Services.AddScoped<savemoney.Services.ServicoExportacao>();
+
+            builder.Services.AddScoped<IDreGerencialService, DreGerencialService>();
 
             // ========================================
             // SESSÃO - Contexto PF/PJ/Ambos
