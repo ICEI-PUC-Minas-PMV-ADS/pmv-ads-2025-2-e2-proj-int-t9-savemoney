@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
+using savemoney.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +16,13 @@ namespace savemoney.Models
         public required string Name { get; set; }
 
         public bool IsPredefined { get; set; }
+
+        /// <summary>
+        /// Classificação para o DRE Gerencial.
+        /// Define se é Custo Variável ou Despesa Operacional.
+        /// </summary>
+        [Display(Name = "Classificação DRE")]
+        public TipoClassificacaoDre ClassificacaoDre { get; set; } = TipoClassificacaoDre.NaoClassificado;
 
         public int? UsuarioId { get; set; }
 
