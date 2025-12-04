@@ -1,48 +1,51 @@
 ﻿@model savemoney.Models.ViewModels.RelatorioFinanceiroViewModel
 @{
-    ViewData["Title"] = "Relatórios Financeiros";
+    ViewData["Title"] = "Relatorios Financeiros";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Cores para categorias
+    var coresCategorias = new[] { "#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#14b8a6", "#6366f1" };
+
+    // Parse JSON para listas
+    var labelsTimeline = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.JsonLabelsTimeline) ?? new List<string>();
+    var valoresReceitas = System.Text.Json.JsonSerializer.Deserialize<List<decimal>>(Model.JsonDadosReceitas) ?? new List<decimal>();
+    var valoresDespesas = System.Text.Json.JsonSerializer.Deserialize<List<decimal>>(Model.JsonDadosDespesas) ?? new List<decimal>();
+    var labelsCategorias = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.JsonLabelsCategorias) ?? new List<string>();
+    var valoresCategorias = System.Text.Json.JsonSerializer.Deserialize<List<decimal>>(Model.JsonValoresCategorias) ?? new List<decimal>();
+    var diasSemana = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.JsonDiasSemana) ?? new List<string>();
+    var valoresDiaSemana = System.Text.Json.JsonSerializer.Deserialize<List<decimal>>(Model.JsonValoresDiaSemana) ?? new List<decimal>();
+    var projecaoMeses = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.JsonProjecaoMeses) ?? new List<string>();
+    var projecaoSaldos = System.Text.Json.JsonSerializer.Deserialize<List<decimal>>(Model.JsonProjecaoSaldos) ?? new List<decimal>();
+
+    // Calculos para graficos
+    var maxFluxo = Math.Max(valoresReceitas.DefaultIfEmpty(0).Max(), valoresDespesas.DefaultIfEmpty(0).Max());
+    if (maxFluxo == 0) maxFluxo = 1;
+
+    var totalCategorias = valoresCategorias.Sum();
+    if (totalCategorias == 0) totalCategorias = 1;
+
+    var maxDiaSemana = valoresDiaSemana.DefaultIfEmpty(0).Max();
+    if (maxDiaSemana == 0) maxDiaSemana = 1;
+
+    var maxProjecao = projecaoSaldos.DefaultIfEmpty(0).Max();
+    var minProjecao = projecaoSaldos.DefaultIfEmpty(0).Min();
+    var rangeProjecao = maxProjecao - minProjecao;
+    if (rangeProjecao == 0) rangeProjecao = 1;
 }
 
-<script>
-    window.relatoriosData = {
-        timeline: {
-            labels: @Html.Raw(Model.JsonLabelsTimeline),
-            receitas: @Html.Raw(Model.JsonDadosReceitas),
-            despesas: @Html.Raw(Model.JsonDadosDespesas)
-        },
-        categorias: {
-            labels: @Html.Raw(Model.JsonLabelsCategorias),
-            valores: @Html.Raw(Model.JsonValoresCategorias)
-        },
-        diasSemana: {
-            labels: @Html.Raw(Model.JsonDiasSemana ?? "[]"),
-            valores: @Html.Raw(Model.JsonValoresDiaSemana ?? "[]")
-        },
-        projecao: {
-            meses: @Html.Raw(Model.JsonProjecaoMeses ?? "[]"),
-            saldos: @Html.Raw(Model.JsonProjecaoSaldos ?? "[]")
-        },
-        kpis: {
-            receitas: "@Model.TotalReceitas.ToString(System.Globalization.CultureInfo.InvariantCulture)",
-            despesas: "@Model.TotalDespesas.ToString(System.Globalization.CultureInfo.InvariantCulture)",
-            saldo: "@Model.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)",
-            taxaPoupanca: "@Model.TaxaPoupanca.ToString(System.Globalization.CultureInfo.InvariantCulture)"
-        },
-        filtros: {
-            dataInicio: '@Model.DataInicio.ToString("yyyy-MM-dd")',
-            dataFim: '@Model.DataFim.ToString("yyyy-MM-dd")'
-        }
-    };
-</script>
+<link rel="stylesheet" href="~/css/relatorios.css" asp-append-version="true" />
 
 <div class="relatorios-container">
+    <!-- Header -->
     <div class="page-header">
         <div class="header-content">
             <div class="header-title-wrapper">
-                <span class="material-symbols-outlined header-icon">analytics</span>
+                <div class="header-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
                 <div>
-                    <h1 class="page-title">Relatórios Financeiros</h1>
-                    <p class="page-subtitle">Análise completa das suas finanças</p>
+                    <h1 class="page-title">Relatorios Financeiros</h1>
+                    <p class="page-subtitle">Analise completa das suas financas</p>
                 </div>
             </div>
             <div class="header-actions no-print">
@@ -51,23 +54,24 @@
                    asp-route-dataFim="@Model.DataFim.ToString("yyyy-MM-dd")"
                    asp-route-tipoRecorrencia="@Model.TipoRecorrenciaFiltro"
                    class="btn-export">
-                    <span class="material-symbols-outlined">download</span>
+                    <i class="bi bi-download"></i>
                     Exportar CSV
                 </a>
                 <button type="button" class="btn-print" onclick="window.print()">
-                    <span class="material-symbols-outlined">print</span>
+                    <i class="bi bi-printer"></i>
                     Imprimir
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Filtros -->
     <div class="filters-section glass-card no-print">
         <form method="get" id="filterForm" class="filters-form">
             <div class="date-chips">
                 <button type="button" class="date-chip" data-period="today">Hoje</button>
                 <button type="button" class="date-chip" data-period="week">Esta Semana</button>
-                <button type="button" class="date-chip" data-period="month">Este Mês</button>
+                <button type="button" class="date-chip" data-period="month">Este Mes</button>
                 <button type="button" class="date-chip" data-period="quarter">Trimestre</button>
                 <button type="button" class="date-chip" data-period="year">Este Ano</button>
             </div>
@@ -75,63 +79,101 @@
             <div class="filters-row">
                 <div class="filter-group">
                     <label class="filter-label">
-                        <span class="material-symbols-outlined">calendar_today</span>
-                        Data Início
+                        <i class="bi bi-calendar3"></i> Data Inicio
                     </label>
                     <input type="date" name="dataInicio" value="@Model.DataInicio.ToString("yyyy-MM-dd")" class="filter-input" />
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label">
-                        <span class="material-symbols-outlined">event</span>
-                        Data Fim
+                        <i class="bi bi-calendar3-event"></i> Data Fim
                     </label>
                     <input type="date" name="dataFim" value="@Model.DataFim.ToString("yyyy-MM-dd")" class="filter-input" />
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label">
-                        <span class="material-symbols-outlined">view_timeline</span>
-                        Visualização
+                        <i class="bi bi-bar-chart-steps"></i> Visualizacao
                     </label>
                     <select name="agregacao" class="filter-input">
                         @foreach (var item in Enum.GetValues(typeof(savemoney.Models.PeriodoAgregacao)))
                         {
-                            <!option value="@item" @(Model.Agregacao.ToString() == item.ToString() ? "selected" : "")>@item</!option>
+                            var isSelected = Model.Agregacao.ToString() == item.ToString();
+                            if (isSelected)
+                            {
+                                <option value="@item" selected>@item</option>
+                            }
+                            else
+                            {
+                                <option value="@item">@item</option>
+                            }
                         }
                     </select>
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label">
-                        <span class="material-symbols-outlined">repeat</span>
-                        Tipo
+                        <i class="bi bi-arrow-repeat"></i> Tipo
                     </label>
                     <select name="tipoRecorrencia" class="filter-input">
-                        <!option value="" @(string.IsNullOrEmpty(Model.TipoRecorrenciaFiltro) ? "selected" : "")>Todos</!option>
-                        <!option value="fixo" @(Model.TipoRecorrenciaFiltro == "fixo" ? "selected" : "")>Fixos (Recorrentes)</!option>
-                        <!option value="variavel" @(Model.TipoRecorrenciaFiltro == "variavel" ? "selected" : "")>Variáveis (Únicos)</!option>
+                        @if (string.IsNullOrEmpty(Model.TipoRecorrenciaFiltro))
+                        {
+                            <option value="" selected>Todos</option>
+                        }
+                        else
+                        {
+                            <option value="">Todos</option>
+                        }
+                        @if (Model.TipoRecorrenciaFiltro == "fixo")
+                        {
+                            <option value="fixo" selected>Fixos (Recorrentes)</option>
+                        }
+                        else
+                        {
+                            <option value="fixo">Fixos (Recorrentes)</option>
+                        }
+                        @if (Model.TipoRecorrenciaFiltro == "variavel")
+                        {
+                            <option value="variavel" selected>Variaveis (Unicos)</option>
+                        }
+                        else
+                        {
+                            <option value="variavel">Variaveis (Unicos)</option>
+                        }
                     </select>
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label">
-                        <span class="material-symbols-outlined">category</span>
-                        Categoria
+                        <i class="bi bi-tag"></i> Categoria
                     </label>
                     <select name="categoria" class="filter-input">
-                        <!option value="" @(string.IsNullOrEmpty(Model.CategoriaFiltro) ? "selected" : "")>Todas</!option>
+                        @if (string.IsNullOrEmpty(Model.CategoriaFiltro))
+                        {
+                            <option value="" selected>Todas</option>
+                        }
+                        else
+                        {
+                            <option value="">Todas</option>
+                        }
                         @foreach (var cat in Model.CategoriasDisponiveis)
                         {
-                            <!option value="@cat" @(Model.CategoriaFiltro == cat ? "selected" : "")>@cat</!option>
+                            var isSelected = Model.CategoriaFiltro == cat;
+                            if (isSelected)
+                            {
+                                <option value="@cat" selected>@cat</option>
+                            }
+                            else
+                            {
+                                <option value="@cat">@cat</option>
+                            }
                         }
                     </select>
                 </div>
 
                 <div class="filter-group filter-actions">
                     <button type="submit" class="btn-filter">
-                        <span class="material-symbols-outlined">filter_alt</span>
-                        Filtrar
+                        <i class="bi bi-funnel"></i> Filtrar
                     </button>
                 </div>
             </div>
@@ -140,76 +182,76 @@
 
     @if (!Model.TemDadosSuficientes)
     {
+        <!-- Estado Vazio -->
         <div class="empty-state glass-card">
             <div class="empty-icon">
-                <span class="material-symbols-outlined">query_stats</span>
+                <i class="bi bi-bar-chart-line"></i>
             </div>
             <h2 class="empty-title">Nenhum dado encontrado</h2>
-            <p class="empty-text">@Model.MensagemVazia Tente ajustar o período ou verifique seus lançamentos.</p>
+            <p class="empty-text">@Model.MensagemVazia</p>
             <div class="empty-actions">
                 <a asp-controller="Receitas" asp-action="Index" class="btn-primary">
-                    <span class="material-symbols-outlined">list_alt</span>
-                    Ir para Receitas
+                    <i class="bi bi-plus-circle"></i> Adicionar Receita
                 </a>
                 <a asp-controller="Despesas" asp-action="Index" class="btn-secondary">
-                    <span class="material-symbols-outlined">list_alt</span>
-                    Ir para Despesas
+                    <i class="bi bi-plus-circle"></i> Adicionar Despesa
                 </a>
             </div>
         </div>
     }
     else
     {
+        <!-- KPIs -->
         <div class="kpis-section">
             <div class="glass-card kpi-card">
                 <div class="kpi-icon-wrapper kpi-icon-success">
-                    <span class="material-symbols-outlined">trending_up</span>
+                    <i class="bi bi-arrow-up-circle"></i>
                 </div>
                 <div class="kpi-content">
                     <span class="kpi-value kpi-counter" data-target="@Model.TotalReceitas.ToString(System.Globalization.CultureInfo.InvariantCulture)">R$ 0,00</span>
                     <span class="kpi-label">Total Receitas</span>
                 </div>
                 <div class="kpi-variation @Model.ClasseCssVariacaoReceitas">
-                    <span class="material-symbols-outlined">@Model.IconeVariacaoReceitas</span>
+                    <i class="bi bi-@(Model.VariacaoReceitas >= 0 ? "arrow-up" : "arrow-down")"></i>
                     <span>@Math.Abs(Model.VariacaoReceitas).ToString("F1")%</span>
                 </div>
             </div>
 
             <div class="glass-card kpi-card">
                 <div class="kpi-icon-wrapper kpi-icon-danger">
-                    <span class="material-symbols-outlined">trending_down</span>
+                    <i class="bi bi-arrow-down-circle"></i>
                 </div>
                 <div class="kpi-content">
                     <span class="kpi-value kpi-counter" data-target="@Model.TotalDespesas.ToString(System.Globalization.CultureInfo.InvariantCulture)">R$ 0,00</span>
                     <span class="kpi-label">Total Despesas</span>
                 </div>
                 <div class="kpi-variation @Model.ClasseCssVariacaoDespesas">
-                    <span class="material-symbols-outlined">@Model.IconeVariacaoDespesas</span>
+                    <i class="bi bi-@(Model.VariacaoDespesas >= 0 ? "arrow-up" : "arrow-down")"></i>
                     <span>@Math.Abs(Model.VariacaoDespesas).ToString("F1")%</span>
                 </div>
             </div>
 
             <div class="glass-card kpi-card">
                 <div class="kpi-icon-wrapper kpi-icon-primary">
-                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                    <i class="bi bi-wallet2"></i>
                 </div>
                 <div class="kpi-content">
                     <span class="kpi-value @Model.ClasseCssSaldo kpi-counter" data-target="@Model.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)">R$ 0,00</span>
-                    <span class="kpi-label">Saldo do Período</span>
+                    <span class="kpi-label">Saldo do Periodo</span>
                 </div>
                 <div class="kpi-variation @Model.ClasseCssVariacaoSaldo">
-                    <span class="material-symbols-outlined">@Model.IconeVariacaoSaldo</span>
+                    <i class="bi bi-@(Model.VariacaoSaldo >= 0 ? "arrow-up" : "arrow-down")"></i>
                     <span>@Math.Abs(Model.VariacaoSaldo).ToString("F1")%</span>
                 </div>
             </div>
 
             <div class="glass-card kpi-card">
                 <div class="kpi-icon-wrapper kpi-icon-warning">
-                    <span class="material-symbols-outlined">savings</span>
+                    <i class="bi bi-piggy-bank"></i>
                 </div>
                 <div class="kpi-content">
                     <span class="kpi-value kpi-counter-percent" data-target="@Model.TaxaPoupanca.ToString(System.Globalization.CultureInfo.InvariantCulture)">0%</span>
-                    <span class="kpi-label">Taxa de Poupança</span>
+                    <span class="kpi-label">Taxa de Poupanca</span>
                 </div>
                 <div class="kpi-subtext">
                     @if (Model.TaxaPoupanca >= 20)
@@ -222,17 +264,19 @@
                     }
                     else
                     {
-                        <span class="text-danger">Atenção</span>
+                        <span class="text-danger">Atencao</span>
                     }
                 </div>
             </div>
         </div>
 
+        <!-- Graficos -->
         <div class="charts-section">
+            <!-- Grafico Fluxo Financeiro (Barras Verticais) -->
             <div class="glass-card chart-card chart-wide">
                 <div class="chart-header">
                     <div class="chart-title-wrapper">
-                        <span class="material-symbols-outlined">bar_chart</span>
+                        <i class="bi bi-bar-chart"></i>
                         <h3 class="chart-title">Fluxo Financeiro</h3>
                     </div>
                     <div class="chart-legend">
@@ -245,48 +289,229 @@
                     </div>
                 </div>
                 <div class="chart-body">
-                    <canvas id="chartFluxo"></canvas>
+                    <div class="bar-chart-container">
+                        <div class="bar-chart-y-axis">
+                            <span>@maxFluxo.ToString("N0")</span>
+                            <span>@((maxFluxo * 0.75m).ToString("N0"))</span>
+                            <span>@((maxFluxo * 0.5m).ToString("N0"))</span>
+                            <span>@((maxFluxo * 0.25m).ToString("N0"))</span>
+                            <span>0</span>
+                        </div>
+                        <div class="bar-chart-bars">
+                            @for (int i = 0; i < labelsTimeline.Count; i++)
+                            {
+                                var receita = i < valoresReceitas.Count ? valoresReceitas[i] : 0;
+                                var despesa = i < valoresDespesas.Count ? valoresDespesas[i] : 0;
+                                var alturaReceita = (receita / maxFluxo) * 100;
+                                var alturaDespesa = (despesa / maxFluxo) * 100;
+
+                                <div class="bar-group">
+                                    <div class="bar-pair">
+                                        <div class="bar bar-receita"
+                                             style="height: @alturaReceita.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                             title="Receita: @receita.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
+                                        <div class="bar bar-despesa"
+                                             style="height: @alturaDespesa.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                             title="Despesa: @despesa.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
+                                    </div>
+                                    <span class="bar-label">@labelsTimeline[i]</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- Grafico Categorias (Donut SVG) -->
             <div class="glass-card chart-card">
                 <div class="chart-header">
                     <div class="chart-title-wrapper">
-                        <span class="material-symbols-outlined">donut_large</span>
+                        <i class="bi bi-pie-chart"></i>
                         <h3 class="chart-title">Gastos por Categoria</h3>
                     </div>
                 </div>
-                <div class="chart-body chart-body-doughnut">
-                    <canvas id="chartCategorias"></canvas>
+                <div class="chart-body chart-body-donut">
+                    @if (labelsCategorias.Any())
+                    {
+                        <div class="donut-chart-wrapper">
+                            <svg class="donut-chart" viewBox="0 0 100 100">
+                                @{
+                                    var acumulado = 0m;
+                                    var raio = 35;
+                                    var circunferencia = 2 * Math.PI * raio;
+                                }
+                                @for (int i = 0; i < labelsCategorias.Count; i++)
+                                {
+                                    var valor = i < valoresCategorias.Count ? valoresCategorias[i] : 0;
+                                    var percentual = (valor / totalCategorias) * 100;
+                                    var dashLength = (double)(percentual / 100) * circunferencia;
+                                    var dashOffset = (double)(acumulado / 100) * circunferencia;
+                                    var cor = coresCategorias[i % coresCategorias.Length];
+
+                                    <circle class="donut-segment"
+                                            cx="50" cy="50" r="@raio"
+                                            fill="none"
+                                            stroke="@cor"
+                                            stroke-width="12"
+                                            stroke-dasharray="@dashLength.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) @circunferencia.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                            stroke-dashoffset="-@dashOffset.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                            style="transform: rotate(-90deg); transform-origin: center;">
+                                        <title>@labelsCategorias[i]: @valor.ToString("C", new System.Globalization.CultureInfo("pt-BR")) (@percentual.ToString("F1")%)</title>
+                                    </circle>
+
+                                    acumulado += percentual;
+                                }
+                                <circle cx="50" cy="50" r="25" fill="var(--bg-card)" />
+                            </svg>
+                            <div class="donut-center">
+                                <span class="donut-total">@totalCategorias.ToString("C0", new System.Globalization.CultureInfo("pt-BR"))</span>
+                                <span class="donut-label">Total</span>
+                            </div>
+                        </div>
+                        <div class="donut-legend">
+                            @for (int i = 0; i < Math.Min(labelsCategorias.Count, 7); i++)
+                            {
+                                var cor = coresCategorias[i % coresCategorias.Length];
+                                var valor = i < valoresCategorias.Count ? valoresCategorias[i] : 0;
+                                var percentual = (valor / totalCategorias) * 100;
+
+                                <div class="donut-legend-item">
+                                    <span class="legend-color" style="background: @cor;"></span>
+                                    <span class="legend-text">@labelsCategorias[i]</span>
+                                    <span class="legend-percent">@percentual.ToString("F0")%</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="chart-empty">
+                            <i class="bi bi-pie-chart"></i>
+                            <span>Sem dados</span>
+                        </div>
+                    }
                 </div>
             </div>
 
+            <!-- Grafico Dia da Semana (Barras Horizontais) -->
             <div class="glass-card chart-card">
                 <div class="chart-header">
                     <div class="chart-title-wrapper">
-                        <span class="material-symbols-outlined">calendar_view_week</span>
+                        <i class="bi bi-calendar-week"></i>
                         <h3 class="chart-title">Gastos por Dia da Semana</h3>
                     </div>
                 </div>
                 <div class="chart-body">
-                    <canvas id="chartDiaSemana"></canvas>
+                    @if (diasSemana.Any())
+                    {
+                        <div class="horizontal-bar-chart">
+                            @for (int i = 0; i < diasSemana.Count; i++)
+                            {
+                                var valor = i < valoresDiaSemana.Count ? valoresDiaSemana[i] : 0;
+                                var largura = (valor / maxDiaSemana) * 100;
+
+                                <div class="horizontal-bar-item">
+                                    <span class="horizontal-bar-label">@diasSemana[i]</span>
+                                    <div class="horizontal-bar-track">
+                                        <div class="horizontal-bar-fill"
+                                             style="width: @largura.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                             title="@valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
+                                    </div>
+                                    <span class="horizontal-bar-value">@valor.ToString("C0", new System.Globalization.CultureInfo("pt-BR"))</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="chart-empty">
+                            <i class="bi bi-calendar-week"></i>
+                            <span>Sem dados</span>
+                        </div>
+                    }
                 </div>
             </div>
 
+            <!-- Grafico Projecao (Linha SVG) -->
             <div class="glass-card chart-card chart-wide">
                 <div class="chart-header">
                     <div class="chart-title-wrapper">
-                        <span class="material-symbols-outlined">trending_up</span>
-                        <h3 class="chart-title">Projeção de Saldo (Próximos 6 meses)</h3>
+                        <i class="bi bi-graph-up"></i>
+                        <h3 class="chart-title">Projecao de Saldo (Proximos 6 meses)</h3>
                     </div>
-                    <span class="badge badge-info">Baseado na média dos últimos 3 meses</span>
+                    <span class="badge badge-info">Baseado na media dos ultimos 3 meses</span>
                 </div>
                 <div class="chart-body">
-                    <canvas id="chartProjecao"></canvas>
+                    @if (projecaoMeses.Any() && projecaoSaldos.Any())
+                    {
+                        <div class="line-chart-container">
+                            <div class="line-chart-y-axis">
+                                <span>@maxProjecao.ToString("N0")</span>
+                                <span>@((minProjecao + rangeProjecao * 0.75m).ToString("N0"))</span>
+                                <span>@((minProjecao + rangeProjecao * 0.5m).ToString("N0"))</span>
+                                <span>@((minProjecao + rangeProjecao * 0.25m).ToString("N0"))</span>
+                                <span>@minProjecao.ToString("N0")</span>
+                            </div>
+                            <div class="line-chart-wrapper">
+                                <svg class="line-chart-svg" viewBox="0 0 500 200" preserveAspectRatio="none">
+                                    @{
+                                        var pontos = new List<string>();
+                                        var pontosArea = new List<string>();
+                                        var stepX = 500.0 / Math.Max(projecaoSaldos.Count - 1, 1);
+
+                                        for (int i = 0; i < projecaoSaldos.Count; i++)
+                                        {
+                                            var x = i * stepX;
+                                            var y = 200 - (double)((projecaoSaldos[i] - minProjecao) / rangeProjecao) * 180 - 10;
+                                            pontos.Add($"{x.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)},{y.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}");
+                                        }
+
+                                        pontosArea.Add("0,200");
+                                        pontosArea.AddRange(pontos);
+                                        pontosArea.Add($"{((projecaoSaldos.Count - 1) * stepX).ToString("F1", System.Globalization.CultureInfo.InvariantCulture)},200");
+                                    }
+
+                                    <!-- Area preenchida -->
+                                    <polygon class="line-chart-area" points="@string.Join(" ", pontosArea)" />
+
+                                    <!-- Linha -->
+                                    <polyline class="line-chart-line" points="@string.Join(" ", pontos)" />
+
+                                    <!-- Pontos -->
+                                    @for (int i = 0; i < projecaoSaldos.Count; i++)
+                                    {
+                                        var x = i * stepX;
+                                        var y = 200 - (double)((projecaoSaldos[i] - minProjecao) / rangeProjecao) * 180 - 10;
+
+                                        <circle class="line-chart-point"
+                                                cx="@x.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)"
+                                                cy="@y.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)"
+                                                r="5">
+                                            <title>@projecaoMeses[i]: @projecaoSaldos[i].ToString("C", new System.Globalization.CultureInfo("pt-BR"))</title>
+                                        </circle>
+                                    }
+                                </svg>
+                                <div class="line-chart-x-axis">
+                                    @foreach (var mes in projecaoMeses)
+                                    {
+                                        <span>@mes</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="chart-empty">
+                            <i class="bi bi-graph-up"></i>
+                            <span>Dados insuficientes para projecao</span>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
 
+        <!-- Analise Vila/Heroina -->
         @if (!string.IsNullOrEmpty(Model.CategoriaVila) || !string.IsNullOrEmpty(Model.CategoriaHeroina))
         {
             <div class="analysis-section">
@@ -294,14 +519,13 @@
                 {
                     <div class="glass-card analysis-card analysis-vila">
                         <div class="analysis-icon">
-                            <span class="material-symbols-outlined">warning</span>
+                            <i class="bi bi-exclamation-triangle"></i>
                         </div>
                         <div class="analysis-content">
                             <span class="analysis-label">Categoria em Alta</span>
                             <span class="analysis-value">@Model.CategoriaVila</span>
                             <span class="analysis-variation text-danger">
-                                <span class="material-symbols-outlined">arrow_upward</span>
-                                +@Model.CategoriaVilaVariacao.ToString("F0")%
+                                <i class="bi bi-arrow-up"></i> +@Model.CategoriaVilaVariacao.ToString("F0")%
                             </span>
                         </div>
                     </div>
@@ -310,14 +534,13 @@
                 {
                     <div class="glass-card analysis-card analysis-heroina">
                         <div class="analysis-icon">
-                            <span class="material-symbols-outlined">emoji_events</span>
+                            <i class="bi bi-trophy"></i>
                         </div>
                         <div class="analysis-content">
                             <span class="analysis-label">Economia Identificada</span>
                             <span class="analysis-value">@Model.CategoriaHeroina</span>
                             <span class="analysis-variation text-success">
-                                <span class="material-symbols-outlined">arrow_downward</span>
-                                @Model.CategoriaHeroinaVariacao.ToString("F0")%
+                                <i class="bi bi-arrow-down"></i> @Model.CategoriaHeroinaVariacao.ToString("F0")%
                             </span>
                         </div>
                     </div>
@@ -325,10 +548,11 @@
             </div>
         }
 
+        <!-- Top Receitas e Despesas -->
         <div class="tops-section">
             <div class="glass-card tops-card">
                 <div class="tops-header">
-                    <span class="material-symbols-outlined text-success">arrow_circle_up</span>
+                    <i class="bi bi-arrow-up-circle text-success"></i>
                     <h3 class="tops-title">Top 5 Receitas</h3>
                 </div>
                 <div class="tops-list">
@@ -339,7 +563,7 @@
                             <div class="top-item">
                                 <div class="top-item-info">
                                     <span class="top-item-name">@item.Nome</span>
-                                    <span class="top-item-qty">@item.Quantidade ocorrência(s)</span>
+                                    <span class="top-item-qty">@item.Quantidade ocorrencia(s)</span>
                                 </div>
                                 <span class="top-item-value text-success">@item.ValorFormatado</span>
                             </div>
@@ -347,14 +571,14 @@
                     }
                     else
                     {
-                        <div class="tops-empty">Nenhuma receita no período</div>
+                        <div class="tops-empty">Nenhuma receita no periodo</div>
                     }
                 </div>
             </div>
 
             <div class="glass-card tops-card">
                 <div class="tops-header">
-                    <span class="material-symbols-outlined text-danger">arrow_circle_down</span>
+                    <i class="bi bi-arrow-down-circle text-danger"></i>
                     <h3 class="tops-title">Top 5 Despesas</h3>
                 </div>
                 <div class="tops-list">
@@ -373,25 +597,26 @@
                     }
                     else
                     {
-                        <div class="tops-empty">Nenhuma despesa no período</div>
+                        <div class="tops-empty">Nenhuma despesa no periodo</div>
                     }
                 </div>
             </div>
         </div>
 
+        <!-- Diagnosticos -->
         @if (Model.Diagnosticos.Any())
         {
             <div class="diagnostics-section glass-card">
                 <div class="diagnostics-header">
-                    <span class="material-symbols-outlined">psychology</span>
-                    <h3 class="diagnostics-title">Diagnósticos Inteligentes</h3>
+                    <i class="bi bi-lightbulb"></i>
+                    <h3 class="diagnostics-title">Diagnosticos Inteligentes</h3>
                 </div>
                 <div class="diagnostics-list">
                     @foreach (var diag in Model.Diagnosticos)
                     {
                         <div class="diag-item @diag.ClasseCss">
                             <div class="diag-icon" style="color: @diag.CorIcone">
-                                <span class="material-symbols-outlined">@diag.Icone</span>
+                                <i class="bi bi-@GetDiagIcon(diag.Icone)"></i>
                             </div>
                             <div class="diag-content">
                                 <span class="diag-title">@diag.Titulo</span>
@@ -403,28 +628,29 @@
             </div>
         }
 
+        <!-- Tabela de Transacoes -->
         <div class="transactions-section glass-card">
             <div class="transactions-header">
                 <div class="transactions-title-wrapper">
-                    <span class="material-symbols-outlined">receipt_long</span>
-                    <h3 class="transactions-title">Transações Detalhadas</h3>
+                    <i class="bi bi-list-ul"></i>
+                    <h3 class="transactions-title">Transacoes Detalhadas</h3>
                     <span class="transactions-count">@Model.QuantidadeTransacoes itens</span>
                 </div>
                 <div class="transactions-search no-print">
-                    <span class="material-symbols-outlined">search</span>
-                    <input type="text" id="searchTransactions" placeholder="Buscar transações..." class="search-input" />
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchTransactions" placeholder="Buscar transacoes..." class="search-input" />
                 </div>
             </div>
             <div class="table-wrapper">
                 <table class="table-custom" id="transactionsTable">
                     <thead>
                         <tr>
-                            <th class="sortable" data-sort="data">Data</th>
+                            <th>Data</th>
                             <th>Dia</th>
-                            <th class="sortable" data-sort="descricao">Descrição</th>
-                            <th class="sortable" data-sort="categoria">Categoria</th>
+                            <th>Descricao</th>
+                            <th>Categoria</th>
                             <th>Tipo</th>
-                            <th class="sortable" data-sort="valor">Valor</th>
+                            <th>Valor</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -439,11 +665,11 @@
                                 </td>
                                 <td>
                                     <div class="transaction-desc">
-                                        <span class="material-symbols-outlined @t.ClasseCssStatus">@t.Icone</span>
+                                        <i class="bi bi-@(t.EhReceita ? "arrow-up-circle" : "arrow-down-circle") @t.ClasseCssStatus"></i>
                                         <span>@t.Descricao</span>
                                         @if (t.IsRecorrente)
                                         {
-                                            <span class="material-symbols-outlined recurrence-icon" title="Recorrente">repeat</span>
+                                            <i class="bi bi-arrow-repeat recurrence-icon" title="Recorrente"></i>
                                         }
                                     </div>
                                 </td>
@@ -464,33 +690,30 @@
             @if (Model.TransacoesDetalhadas.Count > 100)
             {
                 <div class="table-footer">
-                    <span class="text-secondary">Exibindo 100 de @Model.TransacoesDetalhadas.Count transações. Exporte o CSV para ver todas.</span>
+                    <span class="text-secondary">Exibindo 100 de @Model.TransacoesDetalhadas.Count transacoes. Exporte o CSV para ver todas.</span>
                 </div>
             }
         </div>
     }
 </div>
 
-<template id="skeleton-template">
-    <div class="skeleton-container">
-        <div class="skeleton-kpis">
-            <div class="skeleton-card skeleton-pulse"></div>
-            <div class="skeleton-card skeleton-pulse"></div>
-            <div class="skeleton-card skeleton-pulse"></div>
-            <div class="skeleton-card skeleton-pulse"></div>
-        </div>
-        <div class="skeleton-charts">
-            <div class="skeleton-chart-wide skeleton-pulse"></div>
-            <div class="skeleton-chart skeleton-pulse"></div>
-        </div>
-    </div>
-</template>
-
-@section Styles {
-    <link rel="stylesheet" href="~/css/relatorios.css" asp-append-version="true" />
+@section Scripts {
+    <script src="~/js/relatorios.js" asp-append-version="true"></script>
 }
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="~/js/relatorios.js" asp-append-version="true"></script>
+@functions {
+    string GetDiagIcon(string icone)
+    {
+        return icone switch
+        {
+            "warning" => "exclamation-triangle",
+            "check_circle" => "check-circle",
+            "info" => "info-circle",
+            "trending_up" => "graph-up-arrow",
+            "trending_down" => "graph-down-arrow",
+            "pie_chart" => "pie-chart",
+            "calendar_today" => "calendar-event",
+            _ => "info-circle"
+        };
+    }
 }
