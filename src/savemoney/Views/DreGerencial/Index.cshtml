@@ -1,11 +1,8 @@
-charset UTF-8;
-
 @model savemoney.Models.ViewModels.DreGerencialViewModel
 @{
     ViewData["Title"] = "DRE Gerencial";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <link rel="stylesheet" href="~/css/dre-gerencial.css" asp-append-version="true" />
 
@@ -14,7 +11,7 @@ charset UTF-8;
     <div class="dre-header">
         <div class="dre-header-info">
             <h1><i class="bi bi-graph-up-arrow"></i> DRE Gerencial Simplificado</h1>
-            <p>Demonstrativo de Resultados do Exercício</p>
+            <p>Demonstrativo de Resultados do Exercicio</p>
         </div>
         <div class="dre-header-actions">
             <button type="button" class="btn btn-outline-primary" id="btn-exportar">
@@ -28,7 +25,7 @@ charset UTF-8;
         <form asp-action="Index" method="post" id="form-filtros">
             <div class="filtros-grid">
                 <div class="filtro-grupo">
-                    <label asp-for="DataInicio" class="form-label">Data Início</label>
+                    <label asp-for="DataInicio" class="form-label">Data Inicio</label>
                     <input asp-for="DataInicio" type="date" class="form-control" />
                 </div>
 
@@ -50,7 +47,7 @@ charset UTF-8;
                 </div>
 
                 <div class="filtro-grupo filtro-comparativo @(Model.HabilitarComparativo ? "" : "hidden")">
-                    <label asp-for="DataInicioComparativo" class="form-label">Início Comp.</label>
+                    <label asp-for="DataInicioComparativo" class="form-label">Inicio Comp.</label>
                     <input asp-for="DataInicioComparativo" type="date" class="form-control" />
                 </div>
 
@@ -88,7 +85,7 @@ charset UTF-8;
         <div class="kpi-card kpi-margem">
             <div class="kpi-icon"><i class="bi bi-percent"></i></div>
             <div class="kpi-content">
-                <span class="kpi-label">Margem Contribui&#231;&#227;o</span>
+                <span class="kpi-label">Margem Contribuicao</span>
                 <span class="kpi-valor">@Model.PeriodoAtual.MargemContribuicao.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
                 <span class="kpi-percentual">@Model.PeriodoAtual.MargemContribuicaoPercentual.ToString("N1")% da receita</span>
             </div>
@@ -97,9 +94,9 @@ charset UTF-8;
         <div class="kpi-card @(Model.PeriodoAtual.TemLucro ? "kpi-lucro" : "kpi-prejuizo")">
             <div class="kpi-icon"><i class="bi bi-@(Model.PeriodoAtual.TemLucro ? "trophy" : "exclamation-triangle")"></i></div>
             <div class="kpi-content">
-                <span class="kpi-label">@(Model.PeriodoAtual.TemLucro ? "Lucro L&#237;quido" : "Preju&#237;zo")</span>
+                <span class="kpi-label">@(Model.PeriodoAtual.TemLucro ? "Lucro Liquido" : "Prejuizo")</span>
                 <span class="kpi-valor">@Model.PeriodoAtual.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
-                <span class="kpi-percentual">@Model.PeriodoAtual.MargemLiquidaPercentual.ToString("N1")% margem l&#237;quida</span>
+                <span class="kpi-percentual">@Model.PeriodoAtual.MargemLiquidaPercentual.ToString("N1")% margem liquida</span>
             </div>
         </div>
     </div>
@@ -114,13 +111,13 @@ charset UTF-8;
             <table class="dre-tabela">
                 <thead>
                     <tr>
-                        <th class="col-descricao">Descrição</th>
+                        <th class="col-descricao">Descricao</th>
                         <th class="col-valor">Valor</th>
                         <th class="col-percent">%</th>
                         @if (Model.PeriodoComparativo != null)
                         {
                             <th class="col-valor">Comparativo</th>
-                            <th class="col-variacao">Variação</th>
+                            <th class="col-variacao">Variacao</th>
                         }
                     </tr>
                 </thead>
@@ -185,7 +182,7 @@ charset UTF-8;
 
                     <!-- MARGEM DE CONTRIBUIÇÃO -->
                     <tr class="linha-margem linha-subtotal">
-                        <td><i class="bi bi-equal"></i> Margem de Contribuição</td>
+                        <td><i class="bi bi-equal"></i> Margem de Contribuicao</td>
                         <td class="valor">@Model.PeriodoAtual.MargemContribuicao.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
                         <td class="percent">@Model.PeriodoAtual.MargemContribuicaoPercentual.ToString("N1")%</td>
                         @if (Model.PeriodoComparativo != null)
@@ -229,7 +226,7 @@ charset UTF-8;
 
                     <!-- LUCRO LÍQUIDO -->
                     <tr class="linha-resultado linha-total-final @(Model.PeriodoAtual.TemLucro ? "lucro" : "prejuizo")">
-                        <td><i class="bi bi-@(Model.PeriodoAtual.TemLucro ? "check-circle" : "x-circle")"></i> @(Model.PeriodoAtual.TemLucro ? "Lucro Líquido" : "Prejuízo")</td>
+                        <td><i class="bi bi-@(Model.PeriodoAtual.TemLucro ? "check-circle" : "x-circle")"></i> @(Model.PeriodoAtual.TemLucro ? "Lucro Liquido" : "Prejuizo")</td>
                         <td class="valor">@Model.PeriodoAtual.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
                         <td class="percent">@Model.PeriodoAtual.MargemLiquidaPercentual.ToString("N1")%</td>
                         @if (Model.PeriodoComparativo != null)
@@ -244,12 +241,12 @@ charset UTF-8;
             </table>
         </div>
 
-        <!-- Gráfico de Evolução -->
+        <!-- Grafico de Evolucao -->
         @if (Model.HistoricoMensal.Any())
         {
             <div class="dre-grafico-container glass-card">
                 <h2 class="dre-section-title">
-                    <i class="bi bi-bar-chart"></i> Evolução Mensal
+                    <i class="bi bi-bar-chart"></i> Evolucao Mensal
                 </h2>
 
                 <div class="grafico-barras">
@@ -271,7 +268,7 @@ charset UTF-8;
                                 <div class="barra barra-despesa" style="height: @alturaDespesas.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
                                      title="Despesas: @((mes.CustosVariaveis + mes.DespesasOperacionais).ToString("C", new System.Globalization.CultureInfo("pt-BR")))"></div>
                                 <div class="barra @(mes.LucroLiquido >= 0 ? "barra-lucro" : "barra-prejuizo")" style="height: @alturaLucro.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
-                                     title="@(mes.LucroLiquido >= 0 ? "Lucro" : "Prejuízo"): @mes.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
+                                     title="@(mes.LucroLiquido >= 0 ? "Lucro" : "Prejuizo"): @mes.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
                             </div>
                             <span class="grafico-label">@mes.MesAnoAbreviado</span>
                         </div>
@@ -282,7 +279,7 @@ charset UTF-8;
                     <span class="legenda-item"><span class="legenda-cor receita"></span> Receita</span>
                     <span class="legenda-item"><span class="legenda-cor despesa"></span> Despesas</span>
                     <span class="legenda-item"><span class="legenda-cor lucro"></span> Lucro</span>
-                    <span class="legenda-item"><span class="legenda-cor prejuizo"></span> Prejuízo</span>
+                    <span class="legenda-item"><span class="legenda-cor prejuizo"></span> Prejuizo</span>
                 </div>
             </div>
         }
