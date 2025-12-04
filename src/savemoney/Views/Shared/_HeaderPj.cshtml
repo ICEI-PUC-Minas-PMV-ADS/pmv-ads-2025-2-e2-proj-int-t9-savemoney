@@ -1,218 +1,123 @@
 ﻿@using System.Security.Claims
 
-@{
-    bool isLandingPage = (ViewData["Title"] as string) == "Save Money - Gestão Financeira Premium";
-    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    var userPhotoUrl = "https://ui-avatars.com/api/?name=" + (User.FindFirst(ClaimTypes.Name)?.Value ?? "SM") + "&background=3b82f6&color=fff&size=200&bold=true";
-}
-
-<header id="main-header" role="banner">
+<header id="main-header" class="header-pj-theme">
     <div class="header-container">
 
-        <a asp-controller="@(User.Identity.IsAuthenticated ? "Dashboard" : "LandingPage")"
-           asp-action="Index"
-           class="header-logo"
-           aria-label="Save Money - Página inicial">
-            Save Money
+        <a asp-controller="Dashboard" asp-action="Index" class="header-logo" title="Painel">
+            <i class="bi bi-building text-warning me-2"></i>SaveMoney
+            <span class="badge bg-warning text-dark ms-2" style="font-size: 0.6rem; vertical-align: middle;">PJ</span>
         </a>
 
-        <button id="mobile-menu-toggle"
-                class="header-mobile-toggle"
-                aria-label="Abrir menu de navegação"
-                aria-expanded="false">
-            <i class="bi bi-list"></i>
-        </button>
-
-        <nav class="header-nav" id="header-nav-desktop" aria-label="Navegação principal">
+        <nav class="header-nav">
             <ul class="header-nav-links">
+                <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
 
-                @if (isLandingPage)
+                <li class="header-dropdown">
+                    <a href="#">Financeiro <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Receitas" asp-action="Index">Faturamento</a></li>
+                        <li><a asp-controller="Despesas" asp-action="Index">Contas a Pagar</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a asp-controller="Historico" asp-action="Index">Extrato</a></li>
+                    </ul>
+                </li>
+
+                <li class="header-dropdown">
+                    <a href="#" class="text-warning">Gestão <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Relatorios" asp-action="DreGerencial">DRE Gerencial</a></li>
+                        <li><a asp-controller="ProjecaoFinanceira" asp-action="FluxoDeCaixa">Fluxo de Caixa</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a asp-controller="Relatorios" asp-action="Index">Relatórios</a></li>
+                    </ul>
+                </li>
+
+                <li class="header-dropdown">
+                    <a href="#">Contábil <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Categories" asp-action="Index">Plano de Contas</a></li>
+                        <li><a asp-controller="Budgets" asp-action="Index">Centros de Custo</a></li>
+                    </ul>
+                </li>
+
+                <li class="header-dropdown">
+                    <a href="#">Cálculos <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilíbrio</a></li>
+                        <li><a asp-controller="ConversorEnergias" asp-action="Index">Custo de Energia</a></li>
+                    </ul>
+                </li>
+
+                @if (User.IsInRole("Administrador"))
                 {
-                    <li><a href="#control">Controle</a></li>
-                    <li><a href="#invest">Investir</a></li>
-                    <li class="header-dropdown">
-                        <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Perfis <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="header-dropdown-menu">
-                            <li><a href="#profiles">Pessoa Física</a></li>
-                            <li><a href="#profiles">Pessoa Jurídica</a></li>
-                        </ul>
-                    </li>
-                    <li class="header-dropdown">
-                        <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Recursos <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="header-dropdown-menu">
-                            <li><a href="#reports">Diagnósticos</a></li>
-                            <li><a href="#reports">Análise de Tendências</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#goals">Metas</a></li>
-                    <li><a href="#customize">Personalizar</a></li>
-                }
-                else
-                {
-                    <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
-
-                    <li class="header-dropdown">
-                        <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Transações <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="header-dropdown-menu">
-                            <li><a asp-controller="Receitas" asp-action="Index">Receitas</a></li>
-                            <li><a asp-controller="Despesas" asp-action="Index">Despesas</a></li>
-                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;"></li>
-                            <li><a asp-controller="Categories" asp-action="Index">Categorias</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="header-dropdown">
-                        <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Planejamento <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="header-dropdown-menu">
-                            <li><a asp-controller="Budgets" asp-action="Index">Orçamentos</a></li>
-                            <li><a asp-controller="MetasFinanceiras" asp-action="Index">Metas de Vida</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="header-dropdown">
-                        <a href="#" aria-haspopup="true" aria-expanded="false" class="text-accent">
-                            Inteligência <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="header-dropdown-menu">
-                            <li>
-                                <a asp-controller="Relatorios" asp-action="Index" class="d-flex justify-content-between align-items-center">
-                                    Relatórios & Insights
-                                    <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.6rem;">NOVO</span>
-                                </a>
-                            </li>
-                            <li><a asp-controller="TendenciaFinanceira" asp-action="Index">Tendências</a></li>
-                            <li><a asp-controller="ProjecaoFinanceira" asp-action="Index">Projeção Futura</a></li>
-                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;"></li>
-                            <li><a asp-controller="Historico" asp-action="Index">Histórico Completo</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="header-dropdown">
-                        <a href="#" aria-haspopup="true" aria-expanded="false">
-                            Ferramentas <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <ul class="header-dropdown-menu">
-                            <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas">Calc. Metas</a></li>
-                            <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilíbrio</a></li>
-                            <li><a asp-controller="ConversorEnergias" asp-action="Index">Conversor Energia</a></li>
-                        </ul>
-                    </li>
-
-                    <li><a asp-controller="EducacaoFinanceira" asp-action="Index">Educação</a></li>
-
-                    @if (User.IsInRole("Administrador"))
-                    {
-                        <li><a asp-controller="Usuarios" asp-action="Index">Admin</a></li>
-                    }
+                    <li><a asp-controller="Usuarios" asp-action="Index" class="text-danger">Admin</a></li>
                 }
             </ul>
         </nav>
 
         <div class="header-actions">
-            @if (User.Identity.IsAuthenticated)
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Usuarios" asp-action="Details" asp-route-id="@currentUserId"
-                   class="header-btn header-btn-icon"
-                   title="Meu Perfil"
-                   aria-label="Acessar meu perfil">
-                    <img src="@userPhotoUrl" alt="Foto de perfil" class="profile-photo-icon" />
-                </a>
+                var userName = User.Identity.Name ?? "User";
+                var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
 
-                @if (isLandingPage)
-                {
-                    <a asp-controller="Dashboard" asp-action="Index" class="header-btn header-btn-primary">Painel</a>
-                }
-                else
-                {
-                    <a asp-controller="Usuarios" asp-action="Logout" class="header-btn header-btn-primary">Sair</a>
-                }
-            }
-            else
-            {
-                <a asp-controller="Usuarios" asp-action="Login" class="header-btn header-btn-primary">Entrar</a>
+                <div class="header-user-avatar header-user-avatar-pj" title="@userName">
+                    <span>@initials</span>
+                </div>
             }
         </div>
 
+        <button class="header-mobile-toggle" id="mobile-menu-toggle" aria-label="Menu">
+            <i class="bi bi-list"></i>
+        </button>
     </div>
 
-    <nav id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Menu de navegação mobile">
+    <nav id="mobile-nav-drawer" class="mobile-nav-drawer">
         <ul class="mobile-nav-links">
-            @if (isLandingPage)
+            <li><a asp-controller="Dashboard" asp-action="Index" data-dismiss="mobile-nav">Painel</a></li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle">Financeiro <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
+                    <li><a asp-controller="Receitas" asp-action="Index" data-dismiss="mobile-nav">Faturamento</a></li>
+                    <li><a asp-controller="Despesas" asp-action="Index" data-dismiss="mobile-nav">Contas a Pagar</a></li>
+                    <li><a asp-controller="Historico" asp-action="Index" data-dismiss="mobile-nav">Extrato</a></li>
+                </ul>
+            </li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle text-warning">Gestão <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
+                    <li><a asp-controller="Relatorios" asp-action="DreGerencial" data-dismiss="mobile-nav">DRE Gerencial</a></li>
+                    <li><a asp-controller="ProjecaoFinanceira" asp-action="FluxoDeCaixa" data-dismiss="mobile-nav">Fluxo de Caixa</a></li>
+                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Relatórios</a></li>
+                </ul>
+            </li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle">Contábil <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
+                    <li><a asp-controller="Categories" asp-action="Index" data-dismiss="mobile-nav">Plano de Contas</a></li>
+                    <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Centros de Custo</a></li>
+                </ul>
+            </li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle">Cálculos <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
+                    <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio" data-dismiss="mobile-nav">Ponto de Equilíbrio</a></li>
+                    <li><a asp-controller="ConversorEnergias" asp-action="Index" data-dismiss="mobile-nav">Custo de Energia</a></li>
+                </ul>
+            </li>
+
+            @if (User.IsInRole("Administrador"))
             {
-                <li><a href="#control" data-dismiss="mobile-nav">Controle</a></li>
-                <li><a href="#invest" data-dismiss="mobile-nav">Investir</a></li>
-                <li><a href="#profiles" data-dismiss="mobile-nav">Perfis</a></li>
-                <li><a href="#reports" data-dismiss="mobile-nav">Relatórios</a></li>
-                <li><a href="#goals" data-dismiss="mobile-nav">Metas</a></li>
-                <li><a href="#customize" data-dismiss="mobile-nav">Personalizar</a></li>
-            }
-            else
-            {
-                <li><a asp-controller="Dashboard" asp-action="Index" data-dismiss="mobile-nav">Painel</a></li>
-
-                <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle" aria-expanded="false">
-                        Transações <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <ul class="mobile-dropdown-menu">
-                        <li><a asp-controller="Receitas" asp-action="Index" data-dismiss="mobile-nav">Receitas</a></li>
-                        <li><a asp-controller="Despesas" asp-action="Index" data-dismiss="mobile-nav">Despesas</a></li>
-                        <li><a asp-controller="Categories" asp-action="Index" data-dismiss="mobile-nav">Categorias</a></li>
-                    </ul>
-                </li>
-
-                <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle" aria-expanded="false">
-                        Planejamento <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <ul class="mobile-dropdown-menu">
-                        <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Orçamentos</a></li>
-                        <li><a asp-controller="MetasFinanceiras" asp-action="Index" data-dismiss="mobile-nav">Metas de Vida</a></li>
-                    </ul>
-                </li>
-
-                <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle" aria-expanded="false">
-                        Inteligência <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <ul class="mobile-dropdown-menu">
-                        <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav" class="text-accent">Relatórios & Insights</a></li>
-                        <li><a asp-controller="TendenciaFinanceira" asp-action="Index" data-dismiss="mobile-nav">Tendências</a></li>
-                        <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" data-dismiss="mobile-nav">Projeção Futura</a></li>
-                        <li><a asp-controller="Historico" asp-action="Index" data-dismiss="mobile-nav">Histórico Completo</a></li>
-                    </ul>
-                </li>
-
-                <li class="mobile-dropdown">
-                    <button class="mobile-dropdown-toggle" aria-expanded="false">
-                        Ferramentas <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <ul class="mobile-dropdown-menu">
-                        <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas" data-dismiss="mobile-nav">Calc. Metas</a></li>
-                        <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio" data-dismiss="mobile-nav">Ponto de Equilíbrio</a></li>
-                        <li><a asp-controller="ConversorEnergias" asp-action="Index" data-dismiss="mobile-nav">Conversor Energia</a></li>
-                    </ul>
-                </li>
-
-                <li><a asp-controller="EducacaoFinanceira" asp-action="Index" data-dismiss="mobile-nav">Educação</a></li>
-
-                @if (User.IsInRole("Administrador"))
-                {
-                    <li><a asp-controller="Usuarios" asp-action="Index" data-dismiss="mobile-nav">Admin</a></li>
-                }
+                <li><a asp-controller="Usuarios" asp-action="Index" data-dismiss="mobile-nav" class="text-danger">Admin</a></li>
             }
         </ul>
     </nav>
 
-    <button id="header-toggle-tab" class="header-toggle-tab" title="Alternar Menu" aria-label="Alternar visibilidade do menu">
+    <button id="header-toggle-tab" class="header-toggle-tab" title="Alternar Menu">
         <i class="bi bi-chevron-up"></i>
     </button>
 </header>
