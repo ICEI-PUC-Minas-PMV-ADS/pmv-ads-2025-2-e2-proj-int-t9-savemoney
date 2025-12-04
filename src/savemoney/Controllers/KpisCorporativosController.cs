@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using savemoney.Models.ViewModels;
-using savemoney.Services.Interfaces;
+using savemoney.services.Interfaces;
 using System.Security.Claims;
 
 namespace savemoney.Controllers

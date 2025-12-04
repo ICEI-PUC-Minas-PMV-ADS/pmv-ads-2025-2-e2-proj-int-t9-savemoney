@@ -2,7 +2,7 @@
 using savemoney.Models;
 using savemoney.Models.Enums;
 using savemoney.Models.ViewModels;
-using savemoney.Services.Interfaces;
+using savemoney.services.Interfaces;
 
 namespace savemoney.Services
 {
@@ -109,6 +109,7 @@ namespace savemoney.Services
             // RECEITAS
             // ============================================
             var queryReceitas = _context.Receitas
+                .Include(r => r.Category)
                 .Where(r => r.UsuarioId == usuarioId);
 
             // Aplica filtro por regime
@@ -129,22 +130,26 @@ namespace savemoney.Services
             var receitas = await queryReceitas.ToListAsync();
             periodo.ReceitaBruta = receitas.Sum(r => r.Valor);
 
-            // Agrupa receitas (sem categoria por enquanto)
-            periodo.ReceitasDetalhadas = new List<DreLinhaDetalhe>
-            {
-                new DreLinhaDetalhe
+            // Agrupa receitas por categoria
+            periodo.ReceitasDetalhadas = receitas
+                .GroupBy(r => r.Category?.Name ?? "Receitas Gerais")
+                .Select(g => new DreLinhaDetalhe
                 {
-                    Categoria = "Receitas Gerais",
-                    Valor = periodo.ReceitaBruta,
-                    Percentual = 100,
-                    QuantidadeLancamentos = receitas.Count
-                }
-            };
+                    Categoria = g.Key,
+                    Valor = g.Sum(r => r.Valor),
+                    Percentual = periodo.ReceitaBruta > 0
+                        ? Math.Round((g.Sum(r => r.Valor) / periodo.ReceitaBruta) * 100, 2)
+                        : 0,
+                    QuantidadeLancamentos = g.Count()
+                })
+                .OrderByDescending(x => x.Valor)
+                .ToList();
 
             // ============================================
             // DESPESAS (CUSTOS VARIÁVEIS + OPERACIONAIS)
             // ============================================
             var queryDespesas = _context.Despesas
+                .Include(d => d.Category)
                 .Include(d => d.BudgetCategory)
                     .ThenInclude(bc => bc!.Category)
                 .Where(d => d.UsuarioId == usuarioId);
@@ -165,20 +170,18 @@ namespace savemoney.Services
 
             var despesas = await queryDespesas.ToListAsync();
 
-            // Separa por classificação DRE
+            // Separa por classificação DRE (prioriza Category direto, fallback para BudgetCategory)
             var custosVariaveis = despesas
-                .Where(d => d.BudgetCategory?.Category?.ClassificacaoDre == TipoClassificacaoDre.CustoVariavel)
+                .Where(d => ObterClassificacao(d) == TipoClassificacaoDre.CustoVariavel)
                 .ToList();
 
             var despesasOperacionais = despesas
-                .Where(d => d.BudgetCategory?.Category?.ClassificacaoDre == TipoClassificacaoDre.DespesaOperacional)
+                .Where(d => ObterClassificacao(d) == TipoClassificacaoDre.DespesaOperacional)
                 .ToList();
 
             // Despesas não classificadas vão para Operacionais
             var naoClassificadas = despesas
-                .Where(d => d.BudgetCategory?.Category?.ClassificacaoDre == TipoClassificacaoDre.NaoClassificado ||
-                           d.BudgetCategory?.Category == null ||
-                           d.BudgetCategory == null)
+                .Where(d => ObterClassificacao(d) == TipoClassificacaoDre.NaoClassificado)
                 .ToList();
 
             despesasOperacionais.AddRange(naoClassificadas);
@@ -189,7 +192,7 @@ namespace savemoney.Services
             periodo.CustosVariaveis = custosVariaveis.Sum(d => d.Valor);
 
             periodo.CustosDetalhados = custosVariaveis
-                .GroupBy(d => d.BudgetCategory?.Category?.Name ?? "Sem Categoria")
+                .GroupBy(d => ObterNomeCategoria(d))
                 .Select(g => new DreLinhaDetalhe
                 {
                     Categoria = g.Key,
@@ -208,7 +211,7 @@ namespace savemoney.Services
             periodo.DespesasOperacionais = despesasOperacionais.Sum(d => d.Valor);
 
             periodo.DespesasDetalhadas = despesasOperacionais
-                .GroupBy(d => d.BudgetCategory?.Category?.Name ?? "Sem Categoria")
+                .GroupBy(d => ObterNomeCategoria(d))
                 .Select(g => new DreLinhaDetalhe
                 {
                     Categoria = g.Key,
@@ -254,6 +257,40 @@ namespace savemoney.Services
             }
 
             return $"{inicio:dd/MM/yyyy} a {fim:dd/MM/yyyy}";
+        }
+
+        /// <summary>
+        /// Obtém a classificação DRE da despesa.
+        /// Prioriza Category direto, fallback para BudgetCategory.
+        /// </summary>
+        private TipoClassificacaoDre ObterClassificacao(Despesa d)
+        {
+            // Prioridade 1: Category direta
+            if (d.Category != null)
+                return d.Category.ClassificacaoDre;
+
+            // Prioridade 2: Category via BudgetCategory
+            if (d.BudgetCategory?.Category != null)
+                return d.BudgetCategory.Category.ClassificacaoDre;
+
+            return TipoClassificacaoDre.NaoClassificado;
+        }
+
+        /// <summary>
+        /// Obtém o nome da categoria da despesa.
+        /// Prioriza Category direto, fallback para BudgetCategory.
+        /// </summary>
+        private string ObterNomeCategoria(Despesa d)
+        {
+            // Prioridade 1: Category direta
+            if (d.Category != null)
+                return d.Category.Name;
+
+            // Prioridade 2: Category via BudgetCategory
+            if (d.BudgetCategory?.Category != null)
+                return d.BudgetCategory.Category.Name;
+
+            return "Sem Categoria";
         }
     }
 }

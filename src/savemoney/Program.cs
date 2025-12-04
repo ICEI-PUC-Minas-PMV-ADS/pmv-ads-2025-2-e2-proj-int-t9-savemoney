@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Data.Interceptors;
+using savemoney.services.Interfaces;
 using savemoney.Services;
-using savemoney.Services.Interfaces;
 using System.Globalization;
 
 namespace savemoney
@@ -69,6 +69,8 @@ namespace savemoney
             builder.Services.AddScoped<savemoney.Services.ServicoExportacao>();
 
             builder.Services.AddScoped<IDreGerencialService, DreGerencialService>();
+            builder.Services.AddScoped<IKpisCorporativosService, KpisCorporativosService>();
+
 
             // ========================================
             // SESSÃO - Contexto PF/PJ/Ambos

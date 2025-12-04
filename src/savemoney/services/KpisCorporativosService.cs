@@ -2,7 +2,7 @@
 using savemoney.Models;
 using savemoney.Models.Enums;
 using savemoney.Models.ViewModels;
-using savemoney.Services.Interfaces;
+using savemoney.services.Interfaces;
 
 namespace savemoney.Services
 {

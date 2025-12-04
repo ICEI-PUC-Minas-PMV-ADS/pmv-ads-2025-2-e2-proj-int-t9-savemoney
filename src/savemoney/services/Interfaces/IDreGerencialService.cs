@@ -1,7 +1,7 @@
 ﻿using savemoney.Models.Enums;
 using savemoney.Models.ViewModels;
 
-namespace savemoney.Services.Interfaces
+namespace savemoney.services.Interfaces
 {
     /// <summary>
     /// Interface para o serviço de cálculo do DRE Gerencial.

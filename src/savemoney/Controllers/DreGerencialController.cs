@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using savemoney.Models.Enums;
 using savemoney.Models.ViewModels;
+using savemoney.services.Interfaces;
 using savemoney.Services;
-using savemoney.Services.Interfaces;
 using System.Security.Claims;
 
 namespace savemoney.Controllers
