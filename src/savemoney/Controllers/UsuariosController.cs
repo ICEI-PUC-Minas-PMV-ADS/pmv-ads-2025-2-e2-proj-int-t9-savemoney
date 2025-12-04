@@ -53,7 +53,7 @@ namespace savemoney.Controllers
 
             if (senhaOk)
             {
-                // ✅ NOVO: Atualizar último acesso
+                // NOVO: Atualizar último acesso
                 dados.UltimoAcesso = DateTime.Now;
                 _context.Update(dados);
                 await _context.SaveChangesAsync();
@@ -72,11 +72,13 @@ namespace savemoney.Controllers
                 var props = new AuthenticationProperties
                 {
                     AllowRefresh = true,
-                    ExpiresUtc = DateTime.UtcNow.AddHours(2), // ✅ CORRIGIDO: Removido ToLocalTime()
+                    ExpiresUtc = DateTime.UtcNow.AddHours(2), // CORRIGIDO: Removido ToLocalTime()
                     IsPersistent = true,
                 };
 
                 await HttpContext.SignInAsync(principal, props);
+
+                HttpContext.Session.SetString("UserContext", dados.UltimoContexto.ToString());
 
                 TempData["SuccessMessage"] = $"Bem-vindo de volta, {dados.Nome}!";
                 return RedirectToAction("Index", "Dashboard");
