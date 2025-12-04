@@ -1,5 +1,5 @@
 ﻿@model savemoney.Models.Category
-
+@using savemoney.Models.Enums
 @{
     bool isEdit = Model.Id > 0;
     string title = isEdit ? "Editar Categoria" : "Nova Categoria";
@@ -39,6 +39,28 @@
             <span asp-validation-for="Name" class="form-error"></span>
         </div>
 
+        <div class="form-group">
+            <label asp-for="TipoContabil" class="form-label">Tipo Contábil</label>
+            <select asp-for="TipoContabil"
+                    asp-items="Html.GetEnumSelectList<TipoContabil>()"
+                    class="form-input">
+            </select>
+            <small class="form-hint">Define como esta categoria será tratada nos relatórios financeiros.</small>
+        </div>
+
+        <div class="tipo-contabil-help">
+            <details>
+                <summary>O que significa cada tipo?</summary>
+                <ul class="tipo-list">
+                    <li><strong>Receita:</strong> Entradas de dinheiro (vendas, salário, etc.)</li>
+                    <li><strong>Custo Variável:</strong> Custos que variam com produção/vendas (matéria-prima, comissões)</li>
+                    <li><strong>Despesa Fixa:</strong> Gastos fixos mensais (aluguel, salários fixos)</li>
+                    <li><strong>Despesa Operacional:</strong> Gastos do dia-a-dia (luz, água, internet)</li>
+                    <li><strong>Investimento:</strong> Aplicações e aquisições de bens</li>
+                </ul>
+            </details>
+        </div>
+
         <div class="form-actions">
             <button type="button"
                     class="btn-action btn-secondary"
@@ -51,6 +73,52 @@
         </div>
     </form>
 </div>
+
+<style>
+    .form-hint {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.375rem;
+    }
+
+    .tipo-contabil-help {
+        margin-bottom: 1.5rem;
+    }
+
+        .tipo-contabil-help details {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .tipo-contabil-help summary {
+            cursor: pointer;
+            color: var(--accent-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+            .tipo-contabil-help summary:hover {
+                text-decoration: underline;
+            }
+
+    .tipo-list {
+        margin: 0.75rem 0 0 0;
+        padding-left: 1.25rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+        .tipo-list li {
+            margin-bottom: 0.375rem;
+        }
+
+        .tipo-list strong {
+            color: var(--text-primary);
+        }
+</style>
 
 <script>
     // Inicializa validação unobtrusive para o formulário

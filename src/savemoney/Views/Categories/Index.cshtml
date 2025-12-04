@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<savemoney.Models.Category>
+@using savemoney.Models.Enums
 
 @{
     ViewData["Title"] = "Categorias";
@@ -10,11 +11,11 @@
 
 <div class="categories-page-main fade-in">
 
-    <!-- Cabeçalho -->
+    <!-- Cabecalho -->
     <header class="page-header">
         <div class="header-content">
             <h1 class="page-title">Categorias</h1>
-            <p class="page-subtitle">Gerencie as categorias das suas transações.</p>
+            <p class="page-subtitle">Gerencie as categorias das suas transacoes.</p>
         </div>
         <button class="btn-action btn-primary"
                 onclick="carregarModalCriar()"
@@ -47,15 +48,20 @@
                 {
                     <li class="category-item" role="listitem">
                         <div class="category-info">
-                            <div class="category-icon" aria-hidden="true">
-                                <i class="bi bi-tag-fill"></i>
+                            <div class="category-icon @GetIconClass(item.TipoContabil)" aria-hidden="true">
+                                <i class="bi @GetIconName(item.TipoContabil)"></i>
                             </div>
                             <div class="category-details">
                                 <h3 class="category-name">@item.Name</h3>
-                                @if (item.IsPredefined)
-                                {
-                                    <span class="badge badge-system">Padrão do Sistema</span>
-                                }
+                                <div class="category-badges">
+                                    <span class="badge @GetBadgeClass(item.TipoContabil)">
+                                        @GetTipoContabilDisplay(item.TipoContabil)
+                                    </span>
+                                    @if (item.IsPredefined)
+                                    {
+                                        <span class="badge badge-system">Sistema</span>
+                                    }
+                                </div>
                             </div>
                         </div>
 
@@ -80,13 +86,40 @@
                 }
             </ul>
         </div>
+
+        <!-- Legenda dos tipos -->
+        <div class="tipos-legenda glass-panel">
+            <h4><i class="bi bi-info-circle"></i> Legenda dos Tipos Contabeis</h4>
+            <div class="legenda-grid">
+                <div class="legenda-item">
+                    <span class="badge badge-receita">Receita</span>
+                    <span>Entradas de dinheiro</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-custo">Custo Variavel</span>
+                    <span>Custos de producao/venda</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-fixo">Despesa Fixa</span>
+                    <span>Gastos fixos mensais</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-operacional">Despesa Operacional</span>
+                    <span>Gastos do dia-a-dia</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-investimento">Investimento</span>
+                    <span>Aplicacoes e bens</span>
+                </div>
+            </div>
+        </div>
     }
 </div>
 
-<!-- Container para modais dinâmicos -->
+<!-- Container para modais dinamicos -->
 <div id="modal-container"></div>
 
-<!-- Modal de confirmação de exclusão -->
+<!-- Modal de confirmacao de exclusao -->
 <div class="modal fade"
      id="deleteModal"
      tabindex="-1"
@@ -99,7 +132,7 @@
                     <i class="bi bi-exclamation-triangle-fill"></i>
                 </div>
                 <h2 id="deleteModalLabel" class="modal-title-warning">Excluir Categoria?</h2>
-                <p class="modal-text-secondary">Essa ação não pode ser desfeita.</p>
+                <p class="modal-text-secondary">Essa acao nao pode ser desfeita.</p>
                 <div class="modal-actions">
                     <button type="button"
                             class="btn-action btn-secondary"
@@ -120,4 +153,58 @@
 @section Scripts {
     <script src="~/js/categories.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial" />
+}
+
+@functions {
+    string GetBadgeClass(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "badge-receita",
+            TipoContabil.CustoVariavel => "badge-custo",
+            TipoContabil.DespesaFixa => "badge-fixo",
+            TipoContabil.DespesaOperacional => "badge-operacional",
+            TipoContabil.Investimento => "badge-investimento",
+            _ => "badge-default"
+        };
+    }
+
+    string GetIconClass(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "icon-receita",
+            TipoContabil.CustoVariavel => "icon-custo",
+            TipoContabil.DespesaFixa => "icon-fixo",
+            TipoContabil.DespesaOperacional => "icon-operacional",
+            TipoContabil.Investimento => "icon-investimento",
+            _ => ""
+        };
+    }
+
+    string GetIconName(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "bi-arrow-up-circle-fill",
+            TipoContabil.CustoVariavel => "bi-box-fill",
+            TipoContabil.DespesaFixa => "bi-building-fill",
+            TipoContabil.DespesaOperacional => "bi-gear-fill",
+            TipoContabil.Investimento => "bi-graph-up-arrow",
+            _ => "bi-tag-fill"
+        };
+    }
+
+    string GetTipoContabilDisplay(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "Receita",
+            TipoContabil.CustoVariavel => "Custo Variavel",
+            TipoContabil.DespesaFixa => "Despesa Fixa",
+            TipoContabil.DespesaOperacional => "Desp. Operacional",
+            TipoContabil.Investimento => "Investimento",
+            _ => "Nao Classificado"
+        };
+    }
 }
