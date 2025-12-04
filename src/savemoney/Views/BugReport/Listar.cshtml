@@ -1,0 +1,361 @@
+@model List<savemoney.Models.BugReport>
+@{
+    ViewData["Title"] = "Bug Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="bug-reports-container">
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-title-wrapper">
+                <div class="header-icon">
+                    <i class="bi bi-bug-fill"></i>
+                </div>
+                <div>
+                    <h1 class="page-title">Bug Reports</h1>
+                    <p class="page-subtitle">@Model.Count reports registrados</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-badge stat-pending">
+                    <i class="bi bi-clock-fill"></i>
+                    <span>@Model.Count(r => !r.Resolvido) pendentes</span>
+                </div>
+                <div class="stat-badge stat-resolved">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>@Model.Count(r => r.Resolvido) resolvidos</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state glass-card">
+            <i class="bi bi-emoji-smile-fill"></i>
+            <h3>Nenhum bug reportado!</h3>
+            <p>Isso é ótimo! Significa que está tudo funcionando bem.</p>
+        </div>
+    }
+    else
+    {
+        <div class="reports-grid">
+            @foreach (var report in Model)
+            {
+                var gravidadeClass = report.Gravidade switch
+                {
+                    "critica" => "gravidade-critica",
+                    "alta" => "gravidade-alta",
+                    "media" => "gravidade-media",
+                    _ => "gravidade-baixa"
+                };
+
+                <div class="report-card glass-card @(report.Resolvido ? "resolvido" : "")">
+                    <div class="report-header">
+                        <span class="report-id">#@report.Id</span>
+                        <span class="gravidade-badge @gravidadeClass">@report.Gravidade.ToUpper()</span>
+                    </div>
+
+                    <h3 class="report-titulo">@report.Titulo</h3>
+
+                    <div class="report-meta">
+                        <span><i class="bi bi-link-45deg"></i> @report.Pagina</span>
+                        <span><i class="bi bi-calendar3"></i> @report.DataCriacao.ToString("dd/MM/yyyy HH:mm")</span>
+                        @if (!string.IsNullOrEmpty(report.UsuarioNome))
+                        {
+                            <span><i class="bi bi-person-fill"></i> @report.UsuarioNome</span>
+                        }
+                    </div>
+
+                    <p class="report-descricao">@report.Descricao</p>
+
+                    <div class="report-actions">
+                        @if (!report.Resolvido)
+                        {
+                            <button class="btn-resolver" onclick="marcarResolvido(@report.Id, this)">
+                                <i class="bi bi-check-lg"></i> Marcar como Resolvido
+                            </button>
+                        }
+                        else
+                        {
+                            <span class="status-resolvido">
+                                <i class="bi bi-check-circle-fill"></i> Resolvido
+                            </span>
+                        }
+                        <button class="btn-excluir" onclick="excluirReport(@report.Id, this)">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .bug-reports-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .header-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .header-icon {
+        font-size: 2rem;
+        color: var(--danger);
+        background: rgba(239, 68, 68, 0.1);
+        padding: 0.75rem;
+        border-radius: 12px;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .header-stats {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .stat-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .stat-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+    }
+
+    .stat-resolved {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+    }
+
+    .reports-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .report-card {
+        padding: 1.5rem;
+        transition: all 0.3s;
+    }
+
+        .report-card.resolvido {
+            opacity: 0.6;
+        }
+
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .report-id {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        font-family: monospace;
+    }
+
+    .gravidade-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 700;
+    }
+
+    .gravidade-critica {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+
+    .gravidade-alta {
+        background: rgba(249, 115, 22, 0.2);
+        color: #f97316;
+    }
+
+    .gravidade-media {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+    }
+
+    .gravidade-baixa {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+    }
+
+    .report-titulo {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        margin: 0 0 0.75rem 0;
+    }
+
+    .report-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+        .report-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+    .report-descricao {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        max-height: 100px;
+        overflow: hidden;
+    }
+
+    .report-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--glass-border);
+    }
+
+    .btn-resolver {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+
+        .btn-resolver:hover {
+            background: #10b981;
+            color: white;
+        }
+
+    .status-resolvido {
+        color: #10b981;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-excluir {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: none;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .btn-excluir:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+        }
+
+    .glass-card {
+        background: var(--glass-bg, rgba(20, 22, 30, 0.65));
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+        border-radius: 1rem;
+    }
+</style>
+
+<script>
+    async function marcarResolvido(id, btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Aguarde...';
+
+        const response = await fetch('/BugReport/MarcarResolvido?id=' + id, { method: 'POST' });
+        const result = await response.json();
+
+        if (result.success) {
+            location.reload();
+        } else {
+            alert('Erro: ' + result.message);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Marcar como Resolvido';
+        }
+    }
+
+    async function excluirReport(id, btn) {
+        if (!confirm('Tem certeza que deseja excluir este report?')) return;
+
+        btn.disabled = true;
+
+        const response = await fetch('/BugReport/Excluir?id=' + id, { method: 'POST' });
+        const result = await response.json();
+
+        if (result.success) {
+            btn.closest('.report-card').remove();
+        } else {
+            alert('Erro: ' + result.message);
+            btn.disabled = false;
+        }
+    }
+</script>

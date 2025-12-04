@@ -23,7 +23,7 @@
         usersTable = document.getElementById('usersTable');
 
         if (!usersTable) {
-            console.error('Tabela não encontrada');
+            console.warn('Tabela não encontrada - página pode não ter usuários');
             return;
         }
 
@@ -43,9 +43,11 @@
         }
 
         // Row click (opcional - expande em mobile)
-        tableRows.forEach(row => {
-            row.addEventListener('click', handleRowClick);
-        });
+        if (tableRows) {
+            tableRows.forEach(row => {
+                row.addEventListener('click', handleRowClick);
+            });
+        }
 
         console.log('Event listeners configurados');
     }
@@ -75,6 +77,8 @@
     /* Filter Table
        ======================================================================== */
     function filterTable(searchTerm) {
+        if (!tableRows || tableRows.length === 0) return;
+
         let visibleCount = 0;
 
         tableRows.forEach(row => {
@@ -99,10 +103,11 @@
        ======================================================================== */
     function updateEmptyState(visibleCount) {
         let emptyState = document.querySelector('.search-empty-state');
+        const tableWrapper = usersTable?.closest('.table-wrapper');
 
-        if (visibleCount === 0 && searchInput.value.trim() !== '') {
+        if (visibleCount === 0 && searchInput && searchInput.value.trim() !== '') {
             // Create empty state if doesn't exist
-            if (!emptyState) {
+            if (!emptyState && tableWrapper) {
                 emptyState = document.createElement('div');
                 emptyState.className = 'search-empty-state';
                 emptyState.innerHTML = `
@@ -110,15 +115,15 @@
                     <h3 class="empty-title">Nenhum resultado encontrado</h3>
                     <p class="empty-description">Tente buscar com outros termos</p>
                 `;
-                usersTable.parentElement.appendChild(emptyState);
+                tableWrapper.parentElement.appendChild(emptyState);
             }
-            emptyState.style.display = 'block';
-            usersTable.style.display = 'none';
+            if (emptyState) emptyState.style.display = 'block';
+            if (usersTable) usersTable.style.display = 'none';
         } else {
             if (emptyState) {
                 emptyState.style.display = 'none';
             }
-            usersTable.style.display = 'table';
+            if (usersTable) usersTable.style.display = 'table';
         }
     }
 
@@ -132,14 +137,15 @@
 
         // Em mobile, adiciona classe active para expandir
         if (window.innerWidth <= 768) {
-            const isActive = this.classList.contains('active');
+            const row = e.currentTarget;
+            const isActive = row.classList.contains('active');
 
             // Remove active de todas as rows
-            tableRows.forEach(row => row.classList.remove('active'));
+            tableRows.forEach(r => r.classList.remove('active'));
 
             // Toggle current row
             if (!isActive) {
-                this.classList.add('active');
+                row.classList.add('active');
             }
         }
     }
@@ -147,11 +153,14 @@
     /* Sort Table (Optional Enhancement)
        ======================================================================== */
     function sortTable(columnIndex, direction = 'asc') {
-        const tbody = usersTable.querySelector('tbody');
+        if (!usersTable) return;
 
-        const sortedRows = tableRows.sort((a, b) => {
-            const aValue = a.cells[columnIndex].textContent.trim();
-            const bValue = b.cells[columnIndex].textContent.trim();
+        const tbody = usersTable.querySelector('tbody');
+        if (!tbody) return;
+
+        const sortedRows = [...tableRows].sort((a, b) => {
+            const aValue = a.cells[columnIndex]?.textContent.trim() || '';
+            const bValue = b.cells[columnIndex]?.textContent.trim() || '';
 
             if (direction === 'asc') {
                 return aValue.localeCompare(bValue);
@@ -162,15 +171,6 @@
 
         // Re-append rows in sorted order
         sortedRows.forEach(row => tbody.appendChild(row));
-    }
-
-    /* Highlight Search Terms
-       ======================================================================== */
-    function highlightSearchTerm(text, searchTerm) {
-        if (!searchTerm) return text;
-
-        const regex = new RegExp(`(${searchTerm})`, 'gi');
-        return text.replace(regex, '<mark>$1</mark>');
     }
 
     /* Animation Styles
@@ -203,7 +203,7 @@
             /* Active Row (Mobile) */
             .data-table tbody tr.active {
                 background: rgba(59, 130, 246, 0.1);
-                border-left: 0.25rem solid var(--index-accent);
+                border-left: 0.25rem solid var(--index-accent, #3b82f6);
             }
 
             /* Search Empty State */
@@ -218,6 +218,7 @@
                 color: var(--text-secondary);
                 opacity: 0.5;
                 margin-bottom: 1.5rem;
+                display: block;
             }
 
             .search-empty-state .empty-title {
@@ -249,27 +250,6 @@
 
                 .stat-card:hover {
                     transform: translateY(-0.25rem);
-                }
-            }
-
-            /* Loading Skeleton (Future Enhancement) */
-            .skeleton {
-                background: linear-gradient(
-                    90deg,
-                    rgba(255, 255, 255, 0.03) 25%,
-                    rgba(255, 255, 255, 0.05) 50%,
-                    rgba(255, 255, 255, 0.03) 75%
-                );
-                background-size: 200% 100%;
-                animation: skeleton-loading 1.5s infinite;
-            }
-
-            @keyframes skeleton-loading {
-                0% {
-                    background-position: 200% 0;
-                }
-                100% {
-                    background-position: -200% 0;
                 }
             }
 
@@ -335,8 +315,8 @@
     window.IndexModule = {
         filterTable,
         sortTable,
-        searchInput,
-        tableRows
+        get searchInput() { return searchInput; },
+        get tableRows() { return tableRows; }
     };
 
 })();

@@ -139,6 +139,17 @@
                         </div>
                     }
 
+                    <!-- Termos de Uso -->
+                    <div class="form-group terms-group">
+                        <p class="terms-notice">
+                            Ao criar sua conta, você concorda com nossos
+                            <a href="#" onclick="abrirModalTermos(event)" class="terms-link">
+                                <span class="material-symbols-outlined" aria-hidden="true">gavel</span>
+                                Termos de Uso
+                            </a>
+                        </p>
+                    </div>
+
                     <!-- Submit -->
                     <button type="submit" class="btn-submit">
                         <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
@@ -221,6 +232,9 @@
         </div>
 
     </div>
+
+    @* Modal de Termos de Uso
+    <partial name="_TermosDeUso" /> *@
 
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/create.js" asp-append-version="true"></script>

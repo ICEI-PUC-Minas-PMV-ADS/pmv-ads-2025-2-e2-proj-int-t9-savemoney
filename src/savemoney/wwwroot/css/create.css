@@ -314,6 +314,40 @@ select.form-input {
         color: var(--create-success);
     }
 
+/* Terms Group - Link para Termos de Uso
+   ========================================================================== */
+.terms-group {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.terms-notice {
+    font-size: 0.875rem;
+    color: var(--create-text-muted);
+    text-align: center;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.terms-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--create-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+    .terms-link:hover {
+        color: var(--create-accent-hover);
+        text-decoration: underline;
+    }
+
+    .terms-link .material-symbols-outlined {
+        font-size: 1rem;
+    }
+
 /* Submit Button
    ========================================================================== */
 .btn-submit {
