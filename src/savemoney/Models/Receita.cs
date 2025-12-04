@@ -1,7 +1,5 @@
-﻿using savemoney.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace savemoney.Models
 {
@@ -24,7 +22,6 @@ namespace savemoney.Models
         [Required(ErrorMessage = "O valor é obrigatório")]
         [Column(TypeName = "decimal(18,3)")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
-        //[RegularExpression(@"^\d+(\.\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")] Estava dando erro com casas valores decimais Ass.: Maicon
         public decimal Valor { get; set; }
 
         [Display(Name = "Tipo de Moeda")]
@@ -56,6 +53,13 @@ namespace savemoney.Models
 
         [ForeignKey("UsuarioId")]
         public Usuario Usuario { get; set; } = null!;
+
+        // FK para Category (nova)
+        [Display(Name = "Categoria")]
+        public int? CategoryId { get; set; }
+
+        [ForeignKey("CategoryId")]
+        public Category? Category { get; set; }
 
         public enum RecurrenceType
         {
