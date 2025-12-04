@@ -1,0 +1,294 @@
+charset UTF-8;
+
+@model savemoney.Models.ViewModels.DreGerencialViewModel
+@{
+    ViewData["Title"] = "DRE Gerencial";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="~/css/dre-gerencial.css" asp-append-version="true" />
+
+<div class="dre-container">
+    <!-- Header -->
+    <div class="dre-header">
+        <div class="dre-header-info">
+            <h1><i class="bi bi-graph-up-arrow"></i> DRE Gerencial Simplificado</h1>
+            <p>Demonstrativo de Resultados do Exercício</p>
+        </div>
+        <div class="dre-header-actions">
+            <button type="button" class="btn btn-outline-primary" id="btn-exportar">
+                <i class="bi bi-download"></i> Exportar
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="dre-filtros glass-card">
+        <form asp-action="Index" method="post" id="form-filtros">
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <label asp-for="DataInicio" class="form-label">Data Início</label>
+                    <input asp-for="DataInicio" type="date" class="form-control" />
+                </div>
+
+                <div class="filtro-grupo">
+                    <label asp-for="DataFim" class="form-label">Data Fim</label>
+                    <input asp-for="DataFim" type="date" class="form-control" />
+                </div>
+
+                <div class="filtro-grupo">
+                    <label asp-for="Regime" class="form-label">Regime</label>
+                    <select asp-for="Regime" asp-items="Html.GetEnumSelectList<savemoney.Models.Enums.TipoRegimeDre>()" class="form-select"></select>
+                </div>
+
+                <div class="filtro-grupo filtro-checkbox">
+                    <label class="form-check">
+                        <input asp-for="HabilitarComparativo" type="checkbox" class="form-check-input" id="chk-comparativo" />
+                        <span class="form-check-label">Comparativo</span>
+                    </label>
+                </div>
+
+                <div class="filtro-grupo filtro-comparativo @(Model.HabilitarComparativo ? "" : "hidden")">
+                    <label asp-for="DataInicioComparativo" class="form-label">Início Comp.</label>
+                    <input asp-for="DataInicioComparativo" type="date" class="form-control" />
+                </div>
+
+                <div class="filtro-grupo filtro-comparativo @(Model.HabilitarComparativo ? "" : "hidden")">
+                    <label asp-for="DataFimComparativo" class="form-label">Fim Comp.</label>
+                    <input asp-for="DataFimComparativo" type="date" class="form-control" />
+                </div>
+
+                <div class="filtro-grupo filtro-btn">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Cards KPIs -->
+    <div class="dre-kpis">
+        <div class="kpi-card kpi-receita">
+            <div class="kpi-icon"><i class="bi bi-arrow-up-circle"></i></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Receita Bruta</span>
+                <span class="kpi-valor">@Model.PeriodoAtual.ReceitaBruta.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                @if (Model.Variacao != null)
+                {
+                    <span class="kpi-variacao @(Model.Variacao.ReceitaBrutaVariacao >= 0 ? "positiva" : "negativa")">
+                        <i class="bi bi-@(Model.Variacao.ReceitaBrutaVariacao >= 0 ? "arrow-up" : "arrow-down")"></i>
+                        @Math.Abs(Model.Variacao.ReceitaBrutaVariacao).ToString("N1")%
+                    </span>
+                }
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-margem">
+            <div class="kpi-icon"><i class="bi bi-percent"></i></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Margem Contribui&#231;&#227;o</span>
+                <span class="kpi-valor">@Model.PeriodoAtual.MargemContribuicao.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                <span class="kpi-percentual">@Model.PeriodoAtual.MargemContribuicaoPercentual.ToString("N1")% da receita</span>
+            </div>
+        </div>
+
+        <div class="kpi-card @(Model.PeriodoAtual.TemLucro ? "kpi-lucro" : "kpi-prejuizo")">
+            <div class="kpi-icon"><i class="bi bi-@(Model.PeriodoAtual.TemLucro ? "trophy" : "exclamation-triangle")"></i></div>
+            <div class="kpi-content">
+                <span class="kpi-label">@(Model.PeriodoAtual.TemLucro ? "Lucro L&#237;quido" : "Preju&#237;zo")</span>
+                <span class="kpi-valor">@Model.PeriodoAtual.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                <span class="kpi-percentual">@Model.PeriodoAtual.MargemLiquidaPercentual.ToString("N1")% margem l&#237;quida</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- DRE Tabela Principal -->
+    <div class="dre-content">
+        <div class="dre-tabela-container glass-card">
+            <h2 class="dre-section-title">
+                <i class="bi bi-table"></i> Demonstrativo - @Model.PeriodoAtual.Descricao
+            </h2>
+
+            <table class="dre-tabela">
+                <thead>
+                    <tr>
+                        <th class="col-descricao">Descrição</th>
+                        <th class="col-valor">Valor</th>
+                        <th class="col-percent">%</th>
+                        @if (Model.PeriodoComparativo != null)
+                        {
+                            <th class="col-valor">Comparativo</th>
+                            <th class="col-variacao">Variação</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- RECEITA BRUTA -->
+                    <tr class="linha-receita linha-total">
+                        <td><i class="bi bi-plus-circle"></i> Receita Bruta</td>
+                        <td class="valor">@Model.PeriodoAtual.ReceitaBruta.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                        <td class="percent">100%</td>
+                        @if (Model.PeriodoComparativo != null)
+                        {
+                            <td class="valor">@Model.PeriodoComparativo.ReceitaBruta.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                            <td class="variacao @(Model.Variacao!.ReceitaBrutaVariacao >= 0 ? "positiva" : "negativa")">
+                                @(Model.Variacao.ReceitaBrutaVariacao >= 0 ? "+" : "")@Model.Variacao.ReceitaBrutaVariacao.ToString("N1")%
+                            </td>
+                        }
+                    </tr>
+
+                    @foreach (var item in Model.PeriodoAtual.ReceitasDetalhadas)
+                    {
+                        <tr class="linha-detalhe">
+                            <td class="indent">@item.Categoria</td>
+                            <td class="valor">@item.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                            <td class="percent">@item.Percentual.ToString("N1")%</td>
+                            @if (Model.PeriodoComparativo != null)
+                            {
+                                <td class="valor">-</td>
+                                <td class="variacao">-</td>
+                            }
+                        </tr>
+                    }
+
+                    <!-- CUSTOS VARIÁVEIS -->
+                    <tr class="linha-custo linha-total">
+                        <td><i class="bi bi-dash-circle"></i> Custos Variáveis</td>
+                        <td class="valor negativo">(@Model.PeriodoAtual.CustosVariaveis.ToString("C", new System.Globalization.CultureInfo("pt-BR")))</td>
+                        <td class="percent">
+                            @(Model.PeriodoAtual.ReceitaBruta > 0 ? ((Model.PeriodoAtual.CustosVariaveis / Model.PeriodoAtual.ReceitaBruta) * 100).ToString("N1") : "0")%
+                        </td>
+                        @if (Model.PeriodoComparativo != null)
+                        {
+                            <td class="valor negativo">(@Model.PeriodoComparativo.CustosVariaveis.ToString("C", new System.Globalization.CultureInfo("pt-BR")))</td>
+                            <td class="variacao @(Model.Variacao!.CustosVariaveisVariacao <= 0 ? "positiva" : "negativa")">
+                                @(Model.Variacao.CustosVariaveisVariacao >= 0 ? "+" : "")@Model.Variacao.CustosVariaveisVariacao.ToString("N1")%
+                            </td>
+                        }
+                    </tr>
+
+                    @foreach (var item in Model.PeriodoAtual.CustosDetalhados)
+                    {
+                        <tr class="linha-detalhe">
+                            <td class="indent">@item.Categoria</td>
+                            <td class="valor negativo">(@item.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR")))</td>
+                            <td class="percent">@item.Percentual.ToString("N1")%</td>
+                            @if (Model.PeriodoComparativo != null)
+                            {
+                                <td class="valor">-</td>
+                                <td class="variacao">-</td>
+                            }
+                        </tr>
+                    }
+
+                    <!-- MARGEM DE CONTRIBUIÇÃO -->
+                    <tr class="linha-margem linha-subtotal">
+                        <td><i class="bi bi-equal"></i> Margem de Contribuição</td>
+                        <td class="valor">@Model.PeriodoAtual.MargemContribuicao.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                        <td class="percent">@Model.PeriodoAtual.MargemContribuicaoPercentual.ToString("N1")%</td>
+                        @if (Model.PeriodoComparativo != null)
+                        {
+                            <td class="valor">@Model.PeriodoComparativo.MargemContribuicao.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                            <td class="variacao @(Model.Variacao!.MargemContribuicaoVariacao >= 0 ? "positiva" : "negativa")">
+                                @(Model.Variacao.MargemContribuicaoVariacao >= 0 ? "+" : "")@Model.Variacao.MargemContribuicaoVariacao.ToString("N1")%
+                            </td>
+                        }
+                    </tr>
+
+                    <!-- DESPESAS OPERACIONAIS -->
+                    <tr class="linha-despesa linha-total">
+                        <td><i class="bi bi-dash-circle"></i> Despesas Operacionais</td>
+                        <td class="valor negativo">(@Model.PeriodoAtual.DespesasOperacionais.ToString("C", new System.Globalization.CultureInfo("pt-BR")))</td>
+                        <td class="percent">
+                            @(Model.PeriodoAtual.ReceitaBruta > 0 ? ((Model.PeriodoAtual.DespesasOperacionais / Model.PeriodoAtual.ReceitaBruta) * 100).ToString("N1") : "0")%
+                        </td>
+                        @if (Model.PeriodoComparativo != null)
+                        {
+                            <td class="valor negativo">(@Model.PeriodoComparativo.DespesasOperacionais.ToString("C", new System.Globalization.CultureInfo("pt-BR")))</td>
+                            <td class="variacao @(Model.Variacao!.DespesasOperacionaisVariacao <= 0 ? "positiva" : "negativa")">
+                                @(Model.Variacao.DespesasOperacionaisVariacao >= 0 ? "+" : "")@Model.Variacao.DespesasOperacionaisVariacao.ToString("N1")%
+                            </td>
+                        }
+                    </tr>
+
+                    @foreach (var item in Model.PeriodoAtual.DespesasDetalhadas)
+                    {
+                        <tr class="linha-detalhe">
+                            <td class="indent">@item.Categoria</td>
+                            <td class="valor negativo">(@item.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR")))</td>
+                            <td class="percent">@item.Percentual.ToString("N1")%</td>
+                            @if (Model.PeriodoComparativo != null)
+                            {
+                                <td class="valor">-</td>
+                                <td class="variacao">-</td>
+                            }
+                        </tr>
+                    }
+
+                    <!-- LUCRO LÍQUIDO -->
+                    <tr class="linha-resultado linha-total-final @(Model.PeriodoAtual.TemLucro ? "lucro" : "prejuizo")">
+                        <td><i class="bi bi-@(Model.PeriodoAtual.TemLucro ? "check-circle" : "x-circle")"></i> @(Model.PeriodoAtual.TemLucro ? "Lucro Líquido" : "Prejuízo")</td>
+                        <td class="valor">@Model.PeriodoAtual.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                        <td class="percent">@Model.PeriodoAtual.MargemLiquidaPercentual.ToString("N1")%</td>
+                        @if (Model.PeriodoComparativo != null)
+                        {
+                            <td class="valor">@Model.PeriodoComparativo.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</td>
+                            <td class="variacao @(Model.Variacao!.LucroLiquidoVariacao >= 0 ? "positiva" : "negativa")">
+                                @(Model.Variacao.LucroLiquidoVariacao >= 0 ? "+" : "")@Model.Variacao.LucroLiquidoVariacao.ToString("N1")%
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Gráfico de Evolução -->
+        @if (Model.HistoricoMensal.Any())
+        {
+            <div class="dre-grafico-container glass-card">
+                <h2 class="dre-section-title">
+                    <i class="bi bi-bar-chart"></i> Evolução Mensal
+                </h2>
+
+                <div class="grafico-barras">
+                    @{
+                        var maxValor = Model.HistoricoMensal.Max(h => Math.Max(h.ReceitaBruta, Math.Max(h.DespesasOperacionais + h.CustosVariaveis, Math.Abs(h.LucroLiquido))));
+                        if (maxValor == 0) maxValor = 1;
+                    }
+
+                    @foreach (var mes in Model.HistoricoMensal)
+                    {
+                        var alturaReceita = (mes.ReceitaBruta / maxValor) * 100;
+                        var alturaDespesas = ((mes.CustosVariaveis + mes.DespesasOperacionais) / maxValor) * 100;
+                        var alturaLucro = (Math.Abs(mes.LucroLiquido) / maxValor) * 100;
+
+                        <div class="grafico-mes">
+                            <div class="barras-grupo">
+                                <div class="barra barra-receita" style="height: @alturaReceita.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                     title="Receita: @mes.ReceitaBruta.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
+                                <div class="barra barra-despesa" style="height: @alturaDespesas.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                     title="Despesas: @((mes.CustosVariaveis + mes.DespesasOperacionais).ToString("C", new System.Globalization.CultureInfo("pt-BR")))"></div>
+                                <div class="barra @(mes.LucroLiquido >= 0 ? "barra-lucro" : "barra-prejuizo")" style="height: @alturaLucro.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                     title="@(mes.LucroLiquido >= 0 ? "Lucro" : "Prejuízo"): @mes.LucroLiquido.ToString("C", new System.Globalization.CultureInfo("pt-BR"))"></div>
+                            </div>
+                            <span class="grafico-label">@mes.MesAnoAbreviado</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="grafico-legenda">
+                    <span class="legenda-item"><span class="legenda-cor receita"></span> Receita</span>
+                    <span class="legenda-item"><span class="legenda-cor despesa"></span> Despesas</span>
+                    <span class="legenda-item"><span class="legenda-cor lucro"></span> Lucro</span>
+                    <span class="legenda-item"><span class="legenda-cor prejuizo"></span> Prejuízo</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/dre-gerencial.js" asp-append-version="true"></script>
+}

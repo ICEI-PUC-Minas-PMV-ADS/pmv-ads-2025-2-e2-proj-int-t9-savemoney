@@ -1,0 +1,603 @@
+﻿/* ============================================
+   DRE GERENCIAL - Estilos Específicos
+   Usa variáveis globais do site.css
+   ============================================ */
+
+/* Container Principal */
+.dre-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Header */
+.dre-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dre-header-info h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+    .dre-header-info h1 i {
+        color: var(--warning);
+    }
+
+.dre-header-info p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Filtros */
+.dre-filtros {
+    padding: 1.25rem;
+}
+
+.filtros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+    .filtro-grupo .form-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 0;
+    }
+
+.filtro-checkbox {
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
+}
+
+    .filtro-checkbox .form-check {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .filtro-checkbox .form-check-input {
+        width: 1.125rem;
+        height: 1.125rem;
+        cursor: pointer;
+    }
+
+.filtro-comparativo {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+    .filtro-comparativo.hidden {
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        pointer-events: none;
+    }
+
+.filtro-btn {
+    justify-content: flex-end;
+}
+
+    .filtro-btn .btn {
+        width: 100%;
+    }
+
+/* KPIs Cards */
+.dre-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+}
+
+.kpi-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(0.625rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .kpi-card:hover {
+        transform: translateY(-0.125rem);
+        box-shadow: var(--shadow-deep);
+    }
+
+.kpi-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.kpi-receita .kpi-icon {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.kpi-margem .kpi-icon {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-primary);
+}
+
+.kpi-lucro .kpi-icon {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.kpi-prejuizo .kpi-icon {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+}
+
+.kpi-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.kpi-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.025rem;
+}
+
+.kpi-valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kpi-percentual {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.kpi-variacao {
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+    .kpi-variacao.positiva {
+        color: var(--success);
+    }
+
+    .kpi-variacao.negativa {
+        color: var(--danger);
+    }
+
+/* Conteúdo Principal */
+.dre-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.dre-section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+    .dre-section-title i {
+        color: var(--warning);
+    }
+
+/* Tabela DRE */
+.dre-tabela-container {
+    overflow-x: auto;
+}
+
+.dre-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+    .dre-tabela th {
+        text-align: left;
+        padding: 0.875rem 1rem;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-weight: 600;
+        border-bottom: 0.125rem solid var(--border-color);
+        white-space: nowrap;
+    }
+
+        .dre-tabela th.col-valor,
+        .dre-tabela th.col-percent,
+        .dre-tabela th.col-variacao {
+            text-align: right;
+        }
+
+    .dre-tabela td {
+        padding: 0.75rem 1rem;
+        border-bottom: 0.0625rem solid var(--border-color);
+        color: var(--text-secondary);
+    }
+
+        .dre-tabela td.valor,
+        .dre-tabela td.percent,
+        .dre-tabela td.variacao {
+            text-align: right;
+            font-family: "JetBrains Mono", "Consolas", monospace;
+            white-space: nowrap;
+        }
+
+            .dre-tabela td.valor.negativo {
+                color: var(--danger);
+            }
+
+        .dre-tabela td.indent {
+            padding-left: 2.5rem;
+            font-size: 0.85rem;
+        }
+
+        .dre-tabela td.variacao.positiva {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .dre-tabela td.variacao.negativa {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+/* Linhas Especiais */
+.linha-total td {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+    .linha-total td:first-child {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+.linha-receita td:first-child i {
+    color: var(--success);
+}
+
+.linha-custo td:first-child i,
+.linha-despesa td:first-child i {
+    color: var(--danger);
+}
+
+.linha-margem td:first-child i {
+    color: var(--accent-primary);
+}
+
+.linha-subtotal {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+    .linha-subtotal td {
+        font-weight: 600;
+        color: var(--accent-primary);
+        border-top: 0.0625rem dashed var(--border-color);
+        border-bottom: 0.0625rem dashed var(--border-color);
+    }
+
+.linha-detalhe {
+    font-size: 0.85rem;
+}
+
+    .linha-detalhe:hover {
+        background: var(--bg-card);
+    }
+
+.linha-total-final {
+    border-top: 0.125rem solid var(--border-color);
+}
+
+    .linha-total-final td {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    .linha-total-final.lucro td {
+        color: var(--success);
+    }
+
+        .linha-total-final.lucro td.valor {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+    .linha-total-final.prejuizo td {
+        color: var(--danger);
+    }
+
+        .linha-total-final.prejuizo td.valor {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+.linha-resultado td:first-child i {
+    font-size: 1.125rem;
+}
+
+/* Gráfico de Barras CSS */
+.dre-grafico-container {
+    min-height: 20rem;
+}
+
+.grafico-barras {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 15rem;
+    padding: 1rem 0;
+    gap: 0.5rem;
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+.grafico-mes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    max-width: 6rem;
+}
+
+.barras-grupo {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.25rem;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+
+.barra {
+    width: 1.25rem;
+    min-height: 0.25rem;
+    border-radius: 0.25rem 0.25rem 0 0;
+    transition: height 0.5s ease, opacity 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+    .barra:hover {
+        opacity: 0.8;
+    }
+
+.barra-receita {
+    background: linear-gradient(180deg, var(--success), rgba(16, 185, 129, 0.6));
+}
+
+.barra-despesa {
+    background: linear-gradient(180deg, var(--warning), rgba(245, 158, 11, 0.6));
+}
+
+.barra-lucro {
+    background: linear-gradient(180deg, var(--accent-primary), rgba(59, 130, 246, 0.6));
+}
+
+.barra-prejuizo {
+    background: linear-gradient(180deg, var(--danger), rgba(239, 68, 68, 0.6));
+}
+
+.grafico-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Legenda */
+.grafico-legenda {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.legenda-cor {
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 0.25rem;
+}
+
+    .legenda-cor.receita {
+        background: var(--success);
+    }
+
+    .legenda-cor.despesa {
+        background: var(--warning);
+    }
+
+    .legenda-cor.lucro {
+        background: var(--accent-primary);
+    }
+
+    .legenda-cor.prejuizo {
+        background: var(--danger);
+    }
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+
+@media (max-width: 62rem) {
+    .dre-content {
+        grid-template-columns: 1fr;
+    }
+
+    .filtros-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .filtro-comparativo {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 48rem) {
+    .dre-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dre-header-actions {
+        width: 100%;
+    }
+
+        .dre-header-actions .btn {
+            width: 100%;
+        }
+
+    .filtros-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dre-kpis {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-valor {
+        font-size: 1.25rem;
+    }
+
+    .dre-tabela {
+        font-size: 0.8rem;
+    }
+
+        .dre-tabela th,
+        .dre-tabela td {
+            padding: 0.625rem 0.5rem;
+        }
+
+            .dre-tabela td.indent {
+                padding-left: 1.5rem;
+            }
+
+    .grafico-barras {
+        height: 12rem;
+    }
+
+    .barra {
+        width: 1rem;
+    }
+}
+
+@media (max-width: 36rem) {
+    .dre-header-info h1 {
+        font-size: 1.375rem;
+    }
+
+    .filtros-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filtro-comparativo.hidden {
+        display: none;
+    }
+
+    .dre-tabela th.col-percent,
+    .dre-tabela td.percent {
+        display: none;
+    }
+
+    .grafico-barras {
+        height: 10rem;
+        gap: 0.25rem;
+    }
+
+    .barra {
+        width: 0.75rem;
+    }
+
+    .grafico-label {
+        font-size: 0.65rem;
+    }
+
+    .grafico-legenda {
+        gap: 0.75rem;
+    }
+
+    .legenda-item {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 26.875rem) {
+    .dre-container {
+        gap: 1rem;
+    }
+
+    .dre-filtros {
+        padding: 1rem;
+    }
+
+    .kpi-card {
+        padding: 1rem;
+    }
+
+    .kpi-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.25rem;
+    }
+
+    .kpi-valor {
+        font-size: 1.125rem;
+    }
+
+    .dre-tabela th.col-variacao,
+    .dre-tabela td.variacao {
+        display: none;
+    }
+}
