@@ -346,15 +346,12 @@
 
 </main>
 
-@section Scripts {
-    <script>
-        window.saveMoneyDados = {
-            labels: @Html.Raw(Json.Serialize(Model.Meses)),
-            values: @Html.Raw(Json.Serialize(Model.Saldos)),
-            saldoAtual: @Model.SaldoAtual,
-            fluxoMensal: @Model.FluxoMensal,
-            saldoProjetado: @Model.SaldoProjetado6Meses
-        };
-    </script>
-    <script src="~/js/projecao.js" asp-append-version="true"></script>
-}
+<script>
+    window.saveMoneyDados = {
+        labels: @Html.Raw(Json.Serialize(Model.Meses)),
+        values: @Html.Raw(Json.Serialize(Model.Saldos)),
+        saldoAtual: @Json.Serialize(Model.SaldoAtual),
+        fluxoMensal: @Json.Serialize(Model.FluxoMensal),
+        saldoProjetado: @Json.Serialize(Model.SaldoProjetado6Meses)
+    };
+</script>

@@ -4,7 +4,7 @@
 <header id="main-header" class="header-pj-theme">
     <div class="header-container">
 
-        <a asp-controller="Dashboard" asp-action="Index" class="header-logo" title="Painel">
+        <a asp-controller="Dashboard" asp-action="Index" class="header-logo" title="Painel Corporativo">
             <i class="bi bi-building text-warning me-2"></i>SaveMoney
             <span class="badge bg-warning text-dark ms-2" style="font-size: 0.6rem; vertical-align: middle;">PJ</span>
         </a>
@@ -13,44 +13,48 @@
             <ul class="header-nav-links">
                 <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
 
-                <!-- Financeiro -->
                 <li class="header-dropdown">
                     <a href="#">Financeiro <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
                         <li><a asp-controller="Receitas" asp-action="Index">Faturamento</a></li>
                         <li><a asp-controller="Despesas" asp-action="Index">Contas a Pagar</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a asp-controller="Historico" asp-action="Index">Extrato</a></li>
-                    </ul>
-                </li>
-
-                <!-- Gestao -->
-                <li class="header-dropdown">
-                    <a href="#" class="text-warning">Gestao <i class="bi bi-chevron-down"></i></a>
-                    <ul class="header-dropdown-menu">
-                        <li><a asp-controller="KpisCorporativos" asp-action="Index">KPIs Corporativos</a></li>
-                        <li><a asp-controller="DreGerencial" asp-action="Index">DRE Gerencial</a></li>
-                        <li><a asp-controller="ProjecaoFinanceira" asp-action="FluxoDeCaixa">Fluxo de Caixa</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a asp-controller="Relatorios" asp-action="Index">Relatorios</a></li>
-                    </ul>
-                </li>
-
-                <!-- Contabil -->
-                <li class="header-dropdown">
-                    <a href="#">Contabil <i class="bi bi-chevron-down"></i></a>
-                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Historico" asp-action="Index">Extrato Bancário</a></li>
                         <li><a asp-controller="Categories" asp-action="Index">Plano de Contas</a></li>
-                        <li><a asp-controller="Budgets" asp-action="Index">Centros de Custo</a></li>
                     </ul>
                 </li>
 
-                <!-- Calculos -->
                 <li class="header-dropdown">
-                    <a href="#">Calculos <i class="bi bi-chevron-down"></i></a>
+                    <a href="#" class="text-warning">Controladoria <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
-                        <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilibrio</a></li>
+                        <li><a asp-controller="DreGerencial" asp-action="Index">DRE Gerencial</a></li>
+                        <li><a asp-controller="KpisCorporativos" asp-action="Index">KPIs Corporativos</a></li>
+                        <li><a asp-controller="ProjecaoFinanceira" asp-action="Index">Fluxo de Caixa</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a asp-controller="Budgets" asp-action="Index">Orçamentos</a></li>
+                    </ul>
+                </li>
+
+                <li class="header-dropdown">
+                    <a href="#">Análises <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Relatorios" asp-action="Index">Relatórios Gerais</a></li>
+                        <li><a asp-controller="TendenciaFinanceira" asp-action="Index">Tendências</a></li>
+                    </ul>
+                </li>
+
+                <li class="header-dropdown">
+                    <a href="#">Ferramentas <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
                         <li><a asp-controller="ConversorEnergias" asp-action="Index">Custo de Energia</a></li>
+                        <li><a asp-controller="Ferramentas" asp-action="JurosCompostos">Cálculo de Juros</a></li>
+                    </ul>
+                </li>
+
+                <li class="header-dropdown">
+                    <a href="#">Mercado <i class="bi bi-chevron-down"></i></a>
+                    <ul class="header-dropdown-menu">
+                        <li><a asp-controller="Noticias" asp-action="Index">Notícias Econômicas</a></li>
                     </ul>
                 </li>
 
@@ -64,7 +68,7 @@
         <div class="header-actions">
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                var userName = User.Identity.Name ?? "User";
+                var userName = User.Identity.Name ?? "Empresa";
                 var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
 
                 <div class="header-user-avatar header-user-avatar-pj" title="@userName">
@@ -78,47 +82,50 @@
         </button>
     </div>
 
-    <!-- Menu Mobile -->
     <nav id="mobile-nav-drawer" class="mobile-nav-drawer">
         <ul class="mobile-nav-links">
             <li><a asp-controller="Dashboard" asp-action="Index" data-dismiss="mobile-nav">Painel</a></li>
 
-            <!-- Financeiro Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle">Financeiro <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
                     <li><a asp-controller="Receitas" asp-action="Index" data-dismiss="mobile-nav">Faturamento</a></li>
                     <li><a asp-controller="Despesas" asp-action="Index" data-dismiss="mobile-nav">Contas a Pagar</a></li>
                     <li><a asp-controller="Historico" asp-action="Index" data-dismiss="mobile-nav">Extrato</a></li>
-                </ul>
-            </li>
-
-            <!-- Gestao Mobile -->
-            <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle text-warning">Gestao <i class="bi bi-chevron-down"></i></button>
-                <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="KpisCorporativos" asp-action="Index" data-dismiss="mobile-nav">KPIs Corporativos</a></li>
-                    <li><a asp-controller="DreGerencial" asp-action="Index" data-dismiss="mobile-nav">DRE Gerencial</a></li>
-                    <li><a asp-controller="ProjecaoFinanceira" asp-action="FluxoDeCaixa" data-dismiss="mobile-nav">Fluxo de Caixa</a></li>
-                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Relatorios</a></li>
-                </ul>
-            </li>
-
-            <!-- Contabil Mobile -->
-            <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle">Contabil <i class="bi bi-chevron-down"></i></button>
-                <ul class="mobile-dropdown-menu">
                     <li><a asp-controller="Categories" asp-action="Index" data-dismiss="mobile-nav">Plano de Contas</a></li>
-                    <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Centros de Custo</a></li>
                 </ul>
             </li>
 
-            <!-- Calculos Mobile -->
             <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle">Calculos <i class="bi bi-chevron-down"></i></button>
+                <button class="mobile-dropdown-toggle text-warning">Controladoria <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio" data-dismiss="mobile-nav">Ponto de Equilibrio</a></li>
+                    <li><a asp-controller="DreGerencial" asp-action="Index" data-dismiss="mobile-nav">DRE Gerencial</a></li>
+                    <li><a asp-controller="KpisCorporativos" asp-action="Index" data-dismiss="mobile-nav">KPIs Corporativos</a></li>
+                    <li><a asp-controller="ProjecaoFinanceira" asp-action="Index" data-dismiss="mobile-nav">Fluxo de Caixa</a></li>
+                    <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Orçamentos</a></li>
+                </ul>
+            </li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle">Análises <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
+                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Relatórios</a></li>
+                    <li><a asp-controller="TendenciaFinanceira" asp-action="Index" data-dismiss="mobile-nav">Tendências</a></li>
+                </ul>
+            </li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle">Ferramentas <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
                     <li><a asp-controller="ConversorEnergias" asp-action="Index" data-dismiss="mobile-nav">Custo de Energia</a></li>
+                    <li><a asp-controller="Ferramentas" asp-action="JurosCompostos" data-dismiss="mobile-nav">Cálculo de Juros</a></li>
+                </ul>
+            </li>
+
+            <li class="mobile-dropdown">
+                <button class="mobile-dropdown-toggle">Mercado <i class="bi bi-chevron-down"></i></button>
+                <ul class="mobile-dropdown-menu">
+                    <li><a asp-controller="Noticias" asp-action="Index" data-dismiss="mobile-nav">Notícias</a></li>
                 </ul>
             </li>
 

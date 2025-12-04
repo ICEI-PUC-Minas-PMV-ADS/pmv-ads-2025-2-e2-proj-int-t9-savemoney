@@ -265,18 +265,16 @@
         // Limpa canvas
         ctx.clearRect(0, 0, w, h);
 
-        // Calcula dimensões do gráfico
         const chartW = w - padding.left - padding.right;
         const chartH = h - padding.top - padding.bottom;
 
         if (values.length === 0) return;
 
-        // Calcula limites do gráfico
+        // Calcula limites
         const maxVal = Math.max(...values);
         const minVal = Math.min(...values);
         let range = maxVal - minVal;
 
-        // Previne divisão por zero
         if (range === 0) range = Math.abs(maxVal) * 0.2 || 100;
 
         const offset = range * 0.15;
@@ -289,11 +287,13 @@
             return padding.top + chartH - ((val - lowerLimit) / adjustedRange) * chartH;
         };
 
+        // CORREÇÃO 1: Evitar divisão por zero se tiver apenas 1 ponto
         const getX = (i) => {
+            if (labels.length <= 1) return padding.left + (chartW / 2); // Centraliza se for só 1 ponto
             return padding.left + (i / (labels.length - 1)) * chartW;
         };
 
-        // Armazena coordenadas dos pontos para detecção de hover
+        // Armazena coordenadas
         chart.points = values.map((val, i) => ({
             x: getX(i),
             y: getY(val),
@@ -301,24 +301,62 @@
             label: labels[i]
         }));
 
-        // 1. Desenha grade
         drawGrid(ctx, w, h, padding, chartH, upperLimit, adjustedRange, config);
 
-        // 2. Desenha área (se modo area)
-        if (state.viewMode === 'area') {
+        if (state.viewMode === 'area' && values.length > 1) { // Só desenha área se > 1 ponto
             drawArea(ctx, values, getX, getY, h, padding, config);
         }
 
-        // 3. Desenha linha principal
-        drawLine(ctx, values, getX, getY, config);
+        if (values.length > 1) { // Só desenha linha se > 1 ponto
+            drawLine(ctx, values, getX, getY, config);
+        }
 
-        // 4. Desenha pontos
-        drawPoints(ctx, chart.points, state.hoveredPoint, config);
+        // Desenha pontos (funciona mesmo com 1 ponto)
+        drawPoints(ctx, chart.points, state.hoveredPoint, config, h, padding); // Passando h e padding
 
-        // 5. Desenha linha vertical de hover (se tiver ponto hovereado)
         if (state.hoveredPoint !== null) {
             drawHoverLine(ctx, chart.points[state.hoveredPoint], h, padding, config);
         }
+    }
+
+    // ... drawGrid, drawArea e drawLine continuam iguais ...
+
+    // CORREÇÃO 2: Passar h e padding para fixar labels no rodapé
+    function drawPoints(ctx, points, hoveredIndex, config, h, padding) {
+        points.forEach((point, i) => {
+            const isHovered = i === hoveredIndex;
+            const radius = isHovered ? config.hoverPointRadius : config.pointRadius;
+
+            // Círculo interno
+            ctx.fillStyle = config.colors.pointFill;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Borda
+            ctx.strokeStyle = isHovered ? config.colors.hover : config.colors.primary;
+            ctx.lineWidth = isHovered ? 3 : 2;
+            ctx.stroke();
+
+            // Glow effect no hover
+            if (isHovered) {
+                ctx.shadowColor = config.colors.primary;
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            // CORREÇÃO: Label fixo na parte inferior (usando altura do canvas)
+            // Antes estava: point[0].y + 80 (o que fazia o texto pular com o gráfico)
+            ctx.fillStyle = config.colors.text;
+            ctx.font = isHovered ? 'bold 13px Inter' : '12px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            // Fixa o texto 15px abaixo da área do gráfico
+            ctx.fillText(point.label, point.x, h - padding.bottom + 15);
+        });
     }
 
     function drawGrid(ctx, w, h, padding, chartH, upperLimit, adjustedRange, config) {
