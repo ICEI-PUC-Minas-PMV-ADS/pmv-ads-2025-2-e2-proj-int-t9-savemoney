@@ -1,4 +1,5 @@
-﻿@using System.Security.Claims
+﻿@* _HeaderPj.cshtml - Menu Pessoa Juridica *@
+@using System.Security.Claims
 
 <header id="main-header" class="header-pj-theme">
     <div class="header-container">
@@ -12,6 +13,7 @@
             <ul class="header-nav-links">
                 <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
 
+                <!-- Financeiro -->
                 <li class="header-dropdown">
                     <a href="#">Financeiro <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
@@ -22,28 +24,32 @@
                     </ul>
                 </li>
 
+                <!-- Gestao -->
                 <li class="header-dropdown">
-                    <a href="#" class="text-warning">Gestão <i class="bi bi-chevron-down"></i></a>
+                    <a href="#" class="text-warning">Gestao <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
+                        <li><a asp-controller="KpisCorporativos" asp-action="Index">KPIs Corporativos</a></li>
                         <li><a asp-controller="DreGerencial" asp-action="Index">DRE Gerencial</a></li>
                         <li><a asp-controller="ProjecaoFinanceira" asp-action="FluxoDeCaixa">Fluxo de Caixa</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a asp-controller="Relatorios" asp-action="Index">Relatórios</a></li>
+                        <li><a asp-controller="Relatorios" asp-action="Index">Relatorios</a></li>
                     </ul>
                 </li>
 
+                <!-- Contabil -->
                 <li class="header-dropdown">
-                    <a href="#">Contábil <i class="bi bi-chevron-down"></i></a>
+                    <a href="#">Contabil <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
                         <li><a asp-controller="Categories" asp-action="Index">Plano de Contas</a></li>
                         <li><a asp-controller="Budgets" asp-action="Index">Centros de Custo</a></li>
                     </ul>
                 </li>
 
+                <!-- Calculos -->
                 <li class="header-dropdown">
-                    <a href="#">Cálculos <i class="bi bi-chevron-down"></i></a>
+                    <a href="#">Calculos <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
-                        <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilíbrio</a></li>
+                        <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio">Ponto de Equilibrio</a></li>
                         <li><a asp-controller="ConversorEnergias" asp-action="Index">Custo de Energia</a></li>
                     </ul>
                 </li>
@@ -72,10 +78,12 @@
         </button>
     </div>
 
+    <!-- Menu Mobile -->
     <nav id="mobile-nav-drawer" class="mobile-nav-drawer">
         <ul class="mobile-nav-links">
             <li><a asp-controller="Dashboard" asp-action="Index" data-dismiss="mobile-nav">Painel</a></li>
 
+            <!-- Financeiro Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle">Financeiro <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
@@ -85,27 +93,31 @@
                 </ul>
             </li>
 
+            <!-- Gestao Mobile -->
             <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle text-warning">Gestão <i class="bi bi-chevron-down"></i></button>
+                <button class="mobile-dropdown-toggle text-warning">Gestao <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="Relatorios" asp-action="DreGerencial" data-dismiss="mobile-nav">DRE Gerencial</a></li>
+                    <li><a asp-controller="KpisCorporativos" asp-action="Index" data-dismiss="mobile-nav">KPIs Corporativos</a></li>
+                    <li><a asp-controller="DreGerencial" asp-action="Index" data-dismiss="mobile-nav">DRE Gerencial</a></li>
                     <li><a asp-controller="ProjecaoFinanceira" asp-action="FluxoDeCaixa" data-dismiss="mobile-nav">Fluxo de Caixa</a></li>
-                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Relatórios</a></li>
+                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Relatorios</a></li>
                 </ul>
             </li>
 
+            <!-- Contabil Mobile -->
             <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle">Contábil <i class="bi bi-chevron-down"></i></button>
+                <button class="mobile-dropdown-toggle">Contabil <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
                     <li><a asp-controller="Categories" asp-action="Index" data-dismiss="mobile-nav">Plano de Contas</a></li>
                     <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Centros de Custo</a></li>
                 </ul>
             </li>
 
+            <!-- Calculos Mobile -->
             <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle">Cálculos <i class="bi bi-chevron-down"></i></button>
+                <button class="mobile-dropdown-toggle">Calculos <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio" data-dismiss="mobile-nav">Ponto de Equilíbrio</a></li>
+                    <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeEquilibrio" data-dismiss="mobile-nav">Ponto de Equilibrio</a></li>
                     <li><a asp-controller="ConversorEnergias" asp-action="Index" data-dismiss="mobile-nav">Custo de Energia</a></li>
                 </ul>
             </li>

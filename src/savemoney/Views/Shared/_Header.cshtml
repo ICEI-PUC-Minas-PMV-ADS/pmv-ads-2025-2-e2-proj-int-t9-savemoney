@@ -1,9 +1,10 @@
-﻿@using System.Security.Claims
+﻿@* _Header.cshtml - Menu Padrao (Landing Page / Ambos) *@
+@using System.Security.Claims
 
 <header id="main-header">
     <div class="header-container">
 
-        <a asp-controller="Home" asp-action="Index" class="header-logo" title="Início">
+        <a asp-controller="Home" asp-action="Index" class="header-logo" title="Inicio">
             Save Money
         </a>
 
@@ -12,14 +13,16 @@
                 <li><a asp-controller="Home" asp-action="Controle">Controle</a></li>
                 <li><a asp-controller="Home" asp-action="Investir">Investir</a></li>
 
+                <!-- Perfis -->
                 <li class="header-dropdown">
                     <a href="#">Perfis <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
-                        <li><a asp-controller="Home" asp-action="PessoaFisica">Pessoa Física</a></li>
-                        <li><a asp-controller="Home" asp-action="PessoaJuridica">Pessoa Jurídica</a></li>
+                        <li><a asp-controller="Home" asp-action="PessoaFisica">Pessoa Fisica</a></li>
+                        <li><a asp-controller="Home" asp-action="PessoaJuridica">Pessoa Juridica</a></li>
                     </ul>
                 </li>
 
+                <!-- Recursos -->
                 <li class="header-dropdown">
                     <a href="#">Recursos <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
@@ -30,14 +33,13 @@
                 </li>
 
                 <li><a asp-controller="Home" asp-action="Metas">Metas</a></li>
-                @* <li><a asp-controller="Home" asp-action="Personalizar">Personalizar</a></li> Não tem essa opção e não faz parte do escopo do projeto(ainda) *@
             </ul>
         </nav>
 
         <div class="header-actions">
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                @* Usuário LOGADO *@
+                @* Usuario LOGADO *@
                 var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userName = User.Identity.Name ?? "User";
                 var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
@@ -52,7 +54,7 @@
             }
             else
             {
-                @* Usuário NÃO LOGADO *@
+                @* Usuario NAO LOGADO *@
                 <a asp-controller="Usuarios" asp-action="Login" class="header-btn header-btn-primary">
                     Entrar
                 </a>
@@ -64,29 +66,32 @@
         </button>
     </div>
 
+    <!-- Menu Mobile -->
     <nav id="mobile-nav-drawer" class="mobile-nav-drawer">
         <ul class="mobile-nav-links">
             <li><a asp-controller="Home" asp-action="Controle" data-dismiss="mobile-nav">Controle</a></li>
             <li><a asp-controller="Home" asp-action="Investir" data-dismiss="mobile-nav">Investir</a></li>
 
+            <!-- Perfis Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle">Perfis <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="Home" asp-action="PessoaFisica" data-dismiss="mobile-nav">Pessoa Física</a></li>
-                    <li><a asp-controller="Home" asp-action="PessoaJuridica" data-dismiss="mobile-nav">Pessoa Jurídica</a></li>
+                    <li><a asp-controller="Home" asp-action="PessoaFisica" data-dismiss="mobile-nav">Pessoa Fisica</a></li>
+                    <li><a asp-controller="Home" asp-action="PessoaJuridica" data-dismiss="mobile-nav">Pessoa Juridica</a></li>
                 </ul>
             </li>
 
+            <!-- Recursos Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle">Recursos <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
                     <li><a asp-controller="Ferramentas" asp-action="CalculadoraDeMetas" data-dismiss="mobile-nav">Calculadora</a></li>
                     <li><a asp-controller="Ferramentas" asp-action="JurosCompostos" data-dismiss="mobile-nav">Juros Compostos</a></li>
+                    <li><a asp-controller="ConversorEnergias" asp-action="Index" data-dismiss="mobile-nav">Economia de Energia</a></li>
                 </ul>
             </li>
 
             <li><a asp-controller="Home" asp-action="Metas" data-dismiss="mobile-nav">Metas</a></li>
-            <li><a asp-controller="Home" asp-action="Personalizar" data-dismiss="mobile-nav">Personalizar</a></li>
 
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {

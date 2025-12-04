@@ -1,4 +1,5 @@
-﻿@using System.Security.Claims
+﻿@* _HeaderPf.cshtml - Menu Pessoa Fisica *@
+@using System.Security.Claims
 
 <header id="main-header" class="header-pf-theme">
     <div class="header-container">
@@ -12,33 +13,37 @@
             <ul class="header-nav-links">
                 <li><a asp-controller="Dashboard" asp-action="Index">Painel</a></li>
 
+                <!-- Carteira -->
                 <li class="header-dropdown">
                     <a href="#">Carteira <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
                         <li><a asp-controller="Receitas" asp-action="Index">Receitas</a></li>
                         <li><a asp-controller="Despesas" asp-action="Index">Despesas</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a asp-controller="Historico" asp-action="Index">Histórico</a></li>
+                        <li><a asp-controller="Historico" asp-action="Index">Historico</a></li>
                         <li><a asp-controller="Categories" asp-action="Index">Categorias</a></li>
                     </ul>
                 </li>
 
+                <!-- Metas -->
                 <li class="header-dropdown">
                     <a href="#" class="text-success">Metas <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
-                        <li><a asp-controller="Budgets" asp-action="Index">Orçamentos</a></li>
+                        <li><a asp-controller="Budgets" asp-action="Index">Orcamentos</a></li>
                         <li><a asp-controller="MetasFinanceiras" asp-action="Index">Objetivos</a></li>
                     </ul>
                 </li>
 
+                <!-- Relatorios -->
                 <li class="header-dropdown">
-                    <a href="#">Relatórios <i class="bi bi-chevron-down"></i></a>
+                    <a href="#">Relatorios <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
-                        <li><a asp-controller="Relatorios" asp-action="Index">Visão Geral</a></li>
-                        <li><a asp-controller="TendenciaFinanceira" asp-action="Index">Tendências</a></li>
+                        <li><a asp-controller="Relatorios" asp-action="Index">Visao Geral</a></li>
+                        <li><a asp-controller="TendenciaFinanceira" asp-action="Index">Tendencias</a></li>
                     </ul>
                 </li>
 
+                <!-- Ferramentas -->
                 <li class="header-dropdown">
                     <a href="#">Ferramentas <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
@@ -74,36 +79,41 @@
         </button>
     </div>
 
+    <!-- Menu Mobile -->
     <nav id="mobile-nav-drawer" class="mobile-nav-drawer">
         <ul class="mobile-nav-links">
             <li><a asp-controller="Dashboard" asp-action="Index" data-dismiss="mobile-nav">Painel</a></li>
 
+            <!-- Carteira Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle">Carteira <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
                     <li><a asp-controller="Receitas" asp-action="Index" data-dismiss="mobile-nav">Receitas</a></li>
                     <li><a asp-controller="Despesas" asp-action="Index" data-dismiss="mobile-nav">Despesas</a></li>
-                    <li><a asp-controller="Historico" asp-action="Index" data-dismiss="mobile-nav">Histórico</a></li>
+                    <li><a asp-controller="Historico" asp-action="Index" data-dismiss="mobile-nav">Historico</a></li>
                     <li><a asp-controller="Categories" asp-action="Index" data-dismiss="mobile-nav">Categorias</a></li>
                 </ul>
             </li>
 
+            <!-- Metas Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle text-success">Metas <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Orçamentos</a></li>
+                    <li><a asp-controller="Budgets" asp-action="Index" data-dismiss="mobile-nav">Orcamentos</a></li>
                     <li><a asp-controller="MetasFinanceiras" asp-action="Index" data-dismiss="mobile-nav">Objetivos</a></li>
                 </ul>
             </li>
 
+            <!-- Relatorios Mobile -->
             <li class="mobile-dropdown">
-                <button class="mobile-dropdown-toggle">Relatórios <i class="bi bi-chevron-down"></i></button>
+                <button class="mobile-dropdown-toggle">Relatorios <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
-                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Visão Geral</a></li>
-                    <li><a asp-controller="TendenciaFinanceira" asp-action="Index" data-dismiss="mobile-nav">Tendências</a></li>
+                    <li><a asp-controller="Relatorios" asp-action="Index" data-dismiss="mobile-nav">Visao Geral</a></li>
+                    <li><a asp-controller="TendenciaFinanceira" asp-action="Index" data-dismiss="mobile-nav">Tendencias</a></li>
                 </ul>
             </li>
 
+            <!-- Ferramentas Mobile -->
             <li class="mobile-dropdown">
                 <button class="mobile-dropdown-toggle">Ferramentas <i class="bi bi-chevron-down"></i></button>
                 <ul class="mobile-dropdown-menu">
