@@ -1,5 +1,11 @@
 ﻿[
   {
+    "id": "upd_2025_12_04_contexto",
+    "titulo": "Toggle PF/PJ/Ambos",
+    "mensagem": "Novo sistema de alternância de contexto! Agora você pode alternar entre visão Pessoa Física, Pessoa Jurídica ou Ambos. Sua preferência é salva automaticamente.",
+    "data": "2025-12-04T03:00:00"
+  },
+  {
     "id": "upd_2025_12_01_relatorios",
     "titulo": "Novo Módulo de Inteligência",
     "mensagem": "Lançamos a nova tela de Relatórios! Agora com gráficos interativos, projeções financeiras para os próximos 6 meses e diagnósticos automáticos.",
