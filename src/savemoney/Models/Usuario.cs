@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using savemoney.Models.Enums;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace savemoney.Models
 {
@@ -37,6 +38,10 @@ namespace savemoney.Models
         // Foto de perfil
         [StringLength(500, ErrorMessage = "O caminho da foto deve ter no máximo 500 caracteres.")]
         public string FotoPerfil { get; set; } = "https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=200&bold=true";
+
+        // --- Campo para salvar o modo atual da conta (Pf, Pj, ambos) ---
+        [Display(Name = "Preferência de Visualização")]
+        public TipoContexto UltimoContexto { get; set; } = TipoContexto.Pessoal; // Padrão
 
         // Relacionamentos existentes
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
