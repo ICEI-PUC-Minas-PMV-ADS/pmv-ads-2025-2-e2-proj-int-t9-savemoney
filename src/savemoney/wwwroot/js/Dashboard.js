@@ -573,25 +573,36 @@ function toggleDropdown() {
 }
 
 function togglePerfil(tipo) {
-    // Remover active de todos
+    // Feedback visual imediato
     document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // Adicionar active no clicado
-    document.querySelector(`[data-type="${tipo}"]`).classList.add('active');
+    const btnAtivo = document.querySelector(`[data-type="${tipo}"]`);
+    if (btnAtivo) btnAtivo.classList.add('active');
 
-    // Salvar preferência (futuro - backend)
-    localStorage.setItem('perfil-tipo', tipo);
-
-    mostrarNotificacao(`Modo ${tipo.toUpperCase()} ativado`, 'success');
-
-    // TODO: Recarregar widgets específicos do perfil
+    // Salvar no backend (Cookie + Session + Banco)
+    fetch('/Contexto/DefinirContexto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(tipo)
+    })
+        .then(r => r.json())
+        .then(data => {
+            console.log('Contexto salvo:', data);
+            mostrarNotificacao(`Modo ${tipo.toUpperCase()} ativado`, 'success');
+            setTimeout(() => window.location.reload(), 500);
+        })
+        .catch(err => {
+            console.error('Erro ao salvar contexto:', err);
+            mostrarNotificacao('Erro ao salvar preferência', 'error');
+        });
 }
 
-function abrirNotificacoes() {
-    mostrarNotificacao('Sistema de notificações em breve!', 'info');
-}
+//function abrirNotificacoes() {
+//    mostrarNotificacao('Sistema de notificações em breve!', 'info');
+//} <--- Essa função foi movida para notificacoes.js
 
 // ============================================
 // UPLOAD DE AVATAR

@@ -1,7 +1,5 @@
-﻿using savemoney.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace savemoney.Models
 {
@@ -24,7 +22,6 @@ namespace savemoney.Models
         [Required(ErrorMessage = "O valor é obrigatório")]
         [Column(TypeName = "decimal(18,3)")]
         [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
-        //[RegularExpression(@"^\d+(\,\d{1,3})?$", ErrorMessage = "Máximo 3 casas decimais.")] Estava dando erro com casas valores decimais Ass.: Maicon
         public decimal Valor { get; set; }
 
         public string CurrencyType { get; set; } = "BRL";
@@ -35,10 +32,18 @@ namespace savemoney.Models
         [DataType(DataType.Date)]
         public DateTime DataFim { get; set; }
 
+        // FK para BudgetCategory (mantido para orçamentos)
         public int? BudgetCategoryId { get; set; }
 
         [ForeignKey("BudgetCategoryId")]
         public BudgetCategory? BudgetCategory { get; set; }
+
+        // FK para Category (nova - link direto)
+        [Display(Name = "Categoria")]
+        public int? CategoryId { get; set; }
+
+        [ForeignKey("CategoryId")]
+        public Category? Category { get; set; }
 
         public bool Pago { get; set; }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using savemoney.Models;
+using savemoney.Models.Enums;
 using System.Security.Claims;
 
 namespace savemoney.Controllers
@@ -28,7 +29,8 @@ namespace savemoney.Controllers
             var userId = GetCurrentUserId();
             var categories = await _context.Categories
                 .Where(c => c.UsuarioId == userId)
-                .OrderBy(c => c.Name)
+                .OrderBy(c => c.TipoContabil)
+                .ThenBy(c => c.Name)
                 .ToListAsync();
 
             return View(categories);
@@ -37,7 +39,6 @@ namespace savemoney.Controllers
         // GET: /Categories/Create
         public IActionResult Create()
         {
-            // Retorna a PartialView para o AJAX
             return PartialView("_CreateOrEditModal", new Category { Name = "" });
         }
 
@@ -47,21 +48,22 @@ namespace savemoney.Controllers
         public async Task<IActionResult> Create(Category category)
         {
             var userId = GetCurrentUserId();
-            ModelState.Remove("Usuario"); // Ignora validação de navegação
+            ModelState.Remove("Usuario");
 
             if (ModelState.IsValid)
             {
                 category.UsuarioId = userId;
                 category.IsPredefined = false;
 
+                // Sincroniza ClassificacaoDre com TipoContabil
+                category.ClassificacaoDre = MapearParaClassificacaoDre(category.TipoContabil);
+
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
 
-                // Redireciona para recarregar a lista (Simples e eficaz)
                 return RedirectToAction(nameof(Index));
             }
 
-            // Se falhar, devolve o modal com erros
             return PartialView("_CreateOrEditModal", category);
         }
 
@@ -99,6 +101,11 @@ namespace savemoney.Controllers
                     if (existing == null) return NotFound();
 
                     existing.Name = category.Name;
+                    existing.TipoContabil = category.TipoContabil;
+
+                    // Sincroniza ClassificacaoDre com TipoContabil
+                    existing.ClassificacaoDre = MapearParaClassificacaoDre(category.TipoContabil);
+
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -117,18 +124,64 @@ namespace savemoney.Controllers
             var userId = GetCurrentUserId();
             var category = await _context.Categories
                 .Include(c => c.BudgetCategories)
+                .Include(c => c.Receitas)
+                .Include(c => c.Despesas)
                 .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userId);
 
             if (category == null) return NotFound();
 
-            if (category.BudgetCategories.Any())
+            // Verifica se está em uso
+            if (category.BudgetCategories.Any() || category.Receitas.Any() || category.Despesas.Any())
             {
-                return BadRequest("Categoria em uso.");
+                return BadRequest("Categoria em uso. Remova as transações vinculadas primeiro.");
             }
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+        // GET: /Categories/ObterPorTipo - Para selects filtrados
+        [HttpGet]
+        public async Task<IActionResult> ObterPorTipo(TipoContabil tipo)
+        {
+            var userId = GetCurrentUserId();
+            var categories = await _context.Categories
+                .Where(c => c.UsuarioId == userId && c.TipoContabil == tipo)
+                .OrderBy(c => c.Name)
+                .Select(c => new { c.Id, c.Name })
+                .ToListAsync();
+
+            return Json(categories);
+        }
+
+        // GET: /Categories/ObterTodas - Para selects gerais
+        [HttpGet]
+        public async Task<IActionResult> ObterTodas()
+        {
+            var userId = GetCurrentUserId();
+            var categories = await _context.Categories
+                .Where(c => c.UsuarioId == userId)
+                .OrderBy(c => c.TipoContabil)
+                .ThenBy(c => c.Name)
+                .Select(c => new { c.Id, c.Name, Tipo = c.TipoContabil.ToString() })
+                .ToListAsync();
+
+            return Json(categories);
+        }
+
+        /// <summary>
+        /// Mapeia TipoContabil para ClassificacaoDre (mantém compatibilidade com DRE).
+        /// </summary>
+        private TipoClassificacaoDre MapearParaClassificacaoDre(TipoContabil tipo)
+        {
+            return tipo switch
+            {
+                TipoContabil.CustoVariavel => TipoClassificacaoDre.CustoVariavel,
+                TipoContabil.DespesaFixa => TipoClassificacaoDre.DespesaOperacional,
+                TipoContabil.DespesaOperacional => TipoClassificacaoDre.DespesaOperacional,
+                _ => TipoClassificacaoDre.NaoClassificado
+            };
         }
     }
 }

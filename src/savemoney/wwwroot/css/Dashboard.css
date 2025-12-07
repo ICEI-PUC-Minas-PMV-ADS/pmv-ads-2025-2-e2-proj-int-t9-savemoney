@@ -67,7 +67,10 @@ body {
 .user-hub {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
-    padding: 0.75rem 2rem; /* ✅ REDUZIDO - era 1rem */
+    padding-top: 2rem;
+    padding-bottom: 0.5rem;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
     position: sticky;
     top: 0;
     z-index: 100;

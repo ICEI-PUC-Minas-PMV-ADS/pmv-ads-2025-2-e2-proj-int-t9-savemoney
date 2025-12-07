@@ -10,13 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Relatorios\**" />
     <Compile Remove="wwwroot\css\receitas\**" />
-    <Content Remove="Views\Relatorios\**" />
     <Content Remove="wwwroot\css\receitas\**" />
-    <EmbeddedResource Remove="Views\Relatorios\**" />
     <EmbeddedResource Remove="wwwroot\css\receitas\**" />
-    <None Remove="Views\Relatorios\**" />
     <None Remove="wwwroot\css\receitas\**" />
   </ItemGroup>
 
@@ -44,10 +40,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="questpdf" Version="2025.7.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
   <ItemGroup>

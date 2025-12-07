@@ -37,7 +37,7 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -116,6 +116,9 @@ namespace savemoney.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ClassificacaoDre")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPredefined")
                         .HasColumnType("bit");
 
@@ -123,6 +126,9 @@ namespace savemoney.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("TipoContabil")
+                        .HasColumnType("int");
 
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
@@ -137,32 +143,42 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
+                            ClassificacaoDre = 0,
                             IsPredefined = true,
-                            Name = "Alimentação"
+                            Name = "Alimentação",
+                            TipoContabil = 0
                         },
                         new
                         {
                             Id = 2,
+                            ClassificacaoDre = 0,
                             IsPredefined = true,
-                            Name = "Lazer"
+                            Name = "Lazer",
+                            TipoContabil = 0
                         },
                         new
                         {
                             Id = 3,
+                            ClassificacaoDre = 0,
                             IsPredefined = true,
-                            Name = "Transporte"
+                            Name = "Transporte",
+                            TipoContabil = 0
                         },
                         new
                         {
                             Id = 4,
+                            ClassificacaoDre = 0,
                             IsPredefined = true,
-                            Name = "Moradia"
+                            Name = "Moradia",
+                            TipoContabil = 0
                         },
                         new
                         {
                             Id = 5,
+                            ClassificacaoDre = 0,
                             IsPredefined = true,
-                            Name = "Despesas Operacionais"
+                            Name = "Despesas Operacionais",
+                            TipoContabil = 0
                         });
                 });
 
@@ -227,6 +243,9 @@ namespace savemoney.Migrations
                     b.Property<int?>("BudgetCategoryId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CurrencyType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -258,11 +277,13 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18,3)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BudgetCategoryId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UsuarioId");
 
@@ -293,16 +314,61 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ValorAtual")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ValorObjetivo")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("MetasFinanceiras");
+                });
+
+            modelBuilder.Entity("savemoney.Models.NotificacaoUsuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodigoReferenciaSistema")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Lida")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinkAcao")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Mensagem")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Notificacoes");
                 });
 
             modelBuilder.Entity("savemoney.Models.Receita", b =>
@@ -312,6 +378,9 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CurrencyType")
                         .IsRequired()
@@ -344,9 +413,11 @@ namespace savemoney.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18,3)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UsuarioId");
 
@@ -468,6 +539,9 @@ namespace savemoney.Migrations
                     b.Property<DateTime?>("UltimoAcesso")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UltimoContexto")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
@@ -476,14 +550,15 @@ namespace savemoney.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2025, 11, 29, 1, 34, 40, 412, DateTimeKind.Local).AddTicks(4533),
+                            DataCadastro = new DateTime(2025, 12, 4, 4, 25, 24, 156, DateTimeKind.Local).AddTicks(3864),
                             Documento = "000.000.000-00",
                             Email = "admin@savemoney.com",
                             FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true",
                             Nome = "Admin Savemoney",
                             Perfil = 0,
                             Senha = "123456",
-                            TipoUsuario = 0
+                            TipoUsuario = 0,
+                            UltimoContexto = 0
                         });
                 });
 
@@ -626,6 +701,10 @@ namespace savemoney.Migrations
                         .WithMany()
                         .HasForeignKey("BudgetCategoryId");
 
+                    b.HasOne("savemoney.Models.Category", "Category")
+                        .WithMany("Despesas")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("savemoney.Models.Usuario", "Usuario")
                         .WithMany("Despesas")
                         .HasForeignKey("UsuarioId")
@@ -633,6 +712,8 @@ namespace savemoney.Migrations
                         .IsRequired();
 
                     b.Navigation("BudgetCategory");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Usuario");
                 });
@@ -648,13 +729,30 @@ namespace savemoney.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("savemoney.Models.NotificacaoUsuario", b =>
+                {
+                    b.HasOne("savemoney.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("savemoney.Models.Receita", b =>
                 {
+                    b.HasOne("savemoney.Models.Category", "Category")
+                        .WithMany("Receitas")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("savemoney.Models.Usuario", "Usuario")
                         .WithMany("Receitas")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Usuario");
                 });
@@ -689,6 +787,10 @@ namespace savemoney.Migrations
             modelBuilder.Entity("savemoney.Models.Category", b =>
                 {
                     b.Navigation("BudgetCategories");
+
+                    b.Navigation("Despesas");
+
+                    b.Navigation("Receitas");
                 });
 
             modelBuilder.Entity("savemoney.Models.MetaFinanceira", b =>

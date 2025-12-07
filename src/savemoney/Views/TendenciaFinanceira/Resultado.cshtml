@@ -18,124 +18,197 @@
         <div class="header-content">
             <h1 class="page-title">
                 <span class="material-symbols-outlined page-icon" aria-hidden="true">analytics</span>
-                Resultado da Análise
+                Análise de Tendências Financeiras
             </h1>
+            <p class="page-subtitle">Relatório completo do período selecionado</p>
         </div>
         <a asp-action="Index" class="btn-action btn-secondary">
             <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-            Nova Análise
+            <span class="btn-text">Nova Análise</span>
         </a>
     </header>
 
-    <!-- Dados Insuficientes -->
+    <!-- Empty State / Dados Insuficientes -->
     @if (!Model.DadosSuficientes)
     {
-        <div class="alert alert-warning">
-            <span class="material-symbols-outlined alert-icon" aria-hidden="true">warning</span>
-            <div class="alert-content">
-                <h2 class="alert-title">Dados Insuficientes</h2>
-                <p class="alert-text">@Model.MensagemTendencia</p>
+        <section class="empty-state glass-panel">
+            <div class="empty-icon">
+                <span class="material-symbols-outlined" aria-hidden="true">database</span>
             </div>
-        </div>
+            <h2 class="empty-title">Dados Insuficientes para Análise</h2>
+            <p class="empty-description">@Model.MensagemTendencia</p>
 
-        @foreach (var alerta in Model.Alertas)
-        {
-            <div class="alert alert-info">
-                <span class="material-symbols-outlined alert-icon" aria-hidden="true">info</span>
-                <span>@alerta</span>
+            @if (Model.Alertas.Any())
+            {
+                <div class="empty-alerts">
+                    @foreach (var alerta in Model.Alertas)
+                    {
+                        <div class="alert alert-info">
+                            <span class="material-symbols-outlined alert-icon" aria-hidden="true">info</span>
+                            <span>@alerta</span>
+                        </div>
+                    }
+                </div>
+            }
+
+            <div class="empty-actions">
+                <a asp-controller="Receitas" asp-action="Create" class="btn-action btn-success">
+                    <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
+                    <span class="btn-text">Adicionar Receitas</span>
+                </a>
+                <a asp-controller="Despesas" asp-action="Create" class="btn-action btn-danger">
+                    <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
+                    <span class="btn-text">Adicionar Despesas</span>
+                </a>
+                <a asp-action="Index" class="btn-action btn-secondary">
+                    <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+                    <span class="btn-text">Tentar Novamente</span>
+                </a>
             </div>
-        }
-
-        <a asp-controller="Receitas" asp-action="Create" class="btn-action btn-success">
-            <span class="material-symbols-outlined" aria-hidden="true">add</span>
-            Adicionar Receitas
-        </a>
+        </section>
 
         return;
     }
 
-    <!-- Summary Banner -->
-    <section class="summary-banner glass-panel">
-        <h2 class="summary-title">@Model.MensagemTendencia</h2>
-        <div class="summary-grid">
-            <article class="summary-stat">
-                <h3 class="stat-label">Período Analisado</h3>
-                <p class="stat-value">@Model.DataInicio.ToString("MMM/yyyy") - @Model.DataFim.ToString("MMM/yyyy")</p>
-                <small class="stat-subtitle">@Model.PeriodoMeses @(Model.PeriodoMeses == 1 ? "mês" : "meses")</small>
-            </article>
+    <!-- Summary Section (Resumo Executivo) -->
+    <section class="summary-section glass-panel">
+        <div class="summary-header">
+            @{
+                var isCrescente = Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Crescente;
+                var isDecrescente = Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Decrescente;
+                var isEstavel = Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Estavel;
+            }
 
-            <article class="summary-stat">
-                <h3 class="stat-label">Saldo Atual</h3>
-                <p class="stat-value">@Model.SaldoAtual.ToString("C")</p>
-                <small class="stat-subtitle">posição atual</small>
-            </article>
+            <div class="summary-icon-wrapper summary-icon-@(isCrescente ? "success" : isDecrescente ? "danger" : "warning")">
+                <span class="material-symbols-outlined summary-icon" aria-hidden="true">
+                    @(isCrescente ? "trending_up" : isDecrescente ? "trending_down" : "trending_flat")
+                </span>
+            </div>
 
-            <article class="summary-stat">
-                <h3 class="stat-label">Variação Total</h3>
-                <p class="stat-value stat-value-dynamic">
-                    @Model.VariacaoPercentualTotal.ToString("F1")%
-                    @if (Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Crescente)
+            <div class="summary-content">
+                <h2 class="summary-title">
+                    @if (isCrescente)
                     {
-                        <span class="material-symbols-outlined stat-icon stat-icon-success" aria-hidden="true">trending_up</span>
+                        <text>Tendência Positiva Identificada!</text>
                     }
-                    else if (Model.TendenciaIdentificada == savemoney.Models.TipoTendencia.Decrescente)
+                    else if (isDecrescente)
                     {
-                        <span class="material-symbols-outlined stat-icon stat-icon-danger" aria-hidden="true">trending_down</span>
+                        <text>Atenção: Tendência Negativa</text>
                     }
                     else
                     {
-                        <span class="material-symbols-outlined stat-icon stat-icon-warning" aria-hidden="true">trending_flat</span>
+                        <text>Finanças Estáveis</text>
                     }
-                </p>
-                <small class="stat-subtitle">no período</small>
+                </h2>
+                <p class="summary-text">@Model.MensagemTendencia</p>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="summary-stats">
+            <article class="stat-item">
+                <div class="stat-icon-wrapper">
+                    <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-label">Período Analisado</h3>
+                    <p class="stat-value">@Model.PeriodoMeses @(Model.PeriodoMeses == 1 ? "mês" : "meses")</p>
+                    <small class="stat-subtitle">@Model.DataInicio.ToString("MMM/yyyy") - @Model.DataFim.ToString("MMM/yyyy")</small>
+                </div>
+            </article>
+
+            <article class="stat-item">
+                <div class="stat-icon-wrapper">
+                    <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-label">Saldo Atual</h3>
+                    <p class="stat-value stat-value-@(Model.SaldoAtual >= 0 ? "positive" : "negative")">
+                        @Model.SaldoAtual.ToString("C")
+                    </p>
+                    <small class="stat-subtitle">posição atual</small>
+                </div>
+            </article>
+
+            <article class="stat-item stat-item-featured">
+                <div class="stat-icon-wrapper">
+                    <span class="material-symbols-outlined" aria-hidden="true">
+                        @(isCrescente ? "trending_up" : isDecrescente ? "trending_down" : "trending_flat")
+                    </span>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-label">Variação Total</h3>
+                    <p class="stat-value stat-value-@(Model.VariacaoPercentualTotal > 0 ? "positive" : Model.VariacaoPercentualTotal < 0 ? "negative" : "neutral")">
+                        @(Model.VariacaoPercentualTotal > 0 ? "+" : "")@Model.VariacaoPercentualTotal.ToString("F1")%
+                    </p>
+                    <small class="stat-subtitle">no período completo</small>
+                </div>
             </article>
         </div>
     </section>
 
-    <!-- Metrics Cards -->
+    <!-- KPI Cards (Métricas) -->
     <section class="metrics-section">
         <div class="metrics-grid">
-            <article class="metric-card glass-panel">
+            <article class="metric-card kpi-card glass-panel">
                 <div class="metric-icon-wrapper metric-icon-success">
                     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
                 </div>
                 <div class="metric-content">
                     <h3 class="metric-label">Média de Receitas</h3>
                     <p class="metric-value metric-value-success">@Model.MediaReceitas.ToString("C")</p>
-                    <small class="metric-subtitle">por mês</small>
+                    <small class="metric-subtitle">por mês no período</small>
                 </div>
             </article>
 
-            <article class="metric-card glass-panel">
+            <article class="metric-card kpi-card glass-panel">
                 <div class="metric-icon-wrapper metric-icon-danger">
                     <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
                 </div>
                 <div class="metric-content">
                     <h3 class="metric-label">Média de Despesas</h3>
                     <p class="metric-value metric-value-danger">@Model.MediaDespesas.ToString("C")</p>
-                    <small class="metric-subtitle">por mês</small>
+                    <small class="metric-subtitle">por mês no período</small>
                 </div>
             </article>
 
-            <article class="metric-card glass-panel">
+            <article class="metric-card kpi-card glass-panel">
                 <div class="metric-icon-wrapper metric-icon-primary">
                     <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
                 </div>
                 <div class="metric-content">
                     <h3 class="metric-label">Média de Saldo</h3>
                     <p class="metric-value metric-value-primary">@Model.MediaSaldo.ToString("C")</p>
-                    <small class="metric-subtitle">por mês</small>
+                    <small class="metric-subtitle">por mês no período</small>
                 </div>
             </article>
         </div>
     </section>
 
-    <!-- Chart Section -->
+    <!-- Chart Section (com Controles) -->
     <section class="chart-section glass-panel">
-        <h2 class="section-title">
-            <span class="material-symbols-outlined" aria-hidden="true">show_chart</span>
-            Evolução Financeira
-        </h2>
+        <header class="chart-header">
+            <div class="chart-title-group">
+                <span class="material-symbols-outlined chart-icon" aria-hidden="true">show_chart</span>
+                <h2 class="chart-title">Evolução Financeira</h2>
+            </div>
+            <div class="chart-controls">
+                <div class="view-toggle" role="group" aria-label="Tipo de visualização">
+                    <button type="button" class="toggle-btn active" data-view="line" aria-pressed="true">
+                        <span class="material-symbols-outlined" aria-hidden="true">show_chart</span>
+                        <span class="toggle-label">Linhas</span>
+                    </button>
+                    <button type="button" class="toggle-btn" data-view="area" aria-pressed="false">
+                        <span class="material-symbols-outlined" aria-hidden="true">area_chart</span>
+                        <span class="toggle-label">Área</span>
+                    </button>
+                </div>
+                <button type="button" id="btnExportar" class="btn-icon" aria-label="Exportar dados">
+                    <span class="material-symbols-outlined" aria-hidden="true">download</span>
+                </button>
+            </div>
+        </header>
+
         <div class="chart-wrapper">
             <canvas id="graficoTendencia"
                     role="img"
@@ -144,6 +217,44 @@
                     data-receitas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.TotalReceitas).ToList()))'
                     data-despesas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.TotalDespesas).ToList()))'
                     data-saldos='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DadosMensais.Select(d => d.Saldo).ToList()))'></canvas>
+
+            <!-- Tooltip -->
+            <div class="chart-tooltip" id="chartTooltip" role="tooltip" aria-hidden="true">
+                <div class="tooltip-month"></div>
+                <div class="tooltip-data">
+                    <div class="tooltip-item tooltip-item-success">
+                        <span class="tooltip-dot"></span>
+                        <span class="tooltip-label">Receitas:</span>
+                        <span class="tooltip-value tooltip-value-receitas"></span>
+                    </div>
+                    <div class="tooltip-item tooltip-item-danger">
+                        <span class="tooltip-dot"></span>
+                        <span class="tooltip-label">Despesas:</span>
+                        <span class="tooltip-value tooltip-value-despesas"></span>
+                    </div>
+                    <div class="tooltip-item tooltip-item-primary">
+                        <span class="tooltip-dot"></span>
+                        <span class="tooltip-label">Saldo:</span>
+                        <span class="tooltip-value tooltip-value-saldo"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="chart-legend">
+            <div class="legend-item">
+                <span class="legend-dot legend-dot-success"></span>
+                <span class="legend-label">Receitas</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot legend-dot-danger"></span>
+                <span class="legend-label">Despesas</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot legend-dot-primary"></span>
+                <span class="legend-label">Saldo</span>
+            </div>
         </div>
     </section>
 
@@ -155,6 +266,7 @@
                 <h3 class="month-title">Melhor Mês</h3>
             </div>
             <p class="month-value">@Model.MelhorMes</p>
+            <small class="month-subtitle">Maior saldo positivo</small>
         </article>
 
         <article class="month-card glass-panel card-danger">
@@ -163,6 +275,7 @@
                 <h3 class="month-title">Pior Mês</h3>
             </div>
             <p class="month-value">@Model.PiorMes</p>
+            <small class="month-subtitle">Menor saldo ou maior déficit</small>
         </article>
     </div>
 
@@ -179,7 +292,7 @@
                 {
                     <div class="alert alert-warning">
                         <span class="material-symbols-outlined alert-icon" aria-hidden="true">info</span>
-                        <span>@alerta</span>
+                        <span class="alert-content">@alerta</span>
                     </div>
                 }
             </div>
@@ -190,7 +303,7 @@
     <section class="table-section glass-panel">
         <h2 class="section-title">
             <span class="material-symbols-outlined" aria-hidden="true">table_chart</span>
-            Detalhamento Mensal
+            Detalhamento Mensal Completo
         </h2>
         <div class="table-responsive">
             <table class="data-table">
@@ -209,10 +322,12 @@
                     {
                         <tr class="@(dado.IsOutlier ? "row-outlier" : "")">
                             <td class="td-month">
-                                @dado.MesAno
+                                <strong>@dado.MesAno</strong>
                                 @if (dado.IsOutlier)
                                 {
-                                    <span class="material-symbols-outlined outlier-icon" aria-label="Mês atípico" title="Mês atípico">error</span>
+                                    <span class="material-symbols-outlined outlier-icon"
+                                          aria-label="Mês atípico"
+                                          title="Mês com valores fora do padrão">error</span>
                                 }
                             </td>
                             <td class="text-end td-value-positive">
@@ -230,23 +345,32 @@
                                 @if (dado.VariacaoPercentual.HasValue)
                                 {
                                     var variacao = dado.VariacaoPercentual.Value;
-                                    <span class="variation @(variacao > 0 ? "variation-positive" : variacao < 0 ? "variation-negative" : "variation-neutral")">
+                                    <span class="variation variation-@(variacao > 0 ? "positive" : variacao < 0 ? "negative" : "neutral")">
+                                        <span class="material-symbols-outlined variation-icon" aria-hidden="true">
+                                            @(variacao > 0 ? "trending_up" : variacao < 0 ? "trending_down" : "trending_flat")
+                                        </span>
                                         @(variacao > 0 ? "+" : "")@variacao.ToString("F1")%
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="variation variation-neutral">-</span>
+                                    <span class="variation variation-neutral">—</span>
                                 }
                             </td>
                             <td class="text-center">
                                 @if (dado.Saldo >= 0)
                                 {
-                                    <span class="status-badge status-success">Positivo</span>
+                                    <span class="status-badge status-success">
+                                        <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                                        Positivo
+                                    </span>
                                 }
                                 else
                                 {
-                                    <span class="status-badge status-danger">Negativo</span>
+                                    <span class="status-badge status-danger">
+                                        <span class="material-symbols-outlined" aria-hidden="true">cancel</span>
+                                        Negativo
+                                    </span>
                                 }
                             </td>
                         </tr>

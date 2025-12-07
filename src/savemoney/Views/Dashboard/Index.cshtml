@@ -1,564 +1,568 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
     var usuario = ViewBag.Usuario as savemoney.Models.Usuario;
     var widgets = ViewBag.Widgets as List<savemoney.Models.Widget>;
 }
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - SaveMoney</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-</head>
-<body>
-    <div class="dashboard-wrapper">
+<div class="dashboard-wrapper">
 
-        <!-- ============ USER HUB (TOPO) ============ -->
-        <header class="user-hub">
-            <div class="user-hub-container">
+    <!-- ============ USER HUB (TOPO) ============ -->
+    <header class="user-hub">
+        <div class="user-hub-container">
 
-                <!-- Avatar & Saudação -->
-                <div class="user-profile-compact">
-                    <div class="user-avatar-small" id="avatarContainer">
-                        <img src="@usuario.FotoPerfil" alt="@usuario.Nome" id="avatarImage">
-                        <div class="avatar-badge">
-                            <i class="bi bi-camera-fill"></i>
-                        </div>
-                    </div>
-                    <div class="user-info">
-                        <span class="user-greeting">Bem-vindo(a),</span>
-                        <h2 class="user-name">@usuario.Nome</h2>
+            <!-- Avatar & Saudação -->
+            <div class="user-profile-compact">
+                <div class="user-avatar-small" id="avatarContainer">
+                    <img src="@usuario.FotoPerfil" alt="@usuario.Nome" id="avatarImage">
+                    <div class="avatar-badge">
+                        <i class="bi bi-camera-fill"></i>
                     </div>
                 </div>
-
-                <!-- Actions -->
-                <div class="user-hub-actions">
-
-                    <!-- Toggle PF/PJ -->
-                    <div class="profile-toggle">
-                        <button class="toggle-btn active" data-type="pf" onclick="togglePerfil('pf')">
-                            <i class="bi bi-person-fill"></i>
-                            <span>PF</span>
-                        </button>
-                        <button class="toggle-btn" data-type="pj" onclick="togglePerfil('pj')">
-                            <i class="bi bi-building"></i>
-                            <span>PJ</span>
-                        </button>
-                    </div>
-
-                    <!-- Newsletter -->
-                    <button class="hub-btn" onclick="abrirModalNewsletter()" title="Newsletter">
-                        <i class="bi bi-envelope-fill"></i>
-                        <span>Newsletter</span>
-                    </button>
-
-                    <!-- Notificações (Futuro) -->
-                    <button class="hub-btn" onclick="abrirNotificacoes()" title="Notificações">
-                        <i class="bi bi-bell-fill"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-
-                    <!-- Temas -->
-                    <button class="hub-btn" onclick="abrirModalTemas()" title="Personalizar Tema">
-                        <i class="bi bi-palette-fill"></i>
-                        <span>Temas</span>
-                    </button>
-
-                    <!-- Perfil -->
-                    <div class="dropdown-menu-container">
-                        <button class="hub-btn" onclick="toggleDropdown()" title="Configurações">
-                            <i class="bi bi-gear-fill"></i>
-                        </button>
-                        <div class="dropdown-menu" id="userDropdown">
-                            <a href="@Url.Action("Details", "Usuarios", new { id = usuario.Id })">
-                                <i class="bi bi-person-circle"></i>
-                                Informações da Conta
-                            </a>
-                            <a href="@Url.Action("Edit", "Usuarios", new { id = usuario.Id })">
-                                <i class="bi bi-pencil-square"></i>
-                                Editar Perfil
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="@Url.Action("Logout", "Usuarios")" class="text-danger">
-                                <i class="bi bi-box-arrow-right"></i>
-                                Sair
-                            </a>
-                        </div>
-                    </div>
+                <div class="user-info">
+                    <span class="user-greeting">Bem-vindo(a),</span>
+                    <h2 class="user-name">@usuario.Nome</h2>
                 </div>
             </div>
-        </header>
 
-        <!-- ============ WIDGETS AREA ============ -->
-        <main class="widgets-container">
+            <!-- Actions -->
+            <div class="user-hub-actions">
 
-            <!-- Header de Widgets -->
-            <div class="widgets-header">
-                <div class="widgets-title">
-                    <i class="bi bi-grid-3x3-gap-fill"></i>
-                    <h1>Meus Widgets</h1>
+                <div class="profile-toggle">
+                    <button class="toggle-btn" data-type="pf" onclick="togglePerfil('pf')" title="Pessoa Física">
+                        <i class="bi bi-person-fill"></i>
+                        <span>PF</span>
+                    </button>
+                    <button class="toggle-btn" data-type="pj" onclick="togglePerfil('pj')" title="Pessoa Jurídica">
+                        <i class="bi bi-building"></i>
+                        <span>PJ</span>
+                    </button>
+                    <button class="toggle-btn" data-type="ambos" onclick="togglePerfil('ambos')" title="Visualizar Tudo">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Ambos</span>
+                    </button>
                 </div>
-                <button class="btn-add-widget" onclick="abrirModalWidget()">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    <span>Adicionar Widget</span>
+
+                <button class="hub-btn" onclick="abrirModalNewsletter()" title="Newsletter">
+                    <i class="bi bi-envelope-fill"></i>
+                    <span>Newsletter</span>
                 </button>
+
+                <div class="notification-container">
+                    <button class="hub-btn" onclick="notificacoesManager.toggle(event)" title="Notificações">
+                        <i class="bi bi-bell-fill"></i>
+                        <span id="badge-contador" class="notification-badge" style="display: none;">0</span>
+                    </button>
+                    <div id="notification-dropdown" class="notification-dropdown" style="display: none;">
+                        <partial name="_NotificacoesDropdown" />
+                    </div>
+                </div>
+
+                <button class="hub-btn" onclick="abrirModalTemas()" title="Personalizar Tema">
+                    <i class="bi bi-palette-fill"></i>
+                    <span>Temas</span>
+                </button>
+
+                <button class="hub-btn" data-bs-toggle="modal" data-bs-target="#modalExportacao" title="Exportar Relatório">
+                    <i class="bi bi-cloud-download-fill text-primary"></i>
+                    <span>Exportar</span>
+                </button>
+
+                <div class="dropdown-menu-container">
+                    <button class="hub-btn" onclick="toggleDropdown()" title="Configurações">
+                        <i class="bi bi-gear-fill"></i>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <a href="@Url.Action("Details", "Usuarios", new { id = usuario.Id })">
+                            <i class="bi bi-person-circle"></i>
+                            Informações da Conta
+                        </a>
+                        <a href="@Url.Action("Edit", "Usuarios", new { id = usuario.Id })">
+                            <i class="bi bi-pencil-square"></i>
+                            Editar Perfil
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="@Url.Action("Logout", "Usuarios")" class="text-danger">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Sair
+                        </a>
+                    </div>
+                </div>
+
             </div>
+        </div>
+    </header>
 
-            <!-- Grid de Widgets -->
-            <div class="widgets-grid" id="widgetsGrid">
-                @if (widgets != null && widgets.Any())
+    <!-- ============ WIDGETS AREA ============ -->
+    <main class="widgets-container">
+
+        <!-- Header de Widgets -->
+        <div class="widgets-header">
+            <div class="widgets-title">
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+                <h1>Meus Widgets</h1>
+            </div>
+            <button class="btn-add-widget" onclick="abrirModalWidget()">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Adicionar Widget</span>
+            </button>
+        </div>
+
+        <!-- Grid de Widgets -->
+        <div class="widgets-grid" id="widgetsGrid">
+            @if (widgets != null && widgets.Any())
+            {
+                foreach (var widget in widgets)
                 {
-                    foreach (var widget in widgets)
-                    {
-                        var imagemUrl = !string.IsNullOrEmpty(widget.ImagemUrl) ? widget.ImagemUrl : "";
-                        var corFundo = !string.IsNullOrEmpty(imagemUrl) ? "transparent" : widget.CorFundo;
+                    var imagemUrl = !string.IsNullOrEmpty(widget.ImagemUrl) ? widget.ImagemUrl : "";
+                    var corFundo = !string.IsNullOrEmpty(imagemUrl) ? "transparent" : widget.CorFundo;
 
-                        <div class="widget-card"
-                             data-id="@widget.Id"
-                             data-x="@widget.PosicaoX"
-                             data-y="@widget.PosicaoY"
-                             data-zindex="@widget.ZIndex"
-                             data-pinned="@widget.IsPinned.ToString().ToLower()"
-                             data-cols="@widget.Colunas"
-                             data-rows="@widget.Largura"
-                             data-tipo="@widget.TipoWidget"
-                             draggable="@(!widget.IsPinned).ToString().ToLower()"
-                             style="background-color: @corFundo; grid-column: span @widget.Colunas; grid-row: span @widget.Largura;">
+                    <div class="widget-card"
+                         data-id="@widget.Id"
+                         data-x="@widget.PosicaoX"
+                         data-y="@widget.PosicaoY"
+                         data-zindex="@widget.ZIndex"
+                         data-pinned="@widget.IsPinned.ToString().ToLower()"
+                         data-cols="@widget.Colunas"
+                         data-rows="@widget.Largura"
+                         data-tipo="@widget.TipoWidget"
+                         draggable="@(!widget.IsPinned).ToString().ToLower()"
+                         style="background-color: @corFundo; grid-column: span @widget.Colunas; grid-row: span @widget.Largura;">
 
-                            @if (!string.IsNullOrEmpty(imagemUrl))
-                            {
-                                <img src="@imagemUrl" alt="@widget.Titulo" class="widget-image" />
-                                <div class="widget-overlay"></div>
-                            }
+                        @if (!string.IsNullOrEmpty(imagemUrl))
+                        {
+                            <img src="@imagemUrl" alt="@widget.Titulo" class="widget-image" />
+                            <div class="widget-overlay"></div>
+                        }
 
-                            <div class="widget-content">
-                                <div class="widget-header">
-                                    <div class="widget-title-area">
-                                        @if (widget.IsPinned)
-                                        {
-                                            <i class="bi bi-pin-angle-fill widget-pin-icon"></i>
-                                        }
-                                        <h3>@widget.Titulo</h3>
-                                    </div>
-
-                                    <div class="widget-actions">
-                                        <button class="widget-action-btn btn-pin" onclick="toggleFixar(@widget.Id)"
-                                                title="@(widget.IsPinned ? "Desafixar" : "Fixar")">
-                                            <i class="bi bi-pin@(widget.IsPinned ? "-fill" : "")"></i>
-                                        </button>
-                                        <button class="widget-action-btn" onclick="editarWidget(@widget.Id)" title="Editar">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </button>
-                                        <button class="widget-action-btn btn-delete" onclick="confirmarDeletar(@widget.Id)" title="Excluir">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
-                                    </div>
+                        <div class="widget-content">
+                            <div class="widget-header">
+                                <div class="widget-title-area">
+                                    @if (widget.IsPinned)
+                                    {
+                                        <i class="bi bi-pin-angle-fill widget-pin-icon"></i>
+                                    }
+                                    <h3>@widget.Titulo</h3>
                                 </div>
 
-                                @if (!string.IsNullOrEmpty(widget.Descricao))
-                                {
-                                    <p class="widget-description">@widget.Descricao</p>
-                                }
-
-                                @if (!string.IsNullOrEmpty(widget.Link))
-                                {
-                                    <a href="@widget.Link" class="widget-link">
-                                        <span>Acessar</span>
-                                        <i class="bi bi-arrow-right-circle-fill"></i>
-                                    </a>
-                                }
+                                <div class="widget-actions">
+                                    <button class="widget-action-btn btn-pin" onclick="toggleFixar(@widget.Id)"
+                                            title="@(widget.IsPinned ? "Desafixar" : "Fixar")">
+                                        <i class="bi bi-pin@(widget.IsPinned ? "-fill" : "")"></i>
+                                    </button>
+                                    <button class="widget-action-btn" onclick="editarWidget(@widget.Id)" title="Editar">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <button class="widget-action-btn btn-delete" onclick="confirmarDeletar(@widget.Id)" title="Excluir">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
                             </div>
+
+                            @if (!string.IsNullOrEmpty(widget.Descricao))
+                            {
+                                <p class="widget-description">@widget.Descricao</p>
+                            }
+
+                            @if (!string.IsNullOrEmpty(widget.Link))
+                            {
+                                <a href="@widget.Link" class="widget-link">
+                                    <span>Acessar</span>
+                                    <i class="bi bi-arrow-right-circle-fill"></i>
+                                </a>
+                            }
                         </div>
-                    }
+                    </div>
                 }
-                else
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="bi bi-inbox empty-icon"></i>
+                    <h3>Nenhum widget ainda</h3>
+                    <p>Adicione seu primeiro widget para personalizar seu dashboard!</p>
+                    <button class="btn-primary" onclick="abrirModalWidget()">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Criar Primeiro Widget
+                    </button>
+                </div>
+            }
+        </div>
+    </main>
+</div>
+
+<!-- ============ MODAL ADICIONAR/EDITAR WIDGET ============ -->
+<div id="modalWidget" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2 id="modalTitle">
+                <i class="bi bi-plus-square-fill"></i>
+                Adicionar Widget
+            </h2>
+            <button class="modal-close" onclick="fecharModalWidget()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <!-- TABS -->
+        <div class="modal-tabs">
+            <button class="tab-btn active" onclick="switchTab('galeria')">
+                <i class="bi bi-grid-3x2-gap-fill"></i>
+                Galeria
+            </button>
+            <button class="tab-btn" onclick="switchTab('personalizado')">
+                <i class="bi bi-magic"></i>
+                Personalizado
+            </button>
+        </div>
+
+        <!-- TAB: GALERIA -->
+        <div id="tabGaleria" class="tab-content active">
+            <div class="widgets-galeria">
+                @{
+                    var widgetsDisponiveis = new Dictionary<string, (string titulo, string icon, string url, string cor)>
+                                {
+                                { "receitas", ("Receitas", "bi-cash-coin", "/Receitas", "#10b981") },
+                                { "despesas", ("Despesas", "bi-credit-card-2-back-fill", "/Despesas", "#ef4444") },
+                                { "budgets", ("Orçamentos", "bi-pie-chart-fill", "/Budgets", "#3b82f6") },
+                                { "categories", ("Categorias", "bi-tags-fill", "/Categories", "#f59e0b") },
+                                { "metas", ("Metas Financeiras", "bi-bullseye", "/MetasFinanceiras", "#8b5cf6") },
+                                { "relatorios", ("Relatórios", "bi-file-earmark-bar-graph-fill", "/Relatorios", "#06b6d4") },
+                                { "projecao", ("Projeção Financeira", "bi-graph-up-arrow", "/ProjecaoFinanceira", "#ec4899") },
+                                { "tendencia", ("Tendência Financeira", "bi-activity", "/TendenciaFinanceira", "#f97316") },
+                                { "conversor", ("Conversor de Energia", "bi-lightning-charge-fill", "/ConversorEnergias", "#84cc16") },
+                                { "noticias", ("Notícias", "bi-newspaper", "/Noticias", "#6366f1") },
+                                { "artigos", ("Artigos", "bi-journal-text", "/Artigos", "#14b8a6") },
+                                { "educacao", ("Educação Financeira", "bi-book-fill", "/EducacaoFinanceira", "#22c55e") }
+                                };
+                }
+
+                @foreach (var widget in widgetsDisponiveis)
                 {
-                    <div class="empty-state">
-                        <i class="bi bi-inbox empty-icon"></i>
-                        <h3>Nenhum widget ainda</h3>
-                        <p>Adicione seu primeiro widget para personalizar seu dashboard!</p>
-                        <button class="btn-primary" onclick="abrirModalWidget()">
-                            <i class="bi bi-plus-circle-fill"></i>
-                            Criar Primeiro Widget
-                        </button>
+                    <div class="galeria-item" onclick="criarWidgetPredefinido('@widget.Key', '@widget.Value.titulo', '@widget.Value.icon', '@widget.Value.url', '@widget.Value.cor')">
+                        <div class="galeria-icon" style="background: @widget.Value.cor;">
+                            <i class="bi @widget.Value.icon"></i>
+                        </div>
+                        <span class="galeria-titulo">@widget.Value.titulo</span>
                     </div>
                 }
             </div>
-        </main>
-    </div>
-
-    <!-- ============ MODAL ADICIONAR/EDITAR WIDGET ============ -->
-    <div id="modalWidget" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2 id="modalTitle">
-                    <i class="bi bi-plus-square-fill"></i>
-                    Adicionar Widget
-                </h2>
-                <button class="modal-close" onclick="fecharModalWidget()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <!-- TABS -->
-            <div class="modal-tabs">
-                <button class="tab-btn active" onclick="switchTab('galeria')">
-                    <i class="bi bi-grid-3x2-gap-fill"></i>
-                    Galeria
-                </button>
-                <button class="tab-btn" onclick="switchTab('personalizado')">
-                    <i class="bi bi-magic"></i>
-                    Personalizado
-                </button>
-            </div>
-
-            <!-- TAB: GALERIA -->
-            <div id="tabGaleria" class="tab-content active">
-                <div class="widgets-galeria">
-                    @{
-                        var widgetsDisponiveis = new Dictionary<string, (string titulo, string icon, string url, string cor)>
-                                        {
-                                        { "receitas", ("Receitas", "bi-cash-coin", "/Receitas", "#10b981") },
-                                        { "despesas", ("Despesas", "bi-credit-card-2-back-fill", "/Despesas", "#ef4444") },
-                                        { "budgets", ("Orçamentos", "bi-pie-chart-fill", "/Budgets", "#3b82f6") },
-                                        { "categories", ("Categorias", "bi-tags-fill", "/Categories", "#f59e0b") },
-                                        { "metas", ("Metas Financeiras", "bi-bullseye", "/MetasFinanceiras", "#8b5cf6") },
-                                        { "relatorios", ("Relatórios", "bi-file-earmark-bar-graph-fill", "/Relatorios", "#06b6d4") },
-                                        { "projecao", ("Projeção Financeira", "bi-graph-up-arrow", "/ProjecaoFinanceira", "#ec4899") },
-                                        { "tendencia", ("Tendência Financeira", "bi-activity", "/TendenciaFinanceira", "#f97316") },
-                                        { "conversor", ("Conversor de Energia", "bi-lightning-charge-fill", "/ConversorEnergias", "#84cc16") },
-                                        { "noticias", ("Notícias", "bi-newspaper", "/Noticias", "#6366f1") },
-                                        { "artigos", ("Artigos", "bi-journal-text", "/Artigos", "#14b8a6") },
-                                        { "educacao", ("Educação Financeira", "bi-book-fill", "/EducacaoFinanceira", "#22c55e") }
-                                        };
-                    }
-
-                    @foreach (var widget in widgetsDisponiveis)
-                    {
-                        <div class="galeria-item" onclick="criarWidgetPredefinido('@widget.Key', '@widget.Value.titulo', '@widget.Value.icon', '@widget.Value.url', '@widget.Value.cor')">
-                            <div class="galeria-icon" style="background: @widget.Value.cor;">
-                                <i class="bi @widget.Value.icon"></i>
-                            </div>
-                            <span class="galeria-titulo">@widget.Value.titulo</span>
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <!-- TAB: PERSONALIZADO -->
-            <div id="tabPersonalizado" class="tab-content">
-                <form id="formWidget" method="post" asp-action="SalvarWidget">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" id="widgetId" name="Id" value="0">
-                    <input type="hidden" id="tipoWidget" name="TipoWidget" value="custom">
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="titulo">
-                                <i class="bi bi-type"></i>
-                                Título
-                            </label>
-                            <input type="text" id="titulo" name="Titulo" class="form-control" required maxlength="100" placeholder="Nome do Widget">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="link">
-                                <i class="bi bi-link-45deg"></i>
-                                Link/Rota
-                            </label>
-                            <input type="text" id="link" name="Link" class="form-control" placeholder="/Receitas">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="descricao">
-                            <i class="bi bi-chat-left-text"></i>
-                            Descrição
-                        </label>
-                        <textarea id="descricao" name="Descricao" class="form-control" rows="3" maxlength="500" placeholder="Breve descrição do widget..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="imagemUrl">
-                            <i class="bi bi-image"></i>
-                            URL da Imagem (opcional)
-                        </label>
-                        <input type="url" id="imagemUrl" name="ImagemUrl" class="form-control" placeholder="https://..." oninput="previewImagem()">
-                        <div id="imagemPreview" style="margin-top: 0.75rem; display: none;">
-                            <img id="imagemPreviewImg" src="" alt="Preview" style="width: 100%; max-height: 10rem; object-fit: cover; border-radius: 0.5rem;">
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="colunas">
-                                <i class="bi bi-arrows-expand"></i>
-                                Largura
-                            </label>
-                            <select id="colunas" name="Colunas" class="form-control" required>
-                                <option value="1">1 coluna (Pequeno)</option>
-                                <option value="2">2 colunas (Médio)</option>
-                                <option value="3">3 colunas (Grande)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="largura">
-                                <i class="bi bi-arrows-vertical"></i>
-                                Altura
-                            </label>
-                            <select id="largura" name="Largura" class="form-control" required>
-                                <option value="1">1 linha (Baixo)</option>
-                                <option value="2">2 linhas (Médio)</option>
-                                <option value="3">3 linhas (Alto)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="corFundo">
-                                <i class="bi bi-palette-fill"></i>
-                                Cor de Fundo
-                            </label>
-                            <input type="color" id="corFundo" name="CorFundo" class="form-control-color" value="#1b1d29">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn-cancel" onclick="fecharModalWidget()">
-                            <i class="bi bi-x-circle"></i>
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn-primary">
-                            <i class="bi bi-check-circle-fill"></i>
-                            Salvar Widget
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
-    </div>
 
-    <!-- ============ MODAL CONFIRMAR DELEÇÃO ============ -->
-    <div id="modalConfirmar" class="modal">
-        <div class="modal-content modal-small">
-            <div class="modal-header">
-                <h3>
-                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
-                    Confirmar Exclusão
-                </h3>
-            </div>
-            <p>Tem certeza que deseja excluir este widget? Esta ação não pode ser desfeita.</p>
-
-            <form id="formDeletar" method="post" asp-action="DeletarWidget">
+        <!-- TAB: PERSONALIZADO -->
+        <div id="tabPersonalizado" class="tab-content">
+            <form id="formWidget" method="post" asp-action="SalvarWidget">
                 @Html.AntiForgeryToken()
-                <input type="hidden" id="deletarId" name="id">
+                <input type="hidden" id="widgetId" name="Id" value="0">
+                <input type="hidden" id="tipoWidget" name="TipoWidget" value="custom">
 
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="fecharModalConfirmar()">Cancelar</button>
-                    <button type="submit" class="btn-danger">
-                        <i class="bi bi-trash-fill"></i>
-                        Excluir
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ============ MODAL NEWSLETTER ============ -->
-    <div id="modalNewsletter" class="modal">
-        <div class="modal-content modal-medium">
-            <div class="modal-header">
-                <h2>
-                    <i class="bi bi-envelope-open-heart-fill"></i>
-                    Newsletter SaveMoney
-                </h2>
-                <button class="modal-close" onclick="fecharModalNewsletter()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <div id="newsletterBemVindo" class="newsletter-welcome">
-                <i class="bi bi-mailbox2 newsletter-icon"></i>
-                <h3>Receba dicas financeiras exclusivas!</h3>
-                <p>Assine nossa newsletter e fique por dentro das melhores estratégias para alcançar seus objetivos financeiros.</p>
-
-                <div class="newsletter-actions">
-                    <button class="btn-primary" onclick="mostrarFormNewsletter()">
-                        <i class="bi bi-envelope-check-fill"></i>
-                        Quero receber
-                    </button>
-                    <button class="btn-cancel" onclick="recusarNewsletter()">
-                        Não mostrar novamente
-                    </button>
-                </div>
-            </div>
-
-            <div id="newsletterForm" class="newsletter-form" style="display: none;">
-                <form onsubmit="inscreverNewsletter(event)">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="newsletterNome">
-                            <i class="bi bi-person-fill"></i>
-                            Nome Completo
+                        <label for="titulo">
+                            <i class="bi bi-type"></i>
+                            Título
                         </label>
-                        <input type="text" id="newsletterNome" class="form-control" required placeholder="Seu nome">
+                        <input type="text" id="titulo" name="Titulo" class="form-control" required maxlength="100" placeholder="Nome do Widget">
                     </div>
 
                     <div class="form-group">
-                        <label for="newsletterEmail">
-                            <i class="bi bi-envelope-fill"></i>
-                            E-mail
+                        <label for="link">
+                            <i class="bi bi-link-45deg"></i>
+                            Link/Rota
                         </label>
-                        <input type="email" id="newsletterEmail" class="form-control" required placeholder="seu@email.com">
+                        <input type="text" id="link" name="Link" class="form-control" placeholder="/Receitas">
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn-cancel" onclick="fecharModalNewsletter()">Cancelar</button>
-                        <button type="submit" class="btn-primary">
-                            <i class="bi bi-send-fill"></i>
-                            Inscrever-se
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============ MODAL DE TEMAS (mantido) ============ -->
-    <div id="modalTemas" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2>
-                    <i class="bi bi-palette-fill"></i>
-                    Personalizar Tema
-                </h2>
-                <button class="modal-close" onclick="fecharModalTemas()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <div class="temas-section">
-                <h3>Temas Pré-definidos</h3>
-                <div class="temas-grid">
-                    <div class="tema-card" data-theme="default" onclick="aplicarTemaPadrao('default')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, #10111a, #3b82f6);"></div>
-                        <span class="tema-nome">Default</span>
-                    </div>
-                    <div class="tema-card" data-theme="purple" onclick="aplicarTemaPadrao('purple')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f1f, #8b5cf6);"></div>
-                        <span class="tema-nome">Purple Night</span>
-                    </div>
-                    <div class="tema-card" data-theme="green" onclick="aplicarTemaPadrao('green')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, #0a1410, #10b981);"></div>
-                        <span class="tema-nome">Green Money</span>
-                    </div>
-                    <div class="tema-card" data-theme="orange" onclick="aplicarTemaPadrao('orange')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a1410, #f59e0b);"></div>
-                        <span class="tema-nome">Orange Sunset</span>
-                    </div>
-                    <div class="tema-card" data-theme="red" onclick="aplicarTemaPadrao('red')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f0f, #ef4444);"></div>
-                        <span class="tema-nome">Red Passion</span>
-                    </div>
-                    <div class="tema-card" data-theme="cyan" onclick="aplicarTemaPadrao('cyan')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, #0f1a1a, #06b6d4);"></div>
-                        <span class="tema-nome">Cyan Wave</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="temas-section">
-                <h3>Seus Temas</h3>
-                <div id="temasCustomizados" class="temas-grid"></div>
-                <button class="btn-primary" onclick="abrirModalCriarTema()" style="margin-top: 1rem; width: 100%;">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Criar Tema Customizado
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============ MODAL CRIAR TEMA (mantido) ============ -->
-    <div id="modalCriarTema" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="tituloModalTema">
-                    <i class="bi bi-brush-fill"></i>
-                    Criar Tema Customizado
-                </h2>
-                <button class="modal-close" onclick="fecharModalCriarTema()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <form id="formTema" onsubmit="salvarTema(event)">
-                <input type="hidden" id="temaId" value="0">
-
-                <div class="form-group">
-                    <label for="nomeTema">Nome do Tema</label>
-                    <input type="text" id="nomeTema" class="form-control" required maxlength="50" placeholder="Meu Tema Personalizado">
                 </div>
 
                 <div class="form-group">
-                    <label>Cores do Tema</label>
-                    <div class="color-grid">
-                        <div>
-                            <label>Fundo Principal</label>
-                            <input type="color" id="bgPrimary" class="form-control-color" value="#10111a">
-                        </div>
-                        <div>
-                            <label>Fundo Secundário</label>
-                            <input type="color" id="bgSecondary" class="form-control-color" value="#0d0e16">
-                        </div>
-                        <div>
-                            <label>Fundo Card</label>
-                            <input type="color" id="bgCard" class="form-control-color" value="#1b1d29">
-                        </div>
-                        <div>
-                            <label>Cor da Borda</label>
-                            <input type="color" id="borderColor" class="form-control-color" value="#2a2c3c">
-                        </div>
-                        <div>
-                            <label>Texto Principal</label>
-                            <input type="color" id="textPrimary" class="form-control-color" value="#f5f5ff">
-                        </div>
-                        <div>
-                            <label>Texto Secundário</label>
-                            <input type="color" id="textSecondary" class="form-control-color" value="#aaaaaa">
-                        </div>
-                        <div>
-                            <label>Cor de Destaque</label>
-                            <input type="color" id="accentPrimary" class="form-control-color" value="#3b82f6">
-                        </div>
-                        <div>
-                            <label>Destaque (Hover)</label>
-                            <input type="color" id="accentPrimaryHover" class="form-control-color" value="#2563eb">
-                        </div>
-                        <div>
-                            <label>Texto do Botão</label>
-                            <input type="color" id="btnPrimaryText" class="form-control-color" value="#ffffff">
-                        </div>
+                    <label for="descricao">
+                        <i class="bi bi-chat-left-text"></i>
+                        Descrição
+                    </label>
+                    <textarea id="descricao" name="Descricao" class="form-control" rows="3" maxlength="500" placeholder="Breve descrição do widget..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagemUrl">
+                        <i class="bi bi-image"></i>
+                        URL da Imagem (opcional)
+                    </label>
+                    <input type="url" id="imagemUrl" name="ImagemUrl" class="form-control" placeholder="https://..." oninput="previewImagem()">
+                    <div id="imagemPreview" style="margin-top: 0.75rem; display: none;">
+                        <img id="imagemPreviewImg" src="" alt="Preview" style="width: 100%; max-height: 10rem; object-fit: cover; border-radius: 0.5rem;">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="colunas">
+                            <i class="bi bi-arrows-expand"></i>
+                            Largura
+                        </label>
+                        <select id="colunas" name="Colunas" class="form-control" required>
+                            <option value="1">1 coluna (Pequeno)</option>
+                            <option value="2">2 colunas (Médio)</option>
+                            <option value="3">3 colunas (Grande)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="largura">
+                            <i class="bi bi-arrows-vertical"></i>
+                            Altura
+                        </label>
+                        <select id="largura" name="Largura" class="form-control" required>
+                            <option value="1">1 linha (Baixo)</option>
+                            <option value="2">2 linhas (Médio)</option>
+                            <option value="3">3 linhas (Alto)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="corFundo">
+                            <i class="bi bi-palette-fill"></i>
+                            Cor de Fundo
+                        </label>
+                        <input type="color" id="corFundo" name="CorFundo" class="form-control-color" value="#1b1d29">
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="fecharModalCriarTema()">Cancelar</button>
+                    <button type="button" class="btn-cancel" onclick="fecharModalWidget()">
+                        <i class="bi bi-x-circle"></i>
+                        Cancelar
+                    </button>
                     <button type="submit" class="btn-primary">
                         <i class="bi bi-check-circle-fill"></i>
-                        Salvar Tema
+                        Salvar Widget
                     </button>
                 </div>
             </form>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<!-- ============ MODAL CONFIRMAR DELEÇÃO ============ -->
+<div id="modalConfirmar" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h3>
+                <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                Confirmar Exclusão
+            </h3>
+        </div>
+        <p>Tem certeza que deseja excluir este widget? Esta ação não pode ser desfeita.</p>
+
+        <form id="formDeletar" method="post" asp-action="DeletarWidget">
+            @Html.AntiForgeryToken()
+            <input type="hidden" id="deletarId" name="id">
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="fecharModalConfirmar()">Cancelar</button>
+                <button type="submit" class="btn-danger">
+                    <i class="bi bi-trash-fill"></i>
+                    Excluir
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============ MODAL NEWSLETTER ============ -->
+<div id="modalNewsletter" class="modal">
+    <div class="modal-content modal-medium">
+        <div class="modal-header">
+            <h2>
+                <i class="bi bi-envelope-open-heart-fill"></i>
+                Newsletter SaveMoney
+            </h2>
+            <button class="modal-close" onclick="fecharModalNewsletter()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div id="newsletterBemVindo" class="newsletter-welcome">
+            <i class="bi bi-mailbox2 newsletter-icon"></i>
+            <h3>Receba dicas financeiras exclusivas!</h3>
+            <p>Assine nossa newsletter e fique por dentro das melhores estratégias para alcançar seus objetivos financeiros.</p>
+
+            <div class="newsletter-actions">
+                <button class="btn-primary" onclick="mostrarFormNewsletter()">
+                    <i class="bi bi-envelope-check-fill"></i>
+                    Quero receber
+                </button>
+                <button class="btn-cancel" onclick="recusarNewsletter()">
+                    Não mostrar novamente
+                </button>
+            </div>
+        </div>
+
+        <div id="newsletterForm" class="newsletter-form" style="display: none;">
+            <form onsubmit="inscreverNewsletter(event)">
+                <div class="form-group">
+                    <label for="newsletterNome">
+                        <i class="bi bi-person-fill"></i>
+                        Nome Completo
+                    </label>
+                    <input type="text" id="newsletterNome" class="form-control" required placeholder="Seu nome">
+                </div>
+
+                <div class="form-group">
+                    <label for="newsletterEmail">
+                        <i class="bi bi-envelope-fill"></i>
+                        E-mail
+                    </label>
+                    <input type="email" id="newsletterEmail" class="form-control" required placeholder="seu@email.com">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="fecharModalNewsletter()">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="bi bi-send-fill"></i>
+                        Inscrever-se
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODAL DE TEMAS ============ -->
+<div id="modalTemas" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2>
+                <i class="bi bi-palette-fill"></i>
+                Personalizar Tema
+            </h2>
+            <button class="modal-close" onclick="fecharModalTemas()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="temas-section">
+            <h3>Temas Pré-definidos</h3>
+            <div class="temas-grid">
+                <div class="tema-card" data-theme="default" onclick="aplicarTemaPadrao('default')">
+                    <div class="tema-preview" style="background: linear-gradient(135deg, #10111a, #3b82f6);"></div>
+                    <span class="tema-nome">Default</span>
+                </div>
+                <div class="tema-card" data-theme="purple" onclick="aplicarTemaPadrao('purple')">
+                    <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f1f, #8b5cf6);"></div>
+                    <span class="tema-nome">Purple Night</span>
+                </div>
+                <div class="tema-card" data-theme="green" onclick="aplicarTemaPadrao('green')">
+                    <div class="tema-preview" style="background: linear-gradient(135deg, #0a1410, #10b981);"></div>
+                    <span class="tema-nome">Green Money</span>
+                </div>
+                <div class="tema-card" data-theme="orange" onclick="aplicarTemaPadrao('orange')">
+                    <div class="tema-preview" style="background: linear-gradient(135deg, #1a1410, #f59e0b);"></div>
+                    <span class="tema-nome">Orange Sunset</span>
+                </div>
+                <div class="tema-card" data-theme="red" onclick="aplicarTemaPadrao('red')">
+                    <div class="tema-preview" style="background: linear-gradient(135deg, #1a0f0f, #ef4444);"></div>
+                    <span class="tema-nome">Red Passion</span>
+                </div>
+                <div class="tema-card" data-theme="cyan" onclick="aplicarTemaPadrao('cyan')">
+                    <div class="tema-preview" style="background: linear-gradient(135deg, #0f1a1a, #06b6d4);"></div>
+                    <span class="tema-nome">Cyan Wave</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="temas-section">
+            <h3>Seus Temas</h3>
+            <div id="temasCustomizados" class="temas-grid"></div>
+            <button class="btn-primary" onclick="abrirModalCriarTema()" style="margin-top: 1rem; width: 100%;">
+                <i class="bi bi-plus-circle-fill"></i>
+                Criar Tema Customizado
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODAL CRIAR TEMA ============ -->
+<div id="modalCriarTema" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="tituloModalTema">
+                <i class="bi bi-brush-fill"></i>
+                Criar Tema Customizado
+            </h2>
+            <button class="modal-close" onclick="fecharModalCriarTema()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="formTema" onsubmit="salvarTema(event)">
+            <input type="hidden" id="temaId" value="0">
+
+            <div class="form-group">
+                <label for="nomeTema">Nome do Tema</label>
+                <input type="text" id="nomeTema" class="form-control" required maxlength="50" placeholder="Meu Tema Personalizado">
+            </div>
+
+            <div class="form-group">
+                <label>Cores do Tema</label>
+                <div class="color-grid">
+                    <div>
+                        <label>Fundo Principal</label>
+                        <input type="color" id="bgPrimary" class="form-control-color" value="#10111a">
+                    </div>
+                    <div>
+                        <label>Fundo Secundário</label>
+                        <input type="color" id="bgSecondary" class="form-control-color" value="#0d0e16">
+                    </div>
+                    <div>
+                        <label>Fundo Card</label>
+                        <input type="color" id="bgCard" class="form-control-color" value="#1b1d29">
+                    </div>
+                    <div>
+                        <label>Cor da Borda</label>
+                        <input type="color" id="borderColor" class="form-control-color" value="#2a2c3c">
+                    </div>
+                    <div>
+                        <label>Texto Principal</label>
+                        <input type="color" id="textPrimary" class="form-control-color" value="#f5f5ff">
+                    </div>
+                    <div>
+                        <label>Texto Secundário</label>
+                        <input type="color" id="textSecondary" class="form-control-color" value="#aaaaaa">
+                    </div>
+                    <div>
+                        <label>Cor de Destaque</label>
+                        <input type="color" id="accentPrimary" class="form-control-color" value="#3b82f6">
+                    </div>
+                    <div>
+                        <label>Destaque (Hover)</label>
+                        <input type="color" id="accentPrimaryHover" class="form-control-color" value="#2563eb">
+                    </div>
+                    <div>
+                        <label>Texto do Botão</label>
+                        <input type="color" id="btnPrimaryText" class="form-control-color" value="#ffffff">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="fecharModalCriarTema()">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Salvar Tema
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@* Banner de Aviso Beta *@
+<partial name="_BetaWarning" />
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Dashboard.css">
+    <link rel="stylesheet" href="~/css/notificacoes.css" asp-append-version="true">
 }
 
 @section Scripts {
     <script src="~/js/Dashboard.js"></script>
+    <script src="~/js/notificacoes.js" asp-append-version="true"></script>
 }

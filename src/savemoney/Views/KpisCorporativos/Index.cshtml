@@ -1,0 +1,254 @@
+﻿@model savemoney.Models.ViewModels.KpisCorporativosViewModel
+@{
+    ViewData["Title"] = "KPIs Corporativos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/kpis-corporativos.css" asp-append-version="true" />
+
+<div class="kpis-container">
+    <!-- Header -->
+    <div class="kpis-header">
+        <div class="kpis-header-info">
+            <h1><i class="bi bi-speedometer2"></i> KPIs Corporativos</h1>
+            <p>Indicadores de Performance Financeira</p>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="kpis-filtros glass-card">
+        <form asp-action="Index" method="post" id="form-filtros">
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <label asp-for="DataInicio" class="form-label">Data Inicio</label>
+                    <input asp-for="DataInicio" type="date" class="form-control" />
+                </div>
+
+                <div class="filtro-grupo">
+                    <label asp-for="DataFim" class="form-label">Data Fim</label>
+                    <input asp-for="DataFim" type="date" class="form-control" />
+                </div>
+
+                <div class="filtro-grupo filtro-btn">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- KPIs Cards -->
+    <div class="kpis-cards">
+        <!-- KPI 1: Margem de Lucro -->
+        <div class="kpi-card-grande glass-card @(Model.TemLucro ? "kpi-positivo" : "kpi-negativo")">
+            <div class="kpi-card-header">
+                <div class="kpi-icon-grande">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <span class="kpi-badge">Margem de Lucro</span>
+            </div>
+
+            <div class="kpi-valor-destaque">
+                <span class="kpi-percentual-grande">@Model.MargemLucro.ToString("N1")%</span>
+                <span class="kpi-status @(Model.TemLucro ? "status-lucro" : "status-prejuizo")">
+                    <i class="bi bi-@(Model.TemLucro ? "check-circle" : "x-circle")"></i>
+                    @(Model.TemLucro ? "Lucro" : "Prejuizo")
+                </span>
+            </div>
+
+            <div class="kpi-detalhes">
+                <div class="kpi-detalhe-item">
+                    <span class="detalhe-label">Receita Total</span>
+                    <span class="detalhe-valor positivo">@Model.ReceitaTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                </div>
+                <div class="kpi-detalhe-item">
+                    <span class="detalhe-label">Despesa Total</span>
+                    <span class="detalhe-valor negativo">@Model.DespesaTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                </div>
+                <div class="kpi-detalhe-item destaque">
+                    <span class="detalhe-label">Lucro Bruto</span>
+                    <span class="detalhe-valor @(Model.TemLucro ? "positivo" : "negativo")">
+                        @Model.LucroBruto.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                    </span>
+                </div>
+            </div>
+
+            <div class="kpi-formula">
+                <code>Margem = (Lucro / Receita) x 100</code>
+            </div>
+        </div>
+
+        <!-- KPI 2: Burn Rate -->
+        <div class="kpi-card-grande glass-card kpi-warning">
+            <div class="kpi-card-header">
+                <div class="kpi-icon-grande">
+                    <i class="bi bi-fire"></i>
+                </div>
+                <span class="kpi-badge">Burn Rate</span>
+            </div>
+
+            <div class="kpi-valor-destaque">
+                <span class="kpi-valor-grande">@Model.BurnRate.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                <span class="kpi-subtitulo">/mes</span>
+            </div>
+
+            <div class="kpi-detalhes">
+                <div class="kpi-detalhe-item">
+                    <span class="detalhe-label">Custos Fixos</span>
+                    <span class="detalhe-valor">@Model.CustosFixosMensal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                </div>
+                <div class="kpi-detalhe-item">
+                    <span class="detalhe-label">Despesas Operacionais</span>
+                    <span class="detalhe-valor">@Model.DespesasOperacionaisMensal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                </div>
+            </div>
+
+            <div class="kpi-runway">
+                <div class="runway-info">
+                    <span class="runway-label">Runway (Sobrevivencia)</span>
+                    <span class="runway-valor @(Model.RunwayMeses >= 6 ? "runway-ok" : Model.RunwayMeses >= 3 ? "runway-atencao" : "runway-critico")">
+                        @Model.RunwayMeses.ToString("N1") meses
+                    </span>
+                </div>
+                <div class="runway-barra">
+                    @{
+                        var runwayPercent = Math.Min(Model.RunwayMeses / 12 * 100, 100);
+                    }
+                    <div class="runway-progresso" style="width: @runwayPercent.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
+                </div>
+                <span class="runway-saldo">Saldo: @Model.SaldoDisponivel.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+            </div>
+
+            <div class="kpi-formula">
+                <code>Burn Rate = Custos Fixos + Despesas Operacionais</code>
+            </div>
+        </div>
+
+        <!-- KPI 3: Ponto de Equilibrio -->
+        <div class="kpi-card-grande glass-card @(Model.AtingiuEquilibrio ? "kpi-positivo" : "kpi-alerta")">
+            <div class="kpi-card-header">
+                <div class="kpi-icon-grande">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+                <span class="kpi-badge">Ponto de Equilibrio</span>
+            </div>
+
+            <div class="kpi-valor-destaque">
+                <span class="kpi-valor-grande">@Model.PontoEquilibrio.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                <span class="kpi-status @(Model.AtingiuEquilibrio ? "status-lucro" : "status-atencao")">
+                    <i class="bi bi-@(Model.AtingiuEquilibrio ? "check-circle" : "exclamation-circle")"></i>
+                    @(Model.AtingiuEquilibrio ? "Atingido!" : "Nao Atingido")
+                </span>
+            </div>
+
+            <div class="equilibrio-gauge">
+                <div class="gauge-container">
+                    @{
+                        var gaugePercent = Math.Min(Model.PercentualAtingido, 150);
+                        var gaugeRotation = (gaugePercent / 150) * 180 - 90;
+                    }
+                    <div class="gauge-background"></div>
+                    <div class="gauge-fill" style="transform: rotate(@gaugeRotation.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)deg);"></div>
+                    <div class="gauge-center">
+                        <span class="gauge-valor">@Model.PercentualAtingido.ToString("N0")%</span>
+                        <span class="gauge-label">atingido</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-detalhes">
+                <div class="kpi-detalhe-item">
+                    <span class="detalhe-label">Margem de Contribuicao</span>
+                    <span class="detalhe-valor">@Model.MargemContribuicaoPercentual.ToString("N1")%</span>
+                </div>
+                <div class="kpi-detalhe-item">
+                    <span class="detalhe-label">Receita Atual</span>
+                    <span class="detalhe-valor">@Model.ReceitaTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                </div>
+            </div>
+
+            <div class="kpi-formula">
+                <code>PE = Custos Fixos / Margem Contribuicao %</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafico de Evolucao -->
+    @if (Model.HistoricoMensal.Any())
+    {
+        <div class="kpis-grafico glass-card">
+            <h2 class="section-title">
+                <i class="bi bi-bar-chart-line"></i> Evolucao Mensal
+            </h2>
+
+            <div class="grafico-evolucao">
+                @{
+                    var maxValor = Model.HistoricoMensal.Max(h => Math.Max(h.Receita, h.Despesa));
+                    if (maxValor == 0) maxValor = 1;
+                }
+
+                @foreach (var mes in Model.HistoricoMensal)
+                {
+                    var alturaReceita = (mes.Receita / maxValor) * 100;
+                    var alturaDespesa = (mes.Despesa / maxValor) * 100;
+
+                    <div class="evolucao-mes">
+                        <div class="evolucao-barras">
+                            <div class="evolucao-barra receita"
+                                 style="height: @alturaReceita.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                 title="Receita: @mes.Receita.ToString("C", new System.Globalization.CultureInfo("pt-BR"))">
+                            </div>
+                            <div class="evolucao-barra despesa"
+                                 style="height: @alturaDespesa.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%;"
+                                 title="Despesa: @mes.Despesa.ToString("C", new System.Globalization.CultureInfo("pt-BR"))">
+                            </div>
+                        </div>
+                        <span class="evolucao-label">@mes.MesAnoAbreviado</span>
+                        <span class="evolucao-margem @(mes.MargemLucro >= 0 ? "positiva" : "negativa")">
+                            @(mes.MargemLucro >= 0 ? "+" : "")@mes.MargemLucro.ToString("N0")%
+                        </span>
+                    </div>
+                }
+            </div>
+
+            <div class="grafico-legenda">
+                <span class="legenda-item"><span class="legenda-cor receita"></span> Receita</span>
+                <span class="legenda-item"><span class="legenda-cor despesa"></span> Despesa</span>
+            </div>
+        </div>
+    }
+
+    <!-- Custos por Categoria -->
+    @if (Model.CustosPorCategoria.Any())
+    {
+        <div class="kpis-categorias glass-card">
+            <h2 class="section-title">
+                <i class="bi bi-pie-chart"></i> Custos por Categoria
+            </h2>
+
+            <div class="categorias-lista">
+                @foreach (var cat in Model.CustosPorCategoria)
+                {
+                    <div class="categoria-item">
+                        <div class="categoria-info">
+                            <span class="categoria-cor" style="background-color: @cat.Cor;"></span>
+                            <span class="categoria-nome">@cat.Categoria</span>
+                        </div>
+                        <div class="categoria-valores">
+                            <span class="categoria-valor">@cat.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</span>
+                            <span class="categoria-percent">@cat.Percentual.ToString("N1")%</span>
+                        </div>
+                        <div class="categoria-barra">
+                            <div class="categoria-progresso" style="width: @cat.Percentual.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)%; background-color: @cat.Cor;"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/kpis-corporativos.js" asp-append-version="true"></script>
+}

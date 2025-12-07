@@ -60,9 +60,10 @@ body {
     /* Main Container */
     body > main {
         flex: 1;
-        padding-top: var(--header-height);
         padding-left: 1rem;
         padding-right: 1rem;
+        padding-bottom: 3rem;
+        padding-top: 2.5rem;
     }
 
         /* Override para landing pages */
@@ -346,13 +347,11 @@ body {
 }
 
 .card-header {
-    background-color: var(--bg-secondary);
     border-bottom: 0.0625rem solid var(--border-color);
     color: var(--text-primary);
 }
 
 .card-footer {
-    background-color: var(--bg-secondary);
     border-top: 0.0625rem solid var(--border-color);
 }
 

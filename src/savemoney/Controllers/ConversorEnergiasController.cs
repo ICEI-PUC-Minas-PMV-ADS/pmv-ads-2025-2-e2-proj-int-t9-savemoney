@@ -169,6 +169,9 @@ namespace savemoney.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrEdit(ConversorEnergia conversor)
         {
+            ModelState.Remove("Usuario");
+            ModelState.Remove("UsuarioId");
+
             CarregarViewBags();
 
             if (ModelState.IsValid)

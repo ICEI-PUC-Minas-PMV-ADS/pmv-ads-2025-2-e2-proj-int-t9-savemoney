@@ -1,0 +1,387 @@
+﻿@* ============ BANNER DE AVISO BETA ============ *@
+<div class="beta-warning-banner" id="betaWarningBanner">
+    <div class="beta-warning-content">
+        <div class="beta-warning-icon">
+            <i class="bi bi-cone-striped"></i>
+        </div>
+        <div class="beta-warning-text">
+            <strong>Estamos em fase de testes!</strong>
+            <span>
+                Bugs podem ser encontrados. Caso algum atrapalhe sua experiência, por favor,
+                <a href="#" onclick="abrirModalReportBug(event)">reporte-nos</a>.
+            </span>
+        </div>
+        <button class="beta-warning-close" onclick="fecharBetaWarning()" title="Fechar aviso">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+</div>
+
+@* ============ MODAL REPORTAR BUG ============ *@
+<div id="modalReportBug" class="modal">
+    <div class="modal-content modal-medium">
+        <div class="modal-header">
+            <h2>
+                <i class="bi bi-bug-fill"></i>
+                Reportar Bug
+            </h2>
+            <button class="modal-close" onclick="fecharModalReportBug()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div id="reportBugForm">
+            <p class="report-bug-intro">
+                Encontrou um problema? Descreva o bug abaixo e nossa equipe irá analisar o mais rápido possível.
+            </p>
+
+            <form onsubmit="enviarReportBug(event)">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="bugTitulo">
+                        <i class="bi bi-tag-fill"></i>
+                        Título do Bug
+                    </label>
+                    <input type="text" id="bugTitulo" class="form-control" required
+                           placeholder="Ex: Botão não funciona na tela de receitas" maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="bugPagina">
+                        <i class="bi bi-link-45deg"></i>
+                        Página onde ocorreu
+                    </label>
+                    <input type="text" id="bugPagina" class="form-control"
+                           placeholder="Ex: Dashboard, Relatórios, etc." maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="bugDescricao">
+                        <i class="bi bi-chat-left-text-fill"></i>
+                        Descrição detalhada
+                    </label>
+                    <textarea id="bugDescricao" class="form-control" rows="4" required
+                              placeholder="Descreva o que aconteceu, o que você esperava que acontecesse e os passos para reproduzir o bug..." maxlength="1000"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="bugGravidade">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Gravidade
+                    </label>
+                    <select id="bugGravidade" class="form-control" required>
+                        <option value="baixa">Baixa - Inconveniente menor</option>
+                        <option value="media" selected>Média - Afeta funcionalidade</option>
+                        <option value="alta">Alta - Impede uso de recurso</option>
+                        <option value="critica">Crítica - Sistema inutilizável</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="fecharModalReportBug()">
+                        <i class="bi bi-x-circle"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="bi bi-send-fill"></i>
+                        Enviar Report
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="reportBugSuccess" style="display: none;">
+            <div class="report-success-content">
+                <div class="report-success-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h3>Report enviado com sucesso!</h3>
+                <p>Agradecemos por nos ajudar a melhorar o SaveMoney. Nossa equipe irá analisar seu report em breve.</p>
+                <button class="btn-primary" onclick="fecharModalReportBug()">
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ============ BANNER BETA WARNING ============ */
+    .beta-warning-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.08) 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(245, 158, 11, 0.3);
+        padding: 0.75rem 1.5rem;
+        z-index: 1000;
+        animation: slideUpBanner 0.5s ease-out;
+    }
+
+    @@keyframes slideUpBanner {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .beta-warning-banner.hidden {
+        animation: slideDownBanner 0.3s ease-out forwards;
+    }
+
+    @@keyframes slideDownBanner {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+
+    .beta-warning-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .beta-warning-icon {
+        font-size: 1.5rem;
+        color: #f59e0b;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+    }
+
+    .beta-warning-text {
+        flex: 1;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        line-height: 1.4;
+    }
+
+        .beta-warning-text strong {
+            color: #f59e0b;
+            margin-right: 0.5rem;
+        }
+
+        .beta-warning-text a {
+            color: #3b82f6;
+            text-decoration: underline;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+            .beta-warning-text a:hover {
+                color: #60a5fa;
+            }
+
+    .beta-warning-close {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: var(--text-secondary);
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+        .beta-warning-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+        }
+
+    /* ============ MODAL REPORT BUG ============ */
+    .report-bug-intro {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 0.75rem;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .report-success-content {
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+
+    .report-success-icon {
+        font-size: 4rem;
+        color: #10b981;
+        margin-bottom: 1rem;
+        animation: successBounce 0.5s ease-out;
+    }
+
+    @@keyframes successBounce {
+        0% {
+            transform: scale(0);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .report-success-content h3 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .report-success-content p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Responsivo */
+    @@media (max-width: 768px) {
+        .beta-warning-content {
+            flex-wrap: wrap;
+        }
+
+        .beta-warning-text {
+            order: 3;
+            width: 100%;
+            text-align: center;
+        }
+
+        .beta-warning-icon {
+            order: 1;
+        }
+
+        .beta-warning-close {
+            order: 2;
+            margin-left: auto;
+        }
+    }
+</style>
+
+<script>
+    // ============ BETA WARNING BANNER ============
+    function fecharBetaWarning() {
+        const banner = document.getElementById('betaWarningBanner');
+        banner.classList.add('hidden');
+
+        // Salvar preferência por 24h
+        localStorage.setItem('betaWarningClosed', Date.now());
+
+        setTimeout(() => {
+            banner.style.display = 'none';
+        }, 300);
+    }
+
+    // Verificar se deve mostrar o banner
+    (function() {
+        const lastClosed = localStorage.getItem('betaWarningClosed');
+        if (lastClosed) {
+            const horasPassadas = (Date.now() - parseInt(lastClosed)) / (1000 * 60 * 60);
+            if (horasPassadas < 24) {
+                const banner = document.getElementById('betaWarningBanner');
+                if (banner) banner.style.display = 'none';
+            }
+        }
+    })();
+
+    // ============ MODAL REPORT BUG ============
+    function abrirModalReportBug(e) {
+        if (e) e.preventDefault();
+
+        // Reset form
+        document.getElementById('reportBugForm').style.display = 'block';
+        document.getElementById('reportBugSuccess').style.display = 'none';
+        document.getElementById('bugTitulo').value = '';
+        document.getElementById('bugPagina').value = window.location.pathname;
+        document.getElementById('bugDescricao').value = '';
+        document.getElementById('bugGravidade').value = 'media';
+
+        document.getElementById('modalReportBug').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModalReportBug() {
+        document.getElementById('modalReportBug').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    async function enviarReportBug(e) {
+        e.preventDefault();
+
+        const btnSubmit = e.target.querySelector('button[type="submit"]');
+        const btnText = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
+        btnSubmit.disabled = true;
+
+        const dados = {
+            titulo: document.getElementById('bugTitulo').value,
+            pagina: document.getElementById('bugPagina').value,
+            descricao: document.getElementById('bugDescricao').value,
+            gravidade: document.getElementById('bugGravidade').value,
+            userAgent: navigator.userAgent
+        };
+
+        try {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            const response = await fetch('/BugReport/Enviar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token || ''
+                },
+                body: JSON.stringify(dados)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('reportBugForm').style.display = 'none';
+                document.getElementById('reportBugSuccess').style.display = 'block';
+            } else {
+                alert('Erro ao enviar: ' + result.message);
+                btnSubmit.innerHTML = btnText;
+                btnSubmit.disabled = false;
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao enviar report. Tente novamente.');
+            btnSubmit.innerHTML = btnText;
+            btnSubmit.disabled = false;
+        }
+    }
+
+    // Fechar modal ao clicar fora
+    document.getElementById('modalReportBug')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            fecharModalReportBug();
+        }
+    });
+</script>

@@ -1,0 +1,81 @@
+﻿<div class="modal fade" id="modalExportacao" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-glass">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-white d-flex align-items-center">
+                    <i class="bi bi-cloud-download me-2 text-primary"></i>
+                    Exportar Relatório
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-controller="Relatorios" asp-action="ExportarRelatorio" method="post" target="_blank" id="formExportacao">
+                <div class="modal-body pt-4">
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <label class="text-secondary small fw-bold text-uppercase ls-1">Período de Análise</label>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small text-white mb-1">Início</label>
+                            <div class="input-group input-group-glass">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                <input type="date" name="dataInicio" id="exportDataInicio" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small text-white mb-1">Fim</label>
+                            <div class="input-group input-group-glass">
+                                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                                <input type="date" name="dataFim" id="exportDataFim" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-secondary small fw-bold text-uppercase ls-1 mb-3 d-block">Tipo de Relatório</label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="custom-radio-card">
+                                    <input type="radio" name="tipoRelatorio" value="SIMPLES" checked>
+                                    <div class="card-content">
+                                        <i class="bi bi-file-earmark-text text-info fs-3 mb-2"></i>
+                                        <span class="fw-bold text-white d-block">Extrato</span>
+                                        <span class="small text-muted d-block mt-1">Simples</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label class="custom-radio-card">
+                                    <input type="radio" name="tipoRelatorio" value="COMPLETO">
+                                    <div class="card-content">
+                                        <i class="bi bi-briefcase text-warning fs-3 mb-2"></i>
+                                        <span class="fw-bold text-white d-block">Dossiê</span>
+                                        <span class="small text-muted d-block mt-1">Completo</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="text-secondary small fw-bold text-uppercase ls-1 mb-2">Formato</label>
+                        <select name="formato" class="form-select form-select-glass">
+                            <option value="PDF">📄 PDF (Documento)</option>
+                            <option value="EXCEL">📊 Excel (Planilha)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-4 d-flex align-items-center gap-2" id="btnExportarSubmit">
+                        <span class="btn-text">Exportar</span>
+                        <span class="btn-loader d-none"><span class="spinner-border spinner-border-sm"></span> Gerando...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "Simulador de Juros Compostos";
+}
+
+@section css {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/jurosCompostos.css" asp-append-version="true" />
+}
+
+<main class="simulador-page-main fade-in">
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="bi bi-graph-up-arrow"></i> Planejamento Avançado
+            </div>
+            <h1 class="hero-title">O Poder dos Juros Compostos</h1>
+            <p class="hero-subtitle">
+                Descubra como pequenos aportes mensais se transformam em uma grande fortuna ao longo do tempo através do efeito "bola de neve".
+            </p>
+            <a href="#calculadora" class="btn-hero-cta">Simular Investimento</a>
+        </div>
+    </section>
+
+    <section class="calculadora-section" id="calculadora">
+        <div class="container-calculadora">
+
+            <div class="calculadora-grid">
+                <article class="form-card glass-panel">
+                    <div class="card-header">
+                        <h3><i class="bi bi-sliders"></i> Parâmetros</h3>
+                    </div>
+                    <form id="jurosForm">
+                        <div class="form-group">
+                            <label for="valorInicial">Valor Inicial (R$)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-cash-coin"></i>
+                                <input type="number" id="valorInicial" class="form-input" placeholder="Ex: 1000,00" value="1000">
+                            </div>
+                            <small class="form-hint">Quanto você tem hoje para começar?</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aporteMensal">Aporte Mensal (R$)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-wallet2"></i>
+                                <input type="number" id="aporteMensal" class="form-input" placeholder="Ex: 500,00" value="500">
+                            </div>
+                            <small class="form-hint">Quanto vai investir todo mês?</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taxaJuros">Taxa de Juros Anual (%)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-percent"></i>
+                                <input type="number" id="taxaJuros" class="form-input" placeholder="Ex: 10,0" value="10" step="0.1">
+                            </div>
+                            <small class="form-hint">Rentabilidade média esperada (ex: 10% a.a.)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="periodoAnos">Tempo de Investimento (Anos)</label>
+                            <div class="range-container">
+                                <input type="range" id="periodoAnos" class="form-range" min="1" max="50" value="10">
+                                <div class="range-value-display">
+                                    <span id="periodoOutput">10</span> anos
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnCalcular" class="btn-submit">
+                            <i class="bi bi-calculator-fill"></i> Calcular Resultado
+                        </button>
+                    </form>
+                </article>
+
+                <article class="results-card glass-panel">
+                    <div class="results-header">
+                        <h3>Projeção Futura</h3>
+                        <span class="badge-periodo" id="badgePeriodo">Em 10 anos</span>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Investido</span>
+                            <span class="summary-value" id="resTotalInvestido">R$ 0,00</span>
+                            <small class="summary-sub">Saiu do seu bolso</small>
+                        </div>
+                        <div class="summary-item highlight">
+                            <span class="summary-label">Total em Juros</span>
+                            <span class="summary-value text-success" id="resTotalJuros">+ R$ 0,00</span>
+                            <small class="summary-sub">O dinheiro trabalhou</small>
+                        </div>
+                    </div>
+
+                    <div class="total-final-box">
+                        <span class="total-label">Montante Final Acumulado</span>
+                        <span class="total-value" id="resMontanteFinal">R$ 0,00</span>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="chartJuros"></canvas>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-accordion-section">
+        <div class="container-accordion">
+            <h2>Entenda os Juros Compostos</h2>
+            <p class="accordion-intro">A "oitava maravilha do mundo", segundo Albert Einstein. Entenda por que começar cedo faz toda a diferença.</p>
+
+            <div class="accordion-custom">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        O que são Juros Compostos?
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p>Diferente dos juros simples (onde o rendimento é calculado apenas sobre o valor inicial), nos juros compostos você ganha <strong>juros sobre juros</strong>. O rendimento do mês passado passa a render também no mês seguinte, criando um efeito exponencial de crescimento.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        A diferença entre "Total Investido" e "Montante Final"
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p><strong>Total Investido:</strong> É a soma de todo o dinheiro que saiu do seu bolso (Valor Inicial + Aportes Mensais).</p>
+                        <p><strong>Montante Final:</strong> É o valor total que você resgata. A diferença entre os dois é o lucro puro gerado pelos juros compostos.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        Por que o tempo é tão importante?
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p>No gráfico acima, você notará que a curva de juros começa devagar e depois "decola". Isso acontece porque o montante base cresce a cada mês. Quanto mais tempo você deixa o dinheiro investido, mais acentuada fica essa curva. Começar 5 anos antes pode dobrar seu resultado final sem que você precise investir mais dinheiro.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="~/js/jurosCompostos.js" asp-append-version="true"></script>
+    <script>
+        // Script simples para o Accordion (UI apenas)
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const isActive = button.classList.contains('active');
+
+            // Fecha todos
+            document.querySelectorAll('.accordion-header').forEach(btn => {
+                btn.classList.remove('active');
+                btn.nextElementSibling.style.maxHeight = null;
+            });
+
+            // Abre o atual se não estava aberto
+            if (!isActive) {
+                button.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+    </script>
+}
