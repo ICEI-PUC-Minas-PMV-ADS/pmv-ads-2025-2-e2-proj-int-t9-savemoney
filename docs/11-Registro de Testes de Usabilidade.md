@@ -23,9 +23,9 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | Usuário 4    |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5    |                    |                                 |                 |                        |                              |                     | 
 
-(../docs/img/Cadastro.png)
-(../docs/img/Login.png)
-(../docs/img/Telainicial.png)
+![Tela de Cadastro](../docs/img/Cadastro.png)
+![Tela de Login](../docs/img/Login.png)
+![Tela de Inicial](../docs/img/Telainicial.png)
 
 **Cenário 2**:   Cadastro de recietas e Despesas      
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
@@ -36,10 +36,10 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
 
-(../docs/img/TelaReceitas.png)
-(../docs/img/CadastroReceita.png)
-(../docs/img/TelaDespesa.png)
-(../docs/img/CadastroDespesa.png)
+![Tela de Receitas](../docs/img/TelaReceitas.png)
+![Tela de Cadastro de Receitas](../docs/img/CadastroReceita.png)
+![Tela de Despesas](../docs/img/TelaDespesa.png)
+![Tela de Cadastro de Despesas](../docs/img/CadastroDespesa.png)
 
 **Cenário 3**:    Cadastro de meta financeira     
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
@@ -50,9 +50,9 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
 
-(../docs/img/Telameta.png)
-(../docs/img/Cadastrometa.png)
-(../docs/img/Aportemeta.png)
+![Tela de Metas Financieras](../docs/img/Telameta.png)
+![Tela de Cadastro de Metas Financeiras](../docs/img/Cadastrometa.png)
+![Tela de Aprote Financeiro](../docs/img/Aportemeta.png)
 
 **Cenário 4**:  Registro de relatórios       
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
@@ -63,9 +63,9 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
 
-(../docs/img/relatorio1.png)
-(../docs/img/relatorio2.png)
-(../docs/img/relatorio3.png)
+![Tela de Relatorio1](../docs/img/relatorio1.png)
+![Tela de Relatorio2](../docs/img/relatorio2.png)
+![Tela de Relatorio3](../docs/img/relatorio3.png)
 
 
 **Cenário 5**: Calculadora de Juros        
@@ -77,7 +77,7 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
 
-(../docs/img/juros.png)
+![Tela de Calculadora de Juros](../docs/img/juros.png)
 
 **Cenário 6**:  Area de Educação (Artigos acadêmicos)      
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
@@ -88,7 +88,8 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
 
-(../docs/img/estudo1.png)
+![Tela de Educacao](../docs/img/Educa.png)
+![Tela de Estudos](../docs/img/estudo1.png)
 
 ## Relatório dos testes de usabilidade 
 
