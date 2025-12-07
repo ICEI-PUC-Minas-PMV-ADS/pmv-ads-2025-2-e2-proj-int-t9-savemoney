@@ -1,6 +1,10 @@
 ﻿@* _HeaderPf.cshtml - Menu Pessoa Fisica *@
 @using System.Security.Claims
 
+@{
+    var usuario = ViewBag.Usuario as savemoney.Models.Usuario;
+}
+
 <header id="main-header" class="header-pf-theme">
     <div class="header-container">
 
@@ -25,7 +29,7 @@
                 </li>
 
                 <li class="header-dropdown">
-                    <a href="#" class="text-success">Planejamento <i class="bi bi-chevron-down"></i></a>
+                    <a href="#">Planejamento <i class="bi bi-chevron-down"></i></a>
                     <ul class="header-dropdown-menu">
                         <li><a asp-controller="Budgets" asp-action="Index">Orçamentos</a></li>
                         <li><a asp-controller="MetasFinanceiras" asp-action="Index">Objetivos</a></li>
@@ -72,8 +76,8 @@
                 var userName = User.Identity.Name ?? "User";
                 var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
 
-                <div class="header-user-avatar" title="@userName">
-                    <span>@initials</span>
+                <div class="header-user-avatar user-avatar-small" title="@userName">
+                    <img src="@usuario.FotoPerfil" alt="@usuario.Nome" id="avatarImage">
                 </div>
             }
         </div>
