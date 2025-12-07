@@ -1,28 +1,18 @@
-﻿:root {
-    --glass-bg: rgba(27, 29, 41, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --accent-purple: #8b5cf6;
-    --accent-purple-hover: #7c3aed;
-    --text-primary: #ffffff;
-    /* === CORREÇÃO DE CONTRASTE AQUI === */
-    --text-muted: #cbd5e1; /* Ajustado de #94a3b8 para um cinza muito mais claro */
-}
+﻿/* ============================================================================
+   CATEGORIES - GERENCIAMENTO DE CATEGORIAS
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
+   ============================================================================ */
 
-/* Container & Animations */
-.premium-container {
-    padding: 2rem 0;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
+/* Animacao de Entrada
+   ========================================================================== */
 .fade-in {
-    animation: fadeIn 0.4s ease-out;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(1.25rem);
     }
 
     to {
@@ -31,120 +21,541 @@
     }
 }
 
-/* Glass Panel */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in {
+        animation: none;
+    }
+}
+
+/* Container Principal
+   ========================================================================== */
+.categories-page-main {
+    max-width: 62.5rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Cabecalho da Pagina
+   ========================================================================== */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+.header-content {
+    flex: 1;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.0625rem;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Botoes de Acao
+   ========================================================================== */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+    .btn-action:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+    .btn-action.btn-primary {
+        background: var(--accent-primary);
+        color: var(--btn-primary-text);
+        box-shadow: 0 0.25rem 1.25rem rgba(59, 130, 246, 0.15);
+    }
+
+        .btn-action.btn-primary:hover {
+            background: var(--accent-primary-hover);
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 1.5625rem rgba(59, 130, 246, 0.3);
+        }
+
+    .btn-action.btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    }
+
+        .btn-action.btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+    .btn-action.btn-danger {
+        background: var(--danger);
+        color: var(--btn-primary-text);
+    }
+
+        .btn-action.btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-0.125rem);
+        }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-action:hover {
+        transform: none;
+    }
+}
+
+/* Painel Glass
+   ========================================================================== */
 .glass-panel {
     background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 1.25rem;
+    overflow: hidden;
 }
 
-/* List Items */
-.list-group-item {
-    transition: background 0.2s;
+/* Lista de Categorias
+   ========================================================================== */
+.categories-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.hover-bg:hover {
-    background: rgba(255, 255, 255, 0.03) !important;
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
 }
 
-.icon-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    .category-item:last-child {
+        border-bottom: none;
+    }
+
+    .category-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-primary);
+    border-radius: 0.625rem;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+    /* Icones por tipo contabil */
+    .category-icon.icon-receita {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+    }
+
+    .category-icon.icon-custo {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+    }
+
+    .category-icon.icon-fixo {
+        background: rgba(139, 92, 246, 0.15);
+        color: #8b5cf6;
+    }
+
+    .category-icon.icon-operacional {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-primary);
+    }
+
+    .category-icon.icon-investimento {
+        background: rgba(6, 182, 212, 0.15);
+        color: #06b6d4;
+    }
+
+.category-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.category-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.category-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.category-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+}
+
+.category-item:hover .category-actions {
+    opacity: 1;
+}
+
+/* Badges de Tipo Contabil
+   ========================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025rem;
+}
+
+.badge-default {
+    background: rgba(170, 170, 170, 0.15);
+    color: var(--text-secondary);
+}
+
+.badge-receita {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.badge-custo {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.badge-fixo {
     background: rgba(139, 92, 246, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent-purple);
-    font-size: 1.2rem;
+    color: #8b5cf6;
 }
 
-/* Buttons */
-.btn-premium-purple {
-    background: var(--accent-purple);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.2s;
+.badge-operacional {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-primary);
 }
 
-    .btn-premium-purple:hover {
-        background: var(--accent-purple-hover);
-        transform: translateY(-1px);
-        color: white;
-    }
-
-.btn-premium-ghost {
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-muted); /* Usa a cor de alto contraste */
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    transition: all 0.2s;
+.badge-investimento {
+    background: rgba(6, 182, 212, 0.15);
+    color: #06b6d4;
 }
 
-    .btn-premium-ghost:hover {
-        background: rgba(255, 255, 255, 0.05);
-        color: white;
-        border-color: rgba(255, 255, 255, 0.2);
-    }
-
-.btn-premium-danger {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
+.badge-system {
+    background: rgba(170, 170, 170, 0.1);
+    color: var(--text-secondary);
 }
 
-    .btn-premium-danger:hover {
-        background: #dc2626;
-    }
-
+/* Icones de Acao
+   ========================================================================== */
 .btn-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: none;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-muted); /* Usa a cor de alto contraste */
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    width: 2rem;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
     .btn-icon:hover {
-        background: var(--accent-purple);
-        color: white;
+        background: var(--accent-primary);
+        color: var(--btn-primary-text);
     }
 
     .btn-icon.danger:hover {
-        background: #ef4444;
+        background: var(--danger);
     }
 
-/* Inputs Premium */
-.form-control-premium {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--glass-border);
-    color: white;
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
+    .btn-icon:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+/* Estado Vazio
+   ========================================================================== */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
 }
 
-    .form-control-premium:focus {
-        background: rgba(0, 0, 0, 0.3);
-        border-color: var(--accent-purple);
-        color: white;
-        box-shadow: none;
+.empty-icon {
+    font-size: 3rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
+}
+
+/* Legenda dos Tipos
+   ========================================================================== */
+.tipos-legenda {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+}
+
+    .tipos-legenda h4 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin: 0 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
-.fw-600 {
+        .tipos-legenda h4 i {
+            color: var(--accent-primary);
+        }
+
+.legenda-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+    .legenda-item .badge {
+        flex-shrink: 0;
+    }
+
+/* Modal - Estrutura Base
+   ========================================================================== */
+.modal-content.glass-panel {
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-subtitle {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+    .btn-close:hover {
+        opacity: 1;
+    }
+
+.modal-body {
+    padding: 2rem;
+}
+
+/* Formulario
+   ========================================================================== */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
     font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.625rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(59, 130, 246, 0.05);
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.1);
+    }
+
+.form-error {
+    display: block;
+    color: var(--danger);
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+/* Modal de Confirmacao
+   ========================================================================== */
+.modal-icon-warning {
+    font-size: 2.5rem;
+    color: var(--warning);
+    margin-bottom: 1rem;
+}
+
+.modal-title-warning {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-text-secondary {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+/* Responsividade
+   ========================================================================== */
+@media (max-width: 48rem) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .btn-action {
+        width: 100%;
+    }
+
+    .category-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .category-actions {
+        opacity: 1;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .legenda-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 36rem) {
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .category-name {
+        font-size: 1rem;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+    }
 }

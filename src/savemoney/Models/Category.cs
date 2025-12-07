@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
+using savemoney.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +17,20 @@ namespace savemoney.Models
 
         public bool IsPredefined { get; set; }
 
+        /// <summary>
+        /// Classificação contábil da categoria.
+        /// Define se é Receita, Custo Variável, Despesa Fixa, etc.
+        /// </summary>
+        [Display(Name = "Tipo Contábil")]
+        public TipoContabil TipoContabil { get; set; } = TipoContabil.NaoClassificado;
+
+        /// <summary>
+        /// Classificação para o DRE Gerencial.
+        /// Define se é Custo Variável ou Despesa Operacional.
+        /// </summary>
+        [Display(Name = "Classificação DRE")]
+        public TipoClassificacaoDre ClassificacaoDre { get; set; } = TipoClassificacaoDre.NaoClassificado;
+
         public int? UsuarioId { get; set; }
 
         [BindNever]
@@ -24,5 +38,17 @@ namespace savemoney.Models
 
         [BindNever]
         public virtual ICollection<BudgetCategory> BudgetCategories { get; set; } = new List<BudgetCategory>();
+
+        /// <summary>
+        /// Receitas vinculadas diretamente a esta categoria.
+        /// </summary>
+        [BindNever]
+        public virtual ICollection<Receita> Receitas { get; set; } = new List<Receita>();
+
+        /// <summary>
+        /// Despesas vinculadas diretamente a esta categoria.
+        /// </summary>
+        [BindNever]
+        public virtual ICollection<Despesa> Despesas { get; set; } = new List<Despesa>();
     }
 }

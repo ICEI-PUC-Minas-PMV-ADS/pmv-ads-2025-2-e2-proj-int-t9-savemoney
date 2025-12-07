@@ -2,80 +2,113 @@
     ViewData["Title"] = "Artigos sobre Educação Financeira";
 }
 
-@* --- ESTILOS DA PÁGINA --- *@
+@section css {
+    <!-- Fonte específica do módulo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/artigos.css" asp-append-version="true" />
+}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-@* Importa a fonte Manrope e os ícones Material Symbols *@
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
-<link rel="stylesheet" href="~/css/artigos.css" asp-append-version="true" />
-
-@* --- FIM DOS ESTILOS --- *@
-
-
-@* Imagem de fundo - Definida via CSS para melhor controle e facilidade de troca *@
+<!-- Imagem de fundo fixa -->
 <div class="background-fixed-image" aria-hidden="true"></div>
 
-
-<main class="content-wrapper">
+<main class="artigos-page-main">
     <div class="container-artigos">
-        <div class="header-artigos">
-            <h1>Artigos Academicos</h1>
-            <p>
-                Explore pesquisas acadêmicas focadas em finanças pessoais, investimentos e economia comportamental. (Fonte: <a href="https://openalex.org/" target="_blank" rel="noopener noreferrer">OpenAlex</a>)
-            </p>
-        </div>
 
-        @* Formulário de Busca para melhor acessibilidade e controle (Enter) *@
-        <form id="form-busca" class="filter-bar glass-effect" onsubmit="return false;">
+        <!-- Cabeçalho -->
+        <header class="header-artigos">
+            <h1>Artigos Acadêmicos</h1>
+            <p>
+                Explore pesquisas acadêmicas focadas em finanças pessoais, investimentos e economia comportamental.
+                <br />
+                Fonte: <a href="https://openalex.org/" target="_blank" rel="noopener noreferrer">OpenAlex</a>
+            </p>
+        </header>
+
+        <!-- Filtros -->
+        <form id="form-busca"
+              class="filter-bar glass-effect"
+              role="search"
+              aria-label="Filtros de busca de artigos">
             <div class="filter-grid">
+
+                <!-- Busca por texto -->
                 <div class="filter-search">
-                    <span class="material-symbols-outlined icon-search">search</span>
-                    <input type="text" id="filtro-texto" class="input-style" placeholder="Digite palavras-chave..." />
+                    <label for="filtro-texto" class="visually-hidden">Buscar artigos</label>
+                    <span class="material-symbols-outlined icon-search" aria-hidden="true">search</span>
+                    <input type="text"
+                           id="filtro-texto"
+                           class="input-style"
+                           placeholder="Digite palavras-chave..."
+                           aria-label="Buscar por palavras-chave" />
                 </div>
 
-                @* NOVO: Filtro de Região *@
+                <!-- Filtro de região -->
                 <div class="filter-region">
-                    <select id="filtro-regiao" class="select-style">
+                    <label for="filtro-regiao" class="visually-hidden">Filtrar por região</label>
+                    <select id="filtro-regiao" class="select-style" aria-label="Filtrar por região">
                         <option value="BR">Brasil</option>
                         <option value="GLOBAL">Global</option>
                     </select>
                 </div>
 
+                <!-- Ordenação -->
                 <div class="filter-sort">
-                    <select id="filtro-ordem" class="select-style">
+                    <label for="filtro-ordem" class="visually-hidden">Ordenar resultados</label>
+                    <select id="filtro-ordem" class="select-style" aria-label="Ordenar por">
                         <option value="relevance">Relevância (Citações)</option>
                         <option value="newest">Mais Recentes</option>
                     </select>
                 </div>
 
-                @* NOVO: Botão de Ação *@
-                 <div class="filter-button-container">
-                    <button type="submit" id="btn-pesquisar" class="btn-action">
+                <!-- Botão de pesquisa -->
+                <div class="filter-button-container">
+                    <button type="submit"
+                            id="btn-pesquisar"
+                            class="btn-action"
+                            aria-label="Pesquisar artigos">
                         Pesquisar
                     </button>
                 </div>
             </div>
         </form>
 
-        <div id="artigos-container" class="artigos-grid">
-            @* Os artigos serão carregados aqui *@
+        <!-- Grid de artigos -->
+        <div id="artigos-container"
+             class="artigos-grid"
+             role="feed"
+             aria-busy="false"
+             aria-label="Lista de artigos">
+            <!-- Artigos serão carregados aqui via JavaScript -->
         </div>
 
-        @* Contêiner de Loading (agora fora do grid principal) *@
-        <div class="loading-container" id="loading-spinner" style="display: none;">
-            <div class="spinner"></div>
-            <p>Carregando...</p>
+        <!-- Loading -->
+        <div class="loading-container"
+             id="loading-spinner"
+             style="display: none;"
+             role="status"
+             aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Carregando artigos...</p>
         </div>
 
-         <div id="status-message-container" style="display: none;">
+        <!-- Mensagens de status -->
+        <div id="status-message-container"
+             style="display: none;"
+             role="status"
+             aria-live="polite">
             <div id="status-message" class="status-message"></div>
-         </div>
-        
-         @* NOVO: Contêiner de Paginação *@
-        <div class="pagination-container" id="pagination-container" style="display: none;">
-             <button id="btn-exibir-mais" class="btn-action btn-show-more">
+        </div>
+
+        <!-- Paginação -->
+        <div class="pagination-container"
+             id="pagination-container"
+             style="display: none;">
+            <button id="btn-exibir-mais"
+                    class="btn-action btn-show-more"
+                    aria-label="Carregar mais artigos">
                 Exibir Mais Artigos
             </button>
         </div>
@@ -86,3 +119,18 @@
 @section Scripts {
     <script src="~/js/artigos.js" asp-append-version="true"></script>
 }
+
+<style>
+    /* Esconder visualmente mas manter acessível */
+    .visually-hidden {
+        position: absolute;
+        width: 0.0625rem;
+        height: 0.0625rem;
+        margin: -0.0625rem;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+</style>

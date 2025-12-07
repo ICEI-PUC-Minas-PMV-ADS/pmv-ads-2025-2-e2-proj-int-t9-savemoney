@@ -4,116 +4,185 @@
     ViewData["Title"] = "Usuários";
 }
 
-<style>
-    :root {
-        --bg-primary: #10111a;
-        --bg-card: #1b1d29;
-        --border-color: #2a2c3c;
-        --text-primary: #f5f5ff;
-        --accent-primary: #3b82f6;
-        --glass-bg: rgba(27, 29, 41, 0.7);
-        --glass-border: rgba(59, 130, 246, 0.2);
-    }
+<div class="index-page">
 
-    .index-container {
-        padding: 40px 20px;
-        background-color: var(--bg-primary);
-        min-height: 100vh;
-    }
+    <div class="index-container">
 
-    .glass-card-table {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        border-radius: 16px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        padding: 30px;
-        color: var(--text-primary);
-    }
-
-        .glass-card-table h1 {
-            color: var(--text-primary);
-        }
-
-    .table {
-        --bs-table-bg: transparent;
-        --bs-table-color: var(--text-primary);
-        --bs-table-border-color: var(--border-color);
-    }
-
-    .table-hover > tbody > tr:hover {
-        --bs-table-bg: var(--bg-card); /* Destaca a linha ao passar o mouse */
-        color: var(--text-primary);
-    }
-
-    .table-light {
-        --bs-table-bg: var(--bg-card);
-        --bs-table-color: var(--text-primary);
-        border-bottom: 2px solid var(--accent-primary); /* Borda de destaque no header */
-    }
-
-        .table-light th {
-            border-color: var(--border-color);
-        }
-
-    .btn-success {
-        background-color: var(--success);
-        border-color: var(--success);
-    }
-</style>
-
-<div class="index-container">
-    <div class="glass-card-table w-100" style="max-width: 1100px; margin: 0 auto;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="d-flex align-items-center">
-                <span class="material-icons me-2" style="font-size: 40px; color: var(--accent-primary);">group</span>
-                <h1 class="h3 mb-0">Usuários</h1>
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-left">
+                <div class="header-icon">
+                    <span class="material-symbols-outlined" aria-hidden="true">group</span>
+                </div>
+                <div class="header-text">
+                    <h1 class="page-title">Usuários</h1>
+                    <p class="page-subtitle">Gerencie os usuários do sistema</p>
+                </div>
             </div>
-            <a asp-action="Create" class="btn btn-success btn-lg">
-                <span class="material-icons align-middle me-1" style="font-size: 20px;">person_add</span>
-                Novo Usuário
-            </a>
+            <div class="header-right">
+                <a asp-action="Create" class="btn btn-success">
+                    <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+                    Novo Usuário
+                </a>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th><span class="material-icons align-middle me-1" style="font-size: 18px;">badge</span> @Html.DisplayNameFor(model => model.Nome)</th>
-                        <th><span class="material-icons align-middle me-1" style="font-size: 18px;">email</span> Email</th>
-                        <th class="d-none d-lg-table-cell"><span class="material-icons align-middle me-1" style="font-size: 18px;">assignment_ind</span> @Html.DisplayNameFor(model => model.Documento)</th>
-                        <th class="d-none d-md-table-cell"><span class="material-icons align-middle me-1" style="font-size: 18px;">calendar_today</span> @Html.DisplayNameFor(model => model.DataCadastro)</th>
-                        <th><span class="material-icons align-middle me-1" style="font-size: 18px;">supervisor_account</span> @Html.DisplayNameFor(model => model.Perfil)</th>
-                        <th class="d-none d-sm-table-cell"><span class="material-icons align-middle me-1" style="font-size: 18px;">account_tree</span> @Html.DisplayNameFor(model => model.TipoUsuario)</th>
-                        <th class="text-center"><span class="material-icons align-middle" style="font-size: 18px;">settings</span> Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon stat-primary">
+                    <span class="material-symbols-outlined" aria-hidden="true">group</span>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-label">Total de Usuários</span>
+                    <span class="stat-value">@Model.Count()</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon stat-success">
+                    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-label">Administradores</span>
+                    <span class="stat-value">@Model.Count(u => u.TipoUsuario.ToString() == "Administrador")</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon stat-info">
+                    <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-label">Usuários Padrão</span>
+                    <span class="stat-value">@Model.Count(u => u.TipoUsuario.ToString() == "Usuario")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="table-card">
+
+            <!-- Table Header -->
+            <div class="table-header">
+                <h2 class="table-title">Lista de Usuários</h2>
+                <div class="table-search">
+                    <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+                    <input type="text"
+                           id="searchInput"
+                           class="search-input"
+                           placeholder="Buscar usuário..."
+                           aria-label="Buscar usuário" />
+                </div>
+            </div>
+
+            <!-- Table Responsive Wrapper -->
+            <div class="table-wrapper">
+                <table class="data-table" id="usersTable">
+                    <thead>
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.Nome)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td class="d-none d-lg-table-cell">@Html.DisplayFor(modelItem => item.Documento)</td>
-                            <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.DataCadastro)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Perfil)</td>
-                            <td class="d-none d-sm-table-cell">@Html.DisplayFor(modelItem => item.TipoUsuario)</td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary" title="Editar">
-                                        <span class="material-icons align-middle" style="font-size: 18px;">edit</span>
-                                    </a>
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary text-white" title="Visualizar">
-                                        <span class="material-icons align-middle" style="font-size: 18px;">visibility</span>
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Excluir">
-                                        <span class="material-icons align-middle" style="font-size: 18px;">delete</span>
-                                    </a>
-                                </div>
-                            </td>
+                            <th>
+                                <span class="material-symbols-outlined th-icon" aria-hidden="true">person</span>
+                                Nome
+                            </th>
+                            <th>
+                                <span class="material-symbols-outlined th-icon" aria-hidden="true">mail</span>
+                                Email
+                            </th>
+                            <th class="hide-mobile">
+                                <span class="material-symbols-outlined th-icon" aria-hidden="true">badge</span>
+                                Documento
+                            </th>
+                            <th class="hide-tablet">
+                                <span class="material-symbols-outlined th-icon" aria-hidden="true">calendar_today</span>
+                                Data de Cadastro
+                            </th>
+                            <th>
+                                <span class="material-symbols-outlined th-icon" aria-hidden="true">supervisor_account</span>
+                                Perfil
+                            </th>
+                            <th class="text-center">
+                                <span class="material-symbols-outlined th-icon" aria-hidden="true">settings</span>
+                                Ações
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr data-search="@item.Nome @item.Email @item.Documento">
+                                <td class="user-name">
+                                    <div class="user-avatar">
+                                        <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+                                    </div>
+                                    <span>@Html.DisplayFor(modelItem => item.Nome)</span>
+                                </td>
+                                <td class="user-email">@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td class="hide-mobile">@Html.DisplayFor(modelItem => item.Documento)</td>
+                                <td class="hide-tablet">
+                                    @item.DataCadastro.ToString("dd/MM/yyyy")
+                                </td>
+                                <td>
+                                    <span class="badge badge-@item.Perfil.ToString().ToLower()">
+                                        @Html.DisplayFor(modelItem => item.Perfil)
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="action-buttons">
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn-action btn-info"
+                                           title="Visualizar"
+                                           aria-label="Visualizar usuário @item.Nome">
+                                            <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                                        </a>
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn-action btn-primary"
+                                           title="Editar"
+                                           aria-label="Editar usuário @item.Nome">
+                                            <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                                        </a>
+                                        <a asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="btn-action btn-danger"
+                                           title="Excluir"
+                                           aria-label="Excluir usuário @item.Nome">
+                                            <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            @if (!Model.Any())
+            {
+                <div class="empty-state">
+                    <span class="material-symbols-outlined empty-icon" aria-hidden="true">group_off</span>
+                    <h3 class="empty-title">Nenhum usuário encontrado</h3>
+                    <p class="empty-description">Comece criando seu primeiro usuário</p>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+                        Criar Primeiro Usuário
+                    </a>
+                </div>
+            }
+
         </div>
+
     </div>
+
 </div>
+
+@section css {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/index.js" asp-append-version="true"></script>
+}

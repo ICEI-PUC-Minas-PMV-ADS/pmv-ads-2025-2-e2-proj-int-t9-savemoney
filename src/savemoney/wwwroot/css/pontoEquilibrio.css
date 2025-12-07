@@ -1,483 +1,672 @@
-:root {
-  --bg-primary: #10111a;
-  --bg-secondary: #0d0e16;
-  --bg-card: #1b1d29;
-  --border-color: #2a2c3c;
-  --text-primary: #f5f5f5;
-  --text-secondary: #aaaaaa;
-  --accent-primary: #3b82f6;
-  --accent-primary-hover: #2563eb;
-  --btn-primary-text: #ffffff;
-  --container-width: 1200px;
+/* ============================================================================
+   CALCULADORA DE PONTO DE EQUILÍBRIO
+   Design System: Dark Mode + Glassmorphism
+   Font: Manrope
+   Usa variáveis globais do site.css
+   ============================================================================ */
+
+/* Importa fonte específica do módulo
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* Animação de Entrada
+   ========================================================================== */
+.fade-in {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Manrope", sans-serif;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(1.25rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-body {
-  color: var(--text-primary);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background-color: var(--bg-primary);
+@media (prefers-reduced-motion: reduce) {
+    .fade-in {
+        animation: none;
+    }
 }
 
-.background-fixed-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  filter: brightness(0.5);
-}
-
-main.content-wrapper {
-  width: 100%;
-  overflow-x: hidden;
-  position: relative;
-  z-index: 2;
-  padding-top: 1rem;
+/* Container Principal
+   ========================================================================== */
+.equilibrio-page-main {
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+    font-family: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
 .container-pe {
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 1.5rem;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
 }
 
-.hero-pe {
-  background-image: url("../assets/ponto-equilibrio.jpg");
-  background-position: center;
-  background-size: cover;
-  position: relative;
-  z-index: 1;
-  padding: 5rem 5rem;
-  margin: 2rem auto 4rem auto;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  background-color: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+/* Hero Section
+   ========================================================================== */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/ponto-equilibrio.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 9rem 1.5rem 5rem;
+    text-align: center;
+    position: relative;
+    min-height: 31.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4rem;
 }
-.hero-pe::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: -1;
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-section {
+        background-attachment: scroll;
+    }
 }
 
 .hero-content {
-  max-width: 800px;
-  margin: 0 auto;
+    max-width: 50rem;
+    margin: 0 auto;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: rgb(255, 255, 255);
-  margin-bottom: 1rem;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    letter-spacing: -0.0625rem;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin: 0 0 2rem 0;
 }
 
 .btn-hero-cta {
-  display: inline-block;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--btn-primary-text);
-  background-color: var(--accent-primary);
-  border: none;
-  border-radius: 50px;
-  padding: 0.8rem 2rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-.btn-hero-cta:hover {
-  background-color: var(--accent-primary-hover);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--btn-primary-text);
+    background: var(--accent-primary);
+    border: none;
+    border-radius: 3.125rem;
+    padding: 0.875rem 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0.25rem 0.9375rem rgba(59, 130, 246, 0.3);
 }
 
+    .btn-hero-cta:hover {
+        background: var(--accent-primary-hover);
+        box-shadow: 0 0.5rem 1.5625rem rgba(59, 130, 246, 0.4);
+        transform: translateY(-0.125rem);
+    }
+
+    .btn-hero-cta:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-hero-cta:hover {
+        transform: none;
+    }
+}
+
+/* Calculadora Section
+   ========================================================================== */
 .calculadora-pe-section {
-  padding: 3rem;
-  margin-bottom: 4rem;
-}
-
-.glass-effect {
-  background: rgba(13, 14, 22, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(42, 44, 60, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 1.5rem;
+    box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.2);
+    padding: 3rem;
+    margin-bottom: 4rem;
 }
 
 .calculadora-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+/* Formulário
+   ========================================================================== */
+.calculadora-form {
+    flex: 1;
 }
 
 .form-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 2rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 2rem 0;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
-}
-.form-group label {
-  display: block;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-.form-text {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  opacity: 0.8;
-  display: block;
-  margin-top: 0.3rem;
+    margin-bottom: 1.5rem;
 }
 
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
 .form-input {
-  width: 100%;
-  font-size: 1rem;
-  color: var(--text-primary);
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  outline: none;
-  height: 3.25rem;
-  padding: 0 1rem;
-  transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.625rem;
+    padding: 0.75rem 1rem;
+    height: 3.25rem;
+    transition: all 0.2s ease;
 }
-.form-input::placeholder {
-  color: var(--text-secondary);
-}
-.form-input:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(59, 130, 246, 0.05);
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.1);
+    }
+
+.form-text {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.25rem;
+    font-style: italic;
 }
 
 .form-group-submit {
-  margin-top: 2rem;
+    margin-top: 2rem;
 }
+
 .btn-submit {
-  width: 100%;
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  background-color: var(--accent-primary);
-  color: var(--btn-primary-text);
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.1rem;
-}
-.btn-submit:hover {
-  background-color: var(--accent-primary-hover);
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    border-radius: 3.125rem;
+    background: var(--accent-primary);
+    color: var(--btn-primary-text);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0.25rem 0.9375rem rgba(59, 130, 246, 0.3);
 }
 
+    .btn-submit:hover {
+        background: var(--accent-primary-hover);
+        box-shadow: 0 0.5rem 1.25rem rgba(59, 130, 246, 0.4);
+        transform: translateY(-0.125rem);
+    }
+
+    .btn-submit:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-submit:hover {
+        transform: none;
+    }
+}
+
+/* Resultado
+   ========================================================================== */
 .calculadora-resultado {
-  background-color: var(--bg-card);
-  border-radius: 12px;
-  padding: 2rem;
-  height: 100%;
-  border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    min-height: 18.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
+
 .resultado-placeholder {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  text-align: center;
-  color: var(--text-secondary);
-  min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--text-secondary);
+    min-height: 15.625rem;
 }
+
 .icon-placeholder {
-  font-size: 4rem;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
-}
-.resultado-placeholder h5 {
-  font-size: 1.25rem;
-  color: var(--text-primary);
-  font-weight: 600;
+    font-size: 4rem;
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
 }
 
-.resultado-calculado h5 {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-.resultado-calculado h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
-}
-.resultado-calculado p {
-  color: var(--text-secondary);
-  line-height: 1.6;
+.resultado-placeholder h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
 }
 
+.resultado-placeholder p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.resultado-calculado {
+    padding: 1rem;
+}
+
+    .resultado-calculado h5 {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .resultado-calculado h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--accent-primary);
+        margin: 0 0 1rem 0;
+    }
+
+    .resultado-calculado p {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+/* Info Section
+   ========================================================================== */
 .info-pe-section {
-  padding: 4rem 1.5rem 6rem 1.5rem;
-  margin: 0 -1.5rem;
-  background: rgba(13, 14, 22, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(42, 44, 60, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
+    background: rgba(13, 14, 22, 0.6);
+    backdrop-filter: blur(0.625rem);
+    -webkit-backdrop-filter: blur(0.625rem);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 1.5rem;
+    padding: 4rem 3rem 6rem;
+    margin-bottom: 4rem;
 }
 
 .info-header {
-  max-width: 800px;
-  margin: 0 auto 3rem auto;
-  text-align: center;
-}
-.info-header h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-.info-header p {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
+    max-width: 50rem;
+    margin: 0 auto 3rem;
+    text-align: center;
 }
 
+    .info-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 1rem 0;
+    }
+
+    .info-header p {
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+/* Passo a Passo
+   ========================================================================== */
 .passo-a-passo {
-  max-width: 900px;
-  margin: 0 auto 4rem auto;
-  text-align: center;
-}
-.passo-a-passo h3 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-}
-.passos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-.passo-card {
-  padding: 1.5rem;
-}
-.passo-card strong {
-  color: var(--accent-primary);
-  font-size: 1.1rem;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-.formula-box {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 2rem;
-  border-radius: 12px;
-  margin-top: 2rem;
-  font-size: 1.1rem;
-  line-height: 1.7;
-}
-.formula-box strong {
-  color: var(--text-primary);
+    max-width: 56.25rem;
+    margin: 0 auto 4rem;
+    text-align: center;
 }
 
+    .passo-a-passo h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 1.5rem 0;
+    }
+
+    .passo-a-passo > p {
+        font-size: 1.0625rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin: 0 0 2rem 0;
+    }
+
+.passos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.passo-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+    .passo-card strong {
+        display: block;
+        color: var(--accent-primary);
+        font-size: 1.0625rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .passo-card p {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+.formula-box {
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+    .formula-box p {
+        font-size: 1.0625rem;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        margin: 0 0 0.75rem 0;
+    }
+
+    .formula-box strong {
+        color: var(--text-primary);
+    }
+
+/* Benefícios
+   ========================================================================== */
 .beneficios-section {
-  max-width: var(--container-width);
-  margin: 0 auto 4rem auto;
+    max-width: 75rem;
+    margin: 0 auto 4rem;
 }
-.beneficios-section h3 {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
+
+    .beneficios-section h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: center;
+        margin: 0 0 2.5rem 0;
+    }
+
 .beneficios-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
+    gap: 2rem;
 }
 
 .info-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  text-align: left;
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
 }
+
 .info-card-content {
-  padding: 1.5rem;
-}
-.info-card-content h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
-}
-.info-card-content p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
+    padding: 1.5rem;
 }
 
+    .info-card-content h4 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.75rem 0;
+    }
+
+    .info-card-content p {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+/* FAQ - Accordion
+   ========================================================================== */
 .container-accordion {
-  max-width: 900px;
-  margin: 0 auto;
+    max-width: 56.25rem;
+    margin: 0 auto;
 }
-.container-accordion h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  text-align: center;
-  margin-bottom: 3rem;
-}
+
+    .container-accordion h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: center;
+        margin: 0 0 3rem 0;
+    }
+
 .accordion-custom {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
+
 .accordion-item {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
 }
+
 .accordion-header {
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  padding: 1.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: color 0.3s ease;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s ease;
 }
-.accordion-header:hover {
-  color: var(--accent-primary);
-}
-.accordion-header[aria-expanded="true"] {
-  color: var(--accent-primary);
-}
+
+    .accordion-header:hover {
+        color: var(--accent-primary);
+    }
+
+    .accordion-header[aria-expanded="true"] {
+        color: var(--accent-primary);
+    }
+
 .accordion-icon {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 1.5em;
-  height: 1.5em;
-  border: 2px solid var(--text-secondary);
-  border-radius: 50%;
-  position: relative;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-  flex-shrink: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0.125rem solid var(--text-secondary);
+    border-radius: 50%;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
 }
-.accordion-icon::before,
-.accordion-icon::after {
-  content: "";
-  position: absolute;
-  background-color: var(--text-secondary);
-  transition: all 0.3s ease;
-}
-.accordion-icon::before {
-  width: 10px;
-  height: 2px;
-}
-.accordion-icon::after {
-  width: 2px;
-  height: 10px;
-}
+
+    .accordion-icon::before,
+    .accordion-icon::after {
+        content: '';
+        position: absolute;
+        background: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .accordion-icon::before {
+        width: 0.625rem;
+        height: 0.125rem;
+    }
+
+    .accordion-icon::after {
+        width: 0.125rem;
+        height: 0.625rem;
+    }
+
 .accordion-header:hover .accordion-icon {
-  border-color: var(--accent-primary);
+    border-color: var(--accent-primary);
 }
-.accordion-header:hover .accordion-icon::before,
-.accordion-header:hover .accordion-icon::after {
-  background-color: var(--accent-primary);
-}
+
+    .accordion-header:hover .accordion-icon::before,
+    .accordion-header:hover .accordion-icon::after {
+        background: var(--accent-primary);
+    }
+
 .accordion-header[aria-expanded="true"] .accordion-icon {
-  transform: rotate(45deg);
-  border-color: var(--accent-primary);
+    transform: rotate(45deg);
+    border-color: var(--accent-primary);
 }
-.accordion-header[aria-expanded="true"] .accordion-icon::before,
-.accordion-header[aria-expanded="true"] .accordion-icon::after {
-  background-color: var(--accent-primary);
-}
+
+    .accordion-header[aria-expanded="true"] .accordion-icon::before,
+    .accordion-header[aria-expanded="true"] .accordion-icon::after {
+        background: var(--accent-primary);
+    }
+
 .accordion-content {
-  padding: 0 1.5rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
-.accordion-content p {
-  margin-top: 1rem;
+    padding: 0 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
 
-@media (max-width: 992px) {
-  .calculadora-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+    .accordion-content p {
+        margin: 0 0 1rem 0;
+    }
+
+/* Responsividade
+   ========================================================================== */
+
+/* Desktop Pequeno: 992px */
+@media (max-width: 62rem) {
+    .calculadora-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
 }
 
-@media (max-width: 768px) {
-  .content-wrapper {
-    padding-top: 100px;
-  }
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  .calculadora-pe-section {
-    padding: 2rem;
-  }
-  .info-pe-section {
-    margin: 0;
-    padding: 4rem 1rem;
-  }
-  .info-header h2,
-  .passo-a-passo h3,
-  .beneficios-section h3,
-  .container-accordion h2 {
-    font-size: 2rem;
-  }
-  .accordion-header {
-    font-size: 1.1rem;
-    padding: 1.2rem;
-  }
-  .accordion-content {
-    padding: 0 1.2rem;
-  }
+/* Tablet: 768px */
+@media (max-width: 48rem) {
+    .hero-section {
+        padding: 7rem 1rem 4rem;
+        min-height: 25rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .calculadora-pe-section {
+        padding: 2rem;
+    }
+
+    .info-pe-section {
+        padding: 3rem 1.5rem 4rem;
+    }
+
+    .info-header h2,
+    .passo-a-passo h3,
+    .beneficios-section h3,
+    .container-accordion h2 {
+        font-size: 2rem;
+    }
+
+    .accordion-header {
+        font-size: 1.0625rem;
+        padding: 1.25rem;
+    }
+
+    .accordion-content {
+        padding: 0 1.25rem;
+    }
+}
+
+/* Mobile: 576px */
+@media (max-width: 36rem) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+
+    .calculadora-pe-section {
+        padding: 1.5rem;
+    }
+
+    .info-pe-section {
+        padding: 2.5rem 1rem 3rem;
+    }
+
+    .container-accordion h2 {
+        font-size: 1.75rem;
+    }
+
+    .passos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile Extremo: 430px */
+@media (max-width: 26.875rem) {
+    .hero-section {
+        padding: 6rem 0.75rem 3rem;
+        min-height: 18.75rem;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .container-pe {
+        padding: 0 0.75rem;
+    }
+
+    .calculadora-pe-section {
+        padding: 1.25rem;
+    }
+
+    .info-pe-section {
+        padding: 2rem 0.75rem;
+    }
+
+    .accordion-header {
+        font-size: 1rem;
+        padding: 1rem;
+    }
 }

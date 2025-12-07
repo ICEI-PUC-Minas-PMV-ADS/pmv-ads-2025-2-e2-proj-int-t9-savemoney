@@ -5,119 +5,154 @@
     var hasData = Model != null && Model.Any();
 }
 
-<link rel="stylesheet" href="~/css/conversor.css" asp-append-version="true" />
-<div id="modal-container"></div>
+@section css {
+    <link rel="stylesheet" href="~/css/conversor.css" asp-append-version="true" />
+}
 
-<div class="premium-container fade-in">
+<div class="conversor-page-main fade-in">
 
-    <header class="page-header text-center mb-5">
-        <h1 class="page-title text-white fw-bolder" style="font-size: 3rem;">
-            <i class="bi bi-lightning-charge-fill me-3 text-info"></i>
-            Conversor de Energia
-        </h1>
-        <p class="page-subtitle text-secondary">Calcule, compare e economize com base nas tarifas da sua região.</p>
+    <!-- Cabeçalho -->
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+                Conversor de Energia
+            </h1>
+            <p class="page-subtitle">Calcule consumo e custo com base nas tarifas da sua região.</p>
+        </div>
     </header>
 
-    <div class="d-flex justify-content-center mb-5">
-        <button class="btn btn-premium-purple btn-lg fw-bold" onclick="carregarModalCriar()">
-            <i class="bi bi-plus-lg me-2"></i>
+    <!-- Botão de ação principal -->
+    <div class="action-button-container">
+        <button class="btn-action btn-primary btn-lg"
+                onclick="carregarModalCriar()"
+                aria-label="Iniciar novo cálculo de conversão">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
             <span>Iniciar Novo Cálculo</span>
         </button>
     </div>
 
-    <div class="glass-panel p-5 mb-5 mx-auto" style="max-width: 850px;">
-        <h4 class="text-white fw-bold mb-4 border-bottom border-secondary border-opacity-25 pb-3">
-            <i class="bi bi-lightbulb me-2 text-warning"></i>
+    <!-- Como funciona -->
+    <section class="info-panel glass-panel" aria-labelledby="info-title">
+        <h2 id="info-title" class="info-title">
+            <i class="bi bi-lightbulb" aria-hidden="true"></i>
             Como funciona o conversor?
-        </h4>
-        <ul class="list-unstyled text-start text-primary mx-auto" style="max-width: 600px;">
-            <li class="mb-3 d-flex align-items-start">
-                <i class="bi bi-1-circle-fill me-3 mt-1 text-success fs-5"></i>
-                <div>
-                    <span class="text-white fw-bold">Entrada de Dados:</span> Informe o valor base (kWh ou R$) e os detalhes de consumo (aparelho, tempo de uso, localização).
+        </h2>
+        <ol class="info-list">
+            <li class="info-item">
+                <div class="info-icon" aria-hidden="true">
+                    <i class="bi bi-1-circle-fill"></i>
+                </div>
+                <div class="info-content">
+                    <strong>Entrada de Dados:</strong> Informe a potência em Watts (ex: 5500W) ou o custo mensal em Reais, junto com tempo de uso diário e localização.
                 </div>
             </li>
-            <li class="mb-3 d-flex align-items-start">
-                <i class="bi bi-2-circle-fill me-3 mt-1 text-success fs-5"></i>
-                <div>
-                    <span class="text-white fw-bold">Processamento Inteligente:</span> O sistema usa a tarifa padrão para converter os valores e estimar o custo/consumo mensal.
+            <li class="info-item">
+                <div class="info-icon" aria-hidden="true">
+                    <i class="bi bi-2-circle-fill"></i>
+                </div>
+                <div class="info-content">
+                    <strong>Processamento Inteligente:</strong> O sistema calcula automaticamente o consumo mensal em kWh e o custo, considerando tarifas por estado e bandeira tarifária.
                 </div>
             </li>
-            <li class="d-flex align-items-start">
-                <i class="bi bi-3-circle-fill me-3 mt-1 text-success fs-5"></i>
-                <div>
-                    <span class="text-white fw-bold">Resultados e Dicas:</span> Receba o cálculo final e sugestões personalizadas de economia (ex: simulação solar).
+            <li class="info-item">
+                <div class="info-icon" aria-hidden="true">
+                    <i class="bi bi-3-circle-fill"></i>
+                </div>
+                <div class="info-content">
+                    <strong>Resultados e Dicas:</strong> Receba análise completa do consumo e sugestões personalizadas de economia baseadas no seu perfil de uso.
                 </div>
             </li>
-        </ul>
-    </div>
+        </ol>
+    </section>
 
+    <!-- Histórico de conversões -->
     @if (hasData)
     {
-        <h2 class="mt-4 mb-4 text-center text-white">
-            <i class="bi bi-clock-history me-2 text-secondary"></i>
-            Histórico de Conversões Salvas
-        </h2>
-        <div class="row row-cols-1 row-cols-lg-2 g-4 justify-content-center" style="max-width: 1100px; margin: 0 auto;">
-            @foreach (var item in Model)
-            {
-                <div class="col">
-                    <div class="glass-card p-4 h-100">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h5 class="text-white card-title fw-bold">
-                                <i class="bi bi-plug-fill me-2 text-primary"></i>
-                                @item.TipoDispositivo (@item.Estado)
-                            </h5>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-icon" onclick="carregarModalEditar(@item.Id)" title="Editar">
-                                    <i class="bi bi-pencil-fill"></i>
+        <section class="conversions-section" aria-labelledby="history-title">
+            <h2 id="history-title" class="section-title">
+                <i class="bi bi-clock-history" aria-hidden="true"></i>
+                Histórico de Conversões Salvas
+            </h2>
+
+            <div class="conversions-grid" role="list">
+                @foreach (var item in Model)
+                {
+                    <article class="conversion-card glass-panel" role="listitem">
+                        <!-- Cabeçalho do card -->
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="bi bi-plug-fill" aria-hidden="true"></i>
+                                @item.TipoDispositivo
+                            </h3>
+                            <div class="card-actions">
+                                <button class="btn-icon"
+                                        onclick="carregarModalEditar(@item.Id)"
+                                        title="Editar conversão"
+                                        aria-label="Editar conversão de @item.TipoDispositivo">
+                                    <i class="bi bi-pencil-fill" aria-hidden="true"></i>
                                 </button>
-                                <a class="btn btn-icon text-info" asp-action="Details" asp-route-id="@item.Id" title="Detalhes do Cálculo">
-                                    <i class="bi bi-search"></i>
+                                <a class="btn-icon"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   title="Ver detalhes"
+                                   aria-label="Ver detalhes da conversão de @item.TipoDispositivo">
+                                    <i class="bi bi-search" aria-hidden="true"></i>
                                 </a>
-                                <button class="btn btn-icon danger" onclick="carregarModalExcluir(@item.Id)" title="Excluir">
-                                    <i class="bi bi-trash-fill"></i>
+                                <button class="btn-icon danger"
+                                        onclick="carregarModalExcluir(@item.Id)"
+                                        title="Excluir conversão"
+                                        aria-label="Excluir conversão de @item.TipoDispositivo">
+                                    <i class="bi bi-trash-fill" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div class="details-list text-muted">
-                            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                                <strong>Valor Base (R$/kWh):</strong> <span>@item.ValorBase @item.TipoValor</span>
+                        <!-- Corpo do card -->
+                        <dl class="card-details">
+                            <div class="detail-row">
+                                <dt>Valor Base:</dt>
+                                <dd>@item.ValorBase @item.TipoValor</dd>
                             </div>
-                            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                                <strong>Consumo Estimado:</strong>
-                                <span class="text-success fw-bold">@(item.ConsumoMensal?.ToString("F2") ?? "N/A") kWh</span>
+                            <div class="detail-row">
+                                <dt>Tempo de Uso:</dt>
+                                <dd>@item.TempoUso h/dia</dd>
                             </div>
-                            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                                <strong>Modalidade:</strong> <span>@item.Modalidade</span>
+                            <div class="detail-row">
+                                <dt>Consumo Mensal:</dt>
+                                <dd class="highlight-success">@(item.ConsumoMensal?.ToString("F2") ?? "N/A") kWh</dd>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <strong>Bandeira:</strong> <span>@item.BandeiraTarifaria</span>
+                            <div class="detail-row">
+                                <dt>Custo Mensal:</dt>
+                                <dd class="highlight-danger">@(item.CustoMensal?.ToString("C") ?? "N/A")</dd>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
+                            <div class="detail-row">
+                                <dt>Estado / Bandeira:</dt>
+                                <dd>@item.Estado / @item.BandeiraTarifaria</dd>
+                            </div>
+                        </dl>
+                    </article>
+                }
+            </div>
+        </section>
     }
     else
     {
-        <div class="glass-panel text-center mt-5 p-5 mx-auto" style="max-width: 600px;">
-            <div style="font-size: 4rem; color: var(--accent-primary);" class="mb-3">
+        <!-- Estado vazio -->
+        <div class="empty-state glass-panel">
+            <div class="empty-icon" aria-hidden="true">
                 <i class="bi bi-lightning-charge-slash-fill"></i>
             </div>
-            <h4 class="text-white fw-bold mb-2">Nenhuma conversão foi realizada ainda.</h4>
-            <p class="text-secondary mx-auto" style="max-width: 80%;">
-                Use o botão **"Iniciar Novo Cálculo"** para criar sua primeira simulação, comparar custos e receber dicas de economia personalizadas.
-            </p>
+            <h2>Nenhuma conversão foi realizada ainda</h2>
+            <p>Use o botão "Iniciar Novo Cálculo" para criar sua primeira simulação e descobrir quanto seus aparelhos consomem e custam mensalmente.</p>
         </div>
     }
 </div>
 
+<!-- Container para modais dinâmicos -->
+<div id="modal-container"></div>
+
 @section Scripts {
     <script src="~/js/conversor.js" asp-append-version="true"></script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

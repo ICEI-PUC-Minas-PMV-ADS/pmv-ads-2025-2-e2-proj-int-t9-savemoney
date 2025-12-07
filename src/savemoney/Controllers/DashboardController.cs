@@ -30,8 +30,9 @@ namespace savemoney.Controllers
             }
 
             var widgets = await _context.Widgets
-                .Where(w => w.UsuarioId == usuarioId)
-                .OrderBy(w => w.PosicaoY)
+                .Where(w => w.UsuarioId == usuarioId && w.IsVisivel)
+                .OrderBy(w => w.ZIndex)
+                .ThenBy(w => w.PosicaoY)
                 .ThenBy(w => w.PosicaoX)
                 .ToListAsync();
 
@@ -44,7 +45,7 @@ namespace savemoney.Controllers
         // POST: Dashboard/SalvarWidget
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SalvarWidget([Bind("Id,Titulo,Descricao,ImagemUrl,Link,Colunas,Largura,CorFundo")] Widget widget)
+        public async Task<IActionResult> SalvarWidget([Bind("Id,Titulo,Descricao,ImagemUrl,Link,Colunas,Largura,CorFundo,TipoWidget")] Widget widget)
         {
             var usuarioId = ObterUsuarioIdLogado();
 
@@ -53,6 +54,9 @@ namespace savemoney.Controllers
                 // Novo widget
                 widget.UsuarioId = usuarioId;
                 widget.DataCriacao = DateTime.Now;
+                widget.IsVisivel = true;
+                widget.IsPinned = false;
+                widget.ZIndex = 0;
 
                 // Calcular próxima posição disponível
                 var ultimoWidget = await _context.Widgets
@@ -99,6 +103,7 @@ namespace savemoney.Controllers
                 widgetExistente.Colunas = widget.Colunas;
                 widgetExistente.Largura = widget.Largura;
                 widgetExistente.CorFundo = widget.CorFundo;
+                widgetExistente.TipoWidget = widget.TipoWidget;
 
                 _context.Widgets.Update(widgetExistente);
             }
@@ -145,6 +150,60 @@ namespace savemoney.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Dashboard/AtualizarPosicoes
+        [HttpPost]
+        public async Task<IActionResult> AtualizarPosicoes([FromBody] List<WidgetPosicaoDto> posicoes)
+        {
+            var usuarioId = ObterUsuarioIdLogado();
+
+            foreach (var pos in posicoes)
+            {
+                var widget = await _context.Widgets
+                    .FirstOrDefaultAsync(w => w.Id == pos.Id && w.UsuarioId == usuarioId);
+
+                if (widget != null && !widget.IsPinned)
+                {
+                    widget.PosicaoX = pos.X;
+                    widget.PosicaoY = pos.Y;
+                    widget.ZIndex = pos.ZIndex;
+                    widget.UltimaMovimentacao = DateTime.Now;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        // POST: Dashboard/ToggleVisibilidade
+        [HttpPost]
+        public async Task<IActionResult> ToggleVisibilidade(int id)
+        {
+            var usuarioId = ObterUsuarioIdLogado();
+            var widget = await _context.Widgets.FirstOrDefaultAsync(w => w.Id == id && w.UsuarioId == usuarioId);
+
+            if (widget == null) return NotFound();
+
+            widget.IsVisivel = !widget.IsVisivel;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, isVisivel = widget.IsVisivel });
+        }
+
+        // POST: Dashboard/FixarWidget
+        [HttpPost]
+        public async Task<IActionResult> FixarWidget(int id)
+        {
+            var usuarioId = ObterUsuarioIdLogado();
+            var widget = await _context.Widgets.FirstOrDefaultAsync(w => w.Id == id && w.UsuarioId == usuarioId);
+
+            if (widget == null) return NotFound();
+
+            widget.IsPinned = !widget.IsPinned;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, isPinned = widget.IsPinned });
+        }
+
         // Método auxiliar para obter o ID do usuário logado
         private int ObterUsuarioIdLogado()
         {
@@ -157,5 +216,14 @@ namespace savemoney.Controllers
 
             return 0;
         }
+    }
+
+    // DTO para transferência de posições
+    public class WidgetPosicaoDto
+    {
+        public int Id { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int ZIndex { get; set; }
     }
 }

@@ -1,94 +1,158 @@
 ﻿@model savemoney.Models.ConversorEnergia
-@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     bool isEdit = Model.Id != 0;
     string title = isEdit ? "Editar Conversão Salva" : "Nova Conversão de Energia";
+    string subtitle = isEdit ? "Atualize os dados da sua conversão." : "Preencha os dados para calcular consumo e custo de energia.";
 }
 
-<div class="modal-header border-0 pb-0">
-    <h5 class="modal-title text-white fw-bold">@title</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div class="modal-header">
+    <div>
+        <h2 class="modal-title">@title</h2>
+        <p class="modal-subtitle">@subtitle</p>
+    </div>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"></button>
 </div>
 
-<div class="modal-body pt-4">
-    <form asp-action="CreateOrEdit" method="post" id="formConversor">
+<div class="modal-body">
+    <form asp-action="CreateOrEdit"
+          method="post"
+          id="formConversor"
+          aria-labelledby="conversorModalLabel">
 
-        @Html.AntiForgeryToken() @* MANTÉM O TOKEN ANTIFORGERY AQUI *@
+        @Html.AntiForgeryToken()
 
         @if (isEdit)
         {
             <input type="hidden" asp-for="Id" />
         }
 
-        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" class="alert-danger"></div>
 
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label asp-for="ValorBase" class="form-label text-muted small fw-bold text-uppercase">1. Valor Base (Potência ou Custo)</label>
-                <input asp-for="ValorBase" class="form-control form-control-premium money-mask" placeholder="Ex: 500 (Potência) ou 120,50 (Custo)" />
-                <span asp-validation-for="ValorBase" class="text-danger small mt-1 d-block"></span>
+        <div class="form-grid">
+            <!-- Valor Base -->
+            <div class="form-group">
+                <label asp-for="ValorBase" class="form-label">
+                    1. Valor Base
+                </label>
+                <input asp-for="ValorBase"
+                       class="form-input"
+                       type="number"
+                       step="0.01"
+                       placeholder="Ex: 5500 (Watts) ou 120,50 (Reais)"
+                       required />
+                <span asp-validation-for="ValorBase" class="form-error"></span>
             </div>
-            <div class="col-md-6">
-                <label asp-for="TipoValor" class="form-label text-muted small fw-bold text-uppercase">2. Unidade de Medida</label>
-                <select asp-for="TipoValor" class="form-select form-select-premium" asp-items="ViewBag.TipoValorOptions">
-                    <option value="">Selecione kWh ou Reais</option>
+
+            <!-- Tipo de Valor -->
+            <div class="form-group">
+                <label asp-for="TipoValor" class="form-label">
+                    2. Unidade
+                </label>
+                <select asp-for="TipoValor"
+                        class="form-input"
+                        asp-items="ViewBag.TipoValorOptions"
+                        required>
+                    <option value="">Selecione Watts ou Reais</option>
                 </select>
-                <span asp-validation-for="TipoValor" class="text-danger small mt-1 d-block"></span>
+                <span asp-validation-for="TipoValor" class="form-error"></span>
+                <small class="form-hint">Watts: potência do aparelho | Reais: valor da conta</small>
             </div>
 
-            <div class="col-md-6">
-                <label asp-for="TipoDispositivo" class="form-label text-muted small fw-bold text-uppercase">3. Tipo de Aparelho</label>
-                <select asp-for="TipoDispositivo" class="form-select form-select-premium" asp-items="ViewBag.Dispositivos">
+            <!-- Tipo de Dispositivo -->
+            <div class="form-group">
+                <label asp-for="TipoDispositivo" class="form-label">
+                    3. Tipo de Aparelho
+                </label>
+                <select asp-for="TipoDispositivo"
+                        class="form-input"
+                        asp-items="ViewBag.Dispositivos"
+                        required>
                     <option value="">Selecione...</option>
                 </select>
-                <span asp-validation-for="TipoDispositivo" class="text-danger small mt-1 d-block"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="TempoUso" class="form-label text-muted small fw-bold text-uppercase">4. Tempo de Uso (Horas/Dia)</label>
-                <input asp-for="TempoUso" class="form-control form-control-premium" placeholder="Ex: 5 (Apenas número de horas)" />
-                <span asp-validation-for="TempoUso" class="text-danger small mt-1 d-block"></span>
+                <span asp-validation-for="TipoDispositivo" class="form-error"></span>
             </div>
 
-            <div class="col-md-4">
-                <label asp-for="Estado" class="form-label text-muted small fw-bold text-uppercase">5. Localização (Estado)</label>
-                <select asp-for="Estado" class="form-select form-select-premium" asp-items="ViewBag.EstadosBrasil">
-                    <option value="">Selecione...</option>
-                </select>
-                <span asp-validation-for="Estado" class="text-danger small mt-1 d-block"></span>
-            </div>
-            <div class="col-md-4">
-                <label asp-for="Modalidade" class="form-label text-muted small fw-bold text-uppercase">6. Modalidade</label>
-                <select asp-for="Modalidade" class="form-select form-select-premium" asp-items="ViewBag.Modalidades">
-                    <option value="">Selecione...</option>
-                </select>
-                <span asp-validation-for="Modalidade" class="text-danger small mt-1 d-block"></span>
-            </div>
-            <div class="col-md-4">
-                <label asp-for="BandeiraTarifaria" class="form-label text-muted small fw-bold text-uppercase">7. Bandeira</label>
-                <select asp-for="BandeiraTarifaria" class="form-select form-select-premium" asp-items="ViewBag.Bandeiras">
-                    <option value="">Selecione...</option>
-                </select>
-                <span asp-validation-for="BandeiraTarifaria" class="text-danger small mt-1 d-block"></span>
+            <!-- Tempo de Uso -->
+            <div class="form-group">
+                <label asp-for="TempoUso" class="form-label">
+                    4. Tempo de Uso (horas/dia)
+                </label>
+                <input asp-for="TempoUso"
+                       class="form-input"
+                       type="number"
+                       step="0.1"
+                       min="0.1"
+                       max="24"
+                       placeholder="Ex: 5 ou 2.5"
+                       required />
+                <span asp-validation-for="TempoUso" class="form-error"></span>
+                <small class="form-hint">Quantas horas por dia o aparelho fica ligado</small>
             </div>
 
-            <input type="hidden" asp-for="ConsumoMensal" />
+            <!-- Estado -->
+            <div class="form-group">
+                <label asp-for="Estado" class="form-label">
+                    5. Estado
+                </label>
+                <select asp-for="Estado"
+                        class="form-input"
+                        asp-items="ViewBag.EstadosBrasil"
+                        required>
+                    <option value="">Selecione...</option>
+                </select>
+                <span asp-validation-for="Estado" class="form-error"></span>
+            </div>
 
+            <!-- Modalidade -->
+            <div class="form-group">
+                <label asp-for="Modalidade" class="form-label">
+                    6. Modalidade
+                </label>
+                <select asp-for="Modalidade"
+                        class="form-input"
+                        asp-items="ViewBag.Modalidades"
+                        required>
+                    <option value="">Selecione...</option>
+                </select>
+                <span asp-validation-for="Modalidade" class="form-error"></span>
+            </div>
+
+            <!-- Bandeira Tarifária -->
+            <div class="form-group">
+                <label asp-for="BandeiraTarifaria" class="form-label">
+                    7. Bandeira Tarifária
+                </label>
+                <select asp-for="BandeiraTarifaria"
+                        class="form-input"
+                        asp-items="ViewBag.Bandeiras"
+                        required>
+                    <option value="">Selecione...</option>
+                </select>
+                <span asp-validation-for="BandeiraTarifaria" class="form-error"></span>
+                <small class="form-hint">Consulte sua conta de luz</small>
+            </div>
         </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-secondary border-opacity-25">
-            <button type="button" class="btn btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-success fw-bold">Salvar Conversão</button>
+        <div class="form-actions">
+            <button type="button"
+                    class="btn-action btn-secondary"
+                    data-bs-dismiss="modal">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-action btn-success">
+                @(isEdit ? "Salvar Alterações" : "Calcular e Salvar")
+            </button>
         </div>
     </form>
 </div>
 
 <script>
-    document.getElementById('ValorBase').addEventListener('input', function(e) {
-        let value = e.target.value;
-        value = value.replace(/[^0-9,]/g, '');
-        const parts = value.split(',');
-        if (parts.length > 2) value = parts[0] + ',' + parts.slice(1).join('');
-        e.target.value = value;
-    });
+    // Inicializa validação unobtrusive
+    if (typeof $.validator !== 'undefined') {
+        $.validator.unobtrusive.parse("#formConversor");
+    }
 </script>

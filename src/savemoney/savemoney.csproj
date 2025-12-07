@@ -43,10 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="SaveMonney\SaveMonney.csproj" />
   </ItemGroup>
 

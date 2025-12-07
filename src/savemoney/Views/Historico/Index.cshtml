@@ -1,0 +1,427 @@
+﻿@model List<savemoney.Models.MovimentoViewModel>
+
+@{
+    ViewData["Title"] = "Histórico Financeiro";
+
+    var totalEntradas = ViewBag.TotalEntradas as decimal? ?? 0;
+    var totalSaidas = ViewBag.TotalSaidas as decimal? ?? 0;
+    var saldo = ViewBag.SaldoPeriodo as decimal? ?? 0;
+    var variacaoReceitas = ViewBag.VariacaoReceitas as decimal? ?? 0;
+    var variacaoDespesas = ViewBag.VariacaoDespesas as decimal? ?? 0;
+    var variacaoSaldo = ViewBag.VariacaoSaldo as decimal? ?? 0;
+    var labels = ViewBag.GraficoLabels as List<string> ?? new List<string>();
+    var receitas = ViewBag.GraficoReceitas as List<decimal> ?? new List<decimal>();
+    var despesas = ViewBag.GraficoDespesas as List<decimal> ?? new List<decimal>();
+    var saldos = ViewBag.GraficoSaldos as List<decimal> ?? new List<decimal>();
+    var tipoFiltro = ViewBag.TipoFiltro as string ?? "todos";
+    var buscaFiltro = ViewBag.BuscaFiltro as string ?? "";
+    var quantidadeMovimentos = ViewBag.QuantidadeMovimentos as int? ?? 0;
+}
+
+@section css {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/historicoIndex.css" asp-append-version="true" />
+}
+
+<div class="background-fixed-image" aria-hidden="true"></div>
+
+<main class="historico-page-main fade-in">
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-icon-wrapper">
+                <span class="material-symbols-outlined header-icon" aria-hidden="true">history</span>
+            </div>
+            <div class="header-text">
+                <h1 class="page-title">Histórico Financeiro</h1>
+                <p class="page-subtitle">@ViewBag.MesAnoCompleto</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a asp-action="ExportarPdf"
+               asp-route-mes="@ViewBag.Mes"
+               asp-route-ano="@ViewBag.Ano"
+               class="btn-action btn-export"
+               target="_blank">
+                <span class="material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>
+                <span class="btn-text">Exportar PDF</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Filtros Avançados -->
+    <section class="filters-section glass-panel">
+        <div class="filters-header">
+            <span class="material-symbols-outlined filters-icon" aria-hidden="true">filter_alt</span>
+            <h2 class="filters-title">Filtros</h2>
+        </div>
+
+        <form asp-action="Index" method="get" id="formFiltros" class="filters-form">
+            <div class="filters-grid">
+                <!-- Período -->
+                <div class="filter-group filter-group-periodo">
+                    <label for="mes" class="filter-label">
+                        <span class="material-symbols-outlined label-icon" aria-hidden="true">calendar_month</span>
+                        Período
+                    </label>
+                    <div class="periodo-inputs">
+                        <div class="select-wrapper">
+                            <select name="mes" id="mes" class="filter-input">
+                                @for (int m = 1; m <= 12; m++)
+                                {
+                                    <option value="@m" selected="@(m == ViewBag.Mes)">
+                                        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)
+                                    </option>
+                                }
+                            </select>
+                            <span class="material-symbols-outlined select-arrow" aria-hidden="true">expand_more</span>
+                        </div>
+                        <input type="number"
+                               name="ano"
+                               id="ano"
+                               value="@ViewBag.Ano"
+                               class="filter-input filter-input-ano"
+                               min="2000"
+                               max="2100"
+                               placeholder="Ano" />
+                    </div>
+                </div>
+
+                <!-- Tipo -->
+                <div class="filter-group">
+                    <label for="tipo" class="filter-label">
+                        <span class="material-symbols-outlined label-icon" aria-hidden="true">category</span>
+                        Tipo
+                    </label>
+                    <div class="select-wrapper">
+                        <select name="tipo" id="tipo" class="filter-input">
+                            <option value="todos" selected="@(tipoFiltro == "todos")">Todos</option>
+                            <option value="receitas" selected="@(tipoFiltro == "receitas")">Receitas</option>
+                            <option value="despesas" selected="@(tipoFiltro == "despesas")">Despesas</option>
+                        </select>
+                        <span class="material-symbols-outlined select-arrow" aria-hidden="true">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Busca -->
+                <div class="filter-group filter-group-busca">
+                    <label for="busca" class="filter-label">
+                        <span class="material-symbols-outlined label-icon" aria-hidden="true">search</span>
+                        Buscar
+                    </label>
+                    <div class="search-wrapper">
+                        <input type="text"
+                               name="busca"
+                               id="busca"
+                               value="@buscaFiltro"
+                               class="filter-input"
+                               placeholder="Digite para buscar..." />
+                        @if (!string.IsNullOrWhiteSpace(buscaFiltro))
+                        {
+                            <button type="button"
+                                    class="clear-search"
+                                    onclick="document.getElementById('busca').value=''; document.getElementById('formFiltros').submit();"
+                                    aria-label="Limpar busca">
+                                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Botão Aplicar -->
+                <div class="filter-group filter-group-button">
+                    <button type="submit" class="btn-action btn-primary w-100">
+                        <span class="material-symbols-outlined" aria-hidden="true">done</span>
+                        <span class="btn-text">Aplicar Filtros</span>
+                    </button>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(buscaFiltro) || tipoFiltro != "todos")
+            {
+                <div class="filters-active">
+                    <span class="filters-active-label">Filtros ativos:</span>
+                    @if (tipoFiltro != "todos")
+                    {
+                        <span class="filter-badge">
+                            @(tipoFiltro == "receitas" ? "Receitas" : "Despesas")
+                            <a href="@Url.Action("Index", new { mes = ViewBag.Mes, ano = ViewBag.Ano, busca = buscaFiltro })"
+                               class="filter-badge-remove"
+                               aria-label="Remover filtro de tipo">
+                                <span class="material-symbols-outlined">close</span>
+                            </a>
+                        </span>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(buscaFiltro))
+                    {
+                        <span class="filter-badge">
+                            Busca: "@buscaFiltro"
+                            <a href="@Url.Action("Index", new { mes = ViewBag.Mes, ano = ViewBag.Ano, tipo = tipoFiltro })"
+                               class="filter-badge-remove"
+                               aria-label="Remover filtro de busca">
+                                <span class="material-symbols-outlined">close</span>
+                            </a>
+                        </span>
+                    }
+                    <a asp-action="Index"
+                       asp-route-mes="@ViewBag.Mes"
+                       asp-route-ano="@ViewBag.Ano"
+                       class="filter-clear-all">
+                        Limpar todos
+                    </a>
+                </div>
+            }
+        </form>
+    </section>
+
+    <!-- KPI Cards Premium -->
+    <section class="kpi-section" id="kpiSection">
+        <div class="kpi-grid">
+            <!-- Receitas -->
+            <article class="kpi-card kpi-card-receitas glass-panel">
+                <div class="kpi-icon-wrapper kpi-icon-success">
+                    <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                </div>
+                <div class="kpi-content">
+                    <h3 class="kpi-label">Receitas do Mês</h3>
+                    <p class="kpi-value kpi-value-success">@totalEntradas.ToString("C")</p>
+                    @if (variacaoReceitas != 0)
+                    {
+                        <div class="kpi-variation kpi-variation-@(variacaoReceitas > 0 ? "positive" : "negative")">
+                            <span class="material-symbols-outlined variation-icon" aria-hidden="true">
+                                @(variacaoReceitas > 0 ? "arrow_upward" : "arrow_downward")
+                            </span>
+                            <span class="variation-text">
+                                @(variacaoReceitas > 0 ? "+" : "")@variacaoReceitas.ToString("F1")%
+                            </span>
+                            <span class="variation-label">vs mês anterior</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <small class="kpi-subtitle">sem dados do mês anterior</small>
+                    }
+                </div>
+            </article>
+
+            <!-- Despesas -->
+            <article class="kpi-card kpi-card-despesas glass-panel">
+                <div class="kpi-icon-wrapper kpi-icon-danger">
+                    <span class="material-symbols-outlined" aria-hidden="true">trending_down</span>
+                </div>
+                <div class="kpi-content">
+                    <h3 class="kpi-label">Despesas do Mês</h3>
+                    <p class="kpi-value kpi-value-danger">@totalSaidas.ToString("C")</p>
+                    @if (variacaoDespesas != 0)
+                    {
+                        <div class="kpi-variation kpi-variation-@(variacaoDespesas > 0 ? "negative" : "positive")">
+                            <span class="material-symbols-outlined variation-icon" aria-hidden="true">
+                                @(variacaoDespesas > 0 ? "arrow_upward" : "arrow_downward")
+                            </span>
+                            <span class="variation-text">
+                                @(variacaoDespesas > 0 ? "+" : "")@variacaoDespesas.ToString("F1")%
+                            </span>
+                            <span class="variation-label">vs mês anterior</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <small class="kpi-subtitle">sem dados do mês anterior</small>
+                    }
+                </div>
+            </article>
+
+            <!-- Saldo -->
+            <article class="kpi-card kpi-card-saldo kpi-card-featured glass-panel">
+                <div class="kpi-icon-wrapper kpi-icon-primary">
+                    <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+                </div>
+                <div class="kpi-content">
+                    <h3 class="kpi-label">Saldo do Mês</h3>
+                    <p class="kpi-value kpi-value-@(saldo >= 0 ? "positive" : "negative")">
+                        @saldo.ToString("C")
+                    </p>
+                    @if (variacaoSaldo != 0)
+                    {
+                        <div class="kpi-variation kpi-variation-@(variacaoSaldo > 0 ? "positive" : "negative")">
+                            <span class="material-symbols-outlined variation-icon" aria-hidden="true">
+                                @(variacaoSaldo > 0 ? "arrow_upward" : "arrow_downward")
+                            </span>
+                            <span class="variation-text">
+                                @(variacaoSaldo > 0 ? "+" : "")@variacaoSaldo.ToString("F1")%
+                            </span>
+                            <span class="variation-label">vs mês anterior</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <small class="kpi-subtitle">sem dados do mês anterior</small>
+                    }
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Gráfico Evolução (6 meses) -->
+    <section class="chart-section glass-panel">
+        <header class="chart-header">
+            <div class="chart-title-group">
+                <span class="material-symbols-outlined chart-icon" aria-hidden="true">show_chart</span>
+                <h2 class="chart-title">Evolução Financeira</h2>
+            </div>
+            <div class="chart-controls">
+                <div class="view-toggle" role="group" aria-label="Tipo de visualização">
+                    <button type="button" class="toggle-btn active" data-view="saldo" aria-pressed="true">
+                        <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+                        <span class="toggle-label">Saldo</span>
+                    </button>
+                    <button type="button" class="toggle-btn" data-view="comparativo" aria-pressed="false">
+                        <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+                        <span class="toggle-label">Comparativo</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="chart-wrapper">
+            <canvas id="historicoCanvas"
+                    role="img"
+                    aria-label="Gráfico de evolução financeira dos últimos 6 meses"
+                    data-labels='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels))'
+                    data-receitas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(receitas))'
+                    data-despesas='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(despesas))'
+                    data-saldos='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(saldos))'></canvas>
+
+            <!-- Tooltip -->
+            <div class="chart-tooltip" id="chartTooltip" role="tooltip" aria-hidden="true">
+                <div class="tooltip-month"></div>
+                <div class="tooltip-data">
+                    <div class="tooltip-item tooltip-item-receitas">
+                        <span class="tooltip-dot"></span>
+                        <span class="tooltip-label">Receitas:</span>
+                        <span class="tooltip-value"></span>
+                    </div>
+                    <div class="tooltip-item tooltip-item-despesas">
+                        <span class="tooltip-dot"></span>
+                        <span class="tooltip-label">Despesas:</span>
+                        <span class="tooltip-value"></span>
+                    </div>
+                    <div class="tooltip-item tooltip-item-saldo">
+                        <span class="tooltip-dot"></span>
+                        <span class="tooltip-label">Saldo:</span>
+                        <span class="tooltip-value"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-legend">
+            <div class="legend-item">
+                <span class="legend-dot legend-dot-receitas"></span>
+                <span class="legend-label">Receitas</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot legend-dot-despesas"></span>
+                <span class="legend-label">Despesas</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot legend-dot-saldo"></span>
+                <span class="legend-label">Saldo</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline / Lista de Movimentos -->
+    @if (Model != null && Model.Any())
+    {
+        <section class="timeline-section">
+            <div class="timeline-header">
+                <h2 class="timeline-title">
+                    <span class="material-symbols-outlined" aria-hidden="true">event_note</span>
+                    Movimentações do Período
+                </h2>
+                <span class="timeline-count">@quantidadeMovimentos @(quantidadeMovimentos == 1 ? "movimento" : "movimentos")</span>
+            </div>
+
+            <div class="timeline-container">
+                @foreach (var movimento in Model)
+                {
+                    var isReceita = movimento.Valor > 0;
+                    var valorAbsoluto = Math.Abs(movimento.Valor);
+
+                    <article class="timeline-item timeline-item-@(isReceita ? "receita" : "despesa")">
+                        <div class="timeline-date">
+                            <span class="date-day">@movimento.Data.ToString("dd")</span>
+                            <span class="date-month">@movimento.Data.ToString("MMM")</span>
+                        </div>
+
+                        <div class="timeline-marker timeline-marker-@(isReceita ? "receita" : "despesa")">
+                            <span class="material-symbols-outlined marker-icon" aria-hidden="true">@movimento.Icone</span>
+                        </div>
+
+                        <div class="timeline-content glass-panel">
+                            <div class="movement-info">
+                                <div class="movement-header">
+                                    <h3 class="movement-title">@movimento.Descricao</h3>
+                                    <span class="movement-badge movement-badge-@(isReceita ? "receita" : "despesa")">
+                                        @movimento.Tipo
+                                    </span>
+                                </div>
+                                <small class="movement-date">@movimento.Data.ToString("dd/MM/yyyy")</small>
+                            </div>
+                            <div class="movement-value movement-value-@(isReceita ? "receita" : "despesa")">
+                                @(isReceita ? "+" : "-")@valorAbsoluto.ToString("C")
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <section class="empty-state glass-panel">
+            <div class="empty-icon">
+                <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+            </div>
+            <h2 class="empty-title">Nenhum movimento encontrado</h2>
+            <p class="empty-description">
+                @if (!string.IsNullOrWhiteSpace(buscaFiltro) || tipoFiltro != "todos")
+                {
+                    <text>Não há movimentos que correspondam aos filtros aplicados. Tente ajustar os filtros ou limpar a busca.</text>
+                }
+                else
+                {
+                    <text>Você ainda não possui movimentos neste período. Acesse as páginas de receitas ou despesas para começar a acompanhar seu histórico financeiro.</text>
+                }
+            </p>
+            <div class="empty-actions">
+                @if (!string.IsNullOrWhiteSpace(buscaFiltro) || tipoFiltro != "todos")
+                {
+                    <a asp-action="Index" asp-route-mes="@ViewBag.Mes" asp-route-ano="@ViewBag.Ano" class="btn-action btn-secondary">
+                        <span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
+                        <span class="btn-text">Limpar Filtros</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Receitas" asp-action="Index" class="btn-action btn-success">
+                        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                        <span class="btn-text">Ir para Receitas</span>
+                    </a>
+                    <a asp-controller="Despesas" asp-action="Index" class="btn-action btn-danger">
+                        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                        <span class="btn-text">Ir para Despesas</span>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+
+</main>
+
+@section Scripts {
+    <script src="~/js/historicoIndex.js" asp-append-version="true"></script>
+}

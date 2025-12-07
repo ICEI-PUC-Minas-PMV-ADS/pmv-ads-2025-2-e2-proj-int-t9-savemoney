@@ -1,0 +1,1333 @@
+﻿/* =========================================
+   RELATORIOS FINANCEIROS - CSS Puro
+   Sem dependencias externas
+   ========================================= */
+
+/* =========================================
+   1. Variaveis & Configuracoes Base
+   ========================================= */
+:root {
+    --glass-bg: rgba(20, 22, 30, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --card-radius: 1.25rem;
+    --transition-speed: 0.3s;
+}
+
+.relatorios-container {
+    max-width: 90rem;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   2. Componentes Glassmorphism
+   ========================================= */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--glass-shadow);
+    transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    overflow: hidden;
+}
+
+/* =========================================
+   3. Header & Acoes
+   ========================================= */
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icon {
+    font-size: 2rem;
+    color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.75rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-export, .btn-print {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .btn-export:hover {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+    }
+
+    .btn-print:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+/* =========================================
+   4. Filtros Avancados
+   ========================================= */
+.filters-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.date-chips {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+}
+
+    .date-chips::-webkit-scrollbar {
+        display: none;
+    }
+
+.date-chip {
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .date-chip:hover, .date-chip.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+    }
+
+.filters-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.filter-input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+    .filter-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+.btn-filter {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 42px;
+    transition: background 0.2s;
+}
+
+    .btn-filter:hover {
+        background: var(--accent-primary-hover);
+    }
+
+/* =========================================
+   5. KPIs
+   ========================================= */
+.kpis-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    padding: 1.75rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+    .kpi-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+.kpi-icon-wrapper {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.kpi-icon-success {
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.15);
+}
+
+.kpi-icon-danger {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.kpi-icon-primary {
+    color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.kpi-icon-warning {
+    color: var(--warning);
+    background: rgba(245, 158, 11, 0.15);
+}
+
+.kpi-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.kpi-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.kpi-variation {
+    position: absolute;
+    top: 1.75rem;
+    right: 1.75rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+    .kpi-variation.text-success {
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .kpi-variation.text-danger {
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+.kpi-subtext {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* =========================================
+   6. Graficos - Container
+   ========================================= */
+.charts-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chart-wide {
+    grid-column: span 2;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.chart-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.chart-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-primary);
+}
+
+    .chart-title-wrapper i {
+        font-size: 1.25rem;
+        color: var(--accent-primary);
+    }
+
+.chart-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.legend-success .legend-dot {
+    background: linear-gradient(135deg, #34d399, #10b981);
+}
+
+.legend-danger .legend-dot {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+}
+
+.badge-info {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-primary);
+    padding: 0.35rem 0.85rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.chart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    height: 100%;
+    opacity: 0.6;
+}
+
+    .chart-empty i {
+        font-size: 2.5rem;
+    }
+
+/* =========================================
+   7. Grafico de Barras Verticais (Fluxo)
+   ========================================= */
+.bar-chart-container {
+    display: flex;
+    height: 280px;
+    gap: 1rem;
+}
+
+.bar-chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: right;
+    padding: 0.5rem 0;
+    min-width: 5rem;
+    font-weight: 500;
+}
+
+.bar-chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    flex: 1;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 12px 0;
+}
+
+.bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 6rem;
+}
+
+.bar-pair {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.35rem;
+    height: 220px;
+    width: 100%;
+    justify-content: center;
+}
+
+.bar {
+    width: 2rem;
+    min-height: 6px;
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+
+    .bar:hover {
+        transform: scaleY(1.02);
+        filter: brightness(1.1);
+    }
+
+.bar-receita {
+    background: linear-gradient(180deg, #34d399 0%, #10b981 50%, rgba(16, 185, 129, 0.7) 100%);
+}
+
+.bar-despesa {
+    background: linear-gradient(180deg, #f87171 0%, #ef4444 50%, rgba(239, 68, 68, 0.7) 100%);
+}
+
+.bar-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* =========================================
+   8. Grafico Donut (Categorias) - SVG
+   ========================================= */
+.chart-body-donut {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.donut-chart-wrapper {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+}
+
+.donut-chart {
+    width: 100%;
+    height: 100%;
+}
+
+.donut-segment {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+    .donut-segment:hover {
+        stroke-width: 16;
+        filter: brightness(1.15) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    }
+
+.donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    background: var(--glass-bg);
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.donut-total {
+    display: block;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.donut-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+    max-width: 180px;
+}
+
+.donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+    .donut-legend-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.legend-text {
+    flex: 1;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.legend-percent {
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+/* =========================================
+   9. Grafico Barras Horizontais (Dia Semana)
+   ========================================= */
+.horizontal-bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+.horizontal-bar-item {
+    display: grid;
+    grid-template-columns: 5rem 1fr 5rem;
+    align-items: center;
+    gap: 1rem;
+}
+
+.horizontal-bar-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: right;
+    font-weight: 500;
+}
+
+.horizontal-bar-track {
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.horizontal-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+    border-radius: 8px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    min-width: 4px;
+}
+
+    .horizontal-bar-fill:hover {
+        filter: brightness(1.15);
+        box-shadow: 0 2px 12px rgba(59, 130, 246, 0.5);
+    }
+
+.horizontal-bar-value {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-align: left;
+}
+
+/* =========================================
+   10. Grafico de Linha (Projecao) - SVG
+   ========================================= */
+.line-chart-container {
+    display: flex;
+    height: 250px;
+    gap: 1rem;
+}
+
+.line-chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: right;
+    padding: 0.5rem 0;
+    min-width: 5rem;
+    font-weight: 500;
+}
+
+.line-chart-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 12px 0;
+    padding: 0.5rem;
+}
+
+.line-chart-svg {
+    flex: 1;
+    width: 100%;
+}
+
+.line-chart-area {
+    fill: url(#areaGradient);
+    fill: rgba(16, 185, 129, 0.15);
+}
+
+.line-chart-line {
+    fill: none;
+    stroke: url(#lineGradient);
+    stroke: #10b981;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.4));
+}
+
+.line-chart-point {
+    fill: #10b981;
+    stroke: var(--bg-card);
+    stroke-width: 3;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.5));
+}
+
+    .line-chart-point:hover {
+        r: 10;
+        filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.6));
+    }
+
+.line-chart-x-axis {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0.5rem 0;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* =========================================
+   11. Analise Vila/Heroina
+   ========================================= */
+.analysis-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.analysis-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.analysis-vila {
+    border-left: 4px solid var(--danger);
+}
+
+.analysis-heroina {
+    border-left: 4px solid var(--success);
+}
+
+.analysis-icon {
+    font-size: 1.5rem;
+}
+
+.analysis-vila .analysis-icon {
+    color: var(--danger);
+}
+
+.analysis-heroina .analysis-icon {
+    color: var(--success);
+}
+
+.analysis-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.analysis-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.analysis-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.analysis-variation {
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* =========================================
+   12. Tops Receitas/Despesas
+   ========================================= */
+.tops-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tops-card {
+    padding: 1.5rem;
+}
+
+.tops-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tops-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tops-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.top-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+    .top-item:last-child {
+        border-bottom: none;
+    }
+
+.top-item-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.top-item-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.top-item-qty, .top-item-category {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.top-item-value {
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.tops-empty {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* =========================================
+   13. Diagnosticos
+   ========================================= */
+.diagnostics-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.diagnostics-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-primary);
+}
+
+.diagnostics-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.diagnostics-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.diag-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    align-items: flex-start;
+}
+
+.diag-icon {
+    font-size: 1.25rem;
+}
+
+.diag-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.diag-title {
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: var(--text-primary);
+}
+
+.diag-message {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* =========================================
+   14. Tabela de Transacoes
+   ========================================= */
+.transactions-section {
+    overflow: hidden;
+}
+
+.transactions-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.transactions-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.transactions-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.transactions-count {
+    background: rgba(255,255,255,0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.transactions-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.search-input {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    width: 200px;
+}
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+    }
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table-custom th {
+        text-align: left;
+        padding: 1rem 1.5rem;
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .table-custom td {
+        padding: 1rem 1.5rem;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--glass-border);
+        vertical-align: middle;
+    }
+
+    .table-custom tbody tr {
+        transition: background 0.2s;
+    }
+
+        .table-custom tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+.date-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    font-family: monospace;
+}
+
+.weekday-badge {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.category-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+}
+
+.type-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+    .type-badge.receita {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+    }
+
+    .type-badge.despesa {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+    }
+
+.transaction-desc {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.recurrence-icon {
+    font-size: 0.9rem;
+    color: var(--accent-primary);
+}
+
+.table-footer {
+    padding: 1rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+}
+
+.hidden-row {
+    display: none !important;
+}
+
+/* =========================================
+   15. Empty State
+   ========================================= */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
+.empty-title {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-text {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.empty-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    color: white;
+}
+
+    .btn-primary:hover {
+        background: var(--accent-primary-hover);
+    }
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+}
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+/* =========================================
+   16. Responsividade
+   ========================================= */
+
+/* Mobile Pequeno (< 576px) */
+@media (max-width: 575.98px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn-export, .btn-print {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .kpis-section {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-card {
+        padding: 1.25rem;
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wide {
+        grid-column: span 1;
+    }
+
+    .analysis-section, .tops-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-body-donut {
+        flex-direction: column;
+    }
+
+    .table-custom th:nth-child(2),
+    .table-custom td:nth-child(2) {
+        display: none;
+    }
+
+    .bar-chart-container {
+        height: 200px;
+    }
+
+    .bar {
+        width: 1rem;
+    }
+}
+
+/* Mobile (576px - 768px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .kpis-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wide {
+        grid-column: span 1;
+    }
+
+    .analysis-section, .tops-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet (768px - 992px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .kpis-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wide {
+        grid-column: span 1;
+    }
+}
+
+/* Desktop (992px - 1200px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .kpis-section {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* =========================================
+   17. Print Styles
+   ========================================= */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .glass-card {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+
+    .kpi-value, .chart-title, .tops-title, .analysis-value {
+        color: black !important;
+    }
+
+    .text-secondary {
+        color: #555 !important;
+    }
+
+    .kpis-section {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .relatorios-container {
+        padding: 0;
+    }
+
+    .bar-receita {
+        background: #10b981 !important;
+    }
+
+    .bar-despesa {
+        background: #ef4444 !important;
+    }
+}

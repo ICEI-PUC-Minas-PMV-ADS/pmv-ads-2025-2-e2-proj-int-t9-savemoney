@@ -1,119 +1,248 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    console.log("Despesas JS (Vanilla) carregado!");
+﻿/* ============================================================================
+   DESPESAS - CONTROLE DE GASTOS
+   ============================================================================ */
 
-    // --- DELEGAÇÃO DE EVENTOS (Vanilla Style) ---
-    // Observa o 'body' para pegar eventos de elementos criados dinamicamente pelo Modal
+(() => {
+    'use strict';
 
-    document.body.addEventListener('change', function (e) {
+    // Elementos principais
+    const modalContainer = document.getElementById('modal-container');
+    let deleteTargetId = 0;
 
-        // 1. Troca de Moeda
-        if (e.target && e.target.id === 'currencyType') {
-            const symbolMap = { "BRL": "R$", "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥" };
-            const symbolSpan = document.getElementById('currencySymbol');
-            if (symbolSpan) symbolSpan.textContent = symbolMap[e.target.value] || "$";
+    // Mapa de símbolos de moeda
+    const currencySymbols = {
+        'BRL': 'R$',
+        'USD': '$',
+        'EUR': '€',
+        'GBP': '£',
+        'JPY': '¥'
+    };
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', initializeDespesas);
+
+    function initializeDespesas() {
+        console.log('✓ Despesas module loaded');
+        setupEventDelegation();
+    }
+
+    /* Delegação de Eventos
+       ======================================================================== */
+    function setupEventDelegation() {
+        // Delegação para mudanças em campos
+        document.body.addEventListener('change', handleBodyChange);
+
+        // Delegação para inputs (máscara de moeda)
+        document.body.addEventListener('input', handleBodyInput);
+    }
+
+    function handleBodyChange(e) {
+        const target = e.target;
+
+        // Troca de moeda
+        if (target.id === 'currencyType') {
+            updateCurrencySymbol(target.value);
         }
 
-        // 2. Switch Recorrência
-        if (e.target && e.target.id === 'isRecurringSwitch') {
-            const optionsDiv = document.getElementById('recurrenceOptions');
-            if (optionsDiv) {
-                // Usa grid para manter o layout de 2 colunas definido no CSS
-                optionsDiv.style.display = e.target.checked ? 'grid' : 'none';
-            }
+        // Toggle de recorrência
+        if (target.id === 'isRecurringSwitch') {
+            toggleRecurrencePanel(target.checked);
         }
-    });
+    }
 
-    // 3. Máscara de Moeda Simples (Permite apenas números e uma vírgula)
-    document.body.addEventListener('input', function (e) {
-        if (e.target && e.target.name === 'Valor') {
-            let value = e.target.value;
+    function handleBodyInput(e) {
+        const target = e.target;
 
-            // Remove tudo que não é dígito ou vírgula
-            value = value.replace(/[^0-9,]/g, '');
-
-            // Garante apenas uma vírgula
-            const parts = value.split(',');
-            if (parts.length > 2) {
-                value = parts[0] + ',' + parts.slice(1).join('');
-            }
-
-            if (value !== e.target.value) {
-                e.target.value = value;
-            }
+        // Máscara de moeda no campo Valor
+        if (target.name === 'Valor') {
+            applyMoneyMask(target);
         }
-    });
-});
+    }
 
-// --- FUNÇÕES GLOBAIS CHAMADAS PELO HTML ---
+    /* Gerenciamento de Modais
+       ======================================================================== */
 
-// Função auxiliar para abrir Modal Bootstrap via JS Puro
-function openBootstrapModal(modalId) {
-    const modalEl = document.getElementById(modalId);
-    if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
+    // Limpa qualquer modal preso e reseta o body
+    function cleanupModals() {
+        // Fecha modais Bootstrap ativos
+        document.querySelectorAll('.modal.show').forEach(modal => {
+            const instance = bootstrap.Modal.getInstance(modal);
+            if (instance) {
+                instance.hide();
+            }
+        });
+
+        // Remove backdrops órfãos
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.remove();
+        });
+
+        // Reseta estado do body
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+
+    // Abre modal Bootstrap
+    function openModal(modalId) {
+        const modalElement = document.getElementById(modalId);
+        if (!modalElement) {
+            console.error(`Modal ${modalId} not found`);
+            return;
+        }
+
+        const modal = new bootstrap.Modal(modalElement);
         modal.show();
     }
-}
 
-// 1. Carregar Criar
-function carregarModalCriar() {
-    const container = document.getElementById("modal-container");
-    container.innerHTML = ""; // Limpa modal anterior
+    // Carrega modal de criação
+    window.carregarModalCriar = function () {
+        cleanupModals();
 
-    fetch("/Despesas/Create")
-        .then(response => response.text())
-        .then(html => {
-            container.innerHTML = html;
-            openBootstrapModal('despesaModal'); // ID do modal no _CreateOrEditModal
+        fetch('/Despesas/Create')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                modalContainer.innerHTML = `
+                    <div class="modal fade" id="despesaModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content glass-panel">
+                                ${html}
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-            // Inicializa estado visual (dispara evento change manualmente)
-            const chk = document.getElementById('isRecurringSwitch');
-            if (chk) chk.dispatchEvent(new Event('change', { bubbles: true }));
-        })
-        .catch(err => console.error("Erro ao carregar modal:", err));
-}
+                openModal('despesaModal');
 
-// 2. Carregar Editar
-function carregarModalEditar(id) {
-    const container = document.getElementById("modal-container");
-    container.innerHTML = "";
+                // Inicializa estado visual
+                initializeModalState();
+            })
+            .catch(error => {
+                console.error('Error loading create form:', error);
+                alert('Erro ao carregar formulário.');
+            });
+    };
 
-    fetch("/Despesas/Edit/" + id)
-        .then(response => response.text())
-        .then(html => {
-            container.innerHTML = html;
-            openBootstrapModal('despesaModal');
+    // Carrega modal de edição
+    window.carregarModalEditar = function (id) {
+        cleanupModals();
 
-            // Atualiza visuais com base nos dados que vieram do banco
-            const chk = document.getElementById('isRecurringSwitch');
-            const currency = document.getElementById('currencyType');
+        fetch(`/Despesas/Edit/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                modalContainer.innerHTML = `
+                    <div class="modal fade" id="despesaModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content glass-panel">
+                                ${html}
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-            if (chk) chk.dispatchEvent(new Event('change', { bubbles: true }));
-            if (currency) currency.dispatchEvent(new Event('change', { bubbles: true }));
-        })
-        .catch(err => console.error("Erro ao carregar modal:", err));
-}
+                openModal('despesaModal');
 
-// 3. Exclusão
-let idParaExcluir = 0;
+                // Inicializa estado visual com dados existentes
+                initializeModalState();
+            })
+            .catch(error => {
+                console.error('Error loading edit form:', error);
+                alert('Erro ao carregar formulário de edição.');
+            });
+    };
 
-function confirmarExclusao(id) {
-    idParaExcluir = id;
-    openBootstrapModal('deleteModal');
-}
+    /* Inicialização do Estado do Modal
+       ======================================================================== */
+    function initializeModalState() {
+        // Atualiza símbolo de moeda
+        const currencySelect = document.getElementById('currencyType');
+        if (currencySelect) {
+            updateCurrencySymbol(currencySelect.value);
+        }
 
-function executarExclusao() {
-    if (idParaExcluir > 0) {
-        fetch("/Despesas/Delete/" + idParaExcluir, {
-            method: 'POST' // Importante: POST para segurança
+        // Atualiza painel de recorrência
+        const recurrenceSwitch = document.getElementById('isRecurringSwitch');
+        if (recurrenceSwitch) {
+            toggleRecurrencePanel(recurrenceSwitch.checked);
+        }
+    }
+
+    /* Funções de UI
+       ======================================================================== */
+    function updateCurrencySymbol(currencyType) {
+        const symbolElement = document.getElementById('currencySymbol');
+        if (symbolElement) {
+            symbolElement.textContent = currencySymbols[currencyType] || '$';
+        }
+    }
+
+    function toggleRecurrencePanel(isVisible) {
+        const recurrencePanel = document.getElementById('recurrenceOptions');
+        if (recurrencePanel) {
+            recurrencePanel.style.display = isVisible ? 'grid' : 'none';
+        }
+    }
+
+    /* Máscara de Moeda
+       ======================================================================== */
+    function applyMoneyMask(input) {
+        let value = input.value;
+
+        // Remove tudo que não é dígito ou vírgula
+        value = value.replace(/[^0-9,]/g, '');
+
+        // Garante apenas uma vírgula
+        const parts = value.split(',');
+        if (parts.length > 2) {
+            value = parts[0] + ',' + parts.slice(1).join('');
+        }
+
+        // Limita casas decimais a 2
+        if (parts[1] && parts[1].length > 2) {
+            value = parts[0] + ',' + parts[1].substring(0, 2);
+        }
+
+        input.value = value;
+    }
+
+    /* Exclusão de Despesa
+       ======================================================================== */
+    window.confirmarExclusao = function (id) {
+        deleteTargetId = id;
+        cleanupModals();
+        openModal('deleteModal');
+    };
+
+    window.executarExclusao = function () {
+        if (deleteTargetId <= 0) return;
+
+        fetch(`/Despesas/Delete/${deleteTargetId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
             .then(response => {
                 if (response.ok) {
                     window.location.reload();
                 } else {
-                    alert("Erro ao excluir.");
+                    throw new Error('Delete failed');
                 }
             })
-            .catch(err => alert("Erro de rede ao excluir."));
-    }
-}
+            .catch(error => {
+                console.error('Error deleting despesa:', error);
+                alert('Erro ao excluir despesa. Tente novamente.');
+            });
+    };
+
+})();

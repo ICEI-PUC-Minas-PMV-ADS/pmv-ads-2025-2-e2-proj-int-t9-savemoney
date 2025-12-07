@@ -1,86 +1,149 @@
 ﻿@model IEnumerable<savemoney.Models.Category>
+@using savemoney.Models.Enums
 
 @{
     ViewData["Title"] = "Categorias";
 }
 
-<link rel="stylesheet" href="~/css/categories.css" />
+@section css {
+    <link rel="stylesheet" href="~/css/categories.css" asp-append-version="true" />
+}
 
-<div class="premium-container fade-in">
+<div class="categories-page-main fade-in">
 
-    <header class="page-header d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h1 class="page-title text-white fw-bold">Categorias</h1>
-            <p class="page-subtitle text-muted">Gerencie as categorias das suas transações.</p>
+    <!-- Cabecalho -->
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Categorias</h1>
+            <p class="page-subtitle">Gerencie as categorias das suas transacoes.</p>
         </div>
-        <button class="btn-premium-purple" onclick="carregarModalCriar()">
-            <i class="bi bi-plus-lg me-2"></i> Nova Categoria
+        <button class="btn-action btn-primary"
+                onclick="carregarModalCriar()"
+                aria-label="Criar nova categoria">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            <span>Nova Categoria</span>
         </button>
     </header>
 
+    <!-- Estado vazio -->
     @if (!Model.Any())
     {
-        <div class="glass-panel text-center p-5">
-            <div class="mb-3">
-                <i class="bi bi-tags text-muted" style="font-size: 3rem;"></i>
+        <div class="empty-state glass-panel">
+            <div class="empty-icon" aria-hidden="true">
+                <i class="bi bi-tags"></i>
             </div>
-            <h4 class="text-white">Nenhuma categoria encontrada</h4>
-            <p class="text-muted">Crie categorias para organizar suas receitas e despesas.</p>
-            <button class="btn-premium-ghost mt-3" onclick="carregarModalCriar()">Criar Agora</button>
+            <h2>Nenhuma categoria encontrada</h2>
+            <p>Crie categorias para organizar suas receitas e despesas.</p>
+            <button class="btn-action btn-secondary" onclick="carregarModalCriar()">
+                Criar Primeira Categoria
+            </button>
         </div>
     }
     else
     {
-        <div class="glass-panel p-0 overflow-hidden">
-            <div class="list-group list-group-flush bg-transparent">
+        <!-- Lista de categorias -->
+        <div class="glass-panel">
+            <ul class="categories-list" role="list">
                 @foreach (var item in Model)
                 {
-                    <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-25 p-4 d-flex justify-content-between align-items-center hover-bg">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="icon-box">
-                                <i class="bi bi-tag-fill"></i>
+                    <li class="category-item" role="listitem">
+                        <div class="category-info">
+                            <div class="category-icon @GetIconClass(item.TipoContabil)" aria-hidden="true">
+                                <i class="bi @GetIconName(item.TipoContabil)"></i>
                             </div>
-                            <div>
-                                <h5 class="text-white mb-0 fw-600">@item.Name</h5>
-                                @if (item.IsPredefined)
-                                {
-                                    <span class="badge bg-secondary text-white small mt-1">Padrão do Sistema</span>
-                                }
+                            <div class="category-details">
+                                <h3 class="category-name">@item.Name</h3>
+                                <div class="category-badges">
+                                    <span class="badge @GetBadgeClass(item.TipoContabil)">
+                                        @GetTipoContabilDisplay(item.TipoContabil)
+                                    </span>
+                                    @if (item.IsPredefined)
+                                    {
+                                        <span class="badge badge-system">Sistema</span>
+                                    }
+                                </div>
                             </div>
                         </div>
 
-                        <div class="d-flex gap-2">
-                            <button class="btn-icon" onclick="carregarModalEditar(@item.Id)" title="Editar">
-                                <i class="bi bi-pencil-fill"></i>
+                        <div class="category-actions">
+                            <button class="btn-icon"
+                                    onclick="carregarModalEditar(@item.Id)"
+                                    title="Editar categoria @item.Name"
+                                    aria-label="Editar categoria @item.Name">
+                                <i class="bi bi-pencil-fill" aria-hidden="true"></i>
                             </button>
                             @if (!item.IsPredefined)
                             {
-                                <button class="btn-icon danger" onclick="confirmarExclusao(@item.Id)" title="Excluir">
-                                    <i class="bi bi-trash-fill"></i>
+                                <button class="btn-icon danger"
+                                        onclick="confirmarExclusao(@item.Id)"
+                                        title="Excluir categoria @item.Name"
+                                        aria-label="Excluir categoria @item.Name">
+                                    <i class="bi bi-trash-fill" aria-hidden="true"></i>
                                 </button>
                             }
                         </div>
-                    </div>
+                    </li>
                 }
+            </ul>
+        </div>
+
+        <!-- Legenda dos tipos -->
+        <div class="tipos-legenda glass-panel">
+            <h4><i class="bi bi-info-circle"></i> Legenda dos Tipos Contabeis</h4>
+            <div class="legenda-grid">
+                <div class="legenda-item">
+                    <span class="badge badge-receita">Receita</span>
+                    <span>Entradas de dinheiro</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-custo">Custo Variavel</span>
+                    <span>Custos de producao/venda</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-fixo">Despesa Fixa</span>
+                    <span>Gastos fixos mensais</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-operacional">Despesa Operacional</span>
+                    <span>Gastos do dia-a-dia</span>
+                </div>
+                <div class="legenda-item">
+                    <span class="badge badge-investimento">Investimento</span>
+                    <span>Aplicacoes e bens</span>
+                </div>
             </div>
         </div>
     }
 </div>
 
+<!-- Container para modais dinamicos -->
 <div id="modal-container"></div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+<!-- Modal de confirmacao de exclusao -->
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content glass-panel border-0">
+        <div class="modal-content glass-panel">
             <div class="modal-body text-center p-4">
-                <div class="modal-icon-warning mb-3">
+                <div class="modal-icon-warning" aria-hidden="true">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                 </div>
-                <h5 class="text-white mb-2">Excluir Categoria?</h5>
-                <p class="text-secondary small mb-4">Essa ação não pode ser desfeita.</p>
-                <div class="d-flex gap-2 justify-content-center">
-                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn-premium-danger" onclick="executarExclusao()">Excluir</button>
+                <h2 id="deleteModalLabel" class="modal-title-warning">Excluir Categoria?</h2>
+                <p class="modal-text-secondary">Essa acao nao pode ser desfeita.</p>
+                <div class="modal-actions">
+                    <button type="button"
+                            class="btn-action btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button"
+                            class="btn-action btn-danger"
+                            onclick="executarExclusao()">
+                        Excluir
+                    </button>
                 </div>
             </div>
         </div>
@@ -89,7 +152,59 @@
 
 @section Scripts {
     <script src="~/js/categories.js" asp-append-version="true"></script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@functions {
+    string GetBadgeClass(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "badge-receita",
+            TipoContabil.CustoVariavel => "badge-custo",
+            TipoContabil.DespesaFixa => "badge-fixo",
+            TipoContabil.DespesaOperacional => "badge-operacional",
+            TipoContabil.Investimento => "badge-investimento",
+            _ => "badge-default"
+        };
+    }
+
+    string GetIconClass(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "icon-receita",
+            TipoContabil.CustoVariavel => "icon-custo",
+            TipoContabil.DespesaFixa => "icon-fixo",
+            TipoContabil.DespesaOperacional => "icon-operacional",
+            TipoContabil.Investimento => "icon-investimento",
+            _ => ""
+        };
+    }
+
+    string GetIconName(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "bi-arrow-up-circle-fill",
+            TipoContabil.CustoVariavel => "bi-box-fill",
+            TipoContabil.DespesaFixa => "bi-building-fill",
+            TipoContabil.DespesaOperacional => "bi-gear-fill",
+            TipoContabil.Investimento => "bi-graph-up-arrow",
+            _ => "bi-tag-fill"
+        };
+    }
+
+    string GetTipoContabilDisplay(TipoContabil tipo)
+    {
+        return tipo switch
+        {
+            TipoContabil.Receita => "Receita",
+            TipoContabil.CustoVariavel => "Custo Variavel",
+            TipoContabil.DespesaFixa => "Despesa Fixa",
+            TipoContabil.DespesaOperacional => "Desp. Operacional",
+            TipoContabil.Investimento => "Investimento",
+            _ => "Nao Classificado"
+        };
     }
 }

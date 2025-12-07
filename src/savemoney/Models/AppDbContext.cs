@@ -19,6 +19,7 @@ namespace savemoney.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<BudgetCategory> BudgetCategories { get; set; }
+        public DbSet<NotificacaoUsuario> Notificacoes { get; set; } // <--- JÁ ESTÁ AQUI
 
         // NOVO: DbSet para Widgets
         public DbSet<Widget> Widgets { get; set; }
@@ -27,6 +28,17 @@ namespace savemoney.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // =================================================================
+            // CORREÇÃO CRÍTICA: Configuração global para campos decimais (Dinheiro)
+            // =================================================================
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetProperties())
+                .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
+            {
+                property.SetColumnType("decimal(18,2)");
+            }
+            // =================================================================
 
             // MetaFinanceira → Aportes (Cascade)
             modelBuilder.Entity<MetaFinanceira>()
@@ -67,12 +79,13 @@ namespace savemoney.Models
                 .HasForeignKey(bc => bc.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // NOVO: Widget → Usuario (Cascade - se deletar usuário, deleta widgets)
+            // Widget → Usuario (Cascade)
             modelBuilder.Entity<Widget>()
                 .HasOne(w => w.Usuario)
                 .WithMany(u => u.Widgets)
                 .HasForeignKey(w => w.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             // Usuario → Receitas (Cascade)
             modelBuilder.Entity<Usuario>()
                 .HasMany(u => u.Receitas)
@@ -87,11 +100,18 @@ namespace savemoney.Models
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Índice para melhorar performance nas queries de widgets por usuário
+            // NotificacaoUsuario → Usuario (Cascade)
+            modelBuilder.Entity<NotificacaoUsuario>()
+                .HasOne(nu => nu.Usuario)
+                .WithMany()
+                .HasForeignKey(nu => nu.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Índice para widgets
             modelBuilder.Entity<Widget>()
                 .HasIndex(w => w.UsuarioId);
 
-            // Dados seed existentes
+            // Seeds... (Mantidos)
             modelBuilder.Entity<Usuario>().HasData(
                 new Usuario
                 {
@@ -103,7 +123,6 @@ namespace savemoney.Models
                     Perfil = 0,
                     TipoUsuario = 0,
                     DataCadastro = DateTime.Now,
-                    // Avatar padrão com iniciais (temporário até adicionar imagem local)
                     FotoPerfil = "https://ui-avatars.com/api/?name=Admin+Savemoney&background=3b82f6&color=fff&size=200&bold=true"
                 }
             );

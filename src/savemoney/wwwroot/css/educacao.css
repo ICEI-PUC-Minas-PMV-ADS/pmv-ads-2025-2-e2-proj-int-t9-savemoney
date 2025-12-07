@@ -1,317 +1,454 @@
-/*CSS da tela de educação financeira*/
+/* ============================================================================
+   EDUCAÇÃO FINANCEIRA - HUB DE CONHECIMENTO
+   Design System: Dark Mode + Glassmorphism - Tema Adaptado
+   Font: Manrope
+   ============================================================================ */
+
+/* Importa fonte específica do módulo
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* Variáveis do Módulo
+   ========================================================================== */
 :root {
-  --bg-primary: #10111a;
-  --bg-secondary: #0d0e16;
-  --bg-card: #1b1d29;
-  --border-color: #2a2c3c;
-  --text-primary: #f5f5f5;
-  --text-secondary: #aaaaaa;
-  --accent-primary: #3b82f6;
-  --accent-primary-hover: #2563eb;
-  --btn-primary-text: #ffffff;
-  --container-width: 1200px;
+    --educacao-font: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Manrope", sans-serif;
+/* Animação de Entrada
+   ========================================================================== */
+.fade-in {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-body {
-  background-color: transparent; 
-  color: var(--text-primary);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(1.25rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .fade-in {
+        animation: none;
+    }
+}
+
+/* Background Fixo
+   ========================================================================== */
 .background-fixed-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -1;
-  background-image: url("../assets/hero-background-3.jpg");
-  background-size: cover;
-  background-position: center;
-  filter: brightness(0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    background-image: url('../assets/hero-background-3.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    filter: brightness(0.5);
 }
 
-main.content-wrapper {
-  width: 100%;
-  overflow-x: hidden;
-  position: relative;
-  z-index: 2;
-  padding-top: 120px;
+@media (prefers-reduced-motion: reduce) {
+    .background-fixed-image {
+        background-attachment: scroll;
+    }
 }
 
-.hero-educacao {
-  padding: 6rem 1.5rem 4rem 1.5rem;
-  text-align: center;
-  position: relative;
-  background-color: transparent; 
+/* Container Principal
+   ========================================================================== */
+.educacao-page-main {
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+    z-index: 2;
+    font-family: var(--educacao-font);
 }
 
-.main-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  gap: 8rem;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 5rem 5rem;
+/* Hero Section
+   ========================================================================== */
+.hero-section {
+    padding: 6rem 1.5rem 4rem;
+    text-align: center;
 }
 
-.intro-text {
-  text-align: center;
-  max-width: 53rem;
-  padding: 0 1rem;
+.hero-content {
+    max-width: 75rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
 }
 
-.title-educacao-financeira h1 {
-  font-size: 4.5rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 3rem;
-  margin-top: -3rem;
+.hero-text {
+    max-width: 53.125rem;
+    margin: 0 auto;
 }
 
-.description-educacao-financeira p {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-  max-width: 768px;
-  margin: 0 auto;
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 2rem 0;
+    letter-spacing: -0.125rem;
 }
 
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch; 
-  gap: 2rem;
-  width: 100%;
-  height: 50%;
-  padding: 1rem 1rem;
+.hero-description {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin: 0;
 }
 
-.card {
-  padding: 2rem;
-  border-radius: 16px;
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 30rem;
-  flex: 1 1 300px;
-  text-decoration: none;
+/* Cards de Ação
+   ========================================================================== */
+.action-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
+    gap: 2rem;
+    max-width: 62.5rem;
+    margin: 0 auto;
 }
 
-.glass-effect {
-  background-color: rgba(13, 14, 22, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgb(42, 44, 60, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+.action-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.0625rem solid var(--glass-border);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
 }
 
-.card:hover {
-  transform: translateY(-5px);
+    .action-card:hover {
+        transform: translateY(-0.3125rem);
+        border-color: var(--accent-primary);
+        box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .action-card:hover {
+        transform: none;
+    }
 }
 
 .card-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
 }
 
-.card h5 {
-  text-align: center;
-  font-size: 1.5em;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
+.action-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.card p {
-  font-size: 1em;
-  margin: 0 0 1.5em;
-  color: var(--text-secondary);
-  flex-grow: 1;
+.action-card p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin: 0;
+    flex-grow: 1;
 }
 
-.btn {
-  padding: 0.8rem 2rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1rem;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: auto;
-  display: block;
-  width: 100%;
+/* Botões de Ação
+   ========================================================================== */
+.btn-action {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    border-radius: 3.125rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-news {
-  background-color: var(--accent-primary);
-  color: var(--btn-primary-text);
-}
-.btn-news:hover {
-  background-color: var(--accent-primary-hover);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    .btn-action:focus-visible {
+        outline: 0.125rem solid var(--accent-primary);
+        outline-offset: 0.125rem;
+    }
+
+    .btn-action.btn-primary {
+        background: var(--accent-primary);
+        color: var(--btn-primary-text);
+        box-shadow: 0 0.25rem 0.9375rem rgba(59, 130, 246, 0.3);
+    }
+
+        .btn-action.btn-primary:hover {
+            background: var(--accent-primary-hover);
+            box-shadow: 0 0.5rem 1.5625rem rgba(59, 130, 246, 0.4);
+            transform: translateY(-0.125rem);
+        }
+
+    .btn-action.btn-secondary {
+        background: var(--bg-card);
+        color: var(--text-primary);
+        border: 0.0625rem solid var(--border-color);
+    }
+
+        .btn-action.btn-secondary:hover {
+            background: var(--border-color);
+            border-color: var(--accent-primary);
+            transform: translateY(-0.125rem);
+        }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-action:hover {
+        transform: none;
+    }
 }
 
-.btn-articles {
-  background-color: var(--bg-card);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-.btn-articles:hover {
-  background-color: var(--border-color);
-  color: var(--text-primary);
-}
-
-
-.info-section-educacao {
-  background-color: rgba(#0d0e16, 0.4);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--border-color);
-  padding: 8rem 6rem;
-  text-align: center;
-  width: 80%;
-  margin: 0 auto 6rem auto;
-  border-radius: 15px;
+/* Info Section
+   ========================================================================== */
+.info-section {
+    background-color: rgba(13, 14, 22, 0.6);
+    backdrop-filter: blur(0.625rem);
+    -webkit-backdrop-filter: blur(0.625rem);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 1.5rem;
+    padding: 5rem 3.75rem;
+    margin: 0 auto 6rem;
+    max-width: 87.5rem;
+    width: calc(100% - 3rem);
 }
 
-.container {
-  max-width: var(--container-width);
-  margin: 0 auto;
+.info-container {
+    max-width: 75rem;
+    margin: 0 auto;
 }
 
 .section-header {
-  max-width: 800px;
-  margin: 0 auto 3rem;
+    text-align: center;
+    max-width: 50rem;
+    margin: 0 auto 3rem;
 }
 
-.section-header h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
+    .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 1rem 0;
+        line-height: 1.2;
+    }
 
-.section-header p {
-  font-size: 1.125rem;
-  color: var(--text-secondary);
-}
+    .section-header p {
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
+        margin: 0;
+    }
 
-.info-cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
+/* Grid de Cards Informativos - CORRIGIDO
+   ========================================================================== */
+.info-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* FIXO: 2 colunas */
+    gap: 2rem;
+    align-items: stretch;
 }
 
 .info-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  text-align: left;
-  transition: all 0.3s ease;
+    background: var(--bg-card);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
-.info-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  border-color: var(--accent-primary);
+
+    .info-card:hover {
+        transform: translateY(-0.3125rem);
+        box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.2);
+        border-color: var(--accent-primary);
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .info-card:hover {
+        transform: none;
+    }
 }
 
 .info-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-  border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    height: 13.75rem;
+    object-fit: cover;
+    display: block;
+    border-bottom: 0.0625rem solid var(--border-color);
 }
 
 .info-card-content {
-  padding: 1.5rem;
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-.info-card-content h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.4;
-  margin-bottom: 0.75rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-height: 3.6rem;
+    .info-card-content h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.4;
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 3.6rem;
+    }
+
+    .info-card-content p {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: var(--text-secondary);
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+/* Responsividade
+   ========================================================================== */
+
+/* Desktop Pequeno: 992px */
+@media (max-width: 62rem) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-description {
+        font-size: 1.125rem;
+    }
+
+    .info-section {
+        padding: 4rem 2rem;
+        width: calc(100% - 2rem);
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+    }
 }
 
-.info-card-content p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
+/* Tablet: 768px */
+@media (max-width: 48rem) {
+    .hero-section {
+        padding: 4rem 1rem 3rem;
+    }
+
+    .hero-content {
+        gap: 3rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .action-cards {
+        grid-template-columns: 1fr;
+        max-width: 31.25rem;
+    }
+
+    .info-section {
+        padding: 3rem 1.5rem;
+        margin-bottom: 4rem;
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+    }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+        }
+
+        .section-header p {
+            font-size: 1rem;
+        }
+    /* CORREÇÃO: Em tablet, mantém 2 colunas se couber, senão 1 */
+    .info-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
+    }
 }
 
+/* Mobile: 576px */
+@media (max-width: 36rem) {
+    .hero-title {
+        font-size: 2rem;
+    }
 
-@media (max-width: 992px) {
-  .title-educacao-financeira h1 {
-    font-size: 3.5rem;
-  }
-  .description-educacao-financeira p {
-    font-size: 1.125rem;
-  }
-  .card-left,
-  .card-right {
-    transform: rotate(0deg);
-  }
-  .card {
-    max-width: 100%;
-  }
-  .section-header h2 {
-    font-size: 2rem;
-  }
-  .info-section-educacao {
-    padding: 4rem 1rem;
-  }
+    .hero-description {
+        font-size: 0.9375rem;
+    }
+
+    .action-card {
+        padding: 2rem;
+    }
+
+        .action-card h2 {
+            font-size: 1.25rem;
+        }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+    /* CORREÇÃO: Em mobile, sempre 1 coluna */
+    .info-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-card img {
+        height: 12.5rem;
+    }
+
+    .info-card-content {
+        padding: 1.25rem;
+    }
+
+        .info-card-content h3 {
+            font-size: 1.125rem;
+            min-height: auto;
+            -webkit-line-clamp: 3;
+        }
 }
 
-@media (max-width: 768px) {
-  .content-wrapper {
-      padding-top: 100px;
-  }
-  .title-educacao-financeira h1 {
-    font-size: 2.5rem;
-  }
-  .description-educacao-financeira p {
-    font-size: 1rem;
-  }
-  .main-content {
-    gap: 3rem;
-    padding: 4rem 0 0 0;
-  }
-  .section-header h2 {
-    font-size: 1.75rem;
-  }
-  .section-header p {
-    font-size: 1rem;
-  }
-  .info-cards-container {
-      grid-template-columns: 1fr;
-  }
+/* Mobile Extremo: 430px */
+@media (max-width: 26.875rem) {
+    .hero-section {
+        padding: 3rem 0.75rem 2rem;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .info-section {
+        padding: 2rem 1rem;
+        border-radius: 1rem;
+    }
+
+    .action-card {
+        padding: 1.5rem;
+    }
 }

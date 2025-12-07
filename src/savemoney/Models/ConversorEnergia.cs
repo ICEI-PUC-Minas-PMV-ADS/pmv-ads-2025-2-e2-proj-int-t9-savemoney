@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace savemoney.Models
 {
@@ -7,13 +8,20 @@ namespace savemoney.Models
         [Key]
         public int Id { get; set; }
 
+        // ✅ NOVO: Relacionamento com Usuário
+        [Required(ErrorMessage = "O usuário é obrigatório.")]
+        [ForeignKey("Usuario")]
+        public int UsuarioId { get; set; }
+        public virtual Usuario? Usuario { get; set; }
+
         [Required(ErrorMessage = "O campo Valor Base é obrigatório.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Informe um valor base maior que zero.")]
+        [Display(Name = "Valor Base")]
         public double ValorBase { get; set; }
 
         [Required(ErrorMessage = "O campo Tipo do Valor é obrigatório.")]
         [Display(Name = "Tipo do Valor")]
-        public string TipoValor { get; set; } = string.Empty;
+        public string TipoValor { get; set; } = string.Empty; // "Watts" ou "Reais"
 
         [Required(ErrorMessage = "O campo Estado é obrigatório.")]
         public string Estado { get; set; } = string.Empty;
@@ -29,11 +37,15 @@ namespace savemoney.Models
         [Display(Name = "Tipo de Dispositivo")]
         public string TipoDispositivo { get; set; } = string.Empty;
 
-        [Display(Name = "Tempo de Uso")]
-        public string? TempoUso { get; set; }
+        [Required(ErrorMessage = "O campo Tempo de Uso é obrigatório.")]
+        [Range(0.1, 24, ErrorMessage = "Tempo deve estar entre 0.1 e 24 horas")]
+        [Display(Name = "Tempo de Uso (horas/dia)")]
+        public double TempoUso { get; set; }
 
         [Display(Name = "Consumo Mensal (kWh)")]
-        [Range(0, double.MaxValue, ErrorMessage = "O consumo mensal deve ser igual ou maior que zero.")]
         public double? ConsumoMensal { get; set; }
+
+        [Display(Name = "Custo Mensal Estimado (R$)")]
+        public double? CustoMensal { get; set; }
     }
 }

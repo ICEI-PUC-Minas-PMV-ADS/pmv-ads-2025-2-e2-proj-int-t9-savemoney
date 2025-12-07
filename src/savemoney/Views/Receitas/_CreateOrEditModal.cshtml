@@ -1,107 +1,204 @@
 ﻿@model savemoney.Models.Receita
 @using savemoney.Models
 
-<div class="modal fade" id="receitaModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content glass-panel premium-modal">
+<div class="modal fade" id="receitaModal" tabindex="-1" aria-labelledby="receitaModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content glass-panel">
 
-            <form action="/Receitas/@(Model.Id == 0 ? "Create" : "Edit")/@(Model.Id == 0 ? "" : Model.Id)" method="post">
+            <form action="/Receitas/@(Model.Id == 0 ? "Create" : "Edit")/@(Model.Id == 0 ? "" : Model.Id)"
+                  method="post"
+                  id="receitaForm"
+                  novalidate>
                 @Html.AntiForgeryToken()
+
                 @if (Model.Id != 0)
                 {
                     <input type="hidden" name="Id" value="@Model.Id" />
                 }
 
-                <div class="modal-header-clean">
-                    <div>
-                        <h5 class="modal-title">@(Model.Id == 0 ? "Nova Receita" : "Editar Receita")</h5>
-                        <p class="modal-subtitle">Preencha os detalhes da entrada financeira.</p>
+                <!-- Modal Header -->
+                <div class="modal-header-custom">
+                    <div class="header-text">
+                        <h2 id="receitaModalTitle" class="modal-title-custom">
+                            @(Model.Id == 0 ? "Nova Receita" : "Editar Receita")
+                        </h2>
+                        <p class="modal-subtitle-custom">Preencha os detalhes da entrada financeira</p>
                     </div>
-                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
+                    <button type="button"
+                            class="btn-close-custom"
+                            data-bs-dismiss="modal"
+                            aria-label="Fechar">
+                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
                     </button>
                 </div>
 
-                <div class="modal-body-clean">
+                <!-- Modal Body -->
+                <div class="modal-body-custom">
 
-                    <div class="form-group-highlight mb-4">
-                        <div class="currency-selector">
-                            <select asp-for="CurrencyType" id="currencyType" class="premium-select-minimal">
+                    <!-- Amount Section -->
+                    <div class="amount-section">
+                        <div class="currency-selector-wrapper">
+                            <label for="currencyType" class="visually-hidden">Selecionar moeda</label>
+                            <select asp-for="CurrencyType"
+                                    id="currencyType"
+                                    class="currency-select"
+                                    aria-label="Tipo de moeda">
                                 <option value="BRL">BRL</option>
                                 <option value="USD">USD</option>
                                 <option value="EUR">EUR</option>
                                 <option value="GBP">GBP</option>
                                 <option value="JPY">JPY</option>
                             </select>
-                            <i class="bi bi-chevron-down"></i>
+                            <span class="material-symbols-outlined select-icon" aria-hidden="true">expand_more</span>
                         </div>
+
                         <div class="amount-input-wrapper">
-                            <span id="currencySymbol" class="currency-symbol">R$</span>
-                            <input asp-for="Valor" class="premium-input-large" type="text" placeholder="0,00" autocomplete="off" />
+                            <span id="currencySymbol" class="currency-symbol" aria-hidden="true">R$</span>
+                            <input asp-for="Valor"
+                                   type="text"
+                                   class="amount-input"
+                                   placeholder="0,00"
+                                   autocomplete="off"
+                                   aria-label="Valor da receita"
+                                   aria-describedby="valorHelp" />
                         </div>
-                        <span asp-validation-for="Valor" class="validation-msg"></span>
+                        <span asp-validation-for="Valor" class="form-error"></span>
+                        <small id="valorHelp" class="form-text">Informe o valor da receita</small>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="Titulo" class="premium-label">Descrição</label>
-                        <input asp-for="Titulo" class="premium-input" placeholder="Ex: Salário Mensal, Venda de Produto..." />
-                        <span asp-validation-for="Titulo" class="validation-msg"></span>
-                    </div>
+                    <div class="form-divider"></div>
 
-                    <div class="grid-2-col mb-3">
-                        <div class="form-group">
-                            <label asp-for="DataInicio" class="premium-label">Recebimento</label>
-                            <input type="date" asp-for="DataInicio" class="premium-input" />
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="DataFim" class="premium-label">Competência</label>
-                            <input type="date" asp-for="DataFim" class="premium-input" />
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="toggle-row mb-3">
-                        <div class="toggle-info">
-                            <span class="toggle-label">Recorrência</span>
-                            <span class="toggle-desc">Esta receita se repete?</span>
-                        </div>
-                        <label class="premium-switch">
-                            <input asp-for="IsRecurring" type="checkbox" id="isRecurringSwitch">
-                            <span class="slider round"></span>
+                    <!-- Título -->
+                    <div class="form-group">
+                        <label asp-for="Titulo" class="form-label">
+                            <span class="material-symbols-outlined label-icon" aria-hidden="true">title</span>
+                            Descrição
                         </label>
+                        <input asp-for="Titulo"
+                               class="form-input"
+                               placeholder="Ex: Salário Mensal, Venda de Produto..."
+                               aria-describedby="tituloHelp" />
+                        <span asp-validation-for="Titulo" class="form-error"></span>
+                        <small id="tituloHelp" class="form-text">Dê um nome descritivo para esta receita</small>
                     </div>
 
-                    <div class="recurrence-panel" id="recurrenceOptions" style="display: @(Model.IsRecurring ? "grid" : "none");">
+                    <!-- Datas -->
+                    <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="premium-label">Frequência</label>
-                            <select asp-for="Recurrence" asp-items="Html.GetEnumSelectList<Receita.RecurrenceType>()" class="premium-select"></select>
+                            <label asp-for="DataInicio" class="form-label">
+                                <span class="material-symbols-outlined label-icon" aria-hidden="true">event</span>
+                                Data de Recebimento
+                            </label>
+                            <input type="date"
+                                   asp-for="DataInicio"
+                                   class="form-input"
+                                   aria-describedby="dataInicioHelp" />
+                            <small id="dataInicioHelp" class="form-text">Quando o valor foi/será recebido</small>
                         </div>
+
                         <div class="form-group">
-                            <label asp-for="RecurrenceCount" class="premium-label">Repetições</label>
-                            <input asp-for="RecurrenceCount" class="premium-input" placeholder="∞" />
+                            <label asp-for="DataFim" class="form-label">
+                                <span class="material-symbols-outlined label-icon" aria-hidden="true">calendar_month</span>
+                                Competência (Opcional)
+                            </label>
+                            <input type="date"
+                                   asp-for="DataFim"
+                                   class="form-input"
+                                   aria-describedby="dataFimHelp" />
+                            <small id="dataFimHelp" class="form-text">Referente a qual mês/período</small>
                         </div>
                     </div>
 
-                    <div class="toggle-row mt-2">
-                        <div class="toggle-info">
-                            <span class="toggle-label">Status</span>
-                            <span class="toggle-desc">O valor já caiu na conta?</span>
+                    <div class="form-divider"></div>
+
+                    <!-- Recorrência Toggle -->
+                    <div class="toggle-section">
+                        <div class="toggle-header">
+                            <div class="toggle-info">
+                                <span class="toggle-title">
+                                    <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+                                    Recorrência
+                                </span>
+                                <span class="toggle-description">Esta receita se repete mensalmente?</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input asp-for="IsRecurring"
+                                       type="checkbox"
+                                       id="isRecurringSwitch"
+                                       aria-describedby="recurrenceHelp">
+                                <span class="toggle-slider"></span>
+                            </label>
                         </div>
-                        <label class="premium-switch">
-                            <input asp-for="Recebido" type="checkbox">
-                            <span class="slider round success"></span>
-                        </label>
+
+                        <!-- Recurrence Options -->
+                        <div id="recurrenceOptions"
+                             class="recurrence-panel"
+                             style="display: @(Model.IsRecurring ? "grid" : "none");">
+                            <div class="form-group">
+                                <label asp-for="Recurrence" class="form-label">Frequência</label>
+                                <select asp-for="Recurrence"
+                                        asp-items="Html.GetEnumSelectList<Receita.RecurrenceType>()"
+                                        class="form-input">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="RecurrenceCount" class="form-label">
+                                    Número de Repetições
+                                </label>
+                                <input asp-for="RecurrenceCount"
+                                       type="number"
+                                       min="1"
+                                       class="form-input"
+                                       placeholder="Infinito"
+                                       aria-describedby="countHelp" />
+                                <small id="countHelp" class="form-text">Deixe em branco para repetir indefinidamente</small>
+                            </div>
+                        </div>
+                        <small id="recurrenceHelp" class="form-text">
+                            Marque se esta receita se repete todos os meses (ex: salário)
+                        </small>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Status Toggle -->
+                    <div class="toggle-section">
+                        <div class="toggle-header">
+                            <div class="toggle-info">
+                                <span class="toggle-title">
+                                    <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                                    Status de Recebimento
+                                </span>
+                                <span class="toggle-description">O valor já caiu na conta?</span>
+                            </div>
+                            <label class="toggle-switch toggle-success">
+                                <input asp-for="Recebido"
+                                       type="checkbox"
+                                       aria-label="Marcar como recebido">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </div>
 
                 </div>
 
-                <div class="modal-footer-clean">
-                    <button type="button" class="btn-premium-ghost" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn-premium-primary">Salvar Receita</button>
+                <!-- Modal Footer -->
+                <div class="modal-footer-custom">
+                    <button type="button"
+                            class="btn-action btn-secondary"
+                            data-bs-dismiss="modal">
+                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-action btn-success">
+                        <span class="material-symbols-outlined" aria-hidden="true">check</span>
+                        Salvar Receita
+                    </button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
+
 <partial name="_ValidationScriptsPartial" />

@@ -1,15 +1,69 @@
-﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+﻿<!-- jQuery Validation via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
-    // Sobrescreve a validação de número do jQuery para aceitar vírgula
-    $.validator.methods.number = function (value, element) {
-        return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
-    }
+    // Configuração de validação para formato brasileiro
+    (function($) {
+        "use strict";
 
-    // Sobrescreve a validação de range (intervalo) para entender vírgula
-    $.validator.methods.range = function (value, element, param) {
-        var globalizedValue = value.replace(",", ".");
-        return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
-    }
+        // Aceita vírgula como separador decimal
+        $.validator.methods.number = function(value, element) {
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        };
+
+        // Valida range com vírgula decimal
+        $.validator.methods.range = function(value, element, param) {
+            var globalizedValue = value.replace(",", ".");
+            return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+        };
+
+        // Aceita data no formato dd/MM/yyyy
+        $.validator.methods.date = function(value, element) {
+            return this.optional(element) || /^\d{2}\/\d{2}\/\d{4}$/.test(value);
+        };
+
+        // Customização de mensagens em português
+        $.validator.messages = $.extend($.validator.messages, {
+            required: "Este campo é obrigatório.",
+            remote: "Por favor, corrija este campo.",
+            email: "Por favor, forneça um endereço de e-mail válido.",
+            url: "Por favor, forneça uma URL válida.",
+            date: "Por favor, forneça uma data válida (dd/MM/yyyy).",
+            dateISO: "Por favor, forneça uma data válida (ISO).",
+            number: "Por favor, forneça um número válido.",
+            digits: "Por favor, forneça somente dígitos.",
+            creditcard: "Por favor, forneça um cartão de crédito válido.",
+            equalTo: "Por favor, forneça o mesmo valor novamente.",
+            maxlength: $.validator.format("Por favor, forneça no máximo {0} caracteres."),
+            minlength: $.validator.format("Por favor, forneça ao menos {0} caracteres."),
+            rangelength: $.validator.format("Por favor, forneça um valor entre {0} e {1} caracteres."),
+            range: $.validator.format("Por favor, forneça um valor entre {0} e {1}."),
+            max: $.validator.format("Por favor, forneça um valor menor ou igual a {0}."),
+            min: $.validator.format("Por favor, forneça um valor maior ou igual a {0}.")
+        });
+
+        // Estilização das mensagens de erro
+        $.validator.setDefaults({
+            highlight: function(element) {
+                $(element)
+                    .addClass('is-invalid')
+                    .removeClass('is-valid');
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .removeClass('is-invalid')
+                    .addClass('is-valid');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function(error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    })(jQuery);
 </script>

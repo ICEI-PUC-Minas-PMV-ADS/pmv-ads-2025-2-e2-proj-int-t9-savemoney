@@ -53,6 +53,11 @@ namespace savemoney.Controllers
 
             if (senhaOk)
             {
+                // NOVO: Atualizar último acesso
+                dados.UltimoAcesso = DateTime.Now;
+                _context.Update(dados);
+                await _context.SaveChangesAsync();
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, dados.Id.ToString()),
@@ -67,12 +72,15 @@ namespace savemoney.Controllers
                 var props = new AuthenticationProperties
                 {
                     AllowRefresh = true,
-                    ExpiresUtc = DateTime.UtcNow.ToLocalTime().AddHours(2),
+                    ExpiresUtc = DateTime.UtcNow.AddHours(2), // CORRIGIDO: Removido ToLocalTime()
                     IsPersistent = true,
                 };
 
                 await HttpContext.SignInAsync(principal, props);
 
+                HttpContext.Session.SetString("UserContext", dados.UltimoContexto.ToString());
+
+                TempData["SuccessMessage"] = $"Bem-vindo de volta, {dados.Nome}!";
                 return RedirectToAction("Index", "Dashboard");
             }
             else
@@ -87,6 +95,7 @@ namespace savemoney.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
+            TempData["SuccessMessage"] = "Logout realizado com sucesso!";
             return Redirect("/");
         }
 
@@ -105,7 +114,7 @@ namespace savemoney.Controllers
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null || userIdClaim != id.ToString())
                 {
-                    return Forbid();
+                    return RedirectToAction("AccessDenied");
                 }
             }
 
@@ -137,6 +146,14 @@ namespace savemoney.Controllers
                 usuario.TipoUsuario = TipoUsuario.Usuario;
             }
 
+            // ✅ NOVO: Validação de email duplicado
+            var emailExiste = await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+            if (emailExiste)
+            {
+                ModelState.AddModelError("Email", "Este email já está cadastrado.");
+                return View(usuario);
+            }
+
             if (ModelState.IsValid)
             {
                 usuario.DataCadastro = DateTime.Now;
@@ -144,7 +161,7 @@ namespace savemoney.Controllers
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
 
-                // Adicione o claim do Id do usuário aqui
+                // Fazer login automático após criar conta
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
@@ -159,11 +176,13 @@ namespace savemoney.Controllers
                 var props = new AuthenticationProperties
                 {
                     AllowRefresh = true,
-                    ExpiresUtc = DateTime.UtcNow.ToLocalTime().AddHours(2),
+                    ExpiresUtc = DateTime.UtcNow.AddHours(2), // ✅ CORRIGIDO
                     IsPersistent = true,
                 };
 
                 await HttpContext.SignInAsync(principal, props);
+
+                TempData["SuccessMessage"] = "Conta criada com sucesso! Bem-vindo ao SaveMoney!";
                 return RedirectToAction("Index", "Dashboard");
             }
             return View(usuario);
@@ -184,7 +203,7 @@ namespace savemoney.Controllers
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null || userIdClaim != id.ToString())
                 {
-                    return Forbid();
+                    return RedirectToAction("AccessDenied");
                 }
             }
 
@@ -213,7 +232,7 @@ namespace savemoney.Controllers
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null || userIdClaim != id.ToString())
                 {
-                    return Forbid();
+                    return RedirectToAction("AccessDenied");
                 }
                 usuario.TipoUsuario = TipoUsuario.Usuario;
             }
@@ -222,9 +241,30 @@ namespace savemoney.Controllers
             {
                 try
                 {
-                    usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+                    // ✅ CORREÇÃO CRÍTICA: Buscar usuário do banco primeiro
+                    var usuarioDoBanco = await _context.Usuarios.AsNoTracking()
+                        .FirstOrDefaultAsync(u => u.Id == id);
+
+                    if (usuarioDoBanco == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // ✅ Se senha veio vazia, manter a senha antiga
+                    if (string.IsNullOrWhiteSpace(usuario.Senha))
+                    {
+                        usuario.Senha = usuarioDoBanco.Senha; // Mantém hash antigo
+                    }
+                    else
+                    {
+                        // ✅ Só faz hash se usuário digitou senha nova
+                        usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+                    }
+
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Usuário atualizado com sucesso!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -237,7 +277,16 @@ namespace savemoney.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                // ✅ Redireciona baseado no papel
+                if (User.IsInRole("Administrador"))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Details), new { id = usuario.Id });
+                }
             }
             return View(usuario);
         }
@@ -250,8 +299,12 @@ namespace savemoney.Controllers
             try
             {
                 // Obter ID do usuário logado
-                var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    return Json(new { success = false, message = "Usuário não autenticado." });
+                }
+                var usuarioId = int.Parse(userIdClaim);
                 // Validar se arquivo foi enviado
                 if (foto == null || foto.Length == 0)
                 {
@@ -353,7 +406,7 @@ namespace savemoney.Controllers
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null || userIdClaim != id.ToString())
                 {
-                    return Forbid();
+                    return RedirectToAction("AccessDenied");
                 }
             }
 
@@ -374,22 +427,47 @@ namespace savemoney.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             // Se não for admin, só pode excluir o próprio usuário
+            bool isDeletingSelf = false;
+
             if (!User.IsInRole("Administrador"))
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null || userIdClaim != id.ToString())
                 {
-                    return Forbid();
+                    return RedirectToAction("AccessDenied");
                 }
+                isDeletingSelf = true;
             }
 
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario != null)
             {
+                // ✅ Deletar foto de perfil se existir
+                if (!string.IsNullOrEmpty(usuario.FotoPerfil) &&
+                    usuario.FotoPerfil.StartsWith("/uploads/"))
+                {
+                    var caminhoFoto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
+                        usuario.FotoPerfil.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+                    if (System.IO.File.Exists(caminhoFoto))
+                    {
+                        System.IO.File.Delete(caminhoFoto);
+                    }
+                }
+
                 _context.Usuarios.Remove(usuario);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+            // ✅ Se deletou a própria conta, faz logout
+            if (isDeletingSelf)
+            {
+                await HttpContext.SignOutAsync();
+                TempData["SuccessMessage"] = "Sua conta foi excluída.";
+                return RedirectToAction("Index", "LandingPage");
+            }
+
+            TempData["SuccessMessage"] = "Usuário excluído com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 

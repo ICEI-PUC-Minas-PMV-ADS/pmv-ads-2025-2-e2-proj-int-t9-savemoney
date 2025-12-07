@@ -2,158 +2,213 @@
     ViewData["Title"] = "Análise de Tendências Financeiras";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/tendencia-financeira-index.css" />
+@section css {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="~/css/tendenciaFinanceiraIndex.css" asp-append-version="true" />
 }
 
-<!-- Background Fixo (Padrão SaveMoney) -->
-<div class="background-fixed-image"></div>
+<div class="background-fixed-image" aria-hidden="true"></div>
 
-<!-- Hero Section -->
-<section class="tendencia-hero">
-    <div class="tendencia-hero-content">
-        <h1>Análise de Tendências</h1>
-        <p class="subtitle">
-            Descubra padrões nas suas finanças e tome decisões mais inteligentes
-            com análises detalhadas de receitas, despesas e evolução do saldo.
-        </p>
-    </div>
-</section>
+<main class="tendencia-page-main fade-in">
 
-<!-- Container Principal -->
-<div class="container py-5">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-icon-wrapper">
+                <span class="material-symbols-outlined hero-icon" aria-hidden="true">insights</span>
+            </div>
+            <h1 class="hero-title">Análise de Tendências</h1>
+            <p class="hero-subtitle">
+                Descubra padrões nas suas finanças e tome decisões mais inteligentes
+                com análises detalhadas de receitas, despesas e evolução do saldo.
+            </p>
+        </div>
+    </section>
 
-    <!-- Card de Instruções (Glassmorphism) -->
-    <div class="glass-card mb-4">
-        <div class="d-flex align-items-start">
-            <i class="bi bi-info-circle text-primary fs-1 me-3"></i>
-            <div>
-                <h5 class="mb-3 info-card-title">Como funciona?</h5>
-                <p class="info-card-text">
+    <!-- Info Card -->
+    <div class="info-card glass-panel">
+        <div class="info-header">
+            <div class="info-icon-wrapper">
+                <span class="material-symbols-outlined" aria-hidden="true">info</span>
+            </div>
+            <div class="info-text-content">
+                <h2 class="info-title">Como funciona a análise?</h2>
+                <p class="info-description">
                     Esta ferramenta analisa suas receitas e despesas ao longo do tempo, identificando
                     padrões de <strong>crescimento</strong>, <strong>redução</strong> ou <strong>estabilidade</strong>
-                    em suas finanças.
+                    em suas finanças através de cálculos estatísticos avançados.
                 </p>
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span class="check-item-text">Mínimo: 3 meses</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span class="check-item-text">Máximo: 12 meses</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span class="check-item-text">Análise em tempo real</span>
-                        </div>
-                    </div>
+            </div>
+        </div>
+
+        <div class="info-features">
+            <div class="feature-item">
+                <span class="material-symbols-outlined feature-icon" aria-hidden="true">check_circle</span>
+                <div class="feature-content">
+                    <strong>Período Mínimo:</strong> 3 meses de dados
+                </div>
+            </div>
+            <div class="feature-item">
+                <span class="material-symbols-outlined feature-icon" aria-hidden="true">check_circle</span>
+                <div class="feature-content">
+                    <strong>Período Máximo:</strong> 12 meses de análise
+                </div>
+            </div>
+            <div class="feature-item">
+                <span class="material-symbols-outlined feature-icon" aria-hidden="true">check_circle</span>
+                <div class="feature-content">
+                    <strong>Atualização:</strong> Análise em tempo real
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Formulário de Seleção -->
-    <div class="glass-card">
-        <form asp-action="GerarAnalise" method="post">
+    <!-- Form Card -->
+    <div class="form-card glass-panel">
+        <div class="form-header">
+            <span class="material-symbols-outlined form-icon" aria-hidden="true">settings</span>
+            <h2 class="form-title">Configurar Análise</h2>
+        </div>
+
+        <form asp-action="GerarAnalise" method="post" id="formAnalise" novalidate>
             @Html.AntiForgeryToken()
 
-            <div class="row g-4 align-items-end">
-                <!-- Seleção de Período -->
-                <div class="col-md-7">
+            <div class="form-grid">
+                <!-- Select Período -->
+                <div class="form-group">
                     <label for="meses" class="form-label">
-                        <i class="bi bi-calendar3"></i> Período de Análise
+                        <span class="material-symbols-outlined label-icon" aria-hidden="true">calendar_month</span>
+                        Período de Análise
                     </label>
-                    <select id="meses" name="meses" class="form-select" required>
-                        <option value="">Selecione o período...</option>
-                        <option value="1">🗓️ Último mês</option>
-                        <option value="3" selected>📅 Últimos 3 meses (Recomendado)</option>
-                        <option value="6">📊 Últimos 6 meses</option>
-                        <option value="9">📈 Últimos 9 meses</option>
-                        <option value="12">📉 Últimos 12 meses</option>
-                    </select>
-                    <div class="form-text">
-                        Quanto maior o período, mais precisa é a análise.
+                    <div class="select-wrapper">
+                        <select id="meses"
+                                name="meses"
+                                class="form-input"
+                                required
+                                aria-describedby="mesesHelp">
+                            <option value="">Selecione o período...</option>
+                            <option value="1">Último mês</option>
+                            <option value="3" selected>Últimos 3 meses (Recomendado)</option>
+                            <option value="6">Últimos 6 meses</option>
+                            <option value="9">Últimos 9 meses</option>
+                            <option value="12">Últimos 12 meses</option>
+                        </select>
+                        <span class="material-symbols-outlined select-arrow" aria-hidden="true">expand_more</span>
                     </div>
+                    <small id="mesesHelp" class="form-help">
+                        <span class="material-symbols-outlined help-icon" aria-hidden="true">lightbulb</span>
+                        Quanto maior o período, mais precisa é a análise de tendências
+                    </small>
                 </div>
 
-                <!-- Botão de Ação -->
-                <div class="col-md-5">
-                    <button type="submit" class="btn-tendencia w-100">
-                        <i class="bi bi-graph-up-arrow me-2"></i>
-                        Gerar Análise
+                <!-- Botão Submit -->
+                <div class="form-group form-group-button">
+                    <button type="submit" class="btn-action btn-primary w-100" id="btnGerarAnalise">
+                        <span class="material-symbols-outlined" aria-hidden="true">insights</span>
+                        <span class="btn-text">Gerar Análise Completa</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Mensagens de Erro -->
+            <!-- Validation Errors -->
             @if (ViewData.ModelState.ErrorCount > 0)
             {
-                <div class="alert-custom alert-danger mt-4">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+                <div class="alert alert-danger" role="alert">
+                    <span class="material-symbols-outlined alert-icon" aria-hidden="true">error</span>
+                    <div class="alert-content">
+                        @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+                    </div>
                 </div>
             }
 
             @if (TempData["Erro"] != null)
             {
-                <div class="alert-custom alert-danger mt-4">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    @TempData["Erro"]
+                <div class="alert alert-danger" role="alert">
+                    <span class="material-symbols-outlined alert-icon" aria-hidden="true">error</span>
+                    <span class="alert-content">@TempData["Erro"]</span>
                 </div>
             }
         </form>
     </div>
 
-    <!-- Card de Dicas -->
-    <div class="glass-card mt-4 tips-card">
-        <h6 class="tips-card-title">
-            <i class="bi bi-lightbulb-fill me-2"></i>Dicas para melhores resultados
-        </h6>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <div class="d-flex align-items-start">
-                    <i class="bi bi-1-circle-fill text-primary me-2 mt-1"></i>
-                    <div>
-                        <strong class="tips-item-title">Registre regularmente</strong>
-                        <p class="tips-item-text">
-                            Adicione receitas e despesas assim que ocorrerem
-                        </p>
-                    </div>
+    <!-- Preview Card (Novo) -->
+    <div class="preview-card glass-panel">
+        <div class="preview-header">
+            <span class="material-symbols-outlined preview-icon" aria-hidden="true">preview</span>
+            <h2 class="preview-title">O que você vai receber</h2>
+        </div>
+        <div class="preview-grid">
+            <div class="preview-item">
+                <div class="preview-item-icon">
+                    <span class="material-symbols-outlined" aria-hidden="true">show_chart</span>
+                </div>
+                <h3 class="preview-item-title">Gráfico Interativo</h3>
+                <p class="preview-item-text">Visualização da evolução de receitas, despesas e saldo</p>
+            </div>
+            <div class="preview-item">
+                <div class="preview-item-icon">
+                    <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                </div>
+                <h3 class="preview-item-title">Identificação de Tendências</h3>
+                <p class="preview-item-text">Descubra se suas finanças estão crescendo, decrescendo ou estáveis</p>
+            </div>
+            <div class="preview-item">
+                <div class="preview-item-icon">
+                    <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+                </div>
+                <h3 class="preview-item-title">Estatísticas Detalhadas</h3>
+                <p class="preview-item-text">Médias, variações e identificação dos melhores e piores meses</p>
+            </div>
+            <div class="preview-item">
+                <div class="preview-item-icon">
+                    <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+                </div>
+                <h3 class="preview-item-title">Alertas Inteligentes</h3>
+                <p class="preview-item-text">Avisos sobre meses atípicos e sugestões de melhoria</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips Card -->
+    <div class="tips-card glass-panel">
+        <h3 class="tips-title">
+            <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+            Dicas para melhores resultados
+        </h3>
+        <div class="tips-grid">
+            <div class="tip-item">
+                <div class="tip-number">1</div>
+                <div class="tip-content">
+                    <h4 class="tip-heading">Registre regularmente</h4>
+                    <p class="tip-text">Adicione receitas e despesas assim que ocorrerem para dados mais precisos</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="d-flex align-items-start">
-                    <i class="bi bi-2-circle-fill text-primary me-2 mt-1"></i>
-                    <div>
-                        <strong class="tips-item-title">Categorize corretamente</strong>
-                        <p class="tips-item-text">
-                            Use categorias consistentes para melhor análise
-                        </p>
-                    </div>
+            <div class="tip-item">
+                <div class="tip-number">2</div>
+                <div class="tip-content">
+                    <h4 class="tip-heading">Categorize corretamente</h4>
+                    <p class="tip-text">Use categorias consistentes para identificar padrões de gastos</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="d-flex align-items-start">
-                    <i class="bi bi-3-circle-fill text-primary me-2 mt-1"></i>
-                    <div>
-                        <strong class="tips-item-title">Analise mensalmente</strong>
-                        <p class="tips-item-text">
-                            Acompanhe sua evolução todos os meses
-                        </p>
-                    </div>
+            <div class="tip-item">
+                <div class="tip-number">3</div>
+                <div class="tip-content">
+                    <h4 class="tip-heading">Analise mensalmente</h4>
+                    <p class="tip-text">Acompanhe sua evolução todos os meses e ajuste seus hábitos</p>
+                </div>
+            </div>
+            <div class="tip-item">
+                <div class="tip-number">4</div>
+                <div class="tip-content">
+                    <h4 class="tip-heading">Use períodos longos</h4>
+                    <p class="tip-text">Análises de 6-12 meses revelam tendências mais confiáveis</p>
                 </div>
             </div>
         </div>
     </div>
 
-</div>
+</main>
 
 @section Scripts {
-    <script src="~/js/TendenciaFinanceira-Index.js"></script>
+    <script src="~/js/tendenciaFinanceiraIndex.js" asp-append-version="true"></script>
 }

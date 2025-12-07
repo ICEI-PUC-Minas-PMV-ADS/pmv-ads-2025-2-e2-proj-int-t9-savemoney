@@ -34,6 +34,19 @@ namespace savemoney.Models
         public int PosicaoX { get; set; } = 0;
 
         public int PosicaoY { get; set; } = 0;
+        // ADICIONE DEPOIS DA LINHA public int PosicaoY { get; set; } = 0;
+
+        [Range(0, 100)]
+        public int ZIndex { get; set; } = 0;
+
+        public bool IsPinned { get; set; } = false;
+
+        public bool IsVisivel { get; set; } = true;
+
+        public DateTime? UltimaMovimentacao { get; set; }
+
+        [StringLength(20)]
+        public string? TipoWidget { get; set; } = "custom";
 
         [RegularExpression(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
             ErrorMessage = "Cor deve estar no formato hexadecimal (#RRGGBB).")]
