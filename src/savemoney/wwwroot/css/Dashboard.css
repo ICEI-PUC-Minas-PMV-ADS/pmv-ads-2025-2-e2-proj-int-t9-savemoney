@@ -560,11 +560,11 @@ body {
     justify-content: space-between;
     gap: 0.75rem;
     padding: 0.75rem 1.25rem;
-    background: rgba(59, 130, 246, 0.15);
+    background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 0.75rem;
-    color: var(--accent-primary);
+    color: #fff;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9375rem;
@@ -573,10 +573,11 @@ body {
 }
 
     .widget-link:hover {
-        background: rgba(59, 130, 246, 0.25);
-        border-color: var(--accent-primary);
+        background: rgba(0, 0, 0, 0.25);
+        border-color: #fff;
         transform: translateX(4px);
         box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        color: #fff;
     }
 
     .widget-link i {
