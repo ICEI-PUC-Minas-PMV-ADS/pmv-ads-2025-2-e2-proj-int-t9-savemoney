@@ -681,10 +681,12 @@ async function uploadFotoPerfil(file) {
 
 function verificarNewsletter() {
     const jaViu = localStorage.getItem('newsletter-decidido');
+    const jaViuSession = sessionStorage.getItem('newsletter-visto');
 
-    if (!jaViu) {
+    if (!jaViuSession && !jaViu) {
         setTimeout(() => {
             abrirModalNewsletter();
+            sessionStorage.setItem('newsletter-visto', 'visto');
         }, 2000); // Abre 2s após carregar
     }
 }
