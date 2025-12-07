@@ -1,6 +1,10 @@
 ﻿@* _Header.cshtml - Menu Geral (Contém todas as funcionalidades) *@
 @using System.Security.Claims
 
+@{
+    var usuario = ViewBag.Usuario as savemoney.Models.Usuario;
+}
+
 <header id="main-header">
     <div class="header-container">
 
@@ -77,8 +81,8 @@
                 var userName = User.Identity.Name ?? "User";
                 var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
 
-                <div class="header-user-avatar" title="@userName">
-                    <span>@initials</span>
+                <div class="header-user-avatar user-avatar-small" title="@userName">
+                    <img src="@usuario.FotoPerfil" alt="@usuario.Nome" id="avatarImage">
                 </div>
 
                 <a asp-controller="Dashboard" asp-action="Index" class="header-btn header-btn-primary">
