@@ -9,4 +9,4 @@ O projeto Save Money tem como objetivo desenvolver um sistema de gestão finance
 
 ## Vídeo de apresentação - Etapa 05
 
-O vídeo de APRESENTAÇÃO FINAL do projeto ainda vai ser produzido na Etapa 05.
+[Baixe o vídeo da Etapa 05](../docs/videos/apresentacao_2_save_money_pages.mp4)
