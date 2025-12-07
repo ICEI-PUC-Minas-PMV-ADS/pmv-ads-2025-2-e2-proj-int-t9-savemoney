@@ -17,7 +17,7 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 **Cenário 1**: Cadastro e log-in no sistema.         
 | **Usuário**   | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
 |-------------|--------------------|---------------------------------|-----------------|------------------------|------------------------------|
-| Usuário 1    |  32 segundos       |      4 cliques                  |  Sim            |    Nenhum              |  Tela de cadastro/log-in intuitiva e rápida.                           |                     |      
+| Usuário 1    |  62 segundos       |      4 cliques                  |  Sim            |    Nenhum              |  Tela de cadastro/log-in intuitiva e rápida.                           |                     |      
 | Usuário 2    |                    |                                 |                 |                        |                              |                     |      
 | Usuário 3    |                    |                                 |                 |                        |                              |                     |  
 | Usuário 4    |                    |                                 |                 |                        |                              |                     | 
