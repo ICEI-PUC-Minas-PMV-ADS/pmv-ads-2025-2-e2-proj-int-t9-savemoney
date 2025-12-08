@@ -78,12 +78,31 @@
         <div class="header-actions">
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                var userName = User.Identity.Name ?? "User";
-                var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
+                // **INÍCIO DA CORREÇÃO** - Só tenta usar 'usuario' se ele não for nulo
+                if (usuario != null)
+                {
+                    var userName = usuario.Nome ?? User.Identity.Name ?? "User"; // Prefere o nome do objeto Usuario
+                                                                                 // Se o avatar for exibido, as iniciais não são necessárias, mas vamos mantê-las por segurança se houver fallback CSS.
+                                                                                 // var initials = userName.Length >= 2 ? userName.Substring(0, 2).ToUpper() : userName.ToUpper();
 
-                <div class="header-user-avatar user-avatar-small" title="@userName">
-                    <img src="@usuario.FotoPerfil" alt="@usuario.Nome" id="avatarImage">
-                </div>
+                    <div class="header-user-avatar user-avatar-small" title="@userName">
+                        @* Linha que causava o erro (agora protegida) *@
+                        <img src="@usuario.FotoPerfil" alt="@usuario.Nome" id="avatarImage">
+                    </div>
+                }
+                else
+                {
+                    // Opcional: Fallback visual se o objeto 'usuario' falhar ao carregar,
+                    // mas o usuário ainda estiver logado (baseado no cookie/token).
+                    var fallbackName = User.Identity.Name ?? "User";
+                    var fallbackInitials = fallbackName.Length >= 2 ? fallbackName.Substring(0, 2).ToUpper() : fallbackName.ToUpper();
+
+                    // Exibir as iniciais como fallback de avatar
+                    <div class="header-user-avatar user-avatar-small fallback-initials" title="@fallbackName">
+                        @fallbackInitials
+                    </div>
+                }
+                // **FIM DA CORREÇÃO**
 
                 <a asp-controller="Dashboard" asp-action="Index" class="header-btn header-btn-primary">
                     Painel
