@@ -5,8 +5,6 @@
 - **Usuário 2 (U2 - Giulia Faraj):** 28 anos, advogada (uso intensivo de computador), conhecimento **básico** em informática.
 - **Usuário 3 (U3 - Isadora Patrocinio):** 21 anos, ensino técnico completo (uso moderado/focado), conhecimento **básico** em informática.
 
----
-
 ## Exemplo de tabela de registro dos testes de usabilidade  
 
 ### **Cenário 1 (R2, RNF-2)**: Cadastro e Log-in no sistema e Opt-in na Newsletter.

@@ -1,29 +1,27 @@
 message: Please cite this software using these metadata.
-title:
+title: Save Money
 authors:
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
+  - family-names: Gomes Alves
+    given-names: Samuel
+  - family-names: Patrício Valdez
+    given-names: Jeanh 
+  - family-names: Ferreira de Lima
+    given-names: Lucas
+  - family-names: S.B de Oliveira
+    given-names: Matheus Carlos
+  - family-names: Theodoro da Silva
+    given-names: Maicon Vitor
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
-  - name-suffix: Professor
-    affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Da Costa
+    given-names: José Wilson
+
 keywords:
-  - 
-  - 
-repository-code: 
+  - Gestão Financeira  
+  - Saúde Financeira
+  - Educação Financeira
+repository-code: https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2025-2-e2-proj-int-t9-savemoney
 version: 1.0.0
-date-released: 2023-10-31
+
+date-released: 2025-12-07
+
