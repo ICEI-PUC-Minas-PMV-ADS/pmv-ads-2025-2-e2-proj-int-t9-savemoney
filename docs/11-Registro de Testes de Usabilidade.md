@@ -44,7 +44,7 @@
 | **U3 (Isadora)**| 20 segundos        | 8 cliques                 | Sim                               | Nenhum                 | O campo de valor total da meta poderia ter uma máscara de moeda. Rápido e fácil. |
 
 ![Tela de Metas Financieras](../docs/img/Telameta.png)
-![Tela de Cadastro de Metas Financeiras](../docs/img/Cadastrometa.png)
+![Tela de Cadastro de Metas Financieras](../docs/img/Cadastrometa.png)
 ![Tela de Aporte Financeiro](../docs/img/Aportemeta.png)
 
 ---
@@ -93,7 +93,7 @@
 | **U3 (Isadora)**| 58 segundos        | 11 cliques                | Sim                               | Nenhum                 | O filtro de período está bem posicionado. A visualização dos KPIs é clara. |
 
 ![KPIs Corporativos](KIPs.png.jpg)
-![DRE Gerencial Simplificado](DRE.png.jpg)
+![DRE Gerencial Simplificado](DRE.png.png)
 
 ---
 
@@ -104,7 +104,7 @@
 | **U2 (Giulia)** | 50 segundos        | 13 cliques                | Sim                               | Erro ao tentar salvar o orçamento com valor zero. | Tive que voltar e editar, o sistema não alertou que o limite era obrigatório. |
 | **U3 (Isadora)**| 45 segundos        | 11 cliques                | Sim                               | Nenhum                 | Processo simples de definição de limites. O aviso quando o limite da categoria é atingido é claro. |
 
-![Gestão de Orçamento](GestaoOrcamento.png.png)
+![Gestão de Orçamento](GestaoOrcamento.png)
 
 ---
 
@@ -115,7 +115,7 @@
 | **U2 (Giulia)** | 60 segundos        | 15 cliques                | Sim                               | Dificuldade inicial para "arrastar" (precisou de dois cliques para iniciar). | Pensei que não funcionava no celular porque tive dificuldade em arrastar a primeira vez. |
 | **U3 (Isadora)**| 48 segundos        | 13 cliques                | Sim                               | Nenhum                 | Customização muito útil. Lentidão na renderização é perceptível (RNF-1). |
 
-![Dashboard Customizado](DashboardCustomizado.png.jpg)
+![Dashboard Customizado](DashboardCustomizado.png.png)
 
 ---
 
@@ -126,7 +126,7 @@
 | **U2 (Giulia)** | 70 segundos        | 14 cliques                | Não                               | Erro ao tentar filtrar Tendências por trimestre. | A opção de filtro não funcionou corretamente ao tentar mudar para trimestre; o gráfico não atualizou. |
 | **U3 (Isadora)**| 55 segundos        | 12 cliques                | Sim                               | Nenhum                 | Os dados históricos influenciam a projeção de forma visível, o que é bom. |
 
-![Análise de Tendências Financeiras](AnaliseTendencias_Projecao.png.jpg)
+![Análise de Tendências Financeiras](AnaliseTendencias_Projecao.png.png)
 
 ---
 
@@ -148,7 +148,7 @@
 | **U2 (Giulia)** | 40 segundos        | 11 cliques                | Sim                               | Erro ao tentar ordenar a tabela por valor. | O clique para ordenar não funcionou na primeira tentativa, tive que clicar duas vezes. |
 | **U3 (Isadora)**| 35 segundos        | 9 cliques                 | Sim                               | Nenhum                 | Os filtros de data são intuitivos. Ótimo resumo das transações. |
 
-![Histórico Financeiro](HistoricoFinanceiro.png.jpg)
+![Histórico Financeiro](HistoricoFinanceiro.png.png)
 
 ---
 
