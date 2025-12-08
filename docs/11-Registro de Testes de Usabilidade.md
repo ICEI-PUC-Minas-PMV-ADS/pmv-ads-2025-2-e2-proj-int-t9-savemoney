@@ -4,7 +4,7 @@ O registro de testes de usabilidade é um documento ou planilha onde são coleta
 
 ## Perfil dos usuários que participaram do teste
 - Usuário 1: 39 anos, nível básico completo, conhecimento intermediário tecnologia
-- Usuário 2: 18 anos, nível superior incompleto, conhecimento avançado tecnologia
+- Usuário 2: 45 anos, nível superior completo, conhecimento básico tecnologia
 - Usuário 1: 70 anos, nível básico incompleto, conhecimento básico tecnologia
 - Usuário 2: 25 anos, nível superior completo, conhecimento avançado tecnologia
 - Usuário 2: 28 anos, nível superior completo, conhecimento avançado tecnologia
@@ -18,7 +18,7 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | **Usuário**   | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
 |-------------|--------------------|---------------------------------|-----------------|------------------------|------------------------------|
 | Usuário 1    |  62 segundos       |      4 cliques                  |  Sim            |    Nenhum              |  Tela de cadastro/log-in intuitiva e rápida.                           |                     |      
-| Usuário 2    |                    |                                 |                 |                        |                              |                     |      
+| Usuário 2    | 120 segundos        |      7 cliques               |     sim            |         Nenhum         |                              |                     |      
 | Usuário 3    |                    |                                 |                 |                        |                              |                     |  
 | Usuário 4    |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5    |                    |                                 |                 |                        |                              |                     | 
@@ -31,7 +31,7 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
 |-------------|--------------------|---------------------------------|-----------------|------------------------|------------------------------|
 | Usuário 1   |   19 segundos      |    8 cliques                    |   sim           |     Nenhum             |   Apesar de haver opção de recorrência, não existe a opção de cadastro automático.                        |                     |      
-| Usuário 2   |                    |                                 |                 |                        |                              |                     |      
+| Usuário 2   |    150 segundos    |           12 cliques        |        sim         |           Nenhum             |             |                     |      
 | Usuário 3   |                    |                                 |                 |                        |                              |                     |  
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
@@ -45,7 +45,7 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
 |-------------|--------------------|---------------------------------|-----------------|------------------------|------------------------------|
 | Usuário 1   |     15 segundos    |     9 cliques                   |    Sim          |   Nenhum               |   Existe um erro no momento que se insere o aporte da meta, onde é adicionado dois zeros a mais do que já havia inserido.                          |                     |      
-| Usuário 2   |                    |                                 |                 |                        |                              |                     |      
+| Usuário 2   |      40 segundos        |       9 cliques          |         sim        |       Nenhum       |                              |                     |      
 | Usuário 3   |                    |                                 |                 |                        |                              |                     |  
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
@@ -72,7 +72,7 @@ Para registrar os indicadores de cada cenário, é preciso manter a coerência c
 | **Usuário**  | **Tempo Total (seg)** | **Quantidade de cliques** | **Tarefa foi concluída?** (Sim/Não) | **Erros Cometidos** | **Feedback do Usuário** |
 |-------------|--------------------|---------------------------------|-----------------|------------------------|------------------------------|
 | Usuário 1   |  12 segundos       |    6 cliques                    |   Sim           |   Nenhum               |  Calculadora simples e prática de se usar, faciliatando bastante o calculo de juros composto                            |                     |      
-| Usuário 2   |                    |                                 |                 |                        |                              |                     |      
+| Usuário 2   |       50 segundos     |           10 cliques          |        sim         |          Nenhum              |        Erro de Calculo nos juros, falta de separador de minhas                      |                     |      
 | Usuário 3   |                    |                                 |                 |                        |                              |                     |  
 | Usuário 4   |                    |                                 |                 |                        |                              |                     | 
 | Usuário 5   |                    |                                 |                 |                        |                              |                     | 
